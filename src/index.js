@@ -20,7 +20,7 @@ import {
  * @return {Function}
  */
 
-function createStruct(options = {}) {
+function superstruct(options = {}) {
   const TYPES = {
     ...DEFAULT_TYPES,
     ...(options.types || {}),
@@ -231,5 +231,5 @@ function toValue(value, defaults) {
  * @type {Function}
  */
 
-export default createStruct()
-export { createStruct }
+export default superstruct()
+export { superstruct }

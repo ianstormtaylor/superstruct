@@ -1,8 +1,8 @@
 
 import isEmail from 'is-email'
-import { createStruct } from '../../..'
+import { superstruct } from '../../..'
 
-const s = createStruct({
+const s = superstruct({
   types: {
     email: isEmail
   }
