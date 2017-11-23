@@ -11,33 +11,40 @@ import { basename, extname, resolve } from 'path'
  */
 
 describe('superstruct', () => {
-  const testsDir = resolve(__dirname, 'fixtures')
-  const tests = fs.readdirSync(testsDir).filter(t => t[0] !== '.').map(t => basename(t, extname(t)))
+  const kindsDir = resolve(__dirname, 'fixtures')
+  const kinds = fs.readdirSync(kindsDir).filter(t => t[0] !== '.').map(t => basename(t, extname(t)))
 
-  for (const test of tests) {
-    it(test, async () => {
-      const module = require(resolve(testsDir, test))
-      const { struct, value } = module
+  for (const kind of kinds) {
+    describe(kind, () => {
+      const testsDir = resolve(kindsDir, kind)
+      const tests = fs.readdirSync(testsDir).filter(t => t[0] !== '.').map(t => basename(t, extname(t)))
 
-      if ('output' in module) {
-        const expected = module.output
-        const actual = struct(value)
-        assert.deepEqual(actual, expected)
-      }
+      for (const test of tests) {
+        it(test, async () => {
+          const module = require(resolve(testsDir, test))
+          const { struct, value } = module
 
-      else if ('error' in module) {
-        assert.throws(() => {
-          struct(value)
-        }, (e) => {
-          const expected = module.error
-          const actual = pick(e, 'code', 'type', 'key', 'index', 'path', 'value', 'schema')
-          assert.deepEqual(actual, expected)
-          return true
+          if ('output' in module) {
+            const expected = module.output
+            const actual = struct(value)
+            assert.deepEqual(actual, expected)
+          }
+
+          else if ('error' in module) {
+            assert.throws(() => {
+              struct(value)
+            }, (e) => {
+              const expected = module.error
+              const actual = pick(e, 'code', 'type', 'key', 'index', 'path', 'value', 'schema')
+              assert.deepEqual(actual, expected)
+              return true
+            })
+          }
+
+          else {
+            throw new Error(`The "${test}" fixture did not define an \`output\` or \`error\` export.`)
+          }
         })
-      }
-
-      else {
-        throw new Error(`The "${test}" fixture did not define an \`output\` or \`error\` export.`)
       }
     })
   }
