@@ -2,8 +2,8 @@
 import s from '../..'
 
 export const struct = s({
-  name: 'string!',
-  age: 'number!'
+  name: 'string',
+  age: 'number'
 })
 
 export const value = {
@@ -14,7 +14,7 @@ export const value = {
 
 export const error = {
   code: 'property_unknown',
-  schema: '{"name":"string!","age":"number!"}',
+  schema: '{"name":"string","age":"number"}',
   path: ['unknown'],
   key: 'unknown',
 }

@@ -9,7 +9,7 @@ const s = createStruct({
 })
 
 export const struct = s({
-  email: 'email!',
+  email: 'email',
 })
 
 export const value = {
@@ -18,7 +18,7 @@ export const value = {
 
 export const error = {
   code: 'property_invalid',
-  schema: 'email!',
+  schema: 'email',
   path: ['email'],
   key: 'email',
   value: 'invalid',

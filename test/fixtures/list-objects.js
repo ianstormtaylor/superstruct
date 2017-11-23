@@ -1,7 +1,7 @@
 
 import s from '../..'
 
-export const struct = s([{ id: 'string!' }])
+export const struct = s([{ id: 'string' }])
 
 export const value = [
   { id: '1' },

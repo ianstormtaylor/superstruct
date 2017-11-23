@@ -32,8 +32,8 @@ function createStruct(options = {}) {
    */
 
   function scalarStruct(schema, defaults) {
-    const isRequired = schema.endsWith('!')
-    const type = isRequired ? schema.slice(0, -1) : schema
+    const isOptional = schema.endsWith('?')
+    const type = isOptional ? schema.slice(0, -1) : schema
     const fn = types[type] || TYPES[type]
 
     if (typeof fn !== 'function') {
@@ -43,7 +43,7 @@ function createStruct(options = {}) {
     return (value) => {
       value = toValue(value, defaults)
 
-      if (isRequired && value === undefined) {
+      if (!isOptional && value === undefined) {
         throw new ValueRequiredError({ schema })
       }
 

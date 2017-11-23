@@ -1,7 +1,7 @@
 
 import s from '../..'
 
-export const struct = s([{ id: 'string!' }])
+export const struct = s([{ id: 'string' }])
 
 export const value = [
   { id: '1' },
@@ -11,7 +11,7 @@ export const value = [
 
 export const error = {
   code: 'value_invalid',
-  schema: '{"id":"string!"}',
+  schema: '{"id":"string"}',
   path: [1],
   value: 'invalid',
 }

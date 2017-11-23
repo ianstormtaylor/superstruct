@@ -8,13 +8,13 @@ const s = createStruct({
   }
 })
 
-export const struct = s('email!')
+export const struct = s('email')
 
 export const value = 'invalid'
 
 export const error = {
   code: 'value_invalid',
-  schema: 'email!',
+  schema: 'email',
   path: [],
   value: 'invalid',
 }

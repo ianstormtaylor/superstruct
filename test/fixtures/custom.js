@@ -8,7 +8,7 @@ const s = createStruct({
   }
 })
 
-export const struct = s('email!')
+export const struct = s('email')
 
 export const value = 'sam@example.com'
 
