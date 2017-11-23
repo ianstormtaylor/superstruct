@@ -95,14 +95,10 @@ function createStruct(options = {}) {
         try {
           return fn(v)
         } catch (e) {
-          const path = [index].concat(e.path)
-
+          e.path = [index].concat(e.path)
           switch (e.code) {
-            case 'value_invalid':
-              throw new ElementInvalidError({ type: e.type, path, index, value: e.value })
-            default:
-              e.path = path
-              throw e
+            case 'value_invalid': throw new ElementInvalidError({ ...e, index })
+            default: throw e
           }
         }
       })
@@ -149,16 +145,11 @@ function createStruct(options = {}) {
         try {
           r = s(v)
         } catch (e) {
-          const path = [key].concat(e.path)
-
+          e.path = [key].concat(e.path)
           switch (e.code) {
-            case 'value_invalid':
-              throw new PropertyInvalidError({ type: e.type, path, key, value: e.value })
-            case 'value_required':
-              throw new PropertyRequiredError({ type: e.type, path, key })
-            default:
-              e.path = path
-              throw e
+            case 'value_invalid': throw new PropertyInvalidError({ ...e, key })
+            case 'value_required': throw new PropertyRequiredError({ ...e, key })
+            default: throw e
           }
         }
 
@@ -169,8 +160,7 @@ function createStruct(options = {}) {
 
       for (const key in value) {
         if (!(key in structs)) {
-          const path = [key]
-          throw new PropertyUnknownError({ key, path })
+          throw new PropertyUnknownError({ key, path: [key] })
         }
       }
 
