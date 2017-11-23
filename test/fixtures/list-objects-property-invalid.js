@@ -5,13 +5,14 @@ export const struct = s([{ id: 'string!' }])
 
 export const value = [
   { id: '1' },
-  'invalid',
+  { id: false },
   { id: '3' },
 ]
 
 export const error = {
-  code: 'element_invalid',
-  index: 1,
-  path: [1],
-  value: 'invalid',
+  code: 'property_invalid',
+  schema: 'string!',
+  path: [1, 'id'],
+  key: 'id',
+  value: false,
 }

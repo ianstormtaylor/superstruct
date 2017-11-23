@@ -1,26 +1,17 @@
 
 import cloneDeep from 'lodash/cloneDeep'
-import err from 'custom-err'
 import is from 'is'
 
-/**
- * Default types.
- *
- * @type {Object}
- */
+import TYPES from './types'
 
-const DEFAULT_TYPES = {
-  any: v => v !== undefined,
-  array: is.array,
-  boolean: is.boolean,
-  date: is.date,
-  function: is.function,
-  null: is.null,
-  number: is.number,
-  object: is.object,
-  string: is.string,
-  undefined: is.undefined,
-}
+import {
+  PropertyInvalidError,
+  PropertyRequiredError,
+  PropertyUnknownError,
+  ValueInvalidError,
+  ValueRequiredError,
+} from './errors'
+
 
 /**
  * Create a struct factory from a set of `options`.
@@ -30,38 +21,7 @@ const DEFAULT_TYPES = {
  */
 
 function createStruct(options = {}) {
-  const { types = {}, error } = options
-
-  /**
-   * Define a function struct with a `schema` function.
-   *
-   * @param {Function} schema
-   * @param {Any} defaults
-   * @return {Function}
-   */
-
-  function functionStruct(schema, defaults) {
-    const def = toDefinition(schema)
-    const validate = schema
-
-    if (defaults !== undefined && !validate(defaults)) {
-      throw new Error(`The \`defaults\` argument for the struct "${def}" was invalid.`)
-    }
-
-    return (value) => {
-      value = toValue(value, defaults)
-
-      if (!validate(value)) {
-        throw err(`The value "${value}" was invalid. It should have matched the struct "${def}".`, {
-          code: 'value_invalid',
-          path: [],
-          value,
-        })
-      }
-
-      return value
-    }
-  }
+  const { types = {}} = options
 
   /**
    * Define a scalar struct with a `schema` type string.
@@ -72,50 +32,26 @@ function createStruct(options = {}) {
    */
 
   function scalarStruct(schema, defaults) {
-    const def = toDefinition(schema)
-    let type = schema
-    const isRequired = type.endsWith('!')
-
-    if (isRequired) {
-      type = type.slice(0, -1)
-    }
-
-    let fn = types[type] || DEFAULT_TYPES[type]
+    const isRequired = schema.endsWith('!')
+    const type = isRequired ? schema.slice(0, -1) : schema
+    const fn = types[type] || TYPES[type]
 
     if (typeof fn !== 'function') {
-      throw new Error(`No struct validator found for type: "${type}"`)
-    }
-
-    if (!isRequired) {
-      const original = fn
-      fn = v => v === undefined || original(v)
-    }
-
-    const validate = functionStruct(fn, defaults)
-
-    if (defaults !== undefined) {
-      try {
-        validate(defaults)
-      } catch (e) {
-        throw new Error(`The \`defaults\` argument for the struct "${def}" was invalid.`)
-      }
+      throw new Error(`No struct validator found for scalar of type: "${type}"`)
     }
 
     return (value) => {
-      let ret
+      value = toValue(value, defaults)
 
-      try {
-        ret = validate(value)
-      } catch (e) {
-        throw err(`The scalar "${value}" was invalid. It should have matched the struct "${def}".`, {
-          code: 'scalar_invalid',
-          type,
-          path: [],
-          value,
-        })
+      if (isRequired && value === undefined) {
+        throw new ValueRequiredError({ schema })
       }
 
-      return ret
+      if (value !== undefined && !fn(value)) {
+        throw new ValueInvalidError({ value, schema })
+      }
+
+      return value
     }
   }
 
@@ -129,42 +65,27 @@ function createStruct(options = {}) {
 
   function listStruct(schema, defaults) {
     if (schema.length !== 1) {
-      throw new Error(`List structs must be defined with an array with 1 element, but you passed: ${schema.length} elements.`)
+      throw new Error(`List structs must be defined as an array with a single element, but you passed: ${schema.length} elements.`)
     }
 
-    const def = toDefinition(schema)
+    const def = JSON.stringify(schema)
     schema = schema[0]
     const fn = struct(schema)
-
-    if (defaults !== undefined) {
-      try {
-        defaults.forEach(d => fn(d))
-      } catch (e) {
-        throw new Error(`The \`defaults\` argument for the struct "${def}" was invalid.`)
-      }
-    }
 
     return (value) => {
       value = toValue(value, defaults)
 
       if (!is.array(value)) {
-        throw err(`The list "${value}" was invalid. It should have matched the struct "${def}".`, {
-          code: 'list_invalid',
-          path: [],
-          value,
-        })
+        throw new ValueInvalidError({ value, schema: def })
       }
 
       const ret = value.map((v, i) => {
         try {
           return fn(v)
         } catch (e) {
-          throw err(`The element at index \`${i}\` in an array was invalid. It should have matched the struct "${def}". The element in question was: ${v}`, {
-            code: 'element_invalid',
-            index: i,
-            path: [i].concat(e.path),
-            value: v,
-          })
+          const path = [i].concat(e.path)
+          e.path = path
+          throw e
         }
       })
 
@@ -181,31 +102,19 @@ function createStruct(options = {}) {
    */
 
   function objectStruct(schema, defaults) {
-    const def = toDefinition(schema)
+    const def = JSON.stringify(schema)
     const structs = {}
 
     for (const key in schema) {
       const fn = struct(schema[key])
       structs[key] = fn
-
-      if (defaults !== undefined && key in defaults) {
-        try {
-          fn(defaults[key])
-        } catch (e) {
-          throw new Error(`The \`defaults\` argument for the \`${key}\` key of struct "${def}" was invalid.`)
-        }
-      }
     }
 
     return (value) => {
       value = toValue(value, defaults)
 
       if (!is.object(value)) {
-        throw err(`The object "${value}" was invalid. It should have matched the struct "${def}".`, {
-          code: 'object_invalid',
-          path: [],
-          value,
-        })
+        throw new ValueInvalidError({ value, schema: def })
       }
 
       const ret = {}
@@ -218,12 +127,17 @@ function createStruct(options = {}) {
         try {
           r = s(v)
         } catch (e) {
-          throw err(`The \`${key}\` property in an object was invalid. It should have matched the struct "${def}". The property in question was: ${v}`, {
-            code: 'property_invalid',
-            key,
-            path: [key].concat(e.path),
-            value: v,
-          })
+          const path = [key].concat(e.path)
+
+          switch (e.code) {
+            case 'value_invalid':
+              throw new PropertyInvalidError({ schema: e.schema, path, key, value: e.value })
+            case 'value_required':
+              throw new PropertyRequiredError({ schema: e.schema, path, key })
+            default:
+              e.path = path
+              throw e
+          }
         }
 
         if (key in value) {
@@ -233,11 +147,8 @@ function createStruct(options = {}) {
 
       for (const key in value) {
         if (!(key in structs)) {
-          throw err(`The \`${key}\` property in an object was not recognized. It did not appear in the struct "${def}".`, {
-            code: 'property_unknown',
-            key,
-            path: [key],
-          })
+          const path = [key]
+          throw new PropertyUnknownError({ key, path, schema: def })
         }
       }
 
@@ -256,29 +167,17 @@ function createStruct(options = {}) {
   function struct(schema, defaults) {
     let s
 
-    if (is.function(schema)) {
-      s = functionStruct(schema, defaults)
-    } else if (is.string(schema)) {
+    if (is.string(schema)) {
       s = scalarStruct(schema, defaults)
     } else if (is.array(schema)) {
       s = listStruct(schema, defaults)
     } else if (is.object(schema)) {
       s = objectStruct(schema, defaults)
     } else {
-      throw new Error(`A struct schema definition must be a function, string, array or object, but you passed: ${schema}.`)
+      throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}.`)
     }
 
-    return (value) => {
-      let ret
-
-      try {
-        ret = s(value)
-      } catch (e) {
-        throw error ? error(e) : e
-      }
-
-      return ret
-    }
+    return s
   }
 
   /**
@@ -300,23 +199,6 @@ function toValue(value, defaults) {
   if (value !== undefined) return value
   if (typeof defaults === 'function') return defaults()
   return cloneDeep(defaults)
-}
-
-/**
- * Resolve a `schema` into a string representing the schema definition.
- *
- * @param {Function|String|Array|Object} schema
- * @return {String}
- */
-
-function toDefinition(schema) {
-  if (is.string(schema)) {
-    return schema
-  } else if (is.function(schema)) {
-    return schema.toString()
-  } else {
-    return JSON.stringify(schema)
-  }
 }
 
 /**
