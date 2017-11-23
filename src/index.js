@@ -14,7 +14,7 @@ import {
 } from './errors'
 
 /**
- * A symbol to identify structs by.
+ * A private key to identify structs by.
  *
  * @type {String}
  */
@@ -191,7 +191,7 @@ function createStruct(options = {}) {
       throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}`)
     }
 
-    s[IS_STRUCT] = true
+    Object.defineProperty(s, IS_STRUCT, { value: true })
     return s
   }
 

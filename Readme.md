@@ -37,10 +37,9 @@ Superstruct makes it easy to define interfaces and then validate Javascript data
 
 <p align="center">
   <a href="#example">Example</a> •
-  <a href="#features">Features</a> •
   <a href="#why">Why?</a> •
-  <a href="#types">Types</a> •
-  <a href="#api">API</a>
+  <a href="#principles">Principles</a> •
+  <a href="#documentation">Documentation</a>
 </p>
 
 ---
@@ -76,37 +75,28 @@ Superstruct exports a `struct` factory for creating functions that validate data
 import struct from 'superstruct'
 
 const validate = struct({
-  id: 'number!',
-  title: 'string!',
-  created_at: 'date!',
-  is_published: 'boolean!',
-  tags: ['string!'],
+  id: 'number',
+  title: 'string',
+  is_published: 'boolean',
+  tags: ['string'],
   author: {
-    id: 'number!',
-    name: 'string!',
+    id: 'number',
   }
 })
 
 const data = {
   id: 34,
   title: 'Hello World',
-  created_at: new Date(),
   is_published: true,
   tags: ['announcements'],
   author: {
     id: 1,
-    name: 'Jane Smith',
   } 
 }
 
-try {
-  validate(data)
-} catch (e) {
-  console.error('Article object was invalid!')
-  return
-}
-
-console.log('Article object was valid!')
+validate(data)
+// Throws if the data is invalid.
+// Returns the data (with defaults) if valid.
 ```
 
 The schema definition syntax was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/).
@@ -116,291 +106,78 @@ But you can also define your own types—specific to your application's requirem
 ```js
 import { createStruct } from 'superstruct'
 
-import is from 'is'
 import isUuid from 'is-uuid'
 import isEmail from 'is-email'
-import isIsoDate from 'is-isodate'
 
 const struct = createStruct({
   types: {
     uuid: v => isUuid.v5(v),
-    name: v => is.string(v) && v.length < 256,
-    email: v => isEmail(v) && v.length < 1024,
-    isodate: v => isIsoDate(v),
+    email: v => isEmail(v) && v.length < 256,
   }
 })
 
 const validate = struct({
-  id: 'uuid!',
-  email: 'email!',
-  first: 'name!',
-  last: 'name!',
-  created_at: 'isodate!',
-  is_admin: 'boolean',
+  id: 'uuid',
+  email: 'email',
+  is_admin: 'boolean?',
 })
 
 const data = {
   id: '5a2de30a-a736-5aea-8f7f-ad0f019cdc00',
   email: 'jane@example.com',
-  first: 'Jane',
-  last: 'Smith',
-  created_at: '2017-11-23T00:56:12+00:00',
 }
 
-try {
-  validate(data)
-} catch (e) {
-  console.error('User object was invalid!')
-  return
-}
-
-console.log('User object was valid!')
+validate(data)
+// Throws if the data is invalid.
+// Returns the data (with defaults) if valid.
 ```
-
-
-<br/>
-
-### Features
-
-- Uses a simple, SQL-like syntax for building queries.
-- Enables dynamic `WHERE`, `ORDER BY`, `INSERT`, `UPDATE`, &hellip; clauses.
-- Built on top of [`pg-sql`](https://github.com/calebmer/pg-sql) for writing simple SQL strings in Javascript.
-- Compatible with [`pg`](https://github.com/brianc/node-postgres) out of the box.
 
 
 <br/>
 
 ### Why?
 
-Choosing not to use an ORM is a very common and reasonable choice. But one of the biggest downsides is that you lose some of the expressiveness when dynamic SQL statements are concerned. For example when you need to...
+There are lots of existing validation libraries. Some of them, like [Joi](), are fairly popular. But most of them exhibit one or many issues...
 
-- ...insert or update from a handful of different attributes.
-- ...filter by custom parameters.
-- ...limit, order and paginate with custom parameters.
+- **Not throwing the errors.** Many validators simply return `true/false` or return details about the error. This was nice back in the days of callbacks, where throwing was discouraged, but in modern Javascript using `throw` leads to much simpler code.
 
-Building SQL strings by hand for these dynamic inputs is tedious.
+- **Not making it easy to define custom types.** Lots of the validators ship with built-in types like emails, URLs, UUIDs, etc. But they often don't take into account things like maximum lengths, or But once you need to define your own custom types—which any reasonably sized use case will require—the APIs are complex, and poorly supported.
 
-There are libraries that try to solve this, but most of them re-invent the entire SQL syntax with Javascript methods—some even require defining your schema in advance. You're basically back to re-inventing an ORM but without any of the benefits.
+- **Not having single sources of truth.** Many of the existing APIs encourage re-defining data types like names, emails, or  over and over, with the source of truth being spread out across many files. This leads to 
 
-`pg-sql-helpers` lets you continue to write simple, composable SQL strings with the help of [`pg-sql`](https://github.com/calebmer/pg-sql), while giving you a handful of helper functions to make building queries from dynamic, user-provided values much, much easier.
+- **Not treating errors as part of the API.** For the validators that do throw errors, they often throw simple message-only errors without any extra information. This makes it hard to customize the error message to make them helpful for users.
 
+- **Not compiling schemas on creation.** Some validators allow you to define schemas as plain Javascript objects, which seems nice. But then they delegate the more complex parsing and compiling logic to validation time, instead of doing the work up front.
 
-<br/>
+Of course, not every validation library suffers from all of these issues, but most of them exhibit at least one. If you've run into this problem before, you might like Superstruct.
 
-### Types
-
-Out of the box, Superstruct ships with types for each of the built-in Javascript data types, as well as the special `any` type.
-
-- `any`
-- `array`
-- `boolean`
-- `date`
-- `function`
-- `null`
-- `number`
-- `object`
-- `string`
-- `undefined`
-
-The `any` type matches any value that is not explicitly `undefined` (eg. `value !== undefined`).
-
-But you can also define your own domain-specific types that make writing validations for your use case easier and more specific. For example:
-
-```js
-import isEmail from 'is-email'
-import isIsodate from 'is-isodate'
-import { createStruct } from 'superstruct'
-
-const struct = createStruct({
-  types: {
-    email: v => isEmail(v),
-    isodate: v => isIsodate(v),
-  }
-})
-
-const validate = struct({
-  email: 'email!',
-  created_at: 'isodate!',
-})
-
-validate({
-  email: 'sam@example.com',
-  created_at: '2017-11-23T00:56:12+00:00',
-})
-```
+Which brings me to how Superstruct solves these issues...
 
 
 <br/>
 
-### API
+### Principles
 
-All of the helpers are exported in lowercase _and_ uppercase, so you can match your existing SQL preferences.
+1. **Customizable types.** Superstruct's power is in making it easy to define an entire set of custom data types that are specific to your application, so that you have full control over exactly what you're checking for.
 
-- [`AND`](#and)
-- [`INSERT`](#insert)
-- [`KEYS`](#keys)
-- [`LIMIT`](#limit)
-- [`OFFSET`](#offset)
-- [`OR`](#or)
-- [`ORDER_BY`](#order_by)
-- [`SELECT`](#select)
-- [`UPDATE`](#update)
-- [`VALUES`](#values)
-- [`WHERE`](#where)
+2. **Unopinionated defaults.** Superscript only ships with the native Javascript types by default, that you never have to fight to override decisions made by "core" that differ from your application's needs.
 
-#### `AND`
-`AND([table: String], params: Object)`
+4. **Composable interfaces.** Superstruct interfaces are composable, so you can break down commonly-repeated pieces into smaller components, and compose them to make up the more complex.
 
-```js
-sql`
-  SELECT *
-  FROM users
-  WHERE name = 'John'
-  ${AND({ age: { gt: 42 }})}
-`
-```
+5. **Terse schemas.** The schemas in Superstruct are designed to be extremely terse. This makes them very easy to read and write, so that you're encouraged to have full data validation coverage.
 
-The same as the [`WHERE`](#where) helper, but the keyword will be `AND` instead. Useful when you've already got a hardcoded `WHERE` you need to augment. The `table` string is optional, but can be passed to qualify the columns to match.
+3. **Familiar API.** The Superstruct API was heavily inspired by Typescript, Flow and GraphQL. If you're familiar with any of those then its schema definition API will feel very natural to use, so you can get started quickly.
 
-#### `INSERT`
-`INSERT(table: String, values: Object|Array<Object>)`
+6. **Useful errors.** The errors that Superstruct throws contain all the information you need to convert them into your own application-specific errors easy, which means more helpful errors for your end users!
 
-```js
-sql`
-  ${INSERT('users', { name: 'john', age: 42 })}
-  WHERE id = '1'
-  RETURNING *
-`
-```
+7. **Compiled validators.** Superstruct does the work of compiling its schemas up front, so that it doesn't have to spend lots of time performing expensive tasks for every call to the validation functions in your hot code paths.
 
-Create a SQL "INSERT" clause from a set of `values`. Useful when writing dynamic updates based on attributes that may or may not be passed. _In the case of an array of `values`, the keys from the first object in the array will be used._
 
-#### `KEYS`
-`KEYS(values: Object|Array<Object>)`
+<br/>
 
-```js
-sql`
-  SELECT ${KEYS({ name: true, age: true })}
-  FROM users
-`
-```
+### Documentation
 
-Extract and join the keys of `values` into a SQL string. Useful for building dynamic clauses like `SELECT`, [`INSERT`](#insert), [`UPDATE`](#update), etc. _In the case of an array of `values`, the keys from the first object in the array will be used._
 
-#### `LIMIT`
-`LIMIT(number: Number)`
-
-```js
-sql`
-  SELECT id, name, age
-  FROM users
-  ${LIMIT(20)}
-`
-```
-
-Create a SQL "LIMIT" clause from a dynamic `number`. In the number is `Infinity`, `LIMIT ALL` will be output instead.
-
-#### `OFFSET`
-`OFFSET(number: Number)`
-
-```js
-sql`
-  SELECT id, name, age
-  FROM users
-  LIMIT 10 ${OFFSET(20)}
-`
-```
-
-Create a SQL "OFFSET" clause from a dynamic `number`.
-
-#### `OR`
-`OR([table: String], params: Object)`
-
-```js
-sql`
-  SELECT *
-  FROM users
-  WHERE name = 'John'
-  ${OR({ age: { gt: 42 }})}
-`
-```
-
-The same as the [`WHERE`](#where) helper, but the keyword will be `OR` instead. Useful when you've already got a hardcoded `WHERE` you need to augment. The `table` string is optional, but can be passed to qualify the columns to match.
-
-#### `ORDER_BY`
-`ORDER_BY([table: String], params: Array)`
-
-```js
-sql`
-  SELECT *
-  FROM users
-  ${ORDER_BY(['name', '-age'])}
-`
-```
-
-Create a SQL "ORDER BY" clause from an array of `params`. The params are column name identifiers. They default to `ASC NULLS LAST`, but can be prefixed with `'-'` to denote `DESC NULLS LAST`.
-
-#### `SELECT`
-`SELECT([table: String], values: Object|Array<Object>|Array<String>)`
-
-```js
-sql`
-  ${SELECT(['id', 'name'])}
-  FROM users
-  WHERE id = '1'
-`
-```
-
-#### `UPDATE`
-`UPDATE(table: String, values: Object|Array<Object>)`
-
-```js
-sql`
-  ${UPDATE('users', { name: 'john', age: 42 })}
-  WHERE id = '1'
-  RETURNING *
-`
-```
-
-Create a SQL "UPDATE" clause from a set of `values`. Useful when writing dynamic updates based on attributes that may or may not be passed. _In the case of an array of `values`, the keys from the first object in the array will be used._
-
-#### `VALUES`
-`VALUES(values: Object|Array<Object>)`
-
-```js
-sql`
-  UPDATE users
-  SET (name, age) = (${VALUES({ name: 'john', age: 42 })})
-`
-```
-
-Extract and join the values of `values` into a SQL string. Useful for building dynamic clauses like [`INSERT`](#insert), [`UPDATE`](#update), etc.
-
-#### `WHERE`
-`WHERE([table: String], params: Object)`
-
-```js
-sql`
-  SELECT * 
-  FROM users
-  ${WHERE({ age: { gte: 42 }})}
-`
-```
-
-Create a SQL "WHERE" clause from a set of `params`, with optional `table` name string. Useful when writing dynamic filters based on parameters that may or may not be passed. The `table` string is optional, but can be passed to qualify the columns to match.
-
-The parameters are nested objects with modifiers: 
-
-|**Operator**|**SQL**|
-|---|---|
-|`eq`|`=`|
-|`ne`|`!=`|
-|`gt`|`>`|
-|`gte`|`>=`|
-|`lt`|`<`|
-|`lte`|`<=`|
-
-If a parameter value is not an object, it will be defaulted to `eq` and compared using `=`.
 
 
 <br/>
