@@ -5,12 +5,12 @@ export const struct = s([{ id: 'string?' }])
 
 export const value = [
   { id: '1' },
-  { id: undefined },
+  {},
   { id: '3' },
 ]
 
 export const output = [
   { id: '1' },
-  { id: undefined },
+  {},
   { id: '3' },
 ]

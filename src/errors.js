@@ -28,10 +28,10 @@ class StructError extends Error {
 
 class PropertyInvalidError extends StructError {
 
-  constructor({ schema, key, value, path = [] }) {
-    const message = `The \`${key}\` property in an object was invalid. It should have matched the struct "${schema}". The property in question was: ${value}`
+  constructor({ type, key, value, path = [] }) {
+    const message = `The \`${key}\` property in an object was invalid. It should be of type "${type}", but it was: ${value}`
     const code = 'property_invalid'
-    super(message, { code, schema, path, key, value })
+    super(message, { code, type, path, key, value })
     Error.captureStackTrace(this, this.constructor)
   }
 
@@ -39,10 +39,10 @@ class PropertyInvalidError extends StructError {
 
 class PropertyRequiredError extends StructError {
 
-  constructor({ schema, key, path = [] }) {
-    const message = `The \`${key}\` property is required. It should have matched the struct "${schema}".`
+  constructor({ type, key, path = [] }) {
+    const message = `The \`${key}\` property is required but was not defined. It should be of type "${type}".`
     const code = 'property_required'
-    super(message, { code, schema, path, key })
+    super(message, { code, type, path, key })
     Error.captureStackTrace(this, this.constructor)
   }
 
@@ -50,10 +50,10 @@ class PropertyRequiredError extends StructError {
 
 class PropertyUnknownError extends StructError {
 
-  constructor({ schema, key, path = [] }) {
-    const message = `The \`${key}\` property in an object was not recognized. It did not appear in the struct "${schema}".`
+  constructor({ key, path = [] }) {
+    const message = `The \`${key}\` property in an object was not recognized.`
     const code = 'property_unknown'
-    super(message, { code, schema, path, key })
+    super(message, { code, path, key })
     Error.captureStackTrace(this, this.constructor)
   }
 
@@ -61,10 +61,10 @@ class PropertyUnknownError extends StructError {
 
 class ValueInvalidError extends StructError {
 
-  constructor({ schema, value, path = [] }) {
-    const message = `Expected the value "${value}" to match schema "${schema}".`
+  constructor({ type, value, path = [] }) {
+    const message = `Expected the value "${value}" to match type "${type}".`
     const code = 'value_invalid'
-    super(message, { code, schema, path, value })
+    super(message, { code, type, path, value })
     Error.captureStackTrace(this, this.constructor)
   }
 
@@ -72,10 +72,10 @@ class ValueInvalidError extends StructError {
 
 class ValueRequiredError extends StructError {
 
-  constructor({ schema, path = [] }) {
-    const message = `Missing required value to match schema "${schema}".`
+  constructor({ type, path = [] }) {
+    const message = `A required property was not defined. It should be of type "${type}".`
     const code = 'value_required'
-    super(message, { code, schema, path })
+    super(message, { code, type, path })
     Error.captureStackTrace(this, this.constructor)
   }
 

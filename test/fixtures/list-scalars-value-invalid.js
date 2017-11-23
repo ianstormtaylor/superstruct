@@ -7,7 +7,7 @@ export const value = 'invalid'
 
 export const error = {
   code: 'value_invalid',
-  schema: '["number"]',
+  type: 'array',
   path: [],
   value: 'invalid',
 }

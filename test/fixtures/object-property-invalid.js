@@ -13,7 +13,7 @@ export const value = {
 
 export const error = {
   code: 'property_invalid',
-  schema: 'number',
+  type: 'number',
   path: ['age'],
   key: 'age',
   value: 'invalid',

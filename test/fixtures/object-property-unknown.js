@@ -14,7 +14,6 @@ export const value = {
 
 export const error = {
   code: 'property_unknown',
-  schema: '{"name":"string","age":"number"}',
   path: ['unknown'],
   key: 'unknown',
 }

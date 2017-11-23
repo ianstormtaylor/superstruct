@@ -13,7 +13,7 @@ export const value = {
 
 export const error = {
   code: 'property_required',
-  schema: 'string',
+  type: 'string',
   path: ['name'],
   key: 'name',
 }

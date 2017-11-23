@@ -14,7 +14,7 @@ export const value = 'invalid'
 
 export const error = {
   code: 'value_invalid',
-  schema: 'email',
+  type: 'email',
   path: [],
   value: 'invalid',
 }

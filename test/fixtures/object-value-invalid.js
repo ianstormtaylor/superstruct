@@ -10,7 +10,7 @@ export const value = 'invalid'
 
 export const error = {
   code: 'value_invalid',
-  schema: '{"name":"string","age":"number"}',
+  type: 'object',
   path: [],
   value: 'invalid',
 }

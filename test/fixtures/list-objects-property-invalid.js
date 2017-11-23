@@ -11,7 +11,7 @@ export const value = [
 
 export const error = {
   code: 'property_invalid',
-  schema: 'string',
+  type: 'string',
   path: [1, 'id'],
   key: 'id',
   value: false,

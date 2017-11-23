@@ -7,6 +7,6 @@ export const value = undefined
 
 export const error = {
   code: 'value_required',
-  schema: 'number',
+  type: 'number',
   path: [],
 }

@@ -12,6 +12,13 @@ import {
   ValueRequiredError,
 } from './errors'
 
+/**
+ * A symbol to identify structs by.
+ *
+ * @type {String}
+ */
+
+const IS_STRUCT = '@@__STRUCT__@@'
 
 /**
  * Create a struct factory from a set of `options`.
@@ -44,11 +51,11 @@ function createStruct(options = {}) {
       value = toValue(value, defaults)
 
       if (!isOptional && value === undefined) {
-        throw new ValueRequiredError({ schema })
+        throw new ValueRequiredError({ type })
       }
 
       if (value !== undefined && !fn(value)) {
-        throw new ValueInvalidError({ value, schema })
+        throw new ValueInvalidError({ type, value })
       }
 
       return value
@@ -68,7 +75,6 @@ function createStruct(options = {}) {
       throw new Error(`List structs must be defined as an array with a single element, but you passed: ${schema.length} elements.`)
     }
 
-    const def = JSON.stringify(schema)
     schema = schema[0]
     const fn = struct(schema)
 
@@ -76,7 +82,7 @@ function createStruct(options = {}) {
       value = toValue(value, defaults)
 
       if (!is.array(value)) {
-        throw new ValueInvalidError({ value, schema: def })
+        throw new ValueInvalidError({ type: 'array', value })
       }
 
       const ret = value.map((v, i) => {
@@ -102,7 +108,6 @@ function createStruct(options = {}) {
    */
 
   function objectStruct(schema, defaults) {
-    const def = JSON.stringify(schema)
     const structs = {}
 
     for (const key in schema) {
@@ -114,7 +119,7 @@ function createStruct(options = {}) {
       value = toValue(value, defaults)
 
       if (!is.object(value)) {
-        throw new ValueInvalidError({ value, schema: def })
+        throw new ValueInvalidError({ type: 'object', value })
       }
 
       const ret = {}
@@ -131,9 +136,9 @@ function createStruct(options = {}) {
 
           switch (e.code) {
             case 'value_invalid':
-              throw new PropertyInvalidError({ schema: e.schema, path, key, value: e.value })
+              throw new PropertyInvalidError({ type: e.type, path, key, value: e.value })
             case 'value_required':
-              throw new PropertyRequiredError({ schema: e.schema, path, key })
+              throw new PropertyRequiredError({ type: e.type, path, key })
             default:
               e.path = path
               throw e
@@ -148,7 +153,7 @@ function createStruct(options = {}) {
       for (const key in value) {
         if (!(key in structs)) {
           const path = [key]
-          throw new PropertyUnknownError({ key, path, schema: def })
+          throw new PropertyUnknownError({ key, path })
         }
       }
 
@@ -167,7 +172,9 @@ function createStruct(options = {}) {
   function struct(schema, defaults) {
     let s
 
-    if (is.string(schema)) {
+    if (isStruct(schema)) {
+      s = schema
+    } else if (is.string(schema)) {
       s = scalarStruct(schema, defaults)
     } else if (is.array(schema)) {
       s = listStruct(schema, defaults)
@@ -177,6 +184,7 @@ function createStruct(options = {}) {
       throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}.`)
     }
 
+    s[IS_STRUCT] = true
     return s
   }
 
@@ -185,6 +193,17 @@ function createStruct(options = {}) {
    */
 
   return struct
+}
+
+/**
+ * Check if a `value` is a struct.
+ *
+ * @param {Any} value
+ * @return {Boolean}
+ */
+
+function isStruct(value) {
+  return !!(value && value[IS_STRUCT])
 }
 
 /**

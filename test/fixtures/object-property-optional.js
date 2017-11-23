@@ -7,11 +7,9 @@ export const struct = s({
 })
 
 export const value = {
-  name: undefined,
   age: 42,
 }
 
 export const output = {
-  name: undefined,
   age: 42,
 }
