@@ -1,24 +1,41 @@
 
-# superstruct
+<p align="center">
+  <a href="#"><img src="./docs/images/banner.png" /></a>
+</p>
 
-A simple, expressive way to validate data in Javascript.
+<p align="center">
+  A simple and composable way  <br/>
+  to validate data in Javascript.
+</p>
+<br/>
 
-_Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API is inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/)._
+<p align="center">
+  <a href="https://www.npmjs.com/package/superstruct">
+    <img src="https://img.shields.io/npm/dt/superstruct.svg?maxAge=2592000">
+  </a> 
+  <a href="https://unpkg.com/superstruct/dist/superstruct.min.js">
+    <img src="http://img.badgesize.io/https://unpkg.com/superstruct/dist/superstruct.min.js?compression=gzip&amp;label=superstruct">
+  </a>
+  <a href="https://travis-ci.org/ianstormtaylor/superstruct">
+    <img src="https://travis-ci.org/ianstormtaylor/superstruct.svg?branch=master">
+  </a> 
+  <a href="./packages/superstruct/package.json">
+    <img src="https://img.shields.io/npm/v/superstruct.svg?maxAge=2592000&label=superstruct&colorB=007ec6">
+  </a> 
+  <a href="./License.md">
+    <img src="https://img.shields.io/npm/l/superstruct.svg?maxAge=2592000">
+  </a> 
+</p>
+<br/>
 
----
+Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/). But Superstruct is designed for runtime data validations, for example when accepting input in a REST or GraphQL API.
 
-### Features
 
-- Uses a simple, SQL-like syntax for building queries.
-- Enables dynamic `WHERE`, `ORDER BY`, `INSERT`, `UPDATE`, &hellip; clauses.
-- Built on top of [`pg-sql`](https://github.com/calebmer/pg-sql) for writing simple SQL strings in Javascript.
-- Compatible with [`pg`](https://github.com/brianc/node-postgres) out of the box.
-
----
+<br/>
 
 ### Example
 
-Superstruct ships with a simple `struct` helper out of the box, that creates a function that validates data against a schema:
+Superstruct exports a `struct` factory for creating functions that validate data against a specific schema:
 
 ```js
 import struct from 'superstruct'
@@ -35,7 +52,7 @@ const validate = struct({
   }
 })
 
-const article = {
+const data = {
   id: 34,
   title: 'Hello World',
   created_at: new Date(),
@@ -48,7 +65,7 @@ const article = {
 }
 
 try {
-  validate(article)
+  validate(data)
 } catch (e) {
   console.error('Article object was invalid!')
   return
@@ -57,9 +74,9 @@ try {
 console.log('Article object was valid!')
 ```
 
-The schema definition syntax is inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/).
+The schema definition syntax was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/).
 
-But you can also define your own types, which a specific to your application's requirements, and quickly create structs to validate them. For example:
+But you can also define your own types—specific to your application's requirements—by using the exported `createStruct` function. For example:
 
 ```js
 import { createStruct } from 'superstruct'
@@ -87,7 +104,7 @@ const validate = struct({
   is_admin: 'boolean',
 })
 
-const user = {
+const data = {
   id: '5a2de30a-a736-5aea-8f7f-ad0f019cdc00',
   email: 'jane@example.com',
   first: 'Jane',
@@ -96,7 +113,7 @@ const user = {
 }
 
 try {
-  validate(article)
+  validate(data)
 } catch (e) {
   console.error('User object was invalid!')
   return
@@ -105,7 +122,18 @@ try {
 console.log('User object was valid!')
 ```
 
----
+
+<br/>
+
+### Features
+
+- Uses a simple, SQL-like syntax for building queries.
+- Enables dynamic `WHERE`, `ORDER BY`, `INSERT`, `UPDATE`, &hellip; clauses.
+- Built on top of [`pg-sql`](https://github.com/calebmer/pg-sql) for writing simple SQL strings in Javascript.
+- Compatible with [`pg`](https://github.com/brianc/node-postgres) out of the box.
+
+
+<br/>
 
 ### Why?
 
@@ -121,7 +149,8 @@ There are libraries that try to solve this, but most of them re-invent the entir
 
 `pg-sql-helpers` lets you continue to write simple, composable SQL strings with the help of [`pg-sql`](https://github.com/calebmer/pg-sql), while giving you a handful of helper functions to make building queries from dynamic, user-provided values much, much easier.
 
----
+
+<br/>
 
 ### Types
 
@@ -166,9 +195,7 @@ validate({
 ```
 
 
-
-
----
+<br/>
 
 ### API
 
@@ -340,7 +367,8 @@ The parameters are nested objects with modifiers:
 
 If a parameter value is not an object, it will be defaulted to `eq` and compared using `=`.
 
----
+
+<br/>
 
 ### License
 
