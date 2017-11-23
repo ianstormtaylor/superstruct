@@ -231,5 +231,7 @@ function toValue(value, defaults) {
  * @type {Function}
  */
 
-export default superstruct()
-export { superstruct }
+const struct = superstruct()
+
+export default struct
+export { struct, superstruct }

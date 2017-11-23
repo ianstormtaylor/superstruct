@@ -101,15 +101,15 @@ validate(data)
 
 The schema definition syntax was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/).
 
-But you can also define your own types—specific to your application's requirements—by using the exported `createStruct` function. For example:
+But you can also define your own types—specific to your application's requirements—by using the exported `superstruct` function. For example:
 
 ```js
-import { createStruct } from 'superstruct'
+import { superstruct } from 'superstruct'
 
 import isUuid from 'is-uuid'
 import isEmail from 'is-email'
 
-const struct = createStruct({
+const struct = superstruct({
   types: {
     uuid: v => isUuid.v5(v),
     email: v => isEmail(v) && v.length < 256,
