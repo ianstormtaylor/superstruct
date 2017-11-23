@@ -77,9 +77,7 @@ function createStruct(options = {}) {
 
       if (value === undefined) {
         throw new ValueRequiredError({ type })
-      }
-
-      if (!is.array(value)) {
+      } else if (!is.array(value)) {
         throw new ValueInvalidError({ type, value })
       }
 
@@ -122,12 +120,12 @@ function createStruct(options = {}) {
 
     return (value) => {
       value = toValue(value, defaults)
+      let isUndefined = false
 
       if (value === undefined) {
-        throw new ValueRequiredError({ type })
-      }
-
-      if (!is.object(value)) {
+        isUndefined = true
+        value = {}
+      } else if (!is.object(value)) {
         throw new ValueInvalidError({ type, value })
       }
 
@@ -147,7 +145,9 @@ function createStruct(options = {}) {
             case 'value_invalid':
               throw new PropertyInvalidError({ ...e, key, path })
             case 'value_required':
-              throw new PropertyRequiredError({ ...e, key, path })
+              throw isUndefined
+                ? new ValueRequiredError({ type })
+                : new PropertyRequiredError({ ...e, key, path })
             default:
               if ('path' in e) e.path = path
               throw e
@@ -165,7 +165,7 @@ function createStruct(options = {}) {
         }
       }
 
-      return ret
+      return isUndefined ? undefined : ret
     }
   }
 
