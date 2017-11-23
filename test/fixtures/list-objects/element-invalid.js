@@ -10,8 +10,9 @@ export const value = [
 ]
 
 export const error = {
-  code: 'value_invalid',
+  code: 'element_invalid',
   type: 'object',
   path: [1],
+  index: 1,
   value: 'invalid',
 }

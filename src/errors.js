@@ -26,6 +26,17 @@ class StructError extends Error {
  * @type {StructError}
  */
 
+class ElementInvalidError extends StructError {
+
+  constructor({ type, index, value, path = [] }) {
+    const message = `The element at \`${index}\` in an array was invalid. It should be of type "${type}", but it was: ${value}`
+    const code = 'element_invalid'
+    super(message, { code, type, path, index, value })
+    Error.captureStackTrace(this, this.constructor)
+  }
+
+}
+
 class PropertyInvalidError extends StructError {
 
   constructor({ type, key, value, path = [] }) {
@@ -88,6 +99,7 @@ class ValueRequiredError extends StructError {
  */
 
 export {
+  ElementInvalidError,
   PropertyInvalidError,
   PropertyRequiredError,
   PropertyUnknownError,

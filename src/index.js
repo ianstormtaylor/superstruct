@@ -5,6 +5,7 @@ import is from 'is'
 import TYPES from './types'
 
 import {
+  ElementInvalidError,
   PropertyInvalidError,
   PropertyRequiredError,
   PropertyUnknownError,
@@ -90,13 +91,19 @@ function createStruct(options = {}) {
         throw new ValueInvalidError({ type, value })
       }
 
-      const ret = value.map((v, i) => {
+      const ret = value.map((v, index) => {
         try {
           return fn(v)
         } catch (e) {
-          const path = [i].concat(e.path)
-          e.path = path
-          throw e
+          const path = [index].concat(e.path)
+
+          switch (e.code) {
+            case 'value_invalid':
+              throw new ElementInvalidError({ type: e.type, path, index, value: e.value })
+            default:
+              e.path = path
+              throw e
+          }
         }
       })
 
