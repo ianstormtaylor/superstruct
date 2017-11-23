@@ -14,14 +14,6 @@ import {
 } from './errors'
 
 /**
- * A private key to identify structs by.
- *
- * @type {String}
- */
-
-const IS_STRUCT = '@@__STRUCT__@@'
-
-/**
  * Create a struct factory from a set of `options`.
  *
  * @param {Object} options
@@ -95,10 +87,14 @@ function createStruct(options = {}) {
         try {
           return fn(v)
         } catch (e) {
-          e.path = [index].concat(e.path)
+          const path = [index].concat(e.path)
+
           switch (e.code) {
-            case 'value_invalid': throw new ElementInvalidError({ ...e, index })
-            default: throw e
+            case 'value_invalid':
+              throw new ElementInvalidError({ ...e, index, path })
+            default:
+              if ('path' in e) e.path = path
+              throw e
           }
         }
       })
@@ -145,11 +141,16 @@ function createStruct(options = {}) {
         try {
           r = s(v)
         } catch (e) {
-          e.path = [key].concat(e.path)
+          const path = [key].concat(e.path)
+
           switch (e.code) {
-            case 'value_invalid': throw new PropertyInvalidError({ ...e, key })
-            case 'value_required': throw new PropertyRequiredError({ ...e, key })
-            default: throw e
+            case 'value_invalid':
+              throw new PropertyInvalidError({ ...e, key, path })
+            case 'value_required':
+              throw new PropertyRequiredError({ ...e, key, path })
+            default:
+              if ('path' in e) e.path = path
+              throw e
           }
         }
 
@@ -179,7 +180,7 @@ function createStruct(options = {}) {
   function struct(schema, defaults) {
     let s
 
-    if (isStruct(schema)) {
+    if (is.function(schema)) {
       s = schema
     } else if (is.string(schema)) {
       s = scalarStruct(schema, defaults)
@@ -191,7 +192,6 @@ function createStruct(options = {}) {
       throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}`)
     }
 
-    Object.defineProperty(s, IS_STRUCT, { value: true })
     return s
   }
 
@@ -200,17 +200,6 @@ function createStruct(options = {}) {
    */
 
   return struct
-}
-
-/**
- * Check if a `value` is a struct.
- *
- * @param {Any} value
- * @return {Boolean}
- */
-
-function isStruct(value) {
-  return !!(value && value[IS_STRUCT])
 }
 
 /**
