@@ -50,8 +50,6 @@ function superstruct(options = {}) {
     })
 
     return (value) => {
-      value = toValue(value, defaults)
-
       if (!isOptional && value === undefined) {
         throw new ValueRequiredError({ type })
       }
@@ -82,8 +80,6 @@ function superstruct(options = {}) {
     const type = 'array'
 
     return (value) => {
-      value = toValue(value, defaults)
-
       if (value === undefined) {
         throw new ValueRequiredError({ type })
       } else if (!is.array(value)) {
@@ -128,7 +124,6 @@ function superstruct(options = {}) {
     }
 
     return (value) => {
-      value = toValue(value, defaults)
       let isUndefined = false
 
       if (value === undefined) {
@@ -201,7 +196,15 @@ function superstruct(options = {}) {
       throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}`)
     }
 
-    return s
+    return (value) => {
+      if (value === undefined) {
+        value = typeof defaults === 'function'
+          ? defaults()
+          : cloneDeep(defaults)
+      }
+
+      return s(value)
+    }
   }
 
   /**
@@ -209,20 +212,6 @@ function superstruct(options = {}) {
    */
 
   return struct
-}
-
-/**
- * Resolve a `defaults` and a `value` into a value.
- *
- * @param {Any} value
- * @param {Any} defaults
- * @return {Any}
- */
-
-function toValue(value, defaults) {
-  if (value !== undefined) return value
-  if (typeof defaults === 'function') return defaults()
-  return cloneDeep(defaults)
 }
 
 /**
