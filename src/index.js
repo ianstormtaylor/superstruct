@@ -2,7 +2,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 import is from 'is'
 
-import TYPES from './types'
+import DEFAULT_TYPES from './types'
 
 import {
   ElementInvalidError,
@@ -21,7 +21,10 @@ import {
  */
 
 function createStruct(options = {}) {
-  const { types = {}} = options
+  const TYPES = {
+    ...DEFAULT_TYPES,
+    ...(options.types || {}),
+  }
 
   /**
    * Define a scalar struct with a `schema` type string.
@@ -34,11 +37,17 @@ function createStruct(options = {}) {
   function scalarStruct(schema, defaults) {
     const isOptional = schema.endsWith('?')
     const type = isOptional ? schema.slice(0, -1) : schema
-    const fn = types[type] || TYPES[type]
+    const types = type.split(/\s*\|\s*/g)
 
-    if (typeof fn !== 'function') {
-      throw new Error(`No struct validator function found for type "${type}".`)
-    }
+    const fns = types.map((t) => {
+      const fn = TYPES[t]
+
+      if (typeof fn !== 'function') {
+        throw new Error(`No struct validator function found for type "${t}".`)
+      }
+
+      return fn
+    })
 
     return (value) => {
       value = toValue(value, defaults)
@@ -47,7 +56,7 @@ function createStruct(options = {}) {
         throw new ValueRequiredError({ type })
       }
 
-      if (value !== undefined && !fn(value)) {
+      if (value !== undefined && !fns.some(fn => fn(value))) {
         throw new ValueInvalidError({ type, value })
       }
 
