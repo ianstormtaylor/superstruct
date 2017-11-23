@@ -1,9 +1,9 @@
 
-# pg-sql-helpers
+# superstruct
 
-A set helpers for writing dynamic SQL queries with [`pg-sql`](https://github.com/calebmer/pg-sql) in Javascript.
+A simple, expressive way to validate data in Javascript.
 
-_It's sort of like a [`lodash`](https://lodash.com/) or [`polished`](https://polished.js.org/) for writing SQL._
+_Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API is inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/)._
 
 ---
 
@@ -18,47 +18,92 @@ _It's sort of like a [`lodash`](https://lodash.com/) or [`polished`](https://pol
 
 ### Example
 
-Out of the box, [`pg-sql`](https://github.com/calebmer/pg-sql) lets you write SQL just like you're used to:
+Superstruct ships with a simple `struct` helper out of the box, that creates a function that validates data against a schema:
 
 ```js
-import { sql } from 'pg-sql'
+import struct from 'superstruct'
 
-const name = 'john'
-const result = await pg.query(sql`
-  SELECT id, name, age
-  FROM users
-  WHERE name = ${name}
-`)
+const validate = struct({
+  id: 'number!',
+  title: 'string!',
+  created_at: 'date!',
+  is_published: 'boolean!',
+  tags: ['string!'],
+  author: {
+    id: 'number!',
+    name: 'string!',
+  }
+})
+
+const article = {
+  id: 34,
+  title: 'Hello World',
+  created_at: new Date(),
+  is_published: true,
+  tags: ['announcements'],
+  author: {
+    id: 1,
+    name: 'Jane Smith',
+  } 
+}
+
+try {
+  validate(article)
+} catch (e) {
+  console.error('Article object was invalid!')
+  return
+}
+
+console.log('Article object was valid!')
 ```
 
-With `pg-sql-helpers` you can use the same SQL-like syntax when writing queries with dynamic clauses, like:
+The schema definition syntax is inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/).
+
+But you can also define your own types, which a specific to your application's requirements, and quickly create structs to validate them. For example:
 
 ```js
-import { sql } from 'pg-sql'
-import { INSERT, ORDER_BY, WHERE } from 'pg-sql-helpers'
+import { createStruct } from 'superstruct'
 
-const filter = { name: 'john', age: { gt: 42 }}
-const result = await pg.query(sql`
-  SELECT id, name, age
-  FROM users
-  ${WHERE(filter)}
-`)
+import is from 'is'
+import isUuid from 'is-uuid'
+import isEmail from 'is-email'
+import isIsoDate from 'is-isodate'
 
-const attrs = { name: 'jane', age: 42 }
-const result = await pg.query(sql`
-  ${INSERT('users', attrs)}
-  RETURNING *
-`)
+const struct = createStruct({
+  types: {
+    uuid: v => isUuid.v5(v),
+    name: v => is.string(v) && v.length < 256,
+    email: v => isEmail(v) && v.length < 1024,
+    isodate: v => isIsoDate(v),
+  }
+})
 
-const sort = ['name', '-age']
-const result = await pg.query(sql`
-  SELECT id, name, age
-  FROM users
-  ${ORDER_BY(sort)}
-`)
+const validate = struct({
+  id: 'uuid!',
+  email: 'email!',
+  first: 'name!',
+  last: 'name!',
+  created_at: 'isodate!',
+  is_admin: 'boolean',
+})
+
+const user = {
+  id: '5a2de30a-a736-5aea-8f7f-ad0f019cdc00',
+  email: 'jane@example.com',
+  first: 'Jane',
+  last: 'Smith',
+  created_at: '2017-11-23T00:56:12+00:00',
+}
+
+try {
+  validate(article)
+} catch (e) {
+  console.error('User object was invalid!')
+  return
+}
+
+console.log('User object was valid!')
 ```
-
-So that when building APIs that allow dynamic user input (eg. inserts, updates, filters, sorting, pagination, etc.) you can write powerful queries without concatenating strings or doing other confusing things.
 
 ---
 
@@ -75,6 +120,53 @@ Building SQL strings by hand for these dynamic inputs is tedious.
 There are libraries that try to solve this, but most of them re-invent the entire SQL syntax with Javascript methods—some even require defining your schema in advance. You're basically back to re-inventing an ORM but without any of the benefits.
 
 `pg-sql-helpers` lets you continue to write simple, composable SQL strings with the help of [`pg-sql`](https://github.com/calebmer/pg-sql), while giving you a handful of helper functions to make building queries from dynamic, user-provided values much, much easier.
+
+---
+
+### Types
+
+Out of the box, Superstruct ships with types for each of the built-in Javascript data types, as well as the special `any` type.
+
+- `any`
+- `array`
+- `boolean`
+- `date`
+- `function`
+- `null`
+- `number`
+- `object`
+- `string`
+- `undefined`
+
+The `any` type matches any value that is not explicitly `undefined` (eg. `value !== undefined`).
+
+But you can also define your own domain-specific types that make writing validations for your use case easier and more specific. For example:
+
+```js
+import isEmail from 'is-email'
+import isIsodate from 'is-isodate'
+import { createStruct } from 'superstruct'
+
+const struct = createStruct({
+  types: {
+    email: v => isEmail(v),
+    isodate: v => isIsodate(v),
+  }
+})
+
+const validate = struct({
+  email: 'email!',
+  created_at: 'isodate!',
+})
+
+validate({
+  email: 'sam@example.com',
+  created_at: '2017-11-23T00:56:12+00:00',
+})
+```
+
+
+
 
 ---
 

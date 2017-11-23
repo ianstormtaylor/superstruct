@@ -1,9 +1,9 @@
 {
-  "name": "pg-sql-helpers",
-  "description": "A set helpers for writing dynamic SQL queries with `pg-sql` in Javascript.",
-  "version": "0.1.4",
+  "name": "superstruct",
+  "description": "A simple, expressive way to validate data in Javascript.",
+  "version": "0.0.0",
   "license": "MIT",
-  "repository": "git://github.com/ianstormtaylor/pg-sql-helpers.git",
+  "repository": "git://github.com/ianstormtaylor/superstruct.git",
   "main": "./lib/index.js",
   "scripts": {
     "build": "babel ./src --out-dir ./lib",
@@ -13,6 +13,10 @@
     "release": "np",
     "test": "yarn run build && mocha --compilers js:babel-core/register ./test/index.js",
     "watch": "babel ./lib --out-dir ./lib --watch"
+  },
+  "dependencies": {
+    "is": "^3.2.1",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
@@ -27,26 +31,32 @@
     "np": "^2.13.1"
   },
   "keywords": [
-    "dynamic",
-    "escape",
-    "interpolate",
+    "api",
+    "array",
+    "assert",
+    "cast",
+    "check",
+    "checker",
+    "collection",
+    "data",
+    "express",
+    "hapi",
+    "interface",
+    "invalid",
+    "joi",
+    "json",
+    "list",
+    "model",
+    "object",
     "orm",
-    "pg",
-    "pg-sql",
-    "pgsql",
-    "postgres",
-    "postgresql",
-    "query",
-    "safe",
-    "sql",
-    "string",
-    "template"
-  ],
-  "dependencies": {
-    "custom-err": "^0.0.2",
-    "is": "^3.2.1",
-    "is-plain-object": "^2.0.4",
-    "lodash": "^4.17.4",
-    "pg-sql": "^1.1.0"
-  }
+    "scalar",
+    "schema",
+    "struct",
+    "type",
+    "types",
+    "valid",
+    "validate",
+    "validation",
+    "validator"
+  ]
 }
