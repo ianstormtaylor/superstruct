@@ -22,6 +22,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "eslint": "^3.8.1",
     "eslint-plugin-import": "^2.0.1",
+    "is-email": "^1.0.0",
     "mocha": "^3.2.0",
     "np": "^2.13.1"
   },
