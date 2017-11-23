@@ -44,7 +44,7 @@ function createStruct(options = {}) {
     const fn = types[type] || TYPES[type]
 
     if (typeof fn !== 'function') {
-      throw new Error(`No struct validator found for scalar of type: "${type}"`)
+      throw new Error(`No struct validator function found for type "${type}".`)
     }
 
     return (value) => {
@@ -72,17 +72,22 @@ function createStruct(options = {}) {
 
   function listStruct(schema, defaults) {
     if (schema.length !== 1) {
-      throw new Error(`List structs must be defined as an array with a single element, but you passed: ${schema.length} elements.`)
+      throw new Error(`List structs must be defined as an array with a single element, but you passed ${schema.length} elements.`)
     }
 
     schema = schema[0]
     const fn = struct(schema)
+    const type = 'array'
 
     return (value) => {
       value = toValue(value, defaults)
 
+      if (value === undefined) {
+        throw new ValueRequiredError({ type })
+      }
+
       if (!is.array(value)) {
-        throw new ValueInvalidError({ type: 'array', value })
+        throw new ValueInvalidError({ type, value })
       }
 
       const ret = value.map((v, i) => {
@@ -109,6 +114,7 @@ function createStruct(options = {}) {
 
   function objectStruct(schema, defaults) {
     const structs = {}
+    const type = 'object'
 
     for (const key in schema) {
       const fn = struct(schema[key])
@@ -118,8 +124,12 @@ function createStruct(options = {}) {
     return (value) => {
       value = toValue(value, defaults)
 
+      if (value === undefined) {
+        throw new ValueRequiredError({ type })
+      }
+
       if (!is.object(value)) {
-        throw new ValueInvalidError({ type: 'object', value })
+        throw new ValueInvalidError({ type, value })
       }
 
       const ret = {}
@@ -181,7 +191,7 @@ function createStruct(options = {}) {
     } else if (is.object(schema)) {
       s = objectStruct(schema, defaults)
     } else {
-      throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}.`)
+      throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}`)
     }
 
     s[IS_STRUCT] = true
