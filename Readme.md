@@ -12,28 +12,8 @@
 
 Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/). But Superstruct is designed for runtime data validations, for example when accepting input in a REST or GraphQL API.
 
----
-
-<p align="center">
-  <a href="https://www.npmjs.com/package/superstruct">
-    <img src="https://img.shields.io/npm/dt/superstruct.svg?maxAge=2592000">
-  </a> 
-  <a href="https://unpkg.com/superstruct/dist/superstruct.min.js">
-    <img src="http://img.badgesize.io/https://unpkg.com/superstruct/dist/superstruct.min.js?compression=gzip&amp;label=superstruct">
-  </a>
-  <a href="https://travis-ci.org/ianstormtaylor/superstruct">
-    <img src="https://travis-ci.org/ianstormtaylor/superstruct.svg?branch=master">
-  </a> 
-  <a href="./packages/superstruct/package.json">
-    <img src="https://img.shields.io/npm/v/superstruct.svg?maxAge=2592000&label=superstruct&colorB=007ec6">
-  </a> 
-  <a href="./License.md">
-    <img src="https://img.shields.io/npm/l/superstruct.svg?maxAge=2592000">
-  </a> 
-</p>
 <br/>
-
----
+<br/>
 
 <p align="center">
   <a href="#example">Example</a> •
@@ -42,8 +22,6 @@ Superstruct makes it easy to define interfaces and then validate Javascript data
   <a href="#documentation">Documentation</a>
 </p>
 
----
-
 <p align="center">
   <a href="https://www.npmjs.com/package/superstruct">
     <img src="https://img.shields.io/npm/dt/superstruct.svg?maxAge=2592000">
@@ -61,8 +39,6 @@ Superstruct makes it easy to define interfaces and then validate Javascript data
     <img src="https://img.shields.io/npm/l/superstruct.svg?maxAge=2592000">
   </a> 
 </p>
-
----
 
 <br/>
 <br/>
