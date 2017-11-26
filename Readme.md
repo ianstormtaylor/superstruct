@@ -10,11 +10,6 @@
 <br/>
 <br/>
 
-Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/). But Superstruct is designed for runtime data validations, for example when accepting input in a REST or GraphQL API.
-
-<br/>
-<br/>
-
 <p align="center">
   <a href="#example">Example</a> •
   <a href="#why">Why?</a> •
@@ -41,6 +36,11 @@ Superstruct makes it easy to define interfaces and then validate Javascript data
 </p>
 
 <br/>
+<br/>
+
+Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/). But Superstruct is designed for runtime data validations, for example when accepting input in a REST or GraphQL API.
+
+
 <br/>
 
 ### Example
