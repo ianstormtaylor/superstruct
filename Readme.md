@@ -115,15 +115,17 @@ validate(data)
 
 There are lots of existing validation libraries. Some of them, like [Joi](), are fairly popular. But most of them exhibit many issues...
 
-- **Not throwing errors.** Many validators simply return `true/false` or return string error messages. This was helpful in the days of callbacks, when using `throw` was discouraged, but in modern Javascript using `throw` leads to much simpler code.
+- **They don't throw errors.** Many validators simply return `true/false` or return string error messages. This was helpful in the days of callbacks, when using `throw` was discouraged, but in modern Javascript using `throw` leads to much simpler code.
 
-- **Not exposing useful error information.** For the validators that do `throw`, they often throw message-only errors without any detailed information. This makes it very difficult to customize the errors to make them helpful for end users.
+- **They don't expose useful error information.** For the validators that do `throw`, they often throw over-simplified, message-only errors without any extra details about the reason the error occurred. This makes it very difficult to customize the errors to make them helpful for end users.
 
-- **Not designed around custom types.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no easy way to know how they're implemented. And when defining your own custom types—which any reasonably sized codebase needs to do—the APIs are needlessly complex.
+- **They aren't designed around custom types.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no easy way to know how they're implemented. And when defining your own custom types—which any reasonably sized codebase needs to do—the APIs are needlessly complex.
 
-- **Not having single sources of truth.** Many existing APIs encourage re-defining custom data type requirements like maximum lengths, custom types, error messages, etc. over and over, with the source of truth being spread out across many files, which makes consistentcy difficult to maintain.
+- **They don't encourage single sources of truth.** Many existing APIs encourage re-defining custom data type requirements like maximum lengths, custom types, error messages, etc. over and over, with the source of truth being spread out across many files, which makes consistentcy difficult to maintain.
 
-- **Not compiling schemas on creation.** Some validators allow you to define schemas as plain Javascript objects, which seems nice at first. But it also means that they delegate the complex parsing of the schema logic to validation time, instead of doing the work up front for performance.
+- **They don't compile schemas for performance.** Some validators allow you to define schemas as plain Javascript objects, which seems nice at first. But it also means that they delegate the complex parsing of the schema logic to validation time, instead of doing the work up front for performance.
+
+- **They are tightly coupled to other concerns.** Many validators are implemented as plugins for Express or other HTTP frameworks, which is completely unnecessary and confusing to reason about. And since you can only use them with a web server you end up with even more fragmentation in your codebase.
 
 Of course, not every validation library suffers from all of these issues, but most of them exhibit at least one. If you've run into this problem before, you might like Superstruct.
 
