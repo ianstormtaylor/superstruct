@@ -113,17 +113,17 @@ validate(data)
 
 ### Why?
 
-There are lots of existing validation libraries. Some of them, like [Joi](), are fairly popular. But most of them exhibit one or many issues...
+There are lots of existing validation libraries. Some of them, like [Joi](), are fairly popular. But most of them exhibit many issues...
 
-- **Not throwing the errors.** Many validators simply return `true/false` or return details about the error. This was nice back in the days of callbacks, where throwing was discouraged, but in modern Javascript using `throw` leads to much simpler code.
+- **Not throwing errors.** Many validators simply return `true/false` or return string error messages. This was helpful in the days of callbacks, when using `throw` was discouraged, but in modern Javascript using `throw` leads to much simpler code.
 
-- **Not making it easy to define custom types.** Lots of the validators ship with built-in types like emails, URLs, UUIDs, etc. But they often don't take into account things like maximum lengths, or But once you need to define your own custom types—which any reasonably sized use case will require—the APIs are complex, and poorly supported.
+- **Not exposing useful error information.** For the validators that do `throw`, they often throw message-only errors without any detailed information. This makes it very difficult to customize the errors to make them helpful for end users.
 
-- **Not having single sources of truth.** Many of the existing APIs encourage re-defining data types like names, emails, or  over and over, with the source of truth being spread out across many files. This leads to 
+- **Not designed around custom types.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no easy way to know how they're implemented. And when defining your own custom types—which any reasonably sized codebase needs to do—the APIs are needlessly complex.
 
-- **Not treating errors as part of the API.** For the validators that do throw errors, they often throw simple message-only errors without any extra information. This makes it hard to customize the error message to make them helpful for users.
+- **Not having single sources of truth.** Many existing APIs encourage re-defining custom data type requirements like maximum lengths, custom types, error messages, etc. over and over, with the source of truth being spread out across many files, which makes consistentcy difficult to maintain.
 
-- **Not compiling schemas on creation.** Some validators allow you to define schemas as plain Javascript objects, which seems nice. But then they delegate the more complex parsing and compiling logic to validation time, instead of doing the work up front.
+- **Not compiling schemas on creation.** Some validators allow you to define schemas as plain Javascript objects, which seems nice at first. But it also means that they delegate the complex parsing of the schema logic to validation time, instead of doing the work up front for performance.
 
 Of course, not every validation library suffers from all of these issues, but most of them exhibit at least one. If you've run into this problem before, you might like Superstruct.
 
