@@ -6,13 +6,17 @@
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
   "main": "./lib/index.js",
   "scripts": {
-    "build": "babel ./src --out-dir ./lib",
+    "build": "yarn run build:lib && yarn run build:max && yarn run build:min",
+    "build:lib": "babel ./src --out-dir ./lib",
+    "build:max": "mkdir -p ./dist && NODE_ENV=production browserify ./src/index.js --transform babelify --transform envify --standalone Superstruct > ./dist/superstruct.js",
+    "build:min": "mkdir -p ./dist && NODE_ENV=production browserify ./src/index.js --transform babelify --transform envify --transform uglifyify --standalone Superstruct | uglifyjs > ./dist/superstruct.min.js",
     "clean": "rm -rf ./lib ./node_modules",
     "lint": "eslint src/* test/*",
     "prepublish": "yarn run build",
     "release": "np",
-    "test": "yarn run build && mocha --compilers js:babel-core/register ./test/index.js",
-    "watch": "babel ./lib --out-dir ./lib --watch"
+    "test": "yarn run build:lib && mocha --compilers js:babel-core/register ./test/index.js",
+    "watch": "yarn run watch:lib",
+    "watch:lib": "babel ./lib --out-dir ./lib --watch"
   },
   "dependencies": {
     "is": "^3.2.1",
@@ -24,11 +28,17 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-0": "^6.5.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "envify": "^3.4.1",
     "eslint": "^3.8.1",
     "eslint-plugin-import": "^2.0.1",
     "is-email": "^1.0.0",
     "mocha": "^3.2.0",
-    "np": "^2.13.1"
+    "np": "^2.13.1",
+    "uglify-js": "^2.7.0",
+    "uglifyify": "^3.0.2",
+    "watchify": "^3.7.0"
   },
   "keywords": [
     "api",
