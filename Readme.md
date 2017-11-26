@@ -113,13 +113,13 @@ validate(data)
 
 ### Why?
 
-There are lots of existing validation libraries. Some of them, like [Joi](), are fairly popular. But most of them exhibit many issues...
+There are lots of existing validation libraries. Some of them, like [Joi](), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js) or [`ajv`](https://github.com/epoberezkin/ajv) are decently popular. But all of them exhibit many issues that lead to hard to maintain codebases...
 
-- **They don't throw errors.** Many validators simply return `true/false` or return string error messages. This was helpful in the days of callbacks, when using `throw` was discouraged, but in modern Javascript using `throw` leads to much simpler code.
+- **They don't throw errors.** Many validators simply return `true/false` or return string error messages. This was helpful in the days of callbacks, when using `throw` was discouraged, but in modern Javascript using `throw` leads to much simpler and terser code.
 
 - **They don't expose useful error information.** For the validators that do `throw`, they often throw over-simplified, message-only errors without any extra details about the reason the error occurred. This makes it very difficult to customize the errors to make them helpful for end users.
 
-- **They aren't designed around custom types.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no easy way to know how they're implemented. And when defining your own custom types—which any reasonably sized codebase needs to do—the APIs are needlessly complex.
+- **They aren't designed around custom types.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no easy way to know how they're implemented. And when defining your own custom types—which any reasonably sized codebase needs to do—the APIs are needlessly complex and hard to re-use.
 
 - **They don't encourage single sources of truth.** Many existing APIs encourage re-defining custom data type requirements like maximum lengths, custom types, error messages, etc. over and over, with the source of truth being spread out across many files, which makes consistentcy difficult to maintain.
 
@@ -136,19 +136,19 @@ Which brings me to how Superstruct solves these issues...
 
 ### Principles
 
-1. **Customizable types.** Superstruct's power is in making it easy to define an entire set of custom data types that are specific to your application, so that you have full control over exactly what you're checking for.
+1. **Customizable types.** Superstruct's power is in making it easy to define an entire set of custom data types that are specific to your application, and defined in a _single_ place, so you have full control over your requirements.
 
-2. **Unopinionated defaults.** Superscript only ships with the native Javascript types by default, that you never have to fight to override decisions made by "core" that differ from your application's needs.
+2. **Unopinionated defaults.** Superscript ships with native Javascript types, and everything else is customizable, so you never have to fight to override decisions made by "core" that differ from your application's needs.
 
-4. **Composable interfaces.** Superstruct interfaces are composable, so you can break down commonly-repeated pieces into smaller components, and compose them to make up the more complex.
+4. **Composable interfaces.** Superstruct interfaces are composable, so you can break down commonly-repeated pieces of data into components, and compose them to build up the more complex objects.
 
-5. **Terse schemas.** The schemas in Superstruct are designed to be extremely terse. This makes them very easy to read and write, so that you're encouraged to have full data validation coverage.
+5. **Terse schemas.** The schemas in Superstruct are designed to be extremely terse. This makes them very easy to read and write, encouraging you to have full data validation coverage.
 
-3. **Familiar API.** The Superstruct API was heavily inspired by Typescript, Flow and GraphQL. If you're familiar with any of those then its schema definition API will feel very natural to use, so you can get started quickly.
+7. **Compiled validators.** Superstruct does the work of compiling its schemas up front, so that it doesn't have to spend lots of time performing expensive tasks for every call to the validation functions in your hot code paths.
 
 6. **Useful errors.** The errors that Superstruct throws contain all the information you need to convert them into your own application-specific errors easy, which means more helpful errors for your end users!
 
-7. **Compiled validators.** Superstruct does the work of compiling its schemas up front, so that it doesn't have to spend lots of time performing expensive tasks for every call to the validation functions in your hot code paths.
+3. **Familiar API.** The Superstruct API was heavily inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/). If you're familiar with any of those, then its schema definition API will feel very natural to use, so you can get started quickly.
 
 
 <br/>
