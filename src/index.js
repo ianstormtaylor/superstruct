@@ -15,7 +15,7 @@ const DEFAULT_TYPES = {
   buffer: v => typeOf(v) === 'buffer',
   date: v => typeOf(v) === 'date',
   error: v => typeOf(v) === 'error',
-  function: v => typeOf(v) === 'string',
+  function: v => typeOf(v) === 'function',
   null: v => typeOf(v) === 'null',
   number: v => typeOf(v) === 'number',
   object: v => typeOf(v) === 'object',
