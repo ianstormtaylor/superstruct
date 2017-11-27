@@ -153,11 +153,12 @@ Which brings me to how Superstruct solves these issues...
 
 ### Examples
 
-Superstruct's API is very flexible, allowing it to be used for a variety of use cases on your servers and in the browser...
+Superstruct's API is very flexible, allowing it to be used for a variety of use cases on your servers and in the browser. Here are a few examples to common patterns...
 
 - [Basic Validation](./examples/basic-validation.js)
 - [Custom Types](./examples/custom-types.js)
 - [Default Values](./examples/default-values.js)
+- [Composing Structs](./examples/composing-structs.js)
 - [Throwing Errors](./examples/throwing-errors.js)
 - [Custom Errors](./examples/custom-errors.js)
 
@@ -166,9 +167,10 @@ Superstruct's API is very flexible, allowing it to be used for a variety of use 
 
 ### Documentation
 
-To get started 
+Read the **Getting Started** guide to familiarize yourself with how Superstruct works. After that, check out the full API reference...
 
-
+- [Getting Started](./docs/getting-started.md)
+- [API Reference](./docs/api-reference.md)
 
 
 <br/>
