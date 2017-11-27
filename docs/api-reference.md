@@ -146,9 +146,7 @@ Out of the box, Superstruct recognizes all of the native Javascript types:
 
 ## Errors
 
-Superstruct throws errors when an invalid value is encountered. The errors include all of the possible information you might want about why the error was thrown, so that you can build extremely precise errors of your own to give your end users the best possible experience.
-
-Superstruct errors use a `code` property to distinguish between the different cases when an error might be thrown. The 
+Superstruct throws detailed errors when data is invalid, so that you can build extremely precise errors of your own to give your end users the best possible experience. It uses the `error.code` property to distinguish between the different cases when an error might be thrown: 
 
 ### `element_invalid`
 
