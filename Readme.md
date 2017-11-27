@@ -11,9 +11,10 @@
 <br/>
 
 <p align="center">
-  <a href="#example">Example</a> •
+  <a href="#usage">Usage</a> •
   <a href="#why">Why?</a> •
   <a href="#principles">Principles</a> •
+  <a href="#examples">Examples</a> •
   <a href="#documentation">Documentation</a>
 </p>
 
@@ -35,12 +36,12 @@
 <br/>
 <br/>
 
-Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/), so its familiar API makes it easy to get started. But Superstruct is designed for runtime data validations, like accepting arbitrary input in a REST or GraphQL API, so it throws detailed errors for you or your end users.
+Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/), which gives it a API familiar, easy to understand API. But Superstruct is designed for runtime data validations, like accepting arbitrary input in a REST or GraphQL API, so it throws detailed errors for you or your end users.
 
 
 <br/>
 
-### Example
+### Usage
 
 Superstruct exports a `struct` factory for creating functions that validate data against a specific schema:
 
@@ -84,7 +85,7 @@ import isEmail from 'is-email'
 
 const struct = superstruct({
   types: {
-    uuid: v => isUuid.v5(v),
+    uuid: v => isUuid.v4(v),
     email: v => isEmail(v) && v.length < 256,
   }
 })
@@ -96,7 +97,7 @@ const validate = struct({
 })
 
 const data = {
-  id: '5a2de30a-a736-5aea-8f7f-ad0f019cdc00',
+  id: 'c8d63140-a1f7-45e0-bfc6-df72973fea86',
   email: 'jane@example.com',
 }
 
@@ -150,7 +151,22 @@ Which brings me to how Superstruct solves these issues...
 
 <br/>
 
+### Examples
+
+Superstruct's API is very flexible, allowing it to be used for a variety of use cases on your servers and in the browser...
+
+- [Basic Validation](./examples/basic-validation.js)
+- [Custom Types](./examples/custom-types.js)
+- [Default Values](./examples/default-values.js)
+- [Throwing Errors](./examples/throwing-errors.js)
+- [Custom Errors](./examples/custom-errors.js)
+
+
+<br/>
+
 ### Documentation
+
+To get started 
 
 
 

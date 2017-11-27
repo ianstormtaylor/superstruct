@@ -34,6 +34,8 @@
     "eslint": "^3.8.1",
     "eslint-plugin-import": "^2.0.1",
     "is-email": "^1.0.0",
+    "is-url": "^1.2.2",
+    "is-uuid": "^1.0.2",
     "mocha": "^3.2.0",
     "np": "^2.13.1",
     "uglify-js": "^2.7.0",
