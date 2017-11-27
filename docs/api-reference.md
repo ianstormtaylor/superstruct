@@ -159,8 +159,8 @@ Thrown when an element in an array is invalid.
 |`code`|`String`|`'element_invalid'`|The type of error.|
 |`index`|`Number`|`0`|The index of the invalid element in the array.|
 |`value`|`Any`|`...`|The invalid element's value.|
-|`path`|`Array`|[2,0]|The path to the invalid element relative to the original data.|
-|`data`|`Any`|`...`|The original, top-level data argument passed into the top-level struct.|
+|`path`|`Array`|`[2,0]`|The path to the invalid element relative to the original data.|
+|`data`|`Any`|`...`|The original data argument passed into the top-level struct.|
 
 ### `property_invalid`
 
@@ -171,8 +171,8 @@ Throw when a property in an object is invalid.
 |`code`|`String`|`'property_invalid'`|The type of error.|
 |`key`|`Number`|`0`|The key of the invalid property in the object.|
 |`value`|`Any`|`...`|The invalid property's value.|
-|`path`|`Array`|['address', 'city']|The path to the invalid property relative to the original data.|
-|`data`|`Any`|`...`|The original, top-level data argument passed into the top-level struct.|
+|`path`|`Array`|`['address', 'city']`|The path to the invalid property relative to the original data.|
+|`data`|`Any`|`...`|The original data argument passed into the top-level struct.|
 
 ### `property_required`
 
@@ -182,8 +182,8 @@ Throw when a property in an object is required but not provided.
 |---|---|---|---|
 |`code`|`String`|`'property_required'`|The type of error.|
 |`key`|`Number`|`0`|The key of the required property in the object.|
-|`path`|`Array`|['address', 'city']|The path to the required property relative to the original data.|
-|`data`|`Any`|`...`|The original, top-level data argument passed into the top-level struct.|
+|`path`|`Array`|`['address', 'city']`|The path to the required property relative to the original data.|
+|`data`|`Any`|`...`|The original data argument passed into the top-level struct.|
 
 ### `property_unknown`
 
@@ -193,8 +193,8 @@ Throw when a property in an object was provided but not defined in the struct.
 |---|---|---|---|
 |`code`|`String`|`'property_unknown'`|The type of error.|
 |`key`|`Number`|`0`|The key of the unknown property in the object.|
-|`path`|`Array`|['address', 'name']|The path to the unknown property relative to the original data.|
-|`data`|`Any`||The original, top-level data argument passed into the top-level struct.|
+|`path`|`Array`|`['address', 'name']`|The path to the unknown property relative to the original data.|
+|`data`|`Any`||The original data argument passed into the top-level struct.|
 
 ### `value_invalid`
 
@@ -204,8 +204,8 @@ Throw when a value is invalid.
 |---|---|---|---|
 |`code`|`String`|`'value_invalid'`|The type of error.|
 |`value`|`Any`|`...`|The invalid value's value.|
-|`path`|`Array`|[]|The path to the invalid value relative to the original data.|
-|`data`|`Any`|`...`|The original, top-level data argument passed into the top-level struct.|
+|`path`|`Array`|`[]`|The path to the invalid value relative to the original data.|
+|`data`|`Any`|`...`|The original data argument passed into the top-level struct.|
 
 ### `value_required`
 
@@ -214,5 +214,5 @@ Throw when a value is required but not provided.
 |**Property**|**Type**|**Example**|**Description**|
 |---|---|---|---|
 |`code`|`String`|`'value_required'`|The type of error.|
-|`path`|`Array`|[]|The path to the required value relative to the original data.|
-|`data`|`Any`|`...`|The original, top-level data argument passed into the top-level struct.|
+|`path`|`Array`|`[]`|The path to the required value relative to the original data.|
+|`data`|`Any`|`...`|The original data argument passed into the top-level struct.|
