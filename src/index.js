@@ -2,16 +2,71 @@
 import cloneDeep from 'lodash/cloneDeep'
 import typeOf from 'component-type'
 
-import DEFAULT_TYPES from './types'
+/**
+ * Default types.
+ *
+ * @type {Object}
+ */
 
-import {
-  ElementInvalidError,
-  PropertyInvalidError,
-  PropertyRequiredError,
-  PropertyUnknownError,
-  ValueInvalidError,
-  ValueRequiredError,
-} from './errors'
+const DEFAULT_TYPES = {
+  any: v => v !== undefined,
+  array: v => typeOf(v) === 'array',
+  boolean: v => typeOf(v) === 'boolean',
+  buffer: v => typeOf(v) === 'buffer',
+  date: v => typeOf(v) === 'date',
+  error: v => typeOf(v) === 'error',
+  function: v => typeOf(v) === 'string',
+  null: v => typeOf(v) === 'null',
+  number: v => typeOf(v) === 'number',
+  object: v => typeOf(v) === 'object',
+  regexp: v => typeOf(v) === 'regexp',
+  string: v => typeOf(v) === 'string',
+  undefined: v => typeOf(v) === 'undefined',
+}
+
+/**
+ * Define a struct error.
+ *
+ * @type {StructError}
+ */
+
+class StructError extends Error {
+
+  constructor(message, data) {
+    data.code = message
+    data.path = data.path || []
+    const { index, key, value, type } = data
+
+    switch (message) {
+      case 'element_invalid':
+        message = `Expected the element at index \`${index}\` to be of type "${type}", but it was \`${value}\`.`
+        break
+      case 'property_invalid':
+      case 'property_required':
+        message = `Expected the \`${key}\` property to be of type "${type}", but it was \`${value}\`.`
+        break
+      case 'property_unknown':
+        message = `Unexpected \`${key}\` property that was not defined in the struct.`
+        break
+      case 'value_invalid':
+      case 'value_required':
+        message = `Expected a value of type "${type}" but received \`${value}\`.`
+        break
+      default:
+        throw new Error(`Unknown struct error code: "${message}"`)
+    }
+
+    super(message)
+    this.name = 'StructError'
+
+    for (const k in data) {
+      this[k] = data[k]
+    }
+
+    Error.captureStackTrace(this, this.constructor)
+  }
+
+}
 
 /**
  * Create a struct factory from a set of `options`.
@@ -51,11 +106,11 @@ function superstruct(options = {}) {
 
     return (value) => {
       if (!isOptional && value === undefined) {
-        throw new ValueRequiredError({ type })
+        throw new StructError('value_required', { type })
       }
 
       if (value !== undefined && !fns.some(fn => fn(value))) {
-        throw new ValueInvalidError({ type, value })
+        throw new StructError('value_invalid', { type, value })
       }
 
       return value
@@ -81,9 +136,9 @@ function superstruct(options = {}) {
 
     return (value) => {
       if (value === undefined) {
-        throw new ValueRequiredError({ type })
+        throw new StructError('value_required', { type })
       } else if (typeOf(value) !== 'array') {
-        throw new ValueInvalidError({ type, value })
+        throw new StructError('value_invalid', { type, value })
       }
 
       const ret = value.map((v, index) => {
@@ -94,7 +149,7 @@ function superstruct(options = {}) {
 
           switch (e.code) {
             case 'value_invalid':
-              throw new ElementInvalidError({ ...e, index, path })
+              throw new StructError('element_invalid', { ...e, index, path })
             default:
               if ('path' in e) e.path = path
               throw e
@@ -130,7 +185,7 @@ function superstruct(options = {}) {
         isUndefined = true
         value = {}
       } else if (typeOf(value) !== 'object') {
-        throw new ValueInvalidError({ type, value })
+        throw new StructError('value_invalid', { type, value })
       }
 
       const ret = {}
@@ -147,11 +202,11 @@ function superstruct(options = {}) {
 
           switch (e.code) {
             case 'value_invalid':
-              throw new PropertyInvalidError({ ...e, key, path })
+              throw new StructError('property_invalid', { ...e, key, path })
             case 'value_required':
               throw isUndefined
-                ? new ValueRequiredError({ type })
-                : new PropertyRequiredError({ ...e, key, path })
+                ? new StructError('value_required', { type })
+                : new StructError('property_required', { ...e, key, path })
             default:
               if ('path' in e) e.path = path
               throw e
@@ -165,7 +220,7 @@ function superstruct(options = {}) {
 
       for (const key in value) {
         if (!(key in structs)) {
-          throw new PropertyUnknownError({ key, path: [key] })
+          throw new StructError('property_unknown', { key, path: [key] })
         }
       }
 
@@ -223,4 +278,4 @@ function superstruct(options = {}) {
 const struct = superstruct()
 
 export default struct
-export { struct, superstruct }
+export { struct, superstruct, StructError }
