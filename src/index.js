@@ -1,6 +1,6 @@
 
 import cloneDeep from 'lodash/cloneDeep'
-import is from 'is'
+import typeOf from 'component-type'
 
 import DEFAULT_TYPES from './types'
 
@@ -82,7 +82,7 @@ function superstruct(options = {}) {
     return (value) => {
       if (value === undefined) {
         throw new ValueRequiredError({ type })
-      } else if (!is.array(value)) {
+      } else if (typeOf(value) !== 'array') {
         throw new ValueInvalidError({ type, value })
       }
 
@@ -129,7 +129,7 @@ function superstruct(options = {}) {
       if (value === undefined) {
         isUndefined = true
         value = {}
-      } else if (!is.object(value)) {
+      } else if (typeOf(value) !== 'object') {
         throw new ValueInvalidError({ type, value })
       }
 
@@ -184,13 +184,13 @@ function superstruct(options = {}) {
   function struct(schema, defaults) {
     let s
 
-    if (is.function(schema)) {
+    if (typeOf(schema) === 'function') {
       s = schema
-    } else if (is.string(schema)) {
+    } else if (typeOf(schema) === 'string') {
       s = scalarStruct(schema, defaults)
-    } else if (is.array(schema)) {
+    } else if (typeOf(schema) === 'array') {
       s = listStruct(schema, defaults)
-    } else if (is.object(schema)) {
+    } else if (typeOf(schema) === 'object') {
       s = objectStruct(schema, defaults)
     } else {
       throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}`)

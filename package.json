@@ -19,7 +19,7 @@
     "watch:lib": "babel ./lib --out-dir ./lib --watch"
   },
   "dependencies": {
-    "is": "^3.2.1",
+    "component-type": "^1.2.1",
     "lodash": "^4.17.4"
   },
   "devDependencies": {

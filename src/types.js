@@ -1,5 +1,5 @@
 
-import is from 'is'
+import typeOf from 'component-type'
 
 /**
  * Default types.
@@ -9,13 +9,16 @@ import is from 'is'
 
 export default {
   any: v => v !== undefined,
-  array: is.array,
-  boolean: is.boolean,
-  date: is.date,
-  function: is.function,
-  null: is.null,
-  number: is.number,
-  object: is.object,
-  string: is.string,
-  undefined: is.undefined,
+  array: v => typeOf(v) === 'array',
+  boolean: v => typeOf(v) === 'boolean',
+  buffer: v => typeOf(v) === 'buffer',
+  date: v => typeOf(v) === 'date',
+  error: v => typeOf(v) === 'error',
+  function: v => typeOf(v) === 'string',
+  null: v => typeOf(v) === 'null',
+  number: v => typeOf(v) === 'number',
+  object: v => typeOf(v) === 'object',
+  regexp: v => typeOf(v) === 'regexp',
+  string: v => typeOf(v) === 'string',
+  undefined: v => typeOf(v) === 'undefined',
 }
