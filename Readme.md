@@ -67,9 +67,9 @@ validate(data)
 // Returns the data (with defaults) if valid.
 ```
 
-The schema definition syntax was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/).
+The schema definition syntax was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/), and ships with types for all of the native Javascript types out of the box.
 
-But you can also define your own types—specific to your application's requirements—by using the exported `superstruct` function. For example:
+But you can also define your own custom data types—specific to your application's requirements—by using the exported `superstruct` function. For example:
 
 ```js
 import { superstruct } from 'superstruct'
