@@ -119,7 +119,7 @@ There are lots of existing validation libraries. Some of them, like [Joi](), [`e
 
 - **They don't compile schemas for performance.** Some validators allow you to define schemas as plain Javascript objects, which seems nice at first. But it also means that they delegate the complex parsing of the schema logic to validation time, instead of doing the work up front for performance.
 
-- **They are tightly coupled to other concerns.** Many validators are implemented as plugins for Express or other HTTP frameworks, which is completely unnecessary and confusing to reason about. And since you can only use them with a web server you end up with even more fragmentation in your codebase.
+- **They are tightly coupled to other concerns.** Many validators are implemented as plugins for Express or other HTTP frameworks, which is completely unnecessary and confusing to reason about. And when you need to validate data elsewhere in your code base you end up with fragmentation.
 
 Of course, not every validation library suffers from all of these issues, but most of them exhibit at least one. If you've run into this problem before, you might like Superstruct.
 
