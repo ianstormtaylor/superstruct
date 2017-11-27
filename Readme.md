@@ -53,7 +53,7 @@ import struct from 'superstruct'
 const validate = struct({
   id: 'number',
   title: 'string',
-  is_published: 'boolean',
+  is_published: 'boolean?',
   tags: ['string'],
   author: {
     id: 'number',
@@ -64,7 +64,7 @@ const data = {
   id: 34,
   title: 'Hello World',
   is_published: true,
-  tags: ['announcements'],
+  tags: ['news', 'features'],
   author: {
     id: 1,
   } 
