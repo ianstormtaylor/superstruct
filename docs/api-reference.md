@@ -22,7 +22,7 @@
 
 ## Exports
 
-#### `struct`
+### `struct`
 `struct(schema: Object|Array|String|Function, defaults: Any) => Function`
 
 ```js
@@ -47,7 +47,7 @@ The `struct` function ships with Superstruct by default, and recognizes all of t
 
 If you need to define custom data types, use the [`superstruct`](#superstruct) export instead...
 
-#### `superstruct`
+### `superstruct`
 `superstruct(options: Object) => Function`
 
 ```js
@@ -67,7 +67,7 @@ const validate = struct(...)
 
 The `superstruct` factory function is used to create your own `struct` function, with a set of custom data types defined. This way you can easily define structs that contain types like `'email'`, `'url'`, or whatever else your application may need.
 
-#### `StructError`
+### `StructError`
 `Error`
 
 ```js
@@ -85,7 +85,7 @@ The error class that Superstruct uses for its validation errors. This is exposed
 
 Structs are defined by passing a schema definition to the `struct` function. The schema definition can be a string, array, object or function. They can also be composed by nesting structs inside each other.
 
-#### Scalars
+### Scalars
 
 ```js
 struct('string')
@@ -93,7 +93,7 @@ struct('string')
 
 Scalar structs are the lowest-level type of struct. They validate that a single scalar value matches a type, denoted by a type string.
 
-#### Lists
+### Lists
 
 ```js
 struct(['string'])
@@ -102,7 +102,7 @@ struct([{ id: 'string' }])
 
 List structs will validate that all of the elements in an array match a specific type. The elements's schema can be any valid value for a struct—string, array, object or function.
 
-#### Objects
+### Objects
 
 ```js
 struct({
@@ -114,13 +114,13 @@ struct({
 
 Object structs will validate that each of the properties in an object match a specific type. The properties's schemas can be any valid value for a struct—string, array, object or function.
 
-#### Functions
+### Functions
 
 ```js
 struct(() => typeof value === 'string')
 ```
 
-Function structs will validate using the validation function provided. They're helpful as an escape hatch in cases when you really need something custom.
+Function structs will validate using the validation function provided. They're helpful as an escape hatch in cases when you really need to write a one-off validation, and don't want to add it to your set of known data types.
 
 
 ## Types
@@ -128,6 +128,7 @@ Function structs will validate using the validation function provided. They're h
 Out of the box, Superstruct recognizes all of the native Javascript types:
 
 |**Type**|**Example**|**Description**|
+|---|---|---|
 |`'any'`|`'anything'`|Any value other than `undefined`.|
 |`'array'`|`[1,2,3]`|An array.|
 |`'boolean'`|`false`|A boolean.|
@@ -149,19 +150,19 @@ Superstruct throws errors when an invalid value is encountered. The errors inclu
 
 Superstruct errors use a `code` property to distinguish between the different cases when an error might be thrown. The 
 
-#### `element_invalid`
+### `element_invalid`
 
 Thrown when an element in an array is invalid.
 
-|---|---|
 |**Property**|**Type**|**Example**|**Description**|
+|---|---|
 |`code`|`String`|`'element_invalid'`|The type of error.|
 |`index`|`Number`|`0`|The index of the invalid element in the array.|
 |`value`|`Any`|`...`|The invalid element's value.|
 |`path`|`Array`|[2,0]|The path to the invalid element relative to the original data.|
 |`data`|`Any`|`...`|The original, top-level data argument passed into the top-level struct.|
 
-#### `property_invalid`
+### `property_invalid`
 
 Throw when a property in an object is invalid.
 
@@ -173,7 +174,7 @@ Throw when a property in an object is invalid.
 |`path`|`Array`|['address', 'city']|The path to the invalid property relative to the original data.|
 |`data`|`Any`|`...`|The original, top-level data argument passed into the top-level struct.|
 
-#### `property_required`
+### `property_required`
 
 Throw when a property in an object is required but not provided.
 
@@ -184,7 +185,7 @@ Throw when a property in an object is required but not provided.
 |`path`|`Array`|['address', 'city']|The path to the required property relative to the original data.|
 |`data`|`Any`|`...`|The original, top-level data argument passed into the top-level struct.|
 
-#### `property_unknown`
+### `property_unknown`
 
 Throw when a property in an object was provided but not defined in the struct.
 
@@ -195,7 +196,7 @@ Throw when a property in an object was provided but not defined in the struct.
 |`path`|`Array`|['address', 'name']|The path to the unknown property relative to the original data.|
 |`data`|`Any`||The original, top-level data argument passed into the top-level struct.|
 
-#### `value_invalid`
+### `value_invalid`
 
 Throw when a value is invalid.
 
@@ -206,7 +207,7 @@ Throw when a value is invalid.
 |`path`|`Array`|[]|The path to the invalid value relative to the original data.|
 |`data`|`Any`|`...`|The original, top-level data argument passed into the top-level struct.|
 
-#### `value_required`
+### `value_required`
 
 Throw when a value is required but not provided.
 

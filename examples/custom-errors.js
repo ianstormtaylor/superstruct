@@ -16,9 +16,9 @@ const data = {
   email: 'jane@example.com',
 }
 
-// Validate the data by calling `validate`. In this case the
-// `name` property is invalid, so an error will be thrown that
-// you can catch and customize to your needs.
+// Validate the data by calling `validate`. In this case the `name` property is
+// invalid, so an error will be thrown that you can catch and customize to your
+// needs.
 try {
   validate(data)
   console.log('Valid!')

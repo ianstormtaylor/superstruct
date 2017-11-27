@@ -27,9 +27,8 @@ const data = {
   age: 42,
 }
 
-// Validate the data by calling `validate`, and storing the
-// return value in the `user` variable. Any property that
-// wasn't defined will be set to its default value.
+// Validate the data by calling `validate`, and storing the return value in the
+// `user` variable. Any property that wasn't defined will be set to its default.
 let user
 
 try {
@@ -39,7 +38,7 @@ try {
   throw e
 }
 
-// 'Valid!', {
+// 'Valid!' {
 //   id: 0,
 //   name: 'Jane Smith',
 //   email: 'jan@example.com',

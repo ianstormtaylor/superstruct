@@ -16,9 +16,8 @@ const data = {
   email: 'jane@example.com',
 }
 
-// Validate the data by calling `validate`. In this case the
-// `name` property is invalid, so a `property_invalid` error
-// will be thrown.
+// Validate the data by calling `validate`. In this case the `name` property is
+// invalid, so a `property_invalid` error will be thrown.
 try {
   validate(data)
 } catch (e) {

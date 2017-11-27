@@ -21,8 +21,8 @@ const data = {
   departments: ['engineering', 'product'],
 }
 
-// Validate the data by calling `validate`.
-// In this case, the data is valid, so it will not throw.
+// Validate the data by calling `validate`. In this case, the data is valid, so
+// it will not throw.
 try {
   validate(data)
   console.log('Valid!')
