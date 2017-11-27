@@ -18,9 +18,6 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/superstruct">
-    <img src="https://img.shields.io/npm/dt/superstruct.svg?maxAge=3600">
-  </a> 
   <a href="https://unpkg.com/superstruct/dist/superstruct.min.js">
     <img src="http://img.badgesize.io/https://unpkg.com/superstruct/dist/superstruct.min.js?compression=gzip&amp;label=superstruct&amp;maxAge=3600">
   </a>
