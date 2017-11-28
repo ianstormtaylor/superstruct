@@ -1,9 +1,9 @@
 
-import s from '../../..'
+import { struct as s } from '../../..'
 
 export const struct = s({
   title: 'string',
-  tags: ['string'],
+  tags: s.required(['string']),
 })
 
 export const value = {
