@@ -14,8 +14,8 @@ const struct = superstruct({
   }
 })
 
-// Define a struct which returns a `validate` function.
-const validate = struct({
+// Define a struct to validate with.
+const User = struct({
   id: 'uuid',
   name: 'string',
   email: 'email',
@@ -30,10 +30,10 @@ const data = {
   website: 'https://jane.example.com',
 }
 
-// Validate the data by calling `validate`. In this case, the data is valid, so
+// Validate the data by calling `assert`. In this case, the data is valid, so
 // it will not throw.
 try {
-  validate(data)
+  User.assert(data)
   console.log('Valid!')
 } catch (e) {
   throw e

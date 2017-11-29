@@ -3,7 +3,7 @@
 import struct from '..'
 
 // Define a struct to validate with.
-const validate = struct({
+const User = struct({
   id: 'number',
   name: 'string',
   email: 'string',
@@ -16,10 +16,10 @@ const data = {
   email: 'jane@example.com',
 }
 
-// Validate the data by calling `validate`. In this case the `name` property is
+// Validate the data by calling `assert`. In this case the `name` property is
 // invalid, so a `property_invalid` error will be thrown.
 try {
-  validate(data)
+  User.assert(data)
 } catch (e) {
   throw e
 }

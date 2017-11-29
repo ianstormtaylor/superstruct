@@ -3,19 +3,19 @@
 import struct from '..'
 
 // Define a `user` struct.
-const isUser = struct({
+const User = struct({
   id: 'number',
   name: 'string',
 })
 
 // Define an `article` struct, composing the user struct in the article's
 // `author` property.
-const isArticle = struct({
+const Article = struct({
   id: 'number',
   title: 'string',
   created_at: 'date',
   published_at: 'date?',
-  author: isUser,
+  author: User,
 })
 
 // Define data to be validated.
@@ -32,7 +32,7 @@ const data = {
 // Validate the data by calling `validate`. In this case, the data is valid, so
 // it will not throw an error.
 try {
-  isArticle(data)
+  Article.assert(data)
   console.log('Valid!')
 } catch (e) {
   throw e

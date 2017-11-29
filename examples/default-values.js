@@ -6,7 +6,7 @@ import struct from '..'
 let uid = 1
 
 // Define a struct to validate with.
-const validate = struct({
+const User = struct({
   id: 'number',
   name: 'string',
   email: 'string',
@@ -27,12 +27,12 @@ const data = {
   age: 42,
 }
 
-// Validate the data by calling `validate`, and storing the return value in the
+// Validate the data by calling `assert`, and storing the return value in the
 // `user` variable. Any property that wasn't defined will be set to its default.
 let user
 
 try {
-  user = validate(data)
+  user = User.assert(data)
   console.log('Valid!', user)
 } catch (e) {
   throw e

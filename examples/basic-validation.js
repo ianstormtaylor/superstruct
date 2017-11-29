@@ -3,7 +3,7 @@
 import struct from '..'
 
 // Define a struct to validate with.
-const validate = struct({
+const User = struct({
   id: 'number',
   name: 'string',
   email: 'string',
@@ -21,10 +21,10 @@ const data = {
   departments: ['engineering', 'product'],
 }
 
-// Validate the data by calling `validate`. In this case, the data is valid, so
+// Validate the data by calling `assert`. In this case, the data is valid, so
 // it will not throw.
 try {
-  validate(data)
+  User.assert(data)
   console.log('Valid!')
 } catch (e) {
   throw e
