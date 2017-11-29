@@ -21,10 +21,7 @@ npm install --save superstruct
 And then you can import it into your code base:
 
 ```js
-import struct from 'superstruct'
-```
-```js
-import { superstruct } from 'superstruct'
+import { struct, superstruct } from 'superstruct'
 ```
 
 If you would rather import Superstruct with a `<script>` tag, you can use the bundled build:
