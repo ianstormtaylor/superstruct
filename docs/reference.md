@@ -97,6 +97,9 @@ Structs are defined by passing a schema definition to the `struct` function. The
 ```js
 struct('string')
 ```
+```js
+'a string of text'
+```
 
 Scalar structs are the lowest-level type of struct. They validate that a single scalar value matches a type, denoted by a type string.
 
@@ -105,6 +108,10 @@ Scalar structs are the lowest-level type of struct. They validate that a single 
 ```js
 struct(['string'])
 struct([{ id: 'string' }])
+```
+```js
+['a', 'b', 'c']
+[{ id: '1' }, { id: '2' }, { id: '3' }]
 ```
 
 List structs will validate that all of the elements in an array match a specific type. The elements's schema can be any valid value for a struct—string, array, object or function.
@@ -118,6 +125,13 @@ struct({
   age: 'number',
 })
 ```
+```js
+{
+  id: 1,
+  name: 'Jane Smith',
+  age: 42,
+}
+```
 
 Object structs will validate that each of the properties in an object match a specific type. The properties's schemas can be any valid value for a struct—string, array, object or function.
 
@@ -125,6 +139,9 @@ Object structs will validate that each of the properties in an object match a sp
 
 ```js
 struct(() => typeof value === 'string')
+```
+```js
+'a simple string'
 ```
 
 Function structs will validate using the validation function provided. They're helpful as an escape hatch in cases when you really need to write a one-off validation, and don't want to add it to your set of known data types.
@@ -174,7 +191,7 @@ Throw when a property in an object is invalid.
 |**Property**|**Type**|**Example**|**Description**|
 |---|---|---|---|
 |`code`|`String`|`'property_invalid'`|The type of error.|
-|`key`|`Number`|`0`|The key of the invalid property in the object.|
+|`key`|`Number`|`'city'`|The key of the invalid property in the object.|
 |`value`|`Any`|`...`|The invalid property's value.|
 |`path`|`Array`|`['address', 'city']`|The path to the invalid property relative to the original data.|
 |`data`|`Any`|`...`|The original data argument passed into the top-level struct.|
@@ -186,7 +203,7 @@ Throw when a property in an object is required but not provided.
 |**Property**|**Type**|**Example**|**Description**|
 |---|---|---|---|
 |`code`|`String`|`'property_required'`|The type of error.|
-|`key`|`Number`|`0`|The key of the required property in the object.|
+|`key`|`Number`|`'city'`|The key of the required property in the object.|
 |`path`|`Array`|`['address', 'city']`|The path to the required property relative to the original data.|
 |`data`|`Any`|`...`|The original data argument passed into the top-level struct.|
 
@@ -197,13 +214,13 @@ Throw when a property in an object was provided but not defined in the struct.
 |**Property**|**Type**|**Example**|**Description**|
 |---|---|---|---|
 |`code`|`String`|`'property_unknown'`|The type of error.|
-|`key`|`Number`|`0`|The key of the unknown property in the object.|
+|`key`|`Number`|`'name'`|The key of the unknown property in the object.|
 |`path`|`Array`|`['address', 'name']`|The path to the unknown property relative to the original data.|
-|`data`|`Any`||The original data argument passed into the top-level struct.|
+|`data`|`Any`|`...`|The original data argument passed into the top-level struct.|
 
 ### `value_invalid`
 
-Throw when a value is invalid.
+Throw when a top-level value is invalid.
 
 |**Property**|**Type**|**Example**|**Description**|
 |---|---|---|---|
@@ -214,7 +231,7 @@ Throw when a value is invalid.
 
 ### `value_required`
 
-Throw when a value is required but not provided.
+Throw when a top-level value is required but not provided.
 
 |**Property**|**Type**|**Example**|**Description**|
 |---|---|---|---|
