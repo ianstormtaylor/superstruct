@@ -78,8 +78,8 @@ import isEmail from 'is-email'
 
 const struct = superstruct({
   types: {
-    uuid: v => isUuid.v4(v),
-    email: v => isEmail(v) && v.length < 256,
+    uuid: value => isUuid.v4(value),
+    email: value => isEmail(value) && value.length < 256,
   }
 })
 
