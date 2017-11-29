@@ -4,6 +4,7 @@
 - [API](#api)
   + [`struct`](#struct)
   + [`superstruct`](#superstruct)
+  + [`Struct`](#struct)
   + [`StructError`](#structerror)
 - [Structs](#structs)
   + [Scalars](#scalars)
@@ -33,7 +34,7 @@ import {
 ```
 
 ### `struct`
-`struct(schema: Object|Array|String|Function, defaults: Any) => Function`
+`struct(schema: Object|Array|String|Function, defaults: Any, options: Object) => Function`
 
 ```js
 import { struct } from 'superstruct'
@@ -42,6 +43,8 @@ const Struct = struct({
   id: 'number',
   name: 'string',
   is_admin: 'boolean?',
+}, { 
+  is_admin: false 
 })
 
 Struct.assert({
@@ -73,6 +76,45 @@ const Struct = struct(...)
 ```
 
 The `superstruct` factory function is used to create your own `struct` function, with a set of custom data types defined. This way you can easily define structs that contain types like `'email'`, `'url'`, or whatever else your application may need.
+
+### `Struct`
+`Struct`
+
+```js
+import { struct } from 'superstruct'
+
+const Struct = struct({
+  id: 'number',
+  name: 'string',
+})
+
+Struct.assert(data)
+Struct.validate(data)
+...
+```
+
+`Struct` objects are created by the `struct` factory. They have the following methods:
+
+#### `assert`
+`assert(data: Any) => Any`
+
+Assert that `data` is valid. If the data is invalid a [`StructError`](#structerror) will be thrown, otherwise the data will be returned with defaults applied.
+
+#### `default`
+`default(data: Any) => Any`
+
+Apply the struct's defaults to `data`, returning the result. Usually you'll use [`assert`](#assert) or [`validate`](#validate), but this underlying method is exposed for more specific use cases.
+
+#### `test`
+`test(data: Any) => Boolean`
+
+Test that `data` is valid, returning a boolean representing whether it is valid or not.
+
+#### `validate`
+`validate(data: Any) => Any|StructError`
+
+Validate `data`. If the data is invalid, a [`StructError`](#structerror) will be returned. Otherwise the data will be returned with defaults applied.
+
 
 ### `StructError`
 `Error`
