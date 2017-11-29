@@ -1,5 +1,5 @@
 
-import s from '../../..'
+import { struct as s } from '../../..'
 
 const address = s({
   street: 'string',

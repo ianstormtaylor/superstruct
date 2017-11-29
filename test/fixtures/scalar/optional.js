@@ -1,5 +1,5 @@
 
-import s from '../../..'
+import { struct as s } from '../../..'
 
 export const struct = s('number?')
 
