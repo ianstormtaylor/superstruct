@@ -5,7 +5,7 @@
  * @type {StructError}
  */
 
-class StructError extends Error {
+class StructError extends TypeError {
 
   constructor(code, data) {
     data.code = code

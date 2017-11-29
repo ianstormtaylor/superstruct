@@ -47,7 +47,6 @@ function superstruct(config = {}) {
       this.defaults = defaults
       this.required = required
       this.type = null
-      this.validator = v => true
     }
 
     /**
@@ -443,17 +442,18 @@ function superstruct(config = {}) {
    */
 
   function struct(schema, defaults, options) {
+    const type = typeOf(schema)
     let s
 
     if (isStruct(schema)) {
       s = schema
-    } else if (typeOf(schema) === 'function') {
+    } else if (type === 'function') {
       s = new FunctionStruct(schema, defaults, options)
-    } else if (typeOf(schema) === 'string') {
+    } else if (type === 'string') {
       s = new ScalarStruct(schema, defaults, options)
-    } else if (typeOf(schema) === 'array') {
+    } else if (type === 'array') {
       s = new ListStruct(schema, defaults, options)
-    } else if (typeOf(schema) === 'object') {
+    } else if (type === 'object') {
       s = new ObjectStruct(schema, defaults, options)
     } else {
       throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}`)
@@ -468,15 +468,11 @@ function superstruct(config = {}) {
    */
 
   struct.required = (schema, defaults, options = {}) => {
-    const s = struct(schema, defaults, { ...options, required: true })
-    s.required = true
-    return s
+    return struct(schema, defaults, { ...options, required: true })
   }
 
   struct.optional = (schema, defaults, options = {}) => {
-    const s = struct(schema, defaults, { ...options, required: false })
-    s.required = false
-    return s
+    return struct(schema, defaults, { ...options, required: false })
   }
 
   /**
