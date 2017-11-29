@@ -27,7 +27,7 @@ import struct from 'superstruct'
 import { superstruct } from 'superstruct'
 ```
 
-If you would rather import Superstrict with a `<script>` tag, you can use the bundled build:
+If you would rather import Superstruct with a `<script>` tag, you can use the bundled build:
 
 ```html
 <script src="https://unpkg.com/superstruct@0.0.5/dist/superstruct.min.js"></script>
