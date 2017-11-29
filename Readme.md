@@ -73,7 +73,6 @@ It recognizes all the native Javascript types out of the box. But you can also d
 
 ```js
 import { superstruct } from 'superstruct'
-
 import isUuid from 'is-uuid'
 import isEmail from 'is-email'
 
