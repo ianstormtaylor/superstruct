@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 
-import { superstruct } from '..'
+import { superstruct } from 'superstruct'
 import isEmail from 'is-email'
 import isUuid from 'is-uuid'
 import isUrl from 'is-url'

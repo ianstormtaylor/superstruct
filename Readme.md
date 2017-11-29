@@ -153,6 +153,7 @@ Superstruct's API is very flexible, allowing it to be used for a variety of use 
 - [Default Values](./examples/default-values.js)
 - [Composing Structs](./examples/composing-structs.js)
 - [Throwing Errors](./examples/throwing-errors.js)
+- [Returning Errors](./examples/returning-errors.js)
 - [Custom Errors](./examples/custom-errors.js)
 
 

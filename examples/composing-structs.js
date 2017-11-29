@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 
-import struct from '..'
+import { struct } from 'superstruct'
 
 // Define a `user` struct.
 const User = struct({

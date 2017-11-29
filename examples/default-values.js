@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 
-import struct from '..'
+import { struct } from 'superstruct'
 
 // Define an auto-incrementing unique id.
 let uid = 1
