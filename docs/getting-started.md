@@ -33,7 +33,7 @@ If you would rather import Superstruct with a `<script>` tag, you can use the bu
 <script src="https://unpkg.com/superstruct/dist/superstruct.min.js"></script>
 ```
 
-This will expose the `Superscript` global with the exported functions.
+This will expose the `Superstruct` global with the exported functions.
 
 
 ## Creating Structs
