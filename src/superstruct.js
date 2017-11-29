@@ -56,7 +56,7 @@ function superstruct(config = {}) {
      * @return {Any}
      */
 
-    get(value) {
+    default(value) {
       if (value !== undefined) return value
       const { defaults } = this
       return typeof defaults === 'function' ? defaults() : cloneDeep(defaults)
@@ -70,7 +70,7 @@ function superstruct(config = {}) {
      */
 
     validate(value) {
-      value = this.get(value)
+      value = this.default(value)
       return value
     }
 
@@ -109,7 +109,7 @@ function superstruct(config = {}) {
      */
 
     validate(value) {
-      value = this.get(value)
+      value = this.default(value)
       const { required, type, schema } = this
 
       if (required && value === undefined) {
@@ -166,7 +166,7 @@ function superstruct(config = {}) {
      */
 
     validate(value) {
-      value = this.get(value)
+      value = this.default(value)
       const { required, type, validators } = this
 
       if (required && value === undefined) {
@@ -249,7 +249,7 @@ function superstruct(config = {}) {
      */
 
     validate(value) {
-      value = this.get(value)
+      value = this.default(value)
       const { required, valueStruct } = this
       const result = valueStruct.validate(value)
 
@@ -376,7 +376,7 @@ function superstruct(config = {}) {
      */
 
     validate(value) {
-      value = this.get(value)
+      value = this.default(value)
       const { required, propertyStructs, valueStruct } = this
       const result = valueStruct.validate(value)
 
