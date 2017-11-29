@@ -64,7 +64,9 @@ const data = {
 }
 
 Article.assert(data)
-// Throws when the data is invalid, returns the data otherwise.
+
+// The `assert()` method throws when the data is invalid, and returns the data otherwise.
+// If you'd rather not throw errors, you can use `validate()` or `test()` instead.
 ```
 
 It recognizes all the native Javascript types out of the box. But you can also define your own custom data types—specific to your application's requirements—by using the `superstruct` export:
@@ -94,7 +96,6 @@ const data = {
 }
 
 User.assert(data)
-// Throws when the data is invalid, returns the data otherwise.
 ```
 
 Superstruct supports more complex use cases too like defining list or scalar structs, applying default values, composing structs inside each other, returning errors instead of throwing them, etc. For more information read the full [Documentation](#documentation).
@@ -133,13 +134,13 @@ Which brings me to how Superstruct solves these issues...
 
 4. **Composable interfaces.** Superstruct interfaces are composable, so you can break down commonly-repeated pieces of data into components, and compose them to build up the more complex objects.
 
-5. **Terse schemas.** The schemas in Superstruct are designed to be extremely terse. This makes them very easy to read and write, encouraging you to have full data validation coverage.
+5. **Terse schemas.** The schemas in Superstruct are designed to be extremely terse and expressive. This makes them very easy to read and write, encouraging you to have full data validation coverage.
 
-7. **Compiled validators.** Superstruct does the work of compiling its schemas up front, so that it doesn't have to spend lots of time performing expensive tasks for every call to the validation functions in your hot code paths.
+7. **Compiled validators.** Superstruct does the work of compiling its schemas up front, so that it doesn't  spend time performing expensive tasks for every call to the validation functions in your hot code paths.
 
 6. **Useful errors.** The errors that Superstruct throws contain all the information you need to convert them into your own application-specific errors easy, which means more helpful errors for your end users!
 
-3. **Familiar API.** The Superstruct API was heavily inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/). If you're familiar with any of those, then its schema definition API will feel very natural to use, so you can get started quickly.
+3. **Familiar API.** The Superstruct API was heavily inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/). If you're familiar with any of those, then its schema definition API will feel very natural to use, so you can get started quickly.
 
 
 <br/>
