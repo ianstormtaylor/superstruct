@@ -30,9 +30,9 @@
 <br/>
 <br/>
 
-Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/), which gives it a familiar, easy to understand API. 
+Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/), giving it a familiar and easy to understand API.
 
-But Superstruct is designed for runtime data validations, so it throws detailed runtime errors for you or your end users. This is especially useful in situations like accepting arbitrary input in a REST or GraphQL API. But it can even be used to validate internal data structures in non-typed code bases.
+But Superstruct is designed for validating data at runtime, so it throws (or returns) detailed runtime errors for you or your end users. This is especially useful in situations like accepting arbitrary input in a REST or GraphQL API. But it can even be used to validate internal data structures at runtime when needed.
 
 
 <br/>
@@ -42,7 +42,7 @@ But Superstruct is designed for runtime data validations, so it throws detailed 
 Superstruct exports a `struct` factory for creating functions that validate data against a specific schema:
 
 ```js
-import struct from 'superstruct'
+import { struct } from 'superstruct'
 
 const Article = struct({
   id: 'number',
@@ -57,21 +57,17 @@ const Article = struct({
 const data = {
   id: 34,
   title: 'Hello World',
-  is_published: true,
   tags: ['news', 'features'],
   author: {
     id: 1,
   } 
 }
 
-// Throws if the data is invalid.
-// Returns the data (with defaults) if valid.
 Article.assert(data)
+// Throws when the data is invalid, returns the data otherwise.
 ```
 
-The schema definition syntax was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/), and ships with types for all of the native Javascript types out of the box.
-
-But you can also define your own custom data types—specific to your application's requirements—by using the exported `superstruct` function. For example:
+It recognizes all the native Javascript types out of the box. But you can also define your own custom data types—specific to your application's requirements—by using the `superstruct` export:
 
 ```js
 import { superstruct } from 'superstruct'
@@ -98,9 +94,10 @@ const data = {
 }
 
 User.assert(data)
-// Throws if the data is invalid.
-// Returns the data (with defaults) if valid.
+// Throws when the data is invalid, returns the data otherwise.
 ```
+
+Superstruct supports more complex use cases too like defining list or scalar structs, applying default values, composing structs inside each other, returning errors instead of throwing them, etc. For more information read the full [Documentation](#documentation).
 
 
 <br/>
@@ -109,17 +106,17 @@ User.assert(data)
 
 There are lots of existing validation libraries. Some of them, like [Joi](), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js) or [`ajv`](https://github.com/epoberezkin/ajv) are decently popular. But all of them exhibit many issues that lead to hard to maintain codebases...
 
-- **They don't throw errors.** Many validators simply return `true/false` or return string error messages. This was helpful in the days of callbacks, when using `throw` was discouraged, but in modern Javascript using `throw` leads to much simpler and terser code.
+- **They can't throw errors.** Many validators simply return `true/false` or string errors. Although helpful in the days of callbacks, not using `throw` in modern Javascript makes code much more complex.
 
-- **They don't expose useful error information.** For the validators that do `throw`, they often throw over-simplified, message-only errors without any extra details about the reason the error occurred. This makes it very difficult to customize the errors to make them helpful for end users.
+- **They don't expose detailed errors.** For those that do `throw`, they often throw string-only errors without any details as to why, making it difficult to customize the errors to be helpful for end-users.
 
-- **They aren't designed around custom types.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no easy way to know how they're implemented. And when defining your own custom types—which any reasonably sized codebase needs to do—the APIs are needlessly complex and hard to re-use.
+- **They make custom types hard.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no way to know what they check for, and complicated APIs for defining new types.
 
-- **They don't encourage single sources of truth.** Many existing APIs encourage re-defining custom data type requirements like maximum lengths, custom types, error messages, etc. over and over, with the source of truth being spread out across many files, which makes consistentcy difficult to maintain.
+- **They don't encourage single sources of truth.** Many existing APIs encourage re-defining custom data types over and over, with the source of truth being spread out across your entire code base.
 
-- **They don't compile schemas for performance.** Some validators allow you to define schemas as plain Javascript objects, which seems nice at first. But it also means that they delegate the complex parsing of the schema logic to validation time, instead of doing the work up front for performance.
+- **They don't pre-compile schemas.** Many validators define schemas as plain Javascript objects, which means they delegate the parsing of the schema logic to validation time, making them much slower.
 
-- **They are tightly coupled to other concerns.** Many validators are implemented as plugins for Express or other HTTP frameworks, which is completely unnecessary and confusing to reason about. And when you need to validate data elsewhere in your code base you end up with fragmentation.
+- **They're tightly coupled to other concerns.** Many validators are tightly coupled to Express or other frameworks, which results in one-off, confusing code that isn't reusable across your code base.
 
 Of course, not every validation library suffers from all of these issues, but most of them exhibit at least one. If you've run into this problem before, you might like Superstruct.
 
