@@ -44,7 +44,7 @@ Superstruct exports a `struct` factory for creating functions that validate data
 ```js
 import struct from 'superstruct'
 
-const validate = struct({
+const Article = struct({
   id: 'number',
   title: 'string',
   is_published: 'boolean?',
@@ -64,9 +64,9 @@ const data = {
   } 
 }
 
-validate(data)
 // Throws if the data is invalid.
 // Returns the data (with defaults) if valid.
+Article.assert(data)
 ```
 
 The schema definition syntax was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/) and [GraphQL](http://graphql.org/learn/schema/), and ships with types for all of the native Javascript types out of the box.
@@ -86,7 +86,7 @@ const struct = superstruct({
   }
 })
 
-const validate = struct({
+const User = struct({
   id: 'uuid',
   email: 'email',
   is_admin: 'boolean?',
@@ -97,7 +97,7 @@ const data = {
   email: 'jane@example.com',
 }
 
-validate(data)
+User.assert(data)
 // Throws if the data is invalid.
 // Returns the data (with defaults) if valid.
 ```
@@ -165,8 +165,17 @@ Superstruct's API is very flexible, allowing it to be used for a variety of use 
 
 Read the **Getting Started** guide to familiarize yourself with how Superstruct works. After that, check out the full API reference...
 
-- [Getting Started](./docs/getting-started.md)
-- [API Reference](./docs/api-reference.md)
+- [**Guide**](./docs/guide.md)
+  - [Installing Superstruct](./docs/guide.md#installing-superstruct)
+  - [Creating Structs](./docs/guide.md#creating-structs)
+  - [Defining Custom Data Types](./docs/guide.md#defining-custom-data-types)
+  - [Setting Default Values](./docs/guide.md#setting-default-values)
+  - [Throwing Customized Errors](./docs/guide.md#throwing-customized-errors)
+- [**Reference**](./docs/reference.md)
+  - [API](./docs/reference.md#api)
+  - [Structs](./docs/reference.md#structs)
+  - [Types](./docs/reference.md#types)
+  - [Errors](./docs/reference.md#errors)
 
 
 <br/>

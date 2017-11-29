@@ -1,7 +1,7 @@
 
 # API Reference
 
-- [Exports](#exports)
+- [API](#api)
   + [`struct`](#struct)
   + [`superstruct`](#superstruct)
   + [`StructError`](#structerror)
@@ -20,24 +20,31 @@
   + [`value_required`](#value_required)
 
 
-## Exports
+## API
+
+Superstruct exposes the following API:
+
+```js
+import {
+  struct,
+  superstruct,
+  StructError,
+} from 'superstruct'
+```
 
 ### `struct`
 `struct(schema: Object|Array|String|Function, defaults: Any) => Function`
 
 ```js
-import struct from 'superstruct'
-```
-```js
 import { struct } from 'superstruct'
 
-const validate = struct({
+const Struct = struct({
   id: 'number',
   name: 'string',
   is_admin: 'boolean?',
 })
 
-validate({
+Struct.assert({
   id: 42,
   name: 'Jane Smith',
 })
@@ -62,7 +69,7 @@ const struct = superstruct({
   }
 })
 
-const validate = struct(...)
+const Struct = struct(...)
 ```
 
 The `superstruct` factory function is used to create your own `struct` function, with a set of custom data types defined. This way you can easily define structs that contain types like `'email'`, `'url'`, or whatever else your application may need.

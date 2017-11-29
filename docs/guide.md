@@ -7,6 +7,7 @@
 - [Setting Default Values](#setting-default-values)
 - [Throwing Customized Errors](#throwing-customized-errors)
 
+
 ## Installing Superstruct
 
 To install Superstruct with Yarn or Npm, simply:
