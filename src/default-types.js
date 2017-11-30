@@ -1,5 +1,5 @@
 
-import typeOf from 'component-type'
+import typeOf from 'kind-of'
 
 /**
  * Default types.

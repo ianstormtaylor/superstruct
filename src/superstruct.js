@@ -1,6 +1,6 @@
 
-import cloneDeep from 'lodash.clonedeep'
-import typeOf from 'component-type'
+import cloneDeep from 'clone-deep'
+import typeOf from 'kind-of'
 
 import DEFAULT_TYPES from './default-types'
 import StructError from './struct-error'
