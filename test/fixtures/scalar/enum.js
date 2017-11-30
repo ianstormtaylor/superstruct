@@ -1,8 +1,8 @@
 
-import { struct as s } from '../../..'
+import { struct } from '../../..'
 
-export const struct = s('string|number')
+export const Struct = struct('string|number')
 
-export const value = 42
+export const data = 42
 
 export const output = 42

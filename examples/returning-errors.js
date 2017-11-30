@@ -15,8 +15,8 @@ const data = {
   email: 'jane@example.com',
 }
 
-// Validate the data by calling `assert`. In this case the `name` property is
-// invalid, so a `property_invalid` error will be thrown.
+// Validate the data with the `validate` method. In this case the `name`
+// property is invalid, so a `property_invalid` error will be returned.
 const result = User.validate(data)
 
 if (result instanceof StructError) {

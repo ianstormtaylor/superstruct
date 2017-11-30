@@ -58,10 +58,10 @@ const User = struct({
 })
 ```
 
-Now we can use our `User` struct to validate the data. The easiest way to do this is to use the `assert()` method, like so:
+Now we can use our `User` struct to validate the data. The easiest way to do this is to just call `User` as a function, like so:
 
 ```
-User.assert(data)
+User(data)
 ```
 
 This will either throw an error if the data is invalid, or return the validated data if the data is valid.
@@ -77,7 +77,7 @@ const data = {
   email: 'jane@example.com',
 }
 
-User.assert(data)
+User(data)
 
 // StructError: 'Expected the `name` property to be of type "string", but it was `false`.' {
 //   code: 'property_invalid',
@@ -90,7 +90,7 @@ User.assert(data)
 
 An error was thrown! That's what we expected.
 
-If you'd rather have the error returned instead of thrown, you can use the struct's `validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `test()` method.
+If you'd rather have the error returned instead of thrown, you can use the `Struct.validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `Struct.test()` method. Check out the [Reference](./reference.md) for more information.
 
 
 ## Making Values Optional
@@ -111,13 +111,13 @@ That `'boolean?'` with a question mark at the end means that the value can also 
 So now both of these pieces of data would be valid:
 
 ```js
-User.assert({
+User({
   id: 'number',
   name: 'Jane Smith',
   email: 'jane@example.com',
 })
 
-User.assert({
+User({
   id: 'number',
   name: 'Jane Smith',
   email: 'jane@example.com',
@@ -143,7 +143,7 @@ const User = struct({
 })
 ```
 
-To receive the data with the defaults applied, you'll need to store the return value from the `assert()` method. So your validation becomes:
+To receive the data with the defaults applied, you'll need to store the return value from calling `User()`. So your validation becomes:
 
 ```js
 const data = {
@@ -152,7 +152,7 @@ const data = {
   email: 'jane@example.com',
 }
 
-const result = User.assert(data)
+const result = User(data)
 
 // {
 //   id: 'number',
@@ -206,7 +206,7 @@ const data = {
   email: 'jane',
 }
 
-User.assert(data)
+User(data)
 
 // StructError: 'Expected the `email` property to be of type "email", but it was `'jane'`.' {
 //   code: 'property_invalid',
@@ -233,7 +233,7 @@ router.post('/users', ({ request, response }) => {
   const data = request.body
 
   try {
-    User.assert(data)
+    User(data)
   } catch (e) {
     switch (e.code) {
       default: 

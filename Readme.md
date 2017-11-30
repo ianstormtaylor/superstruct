@@ -69,10 +69,10 @@ const data = {
   } 
 }
 
-Article.assert(data)
+const user = Article(data)
 
-// The `assert()` method throws when the data is invalid, and returns the data otherwise.
-// If you'd rather not throw errors, you can use `validate()` or `test()` instead.
+// This will throw when the data is invalid, and return the data otherwise.
+// If you'd rather not throw, use `Struct.validate()` or `Struct.test()`.
 ```
 
 It recognizes all the native Javascript types out of the box. But you can also define your own custom data types—specific to your application's requirements—by using the `superstruct` export:
@@ -100,7 +100,7 @@ const data = {
   email: 'jane@example.com',
 }
 
-User.assert(data)
+const user = User(data)
 ```
 
 Superstruct supports more complex use cases too like defining list or scalar structs, applying default values, composing structs inside each other, returning errors instead of throwing them, etc. For more information read the full [Documentation](#documentation).

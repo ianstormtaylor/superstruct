@@ -2,14 +2,14 @@
 import isEmail from 'is-email'
 import { superstruct } from '../../..'
 
-const s = superstruct({
+const struct = superstruct({
   types: {
     email: isEmail
   }
 })
 
-export const struct = s('email?')
+export const Struct = struct('email?')
 
-export const value = undefined
+export const data = undefined
 
 export const output = undefined

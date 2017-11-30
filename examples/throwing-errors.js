@@ -15,10 +15,10 @@ const data = {
   email: 'jane@example.com',
 }
 
-// Validate the data by calling `assert`. In this case the `name` property is
-// invalid, so a `property_invalid` error will be thrown.
+// Validate the data. In this case the `name` property is invalid, so a
+// `property_invalid` error will be thrown.
 try {
-  User.assert(data)
+  User(data)
 } catch (e) {
   throw e
 }

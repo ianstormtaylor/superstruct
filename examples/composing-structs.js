@@ -28,10 +28,9 @@ const data = {
   }
 }
 
-// Validate the data by calling `validate`. In this case, the data is valid, so
-// it will not throw an error.
+// Validate the data. In this case, the data is valid, so it won't throw.
 try {
-  Article.assert(data)
+  Article(data)
   console.log('Valid!')
 } catch (e) {
   throw e

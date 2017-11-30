@@ -20,10 +20,9 @@ const data = {
   departments: ['engineering', 'product'],
 }
 
-// Validate the data by calling `assert`. In this case, the data is valid, so
-// it will not throw.
+// Validate the data. In this case, the data is valid, so it won't throw.
 try {
-  User.assert(data)
+  User(data)
   console.log('Valid!')
 } catch (e) {
   throw e
