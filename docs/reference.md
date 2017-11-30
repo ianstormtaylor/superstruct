@@ -47,7 +47,7 @@ const Struct = struct({
   is_admin: false 
 })
 
-Struct.assert({
+Struct({
   id: 42,
   name: 'Jane Smith',
 })
@@ -78,7 +78,7 @@ const Struct = struct(...)
 The `superstruct` factory function is used to create your own `struct` function, with a set of custom data types defined. This way you can easily define structs that contain types like `'email'`, `'url'`, or whatever else your application may need.
 
 ### `Struct`
-`Struct`
+`Function(data: Any) => Any`
 
 ```js
 import { struct } from 'superstruct'
@@ -88,12 +88,10 @@ const Struct = struct({
   name: 'string',
 })
 
-Struct.assert(data)
-Struct.validate(data)
-...
+Struct(data)
 ```
 
-`Struct` objects are created by the `struct` factory. They have the following methods:
+`Struct` validator functions are created by the `struct` factory. You can call them directly for the basic use case. But they also have the following method properties:
 
 #### `assert`
 `assert(data: Any) => Any`
