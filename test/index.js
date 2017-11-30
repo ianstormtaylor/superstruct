@@ -35,7 +35,7 @@ describe('superstruct', () => {
               Struct(data)
             }, (e) => {
               const expected = module.error
-              const actual = pick(e, 'code', 'type', 'key', 'index', 'path', 'value', 'schema')
+              const actual = pick(e, 'type', 'path', 'value')
               assert.deepEqual(actual, expected)
               return true
             })

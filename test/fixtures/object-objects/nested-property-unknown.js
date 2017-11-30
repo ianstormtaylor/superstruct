@@ -21,7 +21,7 @@ export const data = {
 }
 
 export const error = {
-  code: 'property_unknown',
   path: ['address', 'state'],
-  key: 'state',
+  value: 'unknown',
+  type: undefined,
 }

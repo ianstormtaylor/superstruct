@@ -11,8 +11,7 @@ export const data = {
 }
 
 export const error = {
-  code: 'property_required',
-  type: 'array',
   path: ['tags'],
-  key: 'tags',
+  value: undefined,
+  type: 'array',
 }

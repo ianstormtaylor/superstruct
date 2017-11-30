@@ -13,7 +13,7 @@ export const Struct = struct('email')
 export const data = undefined
 
 export const error = {
-  code: 'value_required',
-  type: 'email',
   path: [],
+  value: undefined,
+  type: 'email',
 }

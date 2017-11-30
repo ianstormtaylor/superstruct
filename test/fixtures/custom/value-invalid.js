@@ -13,8 +13,7 @@ export const Struct = struct('email')
 export const data = 'invalid'
 
 export const error = {
-  code: 'value_invalid',
-  type: 'email',
   path: [],
   value: 'invalid',
+  type: 'email',
 }

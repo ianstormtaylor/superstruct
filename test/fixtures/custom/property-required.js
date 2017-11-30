@@ -15,8 +15,7 @@ export const Struct = struct({
 export const data = {}
 
 export const error = {
-  code: 'property_required',
-  type: 'email',
   path: ['email'],
-  key: 'email',
+  type: 'email',
+  value: undefined,
 }

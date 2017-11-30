@@ -12,9 +12,7 @@ export const data = {
 }
 
 export const error = {
-  code: 'element_invalid',
-  type: 'string',
   path: ['tags', 0],
-  index: 0,
   value: false,
+  type: 'string',
 }

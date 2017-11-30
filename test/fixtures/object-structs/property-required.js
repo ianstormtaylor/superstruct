@@ -17,8 +17,7 @@ export const data = {
 }
 
 export const error = {
-  code: 'property_required',
-  type: 'string',
   path: ['address', 'street'],
-  key: 'street',
+  value: undefined,
+  type: 'string',
 }
