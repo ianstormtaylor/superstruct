@@ -22,17 +22,17 @@ describe('superstruct', () => {
       for (const test of tests) {
         it(test, async () => {
           const module = require(resolve(testsDir, test))
-          const { struct, value } = module
+          const { Struct, data } = module
 
           if ('output' in module) {
             const expected = module.output
-            const actual = struct(value)
+            const actual = Struct(data)
             assert.deepEqual(actual, expected)
           }
 
           else if ('error' in module) {
             assert.throws(() => {
-              struct(value)
+              Struct(data)
             }, (e) => {
               const expected = module.error
               const actual = pick(e, 'code', 'type', 'key', 'index', 'path', 'value', 'schema')

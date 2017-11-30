@@ -1,16 +1,16 @@
 
-import { struct as s } from '../../..'
+import { struct } from '../../..'
 
-const address = s({
+const address = struct({
   street: 'string',
   city: 'string',
 })
 
-export const struct = s({
+export const Struct = struct({
   address,
 })
 
-export const value = {
+export const data = {
   address: {
     street: '123 fake st',
     city: 'springfield',

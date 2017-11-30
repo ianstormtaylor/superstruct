@@ -1,12 +1,12 @@
 
-import { struct as s } from '../../..'
+import { struct } from '../../..'
 
-const address = s({
+const address = struct({
   street: 'string',
   city: 'string',
 })
 
-export const struct = s({
+export const Struct = struct({
   address,
 }, {
   address: {
@@ -15,7 +15,7 @@ export const struct = s({
   }
 })
 
-export const value = undefined
+export const data = undefined
 
 export const output = {
   address: {

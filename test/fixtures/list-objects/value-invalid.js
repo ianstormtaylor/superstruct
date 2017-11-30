@@ -1,9 +1,9 @@
 
-import { struct as s } from '../../..'
+import { struct } from '../../..'
 
-export const struct = s([{ id: 'string' }])
+export const Struct = struct([{ id: 'string' }])
 
-export const value = 'invalid'
+export const data = 'invalid'
 
 export const error = {
   code: 'value_invalid',
