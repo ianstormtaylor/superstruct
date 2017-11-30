@@ -12,7 +12,7 @@
     "build": "node builder",
     "clean": "rm -rf ./lib ./node_modules",
     "lint": "eslint src/* test/*",
-    "prepublish": "yarn run build",
+    "prepublish": "npm run build",
     "release": "np",
     "pretest": "npm run build",
     "test": "mocha test/index.js --require reify --compilers js:buble/register",
