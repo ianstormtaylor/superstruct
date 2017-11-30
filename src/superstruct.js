@@ -104,12 +104,8 @@ function superstruct(config = {}) {
      */
 
     assert(value) {
-      const result = this.validate(value)
-
-      if (result instanceof StructError) {
-        throw result
-      }
-
+      const [ error, result ] = this.validate(value)
+      if (error) throw error
       return result
     }
 
@@ -134,20 +130,20 @@ function superstruct(config = {}) {
      */
 
     test(value) {
-      const result = this.validate(value)
-      return !(result instanceof StructError)
+      const [ error ] = this.validate(value)
+      return !error
     }
 
     /**
      * Validate a `value`, returning an error or the value with defaults.
      *
      * @param {Any} value
-     * @return {Any|StructError}
+     * @return {Array}
      */
 
     validate(value) {
       value = this.default(value)
-      return value
+      return [undefined, value]
     }
 
   }
@@ -177,7 +173,7 @@ function superstruct(config = {}) {
      * Validate a `value`, returning an error or the value with defaults.
      *
      * @param {Any} value
-     * @return {Any|StructError}
+     * @return {Array}
      */
 
     validate(value) {
@@ -189,10 +185,11 @@ function superstruct(config = {}) {
         (options.required && value === undefined) ||
         (value !== undefined && !schema(value))
       ) {
-        return new StructError({ type, value, data: value, path: [] })
+        const error = new StructError({ type, value, data: value, path: [] })
+        return [error]
       }
 
-      return value
+      return [undefined, value]
     }
 
   }
@@ -234,7 +231,7 @@ function superstruct(config = {}) {
      * Validate a `value`, returning an error or the value with defaults.
      *
      * @param {Any} value
-     * @return {Any|StructError}
+     * @return {Array}
      */
 
     validate(value) {
@@ -246,10 +243,11 @@ function superstruct(config = {}) {
         (options.required && value === undefined) ||
         (value !== undefined && !validators.some(fn => fn(value)))
       ) {
-        return new StructError({ type, value, data: value, path: [] })
+        const error = new StructError({ type, value, data: value, path: [] })
+        return [error]
       }
 
-      return value
+      return [undefined, value]
     }
 
   }
@@ -290,18 +288,15 @@ function superstruct(config = {}) {
      * Validate a list `value`.
      *
      * @param {Any} value
-     * @return {Any|StructError}
+     * @return {Array}
      */
 
     validate(value) {
       const { options, elementStruct, valueStruct } = this
 
       value = this.default(value)
-      const result = valueStruct.validate(value)
-
-      if (result instanceof StructError) {
-        return result
-      }
+      const [ error ] = valueStruct.validate(value)
+      if (error) return [error]
 
       const errors = []
       const values = []
@@ -309,24 +304,26 @@ function superstruct(config = {}) {
       value = isUndefined ? [] : value
 
       value.forEach((element, index) => {
-        const r = elementStruct.validate(element)
+        const [ e, r ] = elementStruct.validate(element)
 
-        if (r instanceof StructError) {
-          r.path = [index].concat(r.path)
-          r.data = value
-          errors.push(r)
-        } else {
-          values.push(r)
+        if (e) {
+          e.path = [index].concat(e.path)
+          e.data = value
+          errors.push(e)
+          return
         }
+
+        values.push(r)
       })
 
       if (errors.length) {
         const first = errors[0]
         first.errors = errors
-        return first
+        return [first]
       }
 
-      return isUndefined && !values.length ? undefined : values
+      const ret = isUndefined && !values.length ? undefined : values
+      return [undefined, ret]
     }
 
   }
@@ -388,7 +385,7 @@ function superstruct(config = {}) {
      * Validate a list `value`.
      *
      * @param {Any} value
-     * @return {Any|StructError}
+     * @return {Array}
      */
 
     validate(value) {
@@ -396,11 +393,8 @@ function superstruct(config = {}) {
 
       value = this.default(value)
 
-      const result = valueStruct.validate(value)
-
-      if (result instanceof StructError) {
-        return result
-      }
+      const [ error ] = valueStruct.validate(value)
+      if (error) return [error]
 
       const errors = []
       const values = {}
@@ -423,12 +417,12 @@ function superstruct(config = {}) {
           return
         }
 
-        const r = s.validate(v)
+        const [ e, r ] = s.validate(v)
 
-        if (r instanceof StructError) {
-          r.path = [k].concat(r.path)
-          r.data = value
-          errors.push(r)
+        if (e) {
+          e.path = [k].concat(e.path)
+          e.data = value
+          errors.push(e)
           return
         }
 
@@ -440,10 +434,11 @@ function superstruct(config = {}) {
       if (errors.length) {
         const first = errors[0]
         first.errors = errors
-        return first
+        return [first]
       }
 
-      return isUndefined && !hasKeys ? undefined : values
+      const ret = isUndefined && !hasKeys ? undefined : values
+      return [undefined, ret]
     }
 
   }
