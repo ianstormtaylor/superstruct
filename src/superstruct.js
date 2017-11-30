@@ -31,6 +31,19 @@ const STRUCT_METHODS = [
 ]
 
 /**
+ * The diffrent Kinds of struct schemas.
+ *
+ * @type {Array}
+ */
+
+const STRUCT_KINDS = [
+  'scalar',
+  'function',
+  'object',
+  'list',
+]
+
+/**
  * Convenience flags for the struct factory.
  *
  * @type {Array}
@@ -518,33 +531,33 @@ function superstruct(config = {}) {
   }
 
   /**
-   * Define a struct with `schema`, `defaults` and `options`.
+   * Create a `kind` struct with schema `definition`, `defaults` and `options`.
    *
-   * @param {Function|String|Array|Object} schema
+   * @param {String} kind
+   * @param {Function|String|Array|Object} definition
    * @param {Any} defaults
    * @param {Object} options
    * @return {Function}
    */
 
-  function struct(schema, defaults, options = {}) {
-    if (isStruct(schema)) {
-      return schema
+  function createStruct(kind, definition, defaults, options) {
+    if (isStruct(definition)) {
+      return definition
     }
 
-    const type = typeOf(schema)
-    const args = [schema, defaults, options]
-    let sch
+    const args = [definition, defaults, options]
+    let schema
 
-    if (type === 'function') {
-      sch = new FunctionSchema(...args)
-    } else if (type === 'string') {
-      sch = new ScalarSchema(...args)
-    } else if (type === 'array') {
-      sch = new ListSchema(...args)
-    } else if (type === 'object') {
-      sch = new ObjectSchema(...args)
+    if (kind === 'function') {
+      schema = new FunctionSchema(...args)
+    } else if (kind === 'scalar') {
+      schema = new ScalarSchema(...args)
+    } else if (kind === 'list') {
+      schema = new ListSchema(...args)
+    } else if (kind === 'object') {
+      schema = new ObjectSchema(...args)
     } else {
-      throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}`)
+      throw new Error(`Unrecognized struct kind: ${kind}`)
     }
 
     // Define the struct creator function.
@@ -553,7 +566,7 @@ function superstruct(config = {}) {
         throw new Error('The `Struct` creation function should not be used with the `new` keyword.')
       }
 
-      return sch.assert(data)
+      return schema.assert(data)
     }
 
     // Add a private property for identifying struct functions.
@@ -561,13 +574,37 @@ function superstruct(config = {}) {
 
     // Mix in all of the methods for this kind of schema.
     STRUCT_METHODS.forEach((method) => {
-      if (sch[method]) {
-        Struct[method] = (...a) => sch[method](...a)
+      if (schema[method]) {
+        Struct[method] = (...a) => schema[method](...a)
       }
     })
 
     return Struct
   }
+
+  /**
+   * Define a struct with schema `definition`, `defaults` and `options`.
+   *
+   * @param {Function|String|Array|Object} definition
+   * @param {Any} defaults
+   * @param {Object} options
+   * @return {Function}
+   */
+
+  function struct(definition, defaults, options) {
+    if (isStruct(definition)) {
+      return definition
+    }
+
+    const kind = getKind(definition)
+    const Struct = createStruct(kind, definition, defaults, options)
+    return Struct
+  }
+
+  // Mix in a factory for each kind of struct.
+  STRUCT_KINDS.forEach((kind) => {
+    struct[kind] = (...args) => createStruct(kind, ...args)
+  })
 
   // Mix in the convenience properties for option flags.
   STRUCT_FLAGS.forEach((flag) => {
@@ -592,6 +629,25 @@ function superstruct(config = {}) {
 
 function isStruct(value) {
   return !!(value && value[IS_STRUCT])
+}
+
+/**
+ * Get the kind of a struct from its schema `definition`.
+ *
+ * @param {Any} definition
+ * @return {String}
+ */
+
+function getKind(definition) {
+  switch (typeOf(definition)) {
+    case 'function': return 'function'
+    case 'string': return 'scalar'
+    case 'array': return 'list'
+    case 'object': return 'object'
+    default: {
+      throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${definition}`)
+    }
+  }
 }
 
 /**
