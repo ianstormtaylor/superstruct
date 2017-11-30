@@ -8,6 +8,7 @@ import typeOf from 'kind-of'
  */
 
 const TYPES = [
+  'arguments',
   'array',
   'boolean',
   'buffer',
@@ -44,6 +45,7 @@ const TYPES = [
 
 const DEFAULT_TYPES = {
   any: value => value !== undefined,
+  error: value => Object.prototype.toString.call(value) === '[object Error]',
 }
 
 TYPES.forEach((type) => {
