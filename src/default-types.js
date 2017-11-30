@@ -2,23 +2,60 @@
 import typeOf from 'kind-of'
 
 /**
+ * Type strings.
+ *
+ * @type {Array}
+ */
+
+const TYPES = [
+  'arguments',
+  'array',
+  'boolean',
+  'buffer',
+  'date',
+  'float32array',
+  'float64array',
+  'function',
+  'generatorfunction',
+  'int16array',
+  'int32array',
+  'int8array',
+  'map',
+  'null',
+  'number',
+  'object',
+  'regexp',
+  'set',
+  'string',
+  'symbol',
+  'uint16array',
+  'uint32array',
+  'uint8array',
+  'uint8clampedarray',
+  'undefined',
+  'weakmap',
+  'weakset',
+]
+
+/**
  * Default types.
  *
  * @type {Object}
  */
 
-export default {
-  any: v => v !== undefined,
-  array: v => typeOf(v) === 'array',
-  boolean: v => typeOf(v) === 'boolean',
-  buffer: v => typeOf(v) === 'buffer',
-  date: v => typeOf(v) === 'date',
-  error: v => typeOf(v) === 'error',
-  function: v => typeOf(v) === 'function',
-  null: v => typeOf(v) === 'null',
-  number: v => typeOf(v) === 'number',
-  object: v => typeOf(v) === 'object',
-  regexp: v => typeOf(v) === 'regexp',
-  string: v => typeOf(v) === 'string',
-  undefined: v => typeOf(v) === 'undefined',
+const DEFAULT_TYPES = {
+  any: value => value !== undefined,
+  error: value => Object.prototype.toString.call(value) === '[object Error]',
 }
+
+TYPES.forEach((type) => {
+  DEFAULT_TYPES[type] = value => typeOf(value) === type
+})
+
+/**
+ * Export.
+ *
+ * @type {Object}
+ */
+
+export default DEFAULT_TYPES
