@@ -41,9 +41,9 @@
     "lodash.pick": "^4.4.0",
     "mocha": "^3.2.0",
     "np": "^2.13.1",
-    "uglify-js": "^2.7.0",
     "uglifyify": "^3.0.2",
     "watchify": "^3.7.0"
+    "uglify-js": "^3.2.0"
   },
   "keywords": [
     "api",
