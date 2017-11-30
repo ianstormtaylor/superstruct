@@ -45,7 +45,7 @@ But Superstruct is designed for validating data at runtime, so it throws (or ret
 
 ### Usage
 
-Superstruct exports a `struct` factory for creating functions that validate data against a specific schema:
+Superstruct exports a `struct` factory for creating structs that can validate data against a specific schema:
 
 ```js
 import { struct } from 'superstruct'
