@@ -24,21 +24,18 @@ rollup({
 }).then(bun => {
   bun.write({
     format: 'cjs',
-    file: pkg.main,
-    interop: false
+    file: pkg.main
   });
 
   bun.write({
     format: 'es',
-    file: pkg.module,
-    interop: false
+    file: pkg.module
   });
 
   bun.write({
     file: umd,
     format: 'umd',
-    name: pkg.name,
-    interop: false
+    name: pkg.name
   }).then(_ => {
     const data = fs.readFileSync(umd, 'utf8');
 
