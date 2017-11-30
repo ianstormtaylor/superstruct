@@ -17,9 +17,7 @@ export const data = {
 }
 
 export const error = {
-  code: 'property_invalid',
-  type: 'email',
   path: ['email'],
-  key: 'email',
+  type: 'email',
   value: 'invalid',
 }

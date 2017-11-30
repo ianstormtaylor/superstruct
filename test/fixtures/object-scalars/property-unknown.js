@@ -13,7 +13,7 @@ export const data = {
 }
 
 export const error = {
-  code: 'property_unknown',
   path: ['unknown'],
-  key: 'unknown',
+  value: true,
+  type: undefined,
 }

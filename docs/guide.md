@@ -79,12 +79,11 @@ const data = {
 
 User(data)
 
-// StructError: 'Expected the `name` property to be of type "string", but it was `false`.' {
-//   code: 'property_invalid',
-//   type: 'string',
+// StructError: 'Expected a value of type "string" for `name` but received `false`.' {
+//   data: { ... },
 //   path: ['name'],
-//   key: 'name',
 //   value: false,
+//   type: 'string',
 // }
 ```
 
@@ -208,12 +207,11 @@ const data = {
 
 User(data)
 
-// StructError: 'Expected the `email` property to be of type "email", but it was `'jane'`.' {
-//   code: 'property_invalid',
-//   type: 'email',
+// StructError: 'Expected a value of type "email" for `email` but received `'jane'`.' {
+//   data: { ... },
 //   path: ['email'],
-//   key: 'email',
 //   value: 'jane',
+//   type: 'email',
 // }
 ```
 
@@ -235,44 +233,37 @@ router.post('/users', ({ request, response }) => {
   try {
     User(data)
   } catch (e) {
-    switch (e.code) {
-      default: 
-        throw e
-      case 'value_invalid': 
-        const error = new Error(`user_attributes_invalid`)
-        error.value = data
-        throw error
-      case 'value_required': 
-        throw new Error(`user_attributes_required`)
-      case 'property_invalid':
-        const error = new Error(`user_${e.key}_invalid`)
-        error.attribute = e.key
-        error.value = e.value
-        throw error
-      case 'property_required':
-        const error = new Error(`user_${e.key}_required`)
-        error.attribute = e.key
-        throw error
-      case 'property_unknown':
-        const error = new Error(`user_${e.key}_unknown`)
-        error.attribute = e.key
-        throw error
+    const { path, value, type } = e
+    const key = path[0]
+
+    if (value === undefined) {
+      const error = new Error(`user_${key}_required`)
+      error.attribute = key
+      throw error
     }
-  }
+
+    if (type === undefined) {
+      const error = new Error(`user_attribute_unknown`)
+      error.attribute = key
+      throw error
+    }
+
+    const error = new Error(`user_${key}_invalid`)
+    error.attribute = key
+    error.value = value
+    throw error
 })
 ```
 
 Now all of your user validation errors are standardized, so you end up with errors with codes like:
 
 ```
-user_attributes_invalid
-user_attributes_required
-
 user_email_invalid
 user_email_required
 user_email_unknown
 
 user_name_invalid
+user_name_required
 ...
 ```
 

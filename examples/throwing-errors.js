@@ -23,10 +23,9 @@ try {
   throw e
 }
 
-// StructError: 'Expected the `name` property to be of type "string", but it was `false`.' {
-//   code: 'property_invalid',
-//   type: 'string',
+// StructError: 'Expected a value of type "string" for `name` but received `false`.' {
+//   data: { ... },
 //   path: ['name'],
-//   key: 'name',
 //   value: false,
+//   type: 'string',
 // }

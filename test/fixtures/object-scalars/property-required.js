@@ -12,8 +12,7 @@ export const data = {
 }
 
 export const error = {
-  code: 'property_required',
-  type: 'string',
   path: ['name'],
-  key: 'name',
+  value: undefined,
+  type: 'string',
 }

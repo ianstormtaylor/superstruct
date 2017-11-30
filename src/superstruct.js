@@ -14,6 +14,18 @@ import StructError from './struct-error'
 const IS_STRUCT = '@@__STRUCT__@@'
 
 /**
+ * Public properties for struct functions.
+ *
+ * @type {Array}
+ */
+
+const STRUCT_PROPERTIES = [
+  'schema',
+  'defaults',
+  'options',
+]
+
+/**
  * Public methods for struct functions.
  *
  * @type {Array}
@@ -22,12 +34,8 @@ const IS_STRUCT = '@@__STRUCT__@@'
 const STRUCT_METHODS = [
   'assert',
   'default',
-  'defaultProperty',
-  'mask',
   'test',
   'validate',
-  'validateElement',
-  'validateProperty',
 ]
 
 /**
@@ -51,21 +59,7 @@ const STRUCT_KINDS = [
 
 const STRUCT_FLAGS = [
   'required',
-  'unsealed',
 ]
-
-/**
- * The error codes that structs can throw.
- *
- * @type {String}
- */
-
-const ELEMENT_INVALID = 'element_invalid'
-const PROPERTY_INVALID = 'property_invalid'
-const PROPERTY_REQUIRED = 'property_required'
-const PROPERTY_UNKNOWN = 'property_unknown'
-const VALUE_INVALID = 'value_invalid'
-const VALUE_REQUIRED = 'value_required'
 
 /**
  * Create a struct factory with a `config`.
@@ -100,7 +94,6 @@ function superstruct(config = {}) {
       this.schema = schema
       this.defaults = defaults
       this.options = options
-      this.type = null
     }
 
     /**
@@ -168,6 +161,19 @@ function superstruct(config = {}) {
   class FunctionSchema extends Schema {
 
     /**
+     * Create a function schema with `schema`, `defaults` and `options`.
+     *
+     * @param {Any} schema
+     * @param {Any} defaults
+     * @param {Object} options
+     */
+
+    constructor(schema, defaults, options = {}) {
+      super(schema, defaults, options)
+      this.type = '<function>'
+    }
+
+    /**
      * Validate a `value`, returning an error or the value with defaults.
      *
      * @param {Any} value
@@ -179,12 +185,11 @@ function superstruct(config = {}) {
 
       value = this.default(value)
 
-      if (options.required && value === undefined) {
-        return new StructError(VALUE_REQUIRED, { type })
-      }
-
-      if (value !== undefined && !schema(value)) {
-        return new StructError(VALUE_INVALID, { type, value })
+      if (
+        (options.required && value === undefined) ||
+        (value !== undefined && !schema(value))
+      ) {
+        return new StructError({ type, value, data: value, path: [] })
       }
 
       return value
@@ -237,12 +242,11 @@ function superstruct(config = {}) {
 
       value = this.default(value)
 
-      if (options.required && value === undefined) {
-        return new StructError(VALUE_REQUIRED, { type })
-      }
-
-      if (value !== undefined && !validators.some(fn => fn(value))) {
-        return new StructError(VALUE_INVALID, { type, value })
+      if (
+        (options.required && value === undefined) ||
+        (value !== undefined && !validators.some(fn => fn(value)))
+      ) {
+        return new StructError({ type, value, data: value, path: [] })
       }
 
       return value
@@ -283,33 +287,6 @@ function superstruct(config = {}) {
     }
 
     /**
-     * Validate a list `element` at `index`.
-     *
-     * @param {Number} index
-     * @param {Any} element
-     * @return {Any|StructError}
-     */
-
-    validateElement(index, element) {
-      const s = this.elementStruct
-      const result = s.validate(element)
-
-      if (result instanceof StructError) {
-        const e = result
-        const path = [index].concat(e.path)
-
-        if (e.code === VALUE_INVALID) {
-          return new StructError(ELEMENT_INVALID, { ...e, index, path })
-        }
-
-        if ('path' in e) e.path = path
-        return e
-      }
-
-      return result
-    }
-
-    /**
      * Validate a list `value`.
      *
      * @param {Any} value
@@ -317,7 +294,7 @@ function superstruct(config = {}) {
      */
 
     validate(value) {
-      const { options, valueStruct } = this
+      const { options, elementStruct, valueStruct } = this
 
       value = this.default(value)
       const result = valueStruct.validate(value)
@@ -331,10 +308,12 @@ function superstruct(config = {}) {
       const isUndefined = !options.required && value === undefined
       value = isUndefined ? [] : value
 
-      value.forEach((e, i) => {
-        const r = this.validateElement(i, e)
+      value.forEach((element, index) => {
+        const r = elementStruct.validate(element)
 
         if (r instanceof StructError) {
+          r.path = [index].concat(r.path)
+          r.data = value
           errors.push(r)
         } else {
           values.push(r)
@@ -371,14 +350,19 @@ function superstruct(config = {}) {
     constructor(schema, defaults, options = {}) {
       super(schema, defaults, options)
 
-      const type = options.required ? 'object' : 'object?'
-      const valueStruct = struct(type)
       const propertyStructs = {}
 
       for (const key in schema) {
         const s = struct(schema[key])
         propertyStructs[key] = s
+
+        if (s.options.required) {
+          this.options.required = true
+        }
       }
+
+      const type = this.options.required ? 'object' : 'object?'
+      const valueStruct = struct(type)
 
       this.type = type
       this.valueStruct = valueStruct
@@ -386,78 +370,18 @@ function superstruct(config = {}) {
     }
 
     /**
-     * Get the default value for a `key`, given an initial `value`.
+     * Get the defaulted value, given an initial `value`.
      *
-     * @param {String} key
-     * @param {Any} value
-     * @return {Any}
+     * @param {Object|Void} value
+     * @return {Object|Void}
      */
 
-    defaultProperty(key, value) {
-      if (value !== undefined) return value
-      const { defaults = {}} = this
-      const v = defaults[key]
-      return v
-    }
-
-    /**
-     * Mask the properties a `value`, returning only the known ones.
-     *
-     * @param {Function} Struct
-     * @param {Object} value
-     */
-
-    mask(value) {
-      if (value === undefined) {
-        return undefined
-      }
-
-      const { schema } = this
-      const ret = {}
-
-      for (const key in schema) {
-        if (key in value) ret[key] = value[key]
-      }
-
+    default(value) {
+      const { defaults } = this
+      if (value !== undefined || defaults === undefined) return value
+      const defs = typeof defaults === 'function' ? defaults() : cloneDeep(defaults)
+      const ret = Object.assign({}, value, defs)
       return ret
-    }
-
-    /**
-     * Validate a list `element` at `index`.
-     *
-     * @param {Any} element
-     * @param {Number} index
-     * @return {Any|StructError}
-     */
-
-    validateProperty(key, value) {
-      const s = this.propertyStructs[key]
-
-      value = this.defaultProperty(key, value)
-
-      if (!s) {
-        return new StructError(PROPERTY_UNKNOWN, { key, path: [key] })
-      }
-
-      const result = s.validate(value)
-
-      if (result instanceof StructError) {
-        const error = result
-        const path = [key].concat(error.path)
-
-        if (error.code === VALUE_INVALID) {
-          return new StructError(PROPERTY_INVALID, { ...error, key, path })
-        }
-
-        if (error.code === VALUE_REQUIRED) {
-          return new StructError(PROPERTY_REQUIRED, { ...error, key, path })
-        }
-
-        if ('path' in error) error.path = path
-        return error
-      }
-
-      return result
     }
 
     /**
@@ -472,10 +396,6 @@ function superstruct(config = {}) {
 
       value = this.default(value)
 
-      if (options.unsealed) {
-        value = this.mask(value)
-      }
-
       const result = valueStruct.validate(value)
 
       if (result instanceof StructError) {
@@ -485,39 +405,37 @@ function superstruct(config = {}) {
       const errors = []
       const values = {}
       const isUndefined = !options.required && value === undefined
-      let hasKeys = false
+
       value = isUndefined ? {} : value
 
-      for (const k in value) {
-        hasKeys = true
+      const valueKeys = Object.keys(value)
+      const schemaKeys = Object.keys(propertyStructs)
+      const keys = new Set(valueKeys.concat(schemaKeys))
+      const hasKeys = !!valueKeys.length
+
+      keys.forEach((k) => {
         const v = value[k]
-        const r = this.validateProperty(k, v)
+        const s = this.propertyStructs[k]
+
+        if (!s) {
+          const e = new StructError({ data: value, path: [k], value: v })
+          errors.push(e)
+          return
+        }
+
+        const r = s.validate(v)
 
         if (r instanceof StructError) {
-          if (r.code === PROPERTY_REQUIRED && isUndefined) {
-            return new StructError(VALUE_REQUIRED, { type: 'object' })
-          }
-
+          r.path = [k].concat(r.path)
+          r.data = value
           errors.push(r)
-        } else {
+          return
+        }
+
+        if (k in value) {
           values[k] = r
         }
-      }
-
-      for (const k in propertyStructs) {
-        if (k in values) continue
-
-        const v = value[k]
-        const r = this.validateProperty(k, v)
-
-        if (r instanceof StructError) {
-          if (r.code === PROPERTY_REQUIRED && isUndefined) {
-            return new StructError(VALUE_REQUIRED, { type: 'object' })
-          }
-
-          errors.push(r)
-        }
-      }
+      })
 
       if (errors.length) {
         const first = errors[0]
@@ -572,11 +490,14 @@ function superstruct(config = {}) {
     // Add a private property for identifying struct functions.
     Struct[IS_STRUCT] = true
 
-    // Mix in all of the methods for this kind of schema.
+    // Mix in the public struct properties.
+    STRUCT_PROPERTIES.forEach((prop) => {
+      Struct[prop] = schema[prop]
+    })
+
+    // Mix in the public struct methods.
     STRUCT_METHODS.forEach((method) => {
-      if (schema[method]) {
-        Struct[method] = (...a) => schema[method](...a)
-      }
+      Struct[method] = (...a) => schema[method](...a)
     })
 
     return Struct

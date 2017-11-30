@@ -10,9 +10,7 @@ export const data = [
 ]
 
 export const error = {
-  code: 'property_invalid',
-  type: 'string',
   path: [1, 'id'],
-  key: 'id',
   value: false,
+  type: 'string',
 }

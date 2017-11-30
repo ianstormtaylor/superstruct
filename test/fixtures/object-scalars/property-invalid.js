@@ -12,9 +12,7 @@ export const data = {
 }
 
 export const error = {
-  code: 'property_invalid',
-  type: 'number',
   path: ['age'],
-  key: 'age',
   value: 'invalid',
+  type: 'number',
 }
