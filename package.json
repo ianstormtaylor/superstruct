@@ -14,10 +14,9 @@
     "lint": "eslint src/* test/*",
     "prepublish": "yarn run build",
     "release": "np",
-    "watch": "yarn run watch:lib",
     "pretest": "npm run build",
     "test": "mocha test/index.js --require reify --compilers js:buble/register",
-    "watch:lib": "babel ./lib --out-dir ./lib --watch"
+    "watch": "rollup -c -w"
   },
   "dependencies": {
     "component-type": "^1.2.1",

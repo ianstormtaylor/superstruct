@@ -1,27 +1,14 @@
 const fs = require('fs');
-const { rollup } = require('rollup');
-const { minify } = require('uglify-js');
-const pretty = require('pretty-bytes');
 const sizer = require('gzip-size');
+const { rollup } = require('rollup');
+const pretty = require('pretty-bytes');
+const { minify } = require('uglify-js');
+const config = require('./rollup.config');
 const pkg = require('./package');
 
 const umd = pkg['umd:main'];
 
-rollup({
-  input: 'src/index.js',
-  plugins: [
-    require('rollup-plugin-buble')({
-      objectAssign: 'Object.assign',
-      transforms: { modules:false }
-    }),
-    require('rollup-plugin-commonjs')({
-      sourceMap: false
-    }),
-    require('rollup-plugin-node-resolve')({
-      jsnext: true
-    })
-  ]
-}).then(bun => {
+rollup(config).then(bun => {
   bun.write({
     format: 'cjs',
     file: pkg.main
@@ -37,6 +24,7 @@ rollup({
     format: 'umd',
     name: pkg.name
   }).then(_ => {
+    // grab UMD's contents
     const data = fs.readFileSync(umd, 'utf8');
 
     // produce minified output
@@ -47,4 +35,4 @@ rollup({
     const int = sizer.sync(code);
     console.log(`> gzip size: ${ pretty(int) }`);
   });
-}).catch(err => console.log(err))
+}).catch(console.error);
