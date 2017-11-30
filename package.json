@@ -19,8 +19,8 @@
     "watch:lib": "babel ./lib --out-dir ./lib --watch"
   },
   "dependencies": {
-    "component-type": "^1.2.1",
-    "lodash.clonedeep": "^4.5.0"
+    "clone-deep": "^2.0.1",
+    "kind-of": "^6.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
