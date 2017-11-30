@@ -26,13 +26,13 @@ describe('superstruct', () => {
 
           if ('output' in module) {
             const expected = module.output
-            const actual = struct.assert(value)
+            const actual = struct(value)
             assert.deepEqual(actual, expected)
           }
 
           else if ('error' in module) {
             assert.throws(() => {
-              struct.assert(value)
+              struct(value)
             }, (e) => {
               const expected = module.error
               const actual = pick(e, 'code', 'type', 'key', 'index', 'path', 'value', 'schema')
