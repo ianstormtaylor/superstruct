@@ -9,7 +9,7 @@ class StructError extends TypeError {
 
   constructor(attrs) {
     const { data, path, value, type } = attrs
-    const message = `Expected a value of type "${type}" ${path.length ? `at path \`${path.join('.')}\`` : ''} but received \`${value}\`.`
+    const message = `Expected a value of type "${type}" ${path.length ? `for \`${path.join('.')}\`` : ''} but received \`${value}\`.`
     super(message)
     this.data = data
     this.path = path
