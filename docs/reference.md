@@ -103,9 +103,9 @@ Apply the struct's defaults to `data`, returning the result. Usually you'll use 
 Test that `data` is valid, returning a boolean representing whether it is valid or not.
 
 #### `validate`
-`validate(data: Any) => Any|StructError`
+`validate(data: Any) => [StructError, Any]`
 
-Validate `data`. If the data is invalid, a [`StructError`](#structerror) will be returned. Otherwise the data will be returned with defaults applied.
+Validate `data`, returning an array of `[error, result]`. If the data is invalid, the `error` will be a [`StructError`](#structerror). Otherwise, the error will be `undefined` and the `result` will be populated with the data with defaults applied.
 
 
 ### `StructError`
