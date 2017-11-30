@@ -3,7 +3,7 @@ import 'babel-polyfill'
 
 import assert from 'assert'
 import fs from 'fs'
-import pick from 'lodash/pick'
+import pick from 'lodash.pick'
 import { basename, extname, resolve } from 'path'
 
 /**

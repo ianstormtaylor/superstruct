@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "component-type": "^1.2.1",
-    "lodash": "^4.17.4"
+    "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
@@ -38,6 +38,7 @@
     "is-email": "^1.0.0",
     "is-url": "^1.2.2",
     "is-uuid": "^1.0.2",
+    "lodash.pick": "^4.4.0",
     "mocha": "^3.2.0",
     "np": "^2.13.1",
     "uglify-js": "^2.7.0",

@@ -1,5 +1,5 @@
 
-import cloneDeep from 'lodash/cloneDeep'
+import cloneDeep from 'lodash.clonedeep'
 import typeOf from 'component-type'
 
 import DEFAULT_TYPES from './default-types'
