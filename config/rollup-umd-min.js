@@ -3,7 +3,12 @@ import babel from 'rollup-plugin-babel'
 import cjs from 'rollup-plugin-commonjs'
 import node from 'rollup-plugin-node-resolve'
 
-import config from './rollup-umd'
+import config from './rollup'
+
+config.output = {
+  format: 'umd',
+  name: 'Superstruct',
+}
 
 config.plugins = [
   babel({
