@@ -23,13 +23,13 @@
     <img src="https://travis-ci.org/ianstormtaylor/superstruct.svg?branch=master">
   </a> 
   <a href="https://unpkg.com/superstruct/dist/superstruct.min.js">
-    <img src="http://img.badgesize.io/https://unpkg.com/superstruct/dist/superstruct.min.js?compression=gzip&amp;label=size&amp;maxAge=3600">
+    <img src="http://img.badgesize.io/https://unpkg.com/superstruct/dist/superstruct.min.js?compression=gzip&amp;label=size&amp;maxAge=300">
   </a>
   <a href="./packages/superstruct/package.json">
-    <img src="https://img.shields.io/npm/v/superstruct.svg?maxAge=3600&label=version&colorB=007ec6&maxAge=3600">
+    <img src="https://img.shields.io/npm/v/superstruct.svg?maxAge=300&label=version&colorB=007ec6&maxAge=300">
   </a>
   <a href="./License.md">
-    <img src="https://img.shields.io/npm/l/slate.svg?maxAge=3600">
+    <img src="https://img.shields.io/npm/l/slate.svg?maxAge=300">
   </a> 
 </p>
 
@@ -69,10 +69,10 @@ const data = {
   } 
 }
 
-Article.assert(data)
+const article = Article(data)
 
-// The `assert()` method throws when the data is invalid, and returns the data otherwise.
-// If you'd rather not throw errors, you can use `validate()` or `test()` instead.
+// This will throw when the data is invalid, and return the data otherwise.
+// If you'd rather not throw, use `Struct.validate()` or `Struct.test()`.
 ```
 
 It recognizes all the native Javascript types out of the box. But you can also define your own custom data types—specific to your application's requirements—by using the `superstruct` export:
@@ -100,7 +100,7 @@ const data = {
   email: 'jane@example.com',
 }
 
-User.assert(data)
+const user = User(data)
 ```
 
 Superstruct supports more complex use cases too like defining list or scalar structs, applying default values, composing structs inside each other, returning errors instead of throwing them, etc. For more information read the full [Documentation](#documentation).
@@ -110,7 +110,7 @@ Superstruct supports more complex use cases too like defining list or scalar str
 
 ### Why?
 
-There are lots of existing validation libraries. Some of them, like [Joi](), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js) or [`ajv`](https://github.com/epoberezkin/ajv) are decently popular. But all of them exhibit many issues that lead to hard to maintain codebases...
+There are lots of existing validation libraries. Some of them, like [`joi`](), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js), [`yup`](https://github.com/jquense/yup) or [`ajv`](https://github.com/epoberezkin/ajv) are decently popular. But all of them exhibit many issues that lead to hard to maintain codebases...
 
 - **They can't throw errors.** Many validators simply return `true/false` or string errors. Although helpful in the days of callbacks, not using `throw` in modern Javascript makes code much more complex.
 

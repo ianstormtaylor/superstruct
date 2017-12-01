@@ -58,10 +58,10 @@ const User = struct({
 })
 ```
 
-Now we can use our `User` struct to validate the data. The easiest way to do this is to use the `assert()` method, like so:
+Now we can use our `User` struct to validate the data. The easiest way to do this is to just call `User` as a function, like so:
 
 ```
-User.assert(data)
+User(data)
 ```
 
 This will either throw an error if the data is invalid, or return the validated data if the data is valid.
@@ -77,20 +77,19 @@ const data = {
   email: 'jane@example.com',
 }
 
-User.assert(data)
+User(data)
 
-// StructError: 'Expected the `name` property to be of type "string", but it was `false`.' {
-//   code: 'property_invalid',
-//   type: 'string',
+// StructError: 'Expected a value of type "string" for `name` but received `false`.' {
+//   data: { ... },
 //   path: ['name'],
-//   key: 'name',
 //   value: false,
+//   type: 'string',
 // }
 ```
 
 An error was thrown! That's what we expected.
 
-If you'd rather have the error returned instead of thrown, you can use the struct's `validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `test()` method.
+If you'd rather have the error returned instead of thrown, you can use the `Struct.validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `Struct.test()` method. Check out the [Reference](./reference.md) for more information.
 
 
 ## Making Values Optional
@@ -111,13 +110,13 @@ That `'boolean?'` with a question mark at the end means that the value can also 
 So now both of these pieces of data would be valid:
 
 ```js
-User.assert({
+User({
   id: 'number',
   name: 'Jane Smith',
   email: 'jane@example.com',
 })
 
-User.assert({
+User({
   id: 'number',
   name: 'Jane Smith',
   email: 'jane@example.com',
@@ -143,7 +142,7 @@ const User = struct({
 })
 ```
 
-To receive the data with the defaults applied, you'll need to store the return value from the `assert()` method. So your validation becomes:
+To receive the data with the defaults applied, you'll need to store the return value from calling `User()`. So your validation becomes:
 
 ```js
 const data = {
@@ -152,7 +151,7 @@ const data = {
   email: 'jane@example.com',
 }
 
-const result = User.assert(data)
+const result = User(data)
 
 // {
 //   id: 'number',
@@ -206,14 +205,13 @@ const data = {
   email: 'jane',
 }
 
-User.assert(data)
+User(data)
 
-// StructError: 'Expected the `email` property to be of type "email", but it was `'jane'`.' {
-//   code: 'property_invalid',
-//   type: 'email',
+// StructError: 'Expected a value of type "email" for `email` but received `'jane'`.' {
+//   data: { ... },
 //   path: ['email'],
-//   key: 'email',
 //   value: 'jane',
+//   type: 'email',
 // }
 ```
 
@@ -233,46 +231,39 @@ router.post('/users', ({ request, response }) => {
   const data = request.body
 
   try {
-    User.assert(data)
+    User(data)
   } catch (e) {
-    switch (e.code) {
-      default: 
-        throw e
-      case 'value_invalid': 
-        const error = new Error(`user_attributes_invalid`)
-        error.value = data
-        throw error
-      case 'value_required': 
-        throw new Error(`user_attributes_required`)
-      case 'property_invalid':
-        const error = new Error(`user_${e.key}_invalid`)
-        error.attribute = e.key
-        error.value = e.value
-        throw error
-      case 'property_required':
-        const error = new Error(`user_${e.key}_required`)
-        error.attribute = e.key
-        throw error
-      case 'property_unknown':
-        const error = new Error(`user_${e.key}_unknown`)
-        error.attribute = e.key
-        throw error
+    const { path, value, type } = e
+    const key = path[0]
+
+    if (value === undefined) {
+      const error = new Error(`user_${key}_required`)
+      error.attribute = key
+      throw error
     }
-  }
+
+    if (type === undefined) {
+      const error = new Error(`user_attribute_unknown`)
+      error.attribute = key
+      throw error
+    }
+
+    const error = new Error(`user_${key}_invalid`)
+    error.attribute = key
+    error.value = value
+    throw error
 })
 ```
 
 Now all of your user validation errors are standardized, so you end up with errors with codes like:
 
 ```
-user_attributes_invalid
-user_attributes_required
-
 user_email_invalid
 user_email_required
 user_email_unknown
 
 user_name_invalid
+user_name_required
 ...
 ```
 

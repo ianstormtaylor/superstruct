@@ -1,16 +1,15 @@
 
-import { struct as s } from '../../..'
+import { struct } from '../../..'
 
-export const struct = s({
+export const Struct = struct({
   name: 'string',
   age: 'number'
 })
 
-export const value = 'invalid'
+export const data = 'invalid'
 
 export const error = {
-  code: 'value_invalid',
-  type: 'object',
   path: [],
   value: 'invalid',
+  type: 'object',
 }

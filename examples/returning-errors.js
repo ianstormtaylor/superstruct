@@ -15,8 +15,8 @@ const data = {
   email: 'jane@example.com',
 }
 
-// Validate the data by calling `assert`. In this case the `name` property is
-// invalid, so a `property_invalid` error will be thrown.
+// Validate the data with the `validate` method. In this case the `name`
+// property is invalid, so a `property_invalid` error will be returned.
 const result = User.validate(data)
 
 if (result instanceof StructError) {
@@ -25,10 +25,9 @@ if (result instanceof StructError) {
   console.log('Valid!')
 }
 
-// StructError: 'Expected the `name` property to be of type "string", but it was `false`.' {
-//   code: 'property_invalid',
-//   type: 'string',
+// StructError: 'Expected a value of type "string" for `name` but received `false`.' {
+//   data: { ... },
 //   path: ['name'],
-//   key: 'name',
 //   value: false,
+//   type: 'string',
 // }

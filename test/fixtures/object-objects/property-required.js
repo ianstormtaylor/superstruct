@@ -1,7 +1,7 @@
 
-import { struct as s } from '../../..'
+import { struct } from '../../..'
 
-export const struct = s({
+export const Struct = struct({
   name: 'string',
   age: 'number',
   address: {
@@ -10,14 +10,13 @@ export const struct = s({
   }
 })
 
-export const value = {
+export const data = {
   name: 'john',
   age: 42,
 }
 
 export const error = {
-  code: 'property_required',
-  type: 'object',
   path: ['address'],
-  key: 'address',
+  value: undefined,
+  type: 'object',
 }

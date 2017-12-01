@@ -2,21 +2,20 @@
 import isEmail from 'is-email'
 import { superstruct } from '../../..'
 
-const s = superstruct({
+const struct = superstruct({
   types: {
     email: isEmail
   }
 })
 
-export const struct = s({
+export const Struct = struct({
   email: 'email',
 })
 
-export const value = {}
+export const data = {}
 
 export const error = {
-  code: 'property_required',
-  type: 'email',
   path: ['email'],
-  key: 'email',
+  type: 'email',
+  value: undefined,
 }

@@ -1,6 +1,6 @@
 
-import cloneDeep from 'lodash.clonedeep'
-import typeOf from 'component-type'
+import cloneDeep from 'clone-deep'
+import typeOf from 'kind-of'
 
 import DEFAULT_TYPES from './default-types'
 import StructError from './struct-error'
@@ -12,6 +12,54 @@ import StructError from './struct-error'
  */
 
 const IS_STRUCT = '@@__STRUCT__@@'
+
+/**
+ * Public properties for struct functions.
+ *
+ * @type {Array}
+ */
+
+const STRUCT_PROPERTIES = [
+  'schema',
+  'defaults',
+  'options',
+]
+
+/**
+ * Public methods for struct functions.
+ *
+ * @type {Array}
+ */
+
+const STRUCT_METHODS = [
+  'assert',
+  'default',
+  'test',
+  'validate',
+]
+
+/**
+ * The diffrent Kinds of struct schemas.
+ *
+ * @type {Array}
+ */
+
+const STRUCT_KINDS = [
+  'scalar',
+  'function',
+  'object',
+  'list',
+]
+
+/**
+ * Convenience flags for the struct factory.
+ *
+ * @type {Array}
+ */
+
+const STRUCT_FLAGS = [
+  'required',
+]
 
 /**
  * Create a struct factory with a `config`.
@@ -27,26 +75,38 @@ function superstruct(config = {}) {
   }
 
   /**
-   * Base struct.
+   * Base schema.
    *
-   * @type {Struct}
+   * @type {Schema}
    */
 
-  class Struct {
+  class Schema {
 
     /**
-     * Create a struct with `schema`, `defaults` and `options`.
+     * Create a schema with `schema`, `defaults` and `options`.
      *
      * @param {Any} schema
      * @param {Any} defaults
+     * @param {Object} options
      */
 
     constructor(schema, defaults, options = {}) {
-      const { required = false } = options
       this.schema = schema
       this.defaults = defaults
-      this.required = required
-      this.type = null
+      this.options = options
+    }
+
+    /**
+     * Assert that a `value` is valid, throwing if not.
+     *
+     * @param {Any} value
+     * @return {Any|StructError}
+     */
+
+    assert(value) {
+      const [ error, result ] = this.validate(value)
+      if (error) throw error
+      return result
     }
 
     /**
@@ -63,85 +123,94 @@ function superstruct(config = {}) {
     }
 
     /**
-     * Validate a `value`, returning an error or the value with defaults.
+     * Test that a `value` is valid.
      *
      * @param {Any} value
-     * @return {Any|StructError}
+     * @return {Boolean}
      */
 
-    validate(value) {
-      value = this.default(value)
-      return value
+    test(value) {
+      const [ error ] = this.validate(value)
+      return !error
     }
-
-    /**
-     * Assert that a `value` is valid, throwing if not.
-     *
-     * @param {Any} value
-     * @return {Any|StructError}
-     */
-
-    assert(value) {
-      const result = this.validate(value)
-
-      if (result instanceof StructError) {
-        throw result
-      }
-
-      return result
-    }
-
-  }
-
-  /**
-   * Function struct.
-   *
-   * @type {FunctionStruct}
-   */
-
-  class FunctionStruct extends Struct {
 
     /**
      * Validate a `value`, returning an error or the value with defaults.
      *
      * @param {Any} value
-     * @return {Any|StructError}
+     * @return {Array}
      */
 
     validate(value) {
       value = this.default(value)
-      const { required, type, schema } = this
-
-      if (required && value === undefined) {
-        return new StructError('value_required', { type })
-      }
-
-      if (value !== undefined && !schema(value)) {
-        return new StructError('value_invalid', { type, value })
-      }
-
-      return value
+      return [undefined, value]
     }
 
   }
 
   /**
-   * Scalar struct.
+   * Function schema.
    *
-   * @type {ScalarStruct}
+   * @type {FunctionSchema}
    */
 
-  class ScalarStruct extends Struct {
+  class FunctionSchema extends Schema {
 
     /**
-     * Create a scalar struct with `schema`, `defaults` and `options`.
+     * Create a function schema with `schema`, `defaults` and `options`.
      *
      * @param {Any} schema
      * @param {Any} defaults
      * @param {Object} options
      */
 
-    constructor(schema, defaults, options) {
+    constructor(schema, defaults, options = {}) {
+      super(schema, defaults, options)
+      this.type = '<function>'
+    }
+
+    /**
+     * Validate a `value`, returning an error or the value with defaults.
+     *
+     * @param {Any} value
+     * @return {Array}
+     */
+
+    validate(value) {
+      const { options, type, schema } = this
+
+      value = this.default(value)
+
+      if (
+        (options.required && value === undefined) ||
+        (value !== undefined && !schema(value))
+      ) {
+        const error = new StructError({ type, value, data: value, path: [] })
+        return [error]
+      }
+
+      return [undefined, value]
+    }
+
+  }
+
+  /**
+   * Scalar schema.
+   *
+   * @type {ScalarSchema}
+   */
+
+  class ScalarSchema extends Schema {
+
+    /**
+     * Create a scalar schema with `schema`, `defaults` and `options`.
+     *
+     * @param {Any} schema
+     * @param {Any} defaults
+     * @param {Object} options
+     */
+
+    constructor(schema, defaults, options = {}) {
       super(schema, defaults, options)
 
       const required = !schema.endsWith('?')
@@ -153,7 +222,7 @@ function superstruct(config = {}) {
         throw new Error(`No struct validator function found for type "${t}".`)
       })
 
-      this.required = required
+      this.options.required = required
       this.type = type
       this.validators = validators
     }
@@ -162,50 +231,51 @@ function superstruct(config = {}) {
      * Validate a `value`, returning an error or the value with defaults.
      *
      * @param {Any} value
-     * @return {Any|StructError}
+     * @return {Array}
      */
 
     validate(value) {
+      const { options, type, validators } = this
+
       value = this.default(value)
-      const { required, type, validators } = this
 
-      if (required && value === undefined) {
-        return new StructError('value_required', { type })
+      if (
+        (options.required && value === undefined) ||
+        (value !== undefined && !validators.some(fn => fn(value)))
+      ) {
+        const error = new StructError({ type, value, data: value, path: [] })
+        return [error]
       }
 
-      if (value !== undefined && !validators.some(fn => fn(value))) {
-        return new StructError('value_invalid', { type, value })
-      }
-
-      return value
+      return [undefined, value]
     }
 
   }
 
   /**
-   * List struct.
+   * List schema.
    *
-   * @type {ListStruct}
+   * @type {ListSchema}
    */
 
-  class ListStruct extends Struct {
+  class ListSchema extends Schema {
 
     /**
-     * Create a list struct with `schema`, `defaults` and `options`.
+     * Create a list schema with `schema`, `defaults` and `options`.
      *
      * @param {Any} schema
      * @param {Any} defaults
      * @param {Object} options
      */
 
-    constructor(schema, defaults, options) {
+    constructor(schema, defaults, options = {}) {
       super(schema, defaults, options)
 
       if (schema.length !== 1) {
         throw new Error(`List structs must be defined as an array with a single element, but you passed ${schema.length} elements.`)
       }
 
-      const type = this.required ? 'array' : 'array?'
+      const type = options.required ? 'array' : 'array?'
       const valueStruct = struct(type)
       const elementStruct = struct(schema[0])
 
@@ -215,101 +285,81 @@ function superstruct(config = {}) {
     }
 
     /**
-     * Validate a list `element` at `index`.
-     *
-     * @param {Number} index
-     * @param {Any} element
-     * @return {Any|StructError}
-     */
-
-    validateElement(index, element) {
-      const s = this.elementStruct
-      const result = s.validate(element)
-
-      if (result instanceof StructError) {
-        const e = result
-        const path = [index].concat(e.path)
-
-        if (e.code === 'value_invalid') {
-          return new StructError('element_invalid', { ...e, index, path })
-        }
-
-        if ('path' in e) e.path = path
-        return e
-      }
-
-      return result
-    }
-
-    /**
      * Validate a list `value`.
      *
      * @param {Any} value
-     * @return {Any|StructError}
+     * @return {Array}
      */
 
     validate(value) {
-      value = this.default(value)
-      const { required, valueStruct } = this
-      const result = valueStruct.validate(value)
+      const { options, elementStruct, valueStruct } = this
 
-      if (result instanceof StructError) {
-        return result
-      }
+      value = this.default(value)
+      const [ error ] = valueStruct.validate(value)
+      if (error) return [error]
 
       const errors = []
       const values = []
-      const isUndefined = !required && value === undefined
+      const isUndefined = !options.required && value === undefined
       value = isUndefined ? [] : value
 
-      value.forEach((e, i) => {
-        const r = this.validateElement(i, e)
+      value.forEach((element, index) => {
+        const [ e, r ] = elementStruct.validate(element)
 
-        if (r instanceof StructError) {
-          errors.push(r)
-        } else {
-          values.push(r)
+        if (e) {
+          e.path = [index].concat(e.path)
+          e.data = value
+          errors.push(e)
+          return
         }
+
+        values.push(r)
       })
 
       if (errors.length) {
         const first = errors[0]
         first.errors = errors
-        return first
+        return [first]
       }
 
-      return isUndefined && !values.length ? undefined : values
+      const ret = isUndefined && !values.length ? undefined : values
+      return [undefined, ret]
     }
 
   }
 
   /**
-   * Object struct.
+   * Object schema.
    *
-   * @type {ObjectStruct}
+   * @type {ObjectSchema}
    */
 
-  class ObjectStruct extends Struct {
+  class ObjectSchema extends Schema {
 
     /**
-     * Create an object struct with `schema`, `defaults` and `options`.
+     * Create an object schema with `schema`, `defaults` and `options`.
      *
      * @param {Any} schema
      * @param {Any} defaults
      * @param {Object} options
      */
 
-    constructor(schema, defaults, options) {
+    constructor(schema, defaults, options = {}) {
       super(schema, defaults, options)
 
-      const type = this.required ? 'object' : 'object?'
-      const valueStruct = struct(type)
       const propertyStructs = {}
 
       for (const key in schema) {
         const s = struct(schema[key])
         propertyStructs[key] = s
+
+        if (s.options.required) {
+          this.options.required = true
+        }
       }
+
+      const type = this.options.required ? 'object' : 'object?'
+      const valueStruct = struct(type)
 
       this.type = type
       this.valueStruct = valueStruct
@@ -317,163 +367,167 @@ function superstruct(config = {}) {
     }
 
     /**
-     * Get the default value for a `key`, given an initial `value`.
+     * Get the defaulted value, given an initial `value`.
      *
-     * @param {String} key
-     * @param {Any} value
-     * @return {Any}
+     * @param {Object|Void} value
+     * @return {Object|Void}
      */
 
-    getProperty(key, value) {
-      if (value !== undefined) return value
-      const { defaults = {}} = this
-      const v = defaults[key]
-      return v
-    }
-
-    /**
-     * Validate a list `element` at `index`.
-     *
-     * @param {Any} element
-     * @param {Number} index
-     * @return {Any|StructError}
-     */
-
-    validateProperty(key, value) {
-      value = this.getProperty(key, value)
-      const s = this.propertyStructs[key]
-
-      if (!s) {
-        return new StructError('property_unknown', { key, path: [key] })
-      }
-
-      const result = s.validate(value)
-
-      if (result instanceof StructError) {
-        const error = result
-        const path = [key].concat(error.path)
-
-        if (error.code === 'value_invalid') {
-          return new StructError('property_invalid', { ...error, key, path })
-        }
-
-        if (error.code === 'value_required') {
-          return new StructError('property_required', { ...error, key, path })
-        }
-
-        if ('path' in error) error.path = path
-        return error
-      }
-
-      return result
+    default(value) {
+      const { defaults } = this
+      if (value !== undefined || defaults === undefined) return value
+      const defs = typeof defaults === 'function' ? defaults() : cloneDeep(defaults)
+      const ret = Object.assign({}, value, defs)
+      return ret
     }
 
     /**
      * Validate a list `value`.
      *
      * @param {Any} value
-     * @return {Any|StructError}
+     * @return {Array}
      */
 
     validate(value) {
-      value = this.default(value)
-      const { required, propertyStructs, valueStruct } = this
-      const result = valueStruct.validate(value)
+      const { options, propertyStructs, valueStruct } = this
 
-      if (result instanceof StructError) {
-        return result
-      }
+      value = this.default(value)
+
+      const [ error ] = valueStruct.validate(value)
+      if (error) return [error]
 
       const errors = []
       const values = {}
-      const isUndefined = !required && value === undefined
-      let hasKeys = false
+      const isUndefined = !options.required && value === undefined
+
       value = isUndefined ? {} : value
 
-      for (const k in value) {
-        hasKeys = true
+      const valueKeys = Object.keys(value)
+      const schemaKeys = Object.keys(propertyStructs)
+      const keys = new Set(valueKeys.concat(schemaKeys))
+      const hasKeys = !!valueKeys.length
+
+      keys.forEach((k) => {
         const v = value[k]
-        const r = this.validateProperty(k, v)
+        const s = this.propertyStructs[k]
 
-        if (r instanceof StructError) {
-          if (r.code === 'property_required' && isUndefined) {
-            return new StructError('value_required', { type: 'object' })
-          }
+        if (!s) {
+          const e = new StructError({ data: value, path: [k], value: v })
+          errors.push(e)
+          return
+        }
 
-          errors.push(r)
-        } else {
+        const [ e, r ] = s.validate(v)
+
+        if (e) {
+          e.path = [k].concat(e.path)
+          e.data = value
+          errors.push(e)
+          return
+        }
+
+        if (k in value) {
           values[k] = r
         }
-      }
-
-      for (const k in propertyStructs) {
-        if (k in values) continue
-
-        const v = value[k]
-        const r = this.validateProperty(k, v)
-
-        if (r instanceof StructError) {
-          if (r.code === 'property_required' && isUndefined) {
-            return new StructError('value_required', { type: 'object' })
-          }
-
-          errors.push(r)
-        }
-      }
+      })
 
       if (errors.length) {
         const first = errors[0]
         first.errors = errors
-        return first
+        return [first]
       }
 
-      return isUndefined && !hasKeys ? undefined : values
+      const ret = isUndefined && !hasKeys ? undefined : values
+      return [undefined, ret]
     }
 
   }
 
   /**
-   * Define a struct with `schema`, `defaults` and `options`.
+   * Create a `kind` struct with schema `definition`, `defaults` and `options`.
    *
-   * @param {Function|String|Array|Object} schema
+   * @param {String} kind
+   * @param {Function|String|Array|Object} definition
    * @param {Any} defaults
    * @param {Object} options
    * @return {Function}
    */
 
-  function struct(schema, defaults, options) {
-    const type = typeOf(schema)
-    let s
-
-    if (isStruct(schema)) {
-      s = schema
-    } else if (type === 'function') {
-      s = new FunctionStruct(schema, defaults, options)
-    } else if (type === 'string') {
-      s = new ScalarStruct(schema, defaults, options)
-    } else if (type === 'array') {
-      s = new ListStruct(schema, defaults, options)
-    } else if (type === 'object') {
-      s = new ObjectStruct(schema, defaults, options)
-    } else {
-      throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${schema}`)
+  function createStruct(kind, definition, defaults, options) {
+    if (isStruct(definition)) {
+      return definition
     }
 
-    s[IS_STRUCT] = true
-    return s
+    const args = [definition, defaults, options]
+    let schema
+
+    if (kind === 'function') {
+      schema = new FunctionSchema(...args)
+    } else if (kind === 'scalar') {
+      schema = new ScalarSchema(...args)
+    } else if (kind === 'list') {
+      schema = new ListSchema(...args)
+    } else if (kind === 'object') {
+      schema = new ObjectSchema(...args)
+    } else {
+      throw new Error(`Unrecognized struct kind: ${kind}`)
+    }
+
+    // Define the struct creator function.
+    function Struct(data) {
+      if (this instanceof Struct) {
+        throw new Error('The `Struct` creation function should not be used with the `new` keyword.')
+      }
+
+      return schema.assert(data)
+    }
+
+    // Add a private property for identifying struct functions.
+    Struct[IS_STRUCT] = true
+
+    // Mix in the public struct properties.
+    STRUCT_PROPERTIES.forEach((prop) => {
+      Struct[prop] = schema[prop]
+    })
+
+    // Mix in the public struct methods.
+    STRUCT_METHODS.forEach((method) => {
+      Struct[method] = (...a) => schema[method](...a)
+    })
+
+    return Struct
   }
 
   /**
-   * Attach `required` and `optional` convenience methods for easy defining.
+   * Define a struct with schema `definition`, `defaults` and `options`.
+   *
+   * @param {Function|String|Array|Object} definition
+   * @param {Any} defaults
+   * @param {Object} options
+   * @return {Function}
    */
 
-  struct.required = (schema, defaults, options = {}) => {
-    return struct(schema, defaults, { ...options, required: true })
+  function struct(definition, defaults, options) {
+    if (isStruct(definition)) {
+      return definition
+    }
+
+    const kind = getKind(definition)
+    const Struct = createStruct(kind, definition, defaults, options)
+    return Struct
   }
 
-  struct.optional = (schema, defaults, options = {}) => {
-    return struct(schema, defaults, { ...options, required: false })
-  }
+  // Mix in a factory for each kind of struct.
+  STRUCT_KINDS.forEach((kind) => {
+    struct[kind] = (...args) => createStruct(kind, ...args)
+  })
+
+  // Mix in the convenience properties for option flags.
+  STRUCT_FLAGS.forEach((flag) => {
+    Object.defineProperty(struct, flag, {
+      get: () => (s, d, o = {}) => struct(s, d, { ...o, [flag]: true })
+    })
+  })
 
   /**
    * Return the struct factory.
@@ -491,6 +545,25 @@ function superstruct(config = {}) {
 
 function isStruct(value) {
   return !!(value && value[IS_STRUCT])
+}
+
+/**
+ * Get the kind of a struct from its schema `definition`.
+ *
+ * @param {Any} definition
+ * @return {String}
+ */
+
+function getKind(definition) {
+  switch (typeOf(definition)) {
+    case 'function': return 'function'
+    case 'string': return 'scalar'
+    case 'array': return 'list'
+    case 'object': return 'object'
+    default: {
+      throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${definition}`)
+    }
+  }
 }
 
 /**

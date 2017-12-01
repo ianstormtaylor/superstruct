@@ -1,6 +1,6 @@
 import fs from 'fs'
 import assert from 'assert'
-import pick from 'lodash.pick'
+import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
 
 /**
@@ -19,20 +19,20 @@ describe('superstruct', () => {
       for (const test of tests) {
         it(test, () => {
           const module = require(resolve(testsDir, test))
-          const { struct, value } = module
+          const { Struct, data } = module
 
           if ('output' in module) {
             const expected = module.output
-            const actual = struct.assert(value)
+            const actual = Struct(data)
             assert.deepEqual(actual, expected)
           }
 
           else if ('error' in module) {
             assert.throws(() => {
-              struct.assert(value)
+              Struct(data)
             }, (e) => {
               const expected = module.error
-              const actual = pick(e, 'code', 'type', 'key', 'index', 'path', 'value', 'schema')
+              const actual = pick(e, 'type', 'path', 'value')
               assert.deepEqual(actual, expected)
               return true
             })

@@ -1,12 +1,12 @@
 
-import { struct as s } from '../../..'
+import { struct } from '../../..'
 
-export const struct = s({
+export const Struct = struct({
   id: 'string|number',
   zip: 'string|number',
 })
 
-export const value = {
+export const data = {
   id: 1,
   zip: '94203',
 }

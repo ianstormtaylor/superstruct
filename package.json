@@ -2,7 +2,7 @@
   "name": "superstruct",
   "umd:name": "Superstruct",
   "description": "A simple, expressive way to validate data in Javascript.",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
   "umd:main": "lib/superstruct.min.js",
@@ -18,21 +18,25 @@
     "test": "mocha test/index.js --require reify --compilers js:buble/register",
     "watch": "rollup -c -w"
   },
+  "files": [
+    "dist",
+    "lib"
+  ],
   "dependencies": {
-    "component-type": "^1.2.1",
-    "lodash.clonedeep": "^4.5.0"
+    "clone-deep": "^2.0.1",
+    "kind-of": "^6.0.1"
   },
   "devDependencies": {
-    "babel-eslint": "^6.1.0",
-    "eslint": "^3.8.1",
+    "babel-eslint": "^8.0.2",
+    "eslint": "^4.12.1",
     "eslint-plugin-import": "^2.0.1",
     "gzip-size": "^4.1.0",
     "is-email": "^1.0.0",
     "is-url": "^1.2.2",
     "is-uuid": "^1.0.2",
-    "lodash.pick": "^4.4.0",
-    "mocha": "^3.2.0",
-    "np": "^2.13.1",
+    "lodash": "^4.17.4",
+    "mocha": "^4.0.1",
+    "np": "^2.17.0",
     "pretty-bytes": "^4.0.2",
     "reify": "^0.13.0",
     "rollup": "^0.52.0",

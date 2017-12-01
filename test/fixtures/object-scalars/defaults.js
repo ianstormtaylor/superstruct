@@ -1,7 +1,7 @@
 
-import { struct as s } from '../../..'
+import { struct } from '../../..'
 
-export const struct = s({
+export const Struct = struct({
   name: 'string',
   age: 'number'
 }, {
@@ -9,7 +9,7 @@ export const struct = s({
   age: 42,
 })
 
-export const value = undefined
+export const data = undefined
 
 export const output = {
   name: 'john',

@@ -1,8 +1,8 @@
 
-import { struct as s } from '../../..'
+import { struct } from '../../..'
 
-export const struct = s([{ id: 'string' }], [{ id: '0' }])
+export const Struct = struct([{ id: 'string' }], [{ id: '0' }])
 
-export const value = undefined
+export const data = undefined
 
 export const output = [{ id: '0' }]
