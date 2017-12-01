@@ -1,13 +1,13 @@
 
-import typeOf from 'kind-of'
+import kindOf from 'kind-of'
 
 /**
- * Type strings.
+ * The types that `kind-of` supports..
  *
  * @type {Array}
  */
 
-const TYPES = [
+const KIND_OF_TYPES = [
   'arguments',
   'array',
   'boolean',
@@ -38,18 +38,18 @@ const TYPES = [
 ]
 
 /**
- * Default types.
+ * The default types that Superstruct ships with.
  *
  * @type {Object}
  */
 
-const DEFAULT_TYPES = {
+const TYPES = {
   any: value => value !== undefined,
   error: value => Object.prototype.toString.call(value) === '[object Error]',
 }
 
-TYPES.forEach((type) => {
-  DEFAULT_TYPES[type] = value => typeOf(value) === type
+KIND_OF_TYPES.forEach((type) => {
+  TYPES[type] = value => kindOf(value) === type
 })
 
 /**
@@ -58,4 +58,4 @@ TYPES.forEach((type) => {
  * @type {Object}
  */
 
-export default DEFAULT_TYPES
+export default TYPES

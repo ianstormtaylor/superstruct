@@ -1,9 +1,9 @@
 
 import cloneDeep from 'clone-deep'
-import typeOf from 'kind-of'
+import kindOf from 'kind-of'
 
-import DEFAULT_TYPES from './default-types'
-import StructError from './struct-error'
+import DEFAULT_TYPES from './types'
+import StructError from './error'
 
 /**
  * A private string to identify structs by.
@@ -555,7 +555,7 @@ function isStruct(value) {
  */
 
 function getKind(definition) {
-  switch (typeOf(definition)) {
+  switch (kindOf(definition)) {
     case 'function': return 'function'
     case 'string': return 'scalar'
     case 'array': return 'list'
