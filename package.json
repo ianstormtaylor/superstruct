@@ -19,7 +19,6 @@
     "watch": "rollup -c -w"
   },
   "files": [
-    "dist",
     "lib"
   ],
   "dependencies": {
