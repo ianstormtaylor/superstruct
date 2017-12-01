@@ -5,8 +5,9 @@
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
   "main": "./lib/index.js",
+  "module": "./lib/index.es.js",
   "files": [
-    "dist",
+    "umd",
     "lib"
   ],
   "dependencies": {
@@ -19,8 +20,10 @@
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
     "babel-plugin-dev-expression": "^0.2.1",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.2.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babelify": "^8.0.0",
     "browserify": "^14.5.0",
@@ -33,21 +36,25 @@
     "lodash": "^4.17.4",
     "mocha": "^4.0.1",
     "np": "^2.17.0",
+    "rollup": "^0.52.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-node-resolve": "^3.0.0",
     "uglifyify": "^4.0.5",
     "watchify": "^3.7.0"
   },
   "scripts": {
-    "build": "yarn run build:lib && yarn run build:max && yarn run build:min",
-    "build:lib": "babel ./src --out-dir ./lib",
-    "build:max": "mkdir -p ./dist && NODE_ENV=production browserify ./src/index.js --transform babelify --transform envify --standalone Superstruct > ./dist/superstruct.js",
-    "build:min": "mkdir -p ./dist && NODE_ENV=production browserify ./src/index.js --transform babelify --transform envify --transform uglifyify --standalone Superstruct | uglifyjs > ./dist/superstruct.min.js",
+    "build": "yarn run build:es && yarn run build:cjs && yarn run build:max && yarn run build:min",
+    "build:cjs": "rollup --config ./config/rollup-cjs.js",
+    "build:es": "rollup --config ./config/rollup.js",
+    "build:max": "rollup --config ./config/rollup-umd.js > ./umd/superstruct.js",
+    "build:min": "NODE_ENV=production rollup --config ./config/rollup-umd-min.js | uglifyjs > ./umd/superstruct.min.js",
     "clean": "rm -rf ./lib ./node_modules",
     "lint": "eslint src/* test/*",
     "prepublish": "yarn run build",
     "release": "np",
-    "test": "yarn run build:lib && mocha --require babel-core/register ./test/index.js",
-    "watch": "yarn run watch:lib",
-    "watch:lib": "babel ./lib --out-dir ./lib --watch"
+    "test": "yarn run build:cjs && mocha --require babel-core/register ./test/index.js",
+    "watch": "rollup --config ./config/rollup-cjs.js --watch"
   },
   "keywords": [
     "api",
