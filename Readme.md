@@ -69,7 +69,7 @@ const data = {
   } 
 }
 
-const user = Article(data)
+const article = Article(data)
 
 // This will throw when the data is invalid, and return the data otherwise.
 // If you'd rather not throw, use `Struct.validate()` or `Struct.test()`.
