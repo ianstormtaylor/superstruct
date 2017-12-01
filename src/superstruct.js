@@ -1,5 +1,6 @@
 
 import kindOf from 'kind-of'
+import invariant from 'invariant'
 
 import TYPES from './types'
 import Schemas from './schemas'
@@ -72,10 +73,7 @@ function superstruct(config = {}) {
 
     // Define the struct creator function.
     function Struct(data) {
-      if (this instanceof Struct) {
-        throw new Error('The `Struct` creation function should not be used with the `new` keyword.')
-      }
-
+      invariant(!(this instanceof Struct), 'The `Struct` creation function should not be used with the `new` keyword.')
       return schema.assert(data)
     }
 
@@ -152,7 +150,7 @@ function getKind(definition) {
     case 'array': return 'List'
     case 'object': return 'Object'
     default: {
-      throw new Error(`A struct schema definition must be a string, array or object, but you passed: ${definition}`)
+      invariant(false, `A struct schema definition must be a string, array or object, but you passed: ${definition}`)
     }
   }
 }

@@ -11,12 +11,14 @@
   ],
   "dependencies": {
     "clone-deep": "^2.0.1",
+    "invariant": "^2.2.2",
     "kind-of": "^6.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
+    "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",

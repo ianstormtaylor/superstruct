@@ -1,5 +1,7 @@
 
 import cloneDeep from 'clone-deep'
+import kindOf from 'kind-of'
+import invariant from 'invariant'
 
 import StructError from './error'
 
@@ -124,8 +126,8 @@ class ScalarSchema extends Schema {
     const ts = type.split(/\s*\|\s*/g)
     const validators = ts.map((t) => {
       const fn = types[t]
-      if (typeof fn === 'function') return fn
-      throw new Error(`No struct validator function found for type "${t}".`)
+      invariant(typeof fn === 'function', `No struct validator function found for type "${t}".`)
+      return fn
     })
 
     this.kind = 'Scalar'
@@ -157,9 +159,7 @@ class ListSchema extends Schema {
   constructor(schema, defaults, options = {}) {
     super(schema, defaults, options)
 
-    if (schema.length !== 1) {
-      throw new Error(`List structs must be defined as an array with a single element, but you passed ${schema.length} elements.`)
-    }
+    invariant(schema.length === 1, `List structs must be defined as an array with a single element, but you passed ${schema.length} elements.`)
 
     const { struct } = options
     const type = options.required ? 'array' : 'array?'
@@ -220,6 +220,8 @@ class ObjectSchema extends Schema {
 
   constructor(schema, defaults, options = {}) {
     super(schema, defaults, options)
+
+    invariant(kindOf(schema) === 'object', `Object structs must be defined as an object, but you passed: ${schema}`)
 
     const { struct } = options
     const propertyStructs = {}
