@@ -1,12 +1,24 @@
 {
   "name": "superstruct",
+  "umd:name": "Superstruct",
   "description": "A simple, expressive way to validate data in Javascript.",
   "version": "0.3.0",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
-  "main": "./lib/index.js",
+  "umd:main": "lib/superstruct.min.js",
+  "module": "lib/superstruct.es.js",
+  "main": "lib/superstruct.js",
+  "scripts": {
+    "build": "node builder",
+    "clean": "rm -rf ./lib ./node_modules",
+    "lint": "eslint src/* test/*",
+    "prepublish": "npm run build",
+    "release": "np",
+    "pretest": "npm run build",
+    "test": "mocha test/index.js --require reify --compilers js:buble/register",
+    "watch": "rollup -c -w"
+  },
   "files": [
-    "dist",
     "lib"
   ],
   "dependencies": {
@@ -14,38 +26,23 @@
     "kind-of": "^6.0.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.10.1",
-    "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babelify": "^8.0.0",
-    "browserify": "^14.5.0",
-    "envify": "^4.1.0",
     "eslint": "^4.12.1",
     "eslint-plugin-import": "^2.0.1",
+    "gzip-size": "^4.1.0",
     "is-email": "^1.0.0",
     "is-url": "^1.2.2",
     "is-uuid": "^1.0.2",
     "lodash": "^4.17.4",
     "mocha": "^4.0.1",
     "np": "^2.17.0",
-    "uglifyify": "^4.0.5",
-    "watchify": "^3.7.0"
-  },
-  "scripts": {
-    "build": "yarn run build:lib && yarn run build:max && yarn run build:min",
-    "build:lib": "babel ./src --out-dir ./lib",
-    "build:max": "mkdir -p ./dist && NODE_ENV=production browserify ./src/index.js --transform babelify --transform envify --standalone Superstruct > ./dist/superstruct.js",
-    "build:min": "mkdir -p ./dist && NODE_ENV=production browserify ./src/index.js --transform babelify --transform envify --transform uglifyify --standalone Superstruct | uglifyjs > ./dist/superstruct.min.js",
-    "clean": "rm -rf ./lib ./node_modules",
-    "lint": "eslint src/* test/*",
-    "prepublish": "yarn run build",
-    "release": "np",
-    "test": "yarn run build:lib && mocha --require babel-core/register ./test/index.js",
-    "watch": "yarn run watch:lib",
-    "watch:lib": "babel ./lib --out-dir ./lib --watch"
+    "pretty-bytes": "^4.0.2",
+    "reify": "^0.13.0",
+    "rollup": "^0.52.0",
+    "rollup-plugin-buble": "^0.18.0",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "uglify-js": "^3.2.0"
   },
   "keywords": [
     "api",
