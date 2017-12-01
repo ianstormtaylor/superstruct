@@ -1,9 +1,7 @@
 
-import 'babel-polyfill'
-
 import assert from 'assert'
 import fs from 'fs'
-import pick from 'lodash.pick'
+import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
 
 /**
@@ -20,7 +18,7 @@ describe('superstruct', () => {
       const tests = fs.readdirSync(testsDir).filter(t => t[0] !== '.').map(t => basename(t, extname(t)))
 
       for (const test of tests) {
-        it(test, async () => {
+        it(test, () => {
           const module = require(resolve(testsDir, test))
           const { Struct, data } = module
 
