@@ -13,6 +13,7 @@ const KIND_OF_TYPES = [
   'boolean',
   'buffer',
   'date',
+  'error',
   'float32array',
   'float64array',
   'function',
@@ -45,7 +46,6 @@ const KIND_OF_TYPES = [
 
 const TYPES = {
   any: value => value !== undefined,
-  error: value => Object.prototype.toString.call(value) === '[object Error]',
 }
 
 KIND_OF_TYPES.forEach((type) => {
