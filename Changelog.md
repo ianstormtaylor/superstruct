@@ -7,6 +7,18 @@ This document maintains a list of changes to the `superstruct` package with each
 ---
 
 
+### `0.3.0` — November 30, 2017
+
+###### BREAKING
+
+- **The `validate()` method now returns `[ error, result ]`.** Previously it only had a single return value, which necessitated extra type checking to see if the value was an error or a result. Now you can just destructure the array to get either return value, for easier coding.
+
+- **Errors have been simplified, removing "codes".** Previously there were multiple types of errors that were thrown and you could differentiate between them with the `error.code` property. But the other properties of the error already let you infer the code, so having multiple types of errors made for a larger API surface without much benefit.
+
+
+---
+
+
 ### `0.2.0` — November 30, 2017
 
 ###### BREAKING
