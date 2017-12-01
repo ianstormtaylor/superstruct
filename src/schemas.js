@@ -166,6 +166,7 @@ class ListSchema extends Schema {
     const valueStruct = struct(type)
     const elementStruct = struct(schema[0])
 
+    this.kind = 'List'
     this.type = type
     this.check = (value) => {
       const [ error ] = valueStruct.validate(value)
@@ -238,6 +239,7 @@ class ObjectSchema extends Schema {
     const type = this.options.required ? 'object' : 'object?'
     const valueStruct = struct(type)
 
+    this.kind = 'Object'
     this.type = type
     this.check = (value) => {
       const [ error ] = valueStruct.validate(value)
