@@ -1,5 +1,5 @@
 
-import StructError from './struct-error'
+import StructError from './error'
 import superstruct from './superstruct'
 
 /**
