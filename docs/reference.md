@@ -206,7 +206,7 @@ Out of the box, Superstruct recognizes all of the native Javascript types:
 
 Superstruct throws detailed errors when data is invalid, so that you can build extremely precise errors of your own to give your end users the best possible experience. 
 
-Each error includes the following properties:
+Each error thrown includes the following properties:
 
 |**Property**|**Type**|**Example**|**Description**|
 |---|---|---|---|
@@ -214,3 +214,6 @@ Each error includes the following properties:
 |`path`|`Array`|`['address', 'street']`|The path to the invalid value relative to the original data.|
 |`value`|`Any`|`...`|The invalid value.|
 |`type`|`String`|`'string'`|The expected scalar type of the value.|
+|`errors`|`Array`|`[...]`|All the validation errors thrown, of which this is the first.
+
+The "first" error encountered is always the one thrown, because this makes for convenient and simple logic in the majority of cases. However, the `errors` property is available with a list of all of the validation errors that occurred in case you want to add support for multiple error handling.
