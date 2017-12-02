@@ -53,7 +53,7 @@ Struct({
 })
 ```
 
-The `struct` function ships with Superstruct by default, and recognizes all of the native Javascript types in its definitions. It's the easiest way to quickly define structs. 
+The `struct` function ships with Superstruct by default, and recognizes all of the native JavaScript types in its definitions. It's the easiest way to quickly define structs. 
 
 If you need to define custom data types, use the [`superstruct`](#superstruct) export instead...
 
@@ -244,7 +244,7 @@ Union structs validate that a value matches at least one of many structs. Their 
 
 ## Types
 
-Out of the box, Superstruct recognizes all of the native Javascript types:
+Out of the box, Superstruct recognizes all of the native JavaScript types:
 
 |**Type**|**Example**|**Description**|
 |---|---|---|
