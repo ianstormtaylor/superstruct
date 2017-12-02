@@ -14,6 +14,7 @@
   <a href="#usage">Usage</a> •
   <a href="#why">Why?</a> •
   <a href="#principles">Principles</a> •
+  <a href="#demo">Demo</a> •
   <a href="#examples">Examples</a> •
   <a href="#documentation">Documentation</a>
 </p>
@@ -146,6 +147,15 @@ Which brings me to how Superstruct solves these issues...
 6. **Useful errors.** The errors that Superstruct throws contain all the information you need to convert them into your own application-specific errors easy, which means more helpful errors for your end users!
 
 3. **Familiar API.** The Superstruct API was heavily inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/). If you're familiar with any of those, then its schema definition API will feel very natural to use, so you can get started quickly.
+
+
+<br/>
+
+### Demo
+
+Try out the [live demo on JSFiddle](https://jsfiddle.net/yjugaeg8/2/) to get an idea for how the API works, or to quickly verify your use case:
+
+[![Demo screenshot.](./docs/images/demo-screenshot.png)](https://jsfiddle.net/yjugaeg8/2/)
 
 
 <br/>
