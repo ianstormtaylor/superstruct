@@ -1,8 +1,9 @@
 
-import TYPES from './types'
-import KINDS from './kinds'
+import Kinds from './kinds'
 import StructError from './error'
-import isStruct, { IS_STRUCT } from './is-struct'
+import Types from './types'
+import isStruct from './is-struct'
+import { IS_STRUCT, KIND } from './constants'
 
 /**
  * Create a struct factory with a `config`.
@@ -13,7 +14,7 @@ import isStruct, { IS_STRUCT } from './is-struct'
 
 function superstruct(config = {}) {
   const types = {
-    ...TYPES,
+    ...Types,
     ...(config.types || {}),
   }
 
@@ -29,7 +30,7 @@ function superstruct(config = {}) {
   function struct(schema, defaults, options = {}) {
     if (isStruct(schema)) schema = schema.schema
 
-    const kind = KINDS.any(schema, defaults, { ...options, types })
+    const kind = Kinds.any(schema, defaults, { ...options, types })
 
     function Struct(data) {
       if (this instanceof Struct) {
@@ -44,7 +45,7 @@ function superstruct(config = {}) {
     }
 
     Object.defineProperty(Struct, IS_STRUCT, { value: true })
-    Object.defineProperty(Struct, '__kind', { value: kind })
+    Object.defineProperty(Struct, KIND, { value: kind })
 
     Struct.kind = kind.name
     Struct.type = kind.type
@@ -76,8 +77,8 @@ function superstruct(config = {}) {
    * Mix in a factory for each specific kind of struct.
    */
 
-  Object.keys(KINDS).forEach((name) => {
-    const kind = KINDS[name]
+  Object.keys(Kinds).forEach((name) => {
+    const kind = Kinds[name]
 
     struct[name] = (schema, defaults, options) => {
       const type = kind(schema, defaults, { ...options, types })

@@ -2,12 +2,12 @@
 import kindOf from 'kind-of'
 
 /**
- * The types that `kind-of` supports..
+ * The types that `kind-of` supports.
  *
  * @type {Array}
  */
 
-const KIND_OF_TYPES = [
+const TYPES = [
   'arguments',
   'array',
   'boolean',
@@ -44,12 +44,12 @@ const KIND_OF_TYPES = [
  * @type {Object}
  */
 
-const TYPES = {
+const Types = {
   any: value => value !== undefined,
 }
 
-KIND_OF_TYPES.forEach((type) => {
-  TYPES[type] = value => kindOf(value) === type
+TYPES.forEach((type) => {
+  Types[type] = value => kindOf(value) === type
 })
 
 /**
@@ -58,4 +58,4 @@ KIND_OF_TYPES.forEach((type) => {
  * @type {Object}
  */
 
-export default TYPES
+export default Types

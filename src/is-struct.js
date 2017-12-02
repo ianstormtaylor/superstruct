@@ -1,11 +1,5 @@
 
-/**
- * A private string to identify structs by.
- *
- * @type {String}
- */
-
-const IS_STRUCT = '@@__STRUCT__@@'
+import { IS_STRUCT } from './constants'
 
 /**
  * Check if a `value` is a struct.
@@ -25,4 +19,3 @@ function isStruct(value) {
  */
 
 export default isStruct
-export { IS_STRUCT }

@@ -2,9 +2,12 @@
 import kindOf from 'kind-of'
 
 import isStruct from './is-struct'
+import { KIND } from './constants'
 
 /**
  * Kind.
+ *
+ * @type {Kind}
  */
 
 class Kind {
@@ -26,7 +29,7 @@ class Kind {
  */
 
 function any(schema, defaults, options) {
-  if (isStruct(schema)) return schema.__kind
+  if (isStruct(schema)) return schema[KIND]
   if (schema instanceof Kind) return schema
 
   switch (kindOf(schema)) {
@@ -552,12 +555,12 @@ function intersection(schema, defaults, options) {
 }
 
 /**
- * Export.
+ * Kinds.
  *
- * @type {Function}
+ * @type {Object}
  */
 
-export default {
+const Kinds = {
   any,
   dict,
   enum: enums,
@@ -570,3 +573,11 @@ export default {
   union,
   intersection,
 }
+
+/**
+ * Export.
+ *
+ * @type {Object}
+ */
+
+export default Kinds
