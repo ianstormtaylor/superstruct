@@ -17,7 +17,11 @@ class StructError extends TypeError {
     this.type = type
     this.errors = errors
     if (!errors.length) errors.push(this)
-    Error.captureStackTrace(this, this.constructor)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor)
+    } else {
+      this.stack = (new Error()).stack
+    }
   }
 
 }
