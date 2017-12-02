@@ -18,5 +18,5 @@ export const data = {
 export const error = {
   path: ['address'],
   value: undefined,
-  type: 'object',
+  type: '{street,city}',
 }

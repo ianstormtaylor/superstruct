@@ -19,5 +19,5 @@ export const data = {
 export const error = {
   path: ['address'],
   value: 'invalid',
-  type: 'object',
+  type: '{street,city}',
 }

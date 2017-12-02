@@ -4,10 +4,10 @@ import { struct } from '../../..'
 export const Struct = struct({
   name: 'string',
   age: 'number',
-  address: {
+  address: struct.optional({
     street: 'string?',
     city: 'string?',
-  }
+  })
 })
 
 export const data = {

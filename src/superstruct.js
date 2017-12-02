@@ -1,44 +1,10 @@
 
-import kindOf from 'kind-of'
 import invariant from 'invariant'
 
 import TYPES from './types'
-import Schemas from './schemas'
-
-/**
- * A private string to identify structs by.
- *
- * @type {String}
- */
-
-const IS_STRUCT = '@@__STRUCT__@@'
-
-/**
- * Public properties for struct functions.
- *
- * @type {Array}
- */
-
-const STRUCT_PROPERTIES = [
-  'kind',
-  'type',
-  'schema',
-  'defaults',
-  'options',
-]
-
-/**
- * Public methods for struct functions.
- *
- * @type {Array}
- */
-
-const STRUCT_METHODS = [
-  'assert',
-  'default',
-  'test',
-  'validate',
-]
+import KINDS from './kinds'
+import StructError from './error'
+import isStruct, { IS_STRUCT } from './is-struct'
 
 /**
  * Create a struct factory with a `config`.
@@ -54,68 +20,64 @@ function superstruct(config = {}) {
   }
 
   /**
-   * Create a `kind` struct with schema `definition`, `defaults` and `options`.
+   * Create a `kind` struct with `schema`, `defaults` and `options`.
    *
-   * @param {String} kind
-   * @param {Function|String|Array|Object} definition
+   * @param {Any} schema
    * @param {Any} defaults
    * @param {Object} options
    * @return {Function}
    */
 
-  function createStruct(kind, definition, defaults, options = {}) {
-    if (isStruct(definition)) {
-      definition = definition.schema
-    }
+  function struct(schema, defaults, options = {}) {
+    if (isStruct(schema)) schema = schema.schema
 
-    const Schema = Schemas[kind]
-    const schema = new Schema(definition, defaults, { ...options, types, struct })
+    const kind = KINDS.any(schema, defaults, { ...options, types })
 
-    // Define the struct creator function.
     function Struct(data) {
       invariant(!(this instanceof Struct), 'The `Struct` creation function should not be used with the `new` keyword.')
-      return schema.assert(data)
+      return Struct.assert(data)
     }
 
     Struct[IS_STRUCT] = true
-    Struct.kind = kind
+    Struct.__kind = kind
+    Struct.kind = kind.name
+    Struct.type = kind.type
+    Struct.schema = schema
+    Struct.defaults = defaults
+    Struct.options = options
 
-    STRUCT_PROPERTIES.forEach((prop) => {
-      Struct[prop] = schema[prop]
-    })
+    Struct.assert = (value) => {
+      const [ error, result ] = kind.validate(value)
+      if (error) throw new StructError(error)
+      return result
+    }
 
-    STRUCT_METHODS.forEach((method) => {
-      Struct[method] = (...a) => schema[method](...a)
-    })
+    Struct.test = (value) => {
+      const [ error ] = kind.validate(value)
+      return !error
+    }
+
+    Struct.validate = (value) => {
+      const [ error, result ] = kind.validate(value)
+      if (error) return [new StructError(error)]
+      return [undefined, result]
+    }
 
     return Struct
   }
 
   /**
-   * Define a struct with schema `definition`, `defaults` and `options`.
-   *
-   * @param {Function|String|Array|Object} definition
-   * @param {Any} defaults
-   * @param {Object} options
-   * @return {Function}
+   * Mix in a factory for each specific kind of struct.
    */
 
-  function struct(definition, defaults, options) {
-    if (isStruct(definition)) return definition
-    const kind = getKind(definition)
-    const Struct = createStruct(kind, definition, defaults, options)
-    return Struct
-  }
+  Object.keys(KINDS).forEach((name) => {
+    const kind = KINDS[name]
 
-  // Mix in a factory for each kind of struct.
-  Object.keys(Schemas).forEach((kind) => {
-    const lower = kind.toLowerCase()
-    struct[lower] = (...args) => createStruct(kind, ...args)
-  })
-
-  // Mix in the `required` convenience flag.
-  Object.defineProperty(struct, 'required', {
-    get: () => (s, d, o = {}) => struct(s, d, { ...o, required: true })
+    struct[name] = (schema, defaults, options) => {
+      const type = kind(schema, defaults, { ...options, types })
+      const s = struct(type, defaults, options)
+      return s
+    }
   })
 
   /**
@@ -123,36 +85,6 @@ function superstruct(config = {}) {
    */
 
   return struct
-}
-
-/**
- * Check if a `value` is a struct.
- *
- * @param {Any} value
- * @return {Boolean}
- */
-
-function isStruct(value) {
-  return !!(value && value[IS_STRUCT])
-}
-
-/**
- * Get the kind of a struct from its schema `definition`.
- *
- * @param {Any} definition
- * @return {String}
- */
-
-function getKind(definition) {
-  switch (kindOf(definition)) {
-    case 'function': return 'Function'
-    case 'string': return 'Scalar'
-    case 'array': return 'List'
-    case 'object': return 'Object'
-    default: {
-      invariant(false, `A struct schema definition must be a string, array or object, but you passed: ${definition}`)
-    }
-  }
 }
 
 /**

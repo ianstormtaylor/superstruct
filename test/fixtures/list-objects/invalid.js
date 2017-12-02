@@ -3,14 +3,10 @@ import { struct } from '../../..'
 
 export const Struct = struct([{ id: 'string' }])
 
-export const data = [
-  { id: '1' },
-  'invalid',
-  { id: '3' },
-]
+export const data = 'invalid'
 
 export const error = {
-  path: [1],
+  path: [],
   value: 'invalid',
-  type: '{id}',
+  type: '[{id}]',
 }

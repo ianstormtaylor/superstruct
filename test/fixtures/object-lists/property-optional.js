@@ -3,15 +3,13 @@ import { struct } from '../../..'
 
 export const Struct = struct({
   title: 'string',
-  tags: ['string'],
+  tags: struct.optional(['string']),
 })
 
 export const data = {
   title: 'hello world',
 }
 
-export const error = {
-  path: ['tags'],
-  value: undefined,
-  type: '[string]',
+export const output = {
+  title: 'hello world',
 }

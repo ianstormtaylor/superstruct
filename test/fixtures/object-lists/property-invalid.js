@@ -14,5 +14,5 @@ export const data = {
 export const error = {
   path: ['tags'],
   value: 'invalid',
-  type: 'array',
+  type: '[string]',
 }

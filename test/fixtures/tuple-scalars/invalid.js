@@ -1,12 +1,12 @@
 
 import { struct } from '../../..'
 
-export const Struct = struct([{ id: 'string' }])
+export const Struct = struct(['string', 'number'])
 
 export const data = 'invalid'
 
 export const error = {
   path: [],
   value: 'invalid',
-  type: 'array',
+  type: '[string,number]',
 }

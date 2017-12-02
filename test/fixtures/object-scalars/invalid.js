@@ -11,5 +11,5 @@ export const data = 'invalid'
 export const error = {
   path: [],
   value: 'invalid',
-  type: 'object',
+  type: '{name,age}',
 }
