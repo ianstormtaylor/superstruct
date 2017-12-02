@@ -20,6 +20,10 @@ class Kind {
 
 /**
  * Any.
+ *
+ * @param {Array|Function|Object|String} schema
+ * @param {Any} defaults
+ * @param {Object} options
  */
 
 function any(schema, defaults, options) {
@@ -68,14 +72,26 @@ function any(schema, defaults, options) {
     }
   }
 
-  invariant(false, `A schema definition must be an object, array, string or function, but you passed: ${schema}`)
+  invariant(
+    false,
+    `A schema definition must be an object, array, string or function, but you passed: ${schema}`
+  )
 }
 
 /**
  * Dict.
+ *
+ * @param {Array} schema
+ * @param {Object} defaults
+ * @param {Object} options
  */
 
 function dict(schema, defaults, options) {
+  invariant(
+    kindOf(schema) === 'array' && schema.length === 2,
+    `Dict structs must be defined as an array with two elements, but you passed: ${schema}`
+  )
+
   const obj = scalar('object', undefined, options)
   const keys = any(schema[0], undefined, options)
   const values = any(schema[1], undefined, options)
@@ -130,9 +146,18 @@ function dict(schema, defaults, options) {
 
 /**
  * Enums.
+ *
+ * @param {Array} schema
+ * @param {Any} defaults
+ * @param {Object} options
  */
 
 function enums(schema, defaults, options) {
+  invariant(
+    kindOf(schema) === 'array',
+    `Enum structs must be defined as an array, but you passed: ${schema}`
+  )
+
   const name = 'enum'
   const type = schema.map((s) => {
     try {
@@ -153,9 +178,18 @@ function enums(schema, defaults, options) {
 
 /**
  * Function.
+ *
+ * @param {Function} schema
+ * @param {Any} defaults
+ * @param {Object} options
  */
 
 function func(schema, defaults, options) {
+  invariant(
+    kindOf(schema) === 'function',
+    `Function structs must be defined as a function, but you passed: ${schema}`
+  )
+
   const name = 'function'
   const type = '<function>'
   const validate = (value = defaults) => {
@@ -169,10 +203,17 @@ function func(schema, defaults, options) {
 
 /**
  * List.
+ *
+ * @param {Array} schema
+ * @param {Array} defaults
+ * @param {Object} options
  */
 
 function list(schema, defaults, options) {
-  invariant(schema.length === 1, `List structs must be defined as an array with a single element, but you passed ${schema.length} elements.`)
+  invariant(
+    kindOf(schema) === 'array' && schema.length === 1,
+    `List structs must be defined as an array with a single element, but you passed: ${schema}`
+  )
 
   const array = scalar('array', undefined, options)
   const element = any(schema[0], undefined, options)
@@ -218,10 +259,17 @@ function list(schema, defaults, options) {
 
 /**
  * Object.
+ *
+ * @param {Object} schema
+ * @param {Object} defaults
+ * @param {Object} options
  */
 
 function object(schema, defaults, options) {
-  invariant(kindOf(schema) === 'object', `Object structs must be defined as an object, but you passed: ${schema}`)
+  invariant(
+    kindOf(schema) === 'object',
+    `Object structs must be defined as an object, but you passed: ${schema}`
+  )
 
   const obj = scalar('object', undefined, options)
   const ks = []
@@ -290,6 +338,10 @@ function object(schema, defaults, options) {
 
 /**
  * Optional.
+ *
+ * @param {Any} schema
+ * @param {Any} defaults
+ * @param {Object} options
  */
 
 function optional(schema, defaults, options) {
@@ -298,12 +350,26 @@ function optional(schema, defaults, options) {
 
 /**
  * Scalar.
+ *
+ * @param {String} schema
+ * @param {Any} defaults
+ * @param {Object} options
  */
 
 function scalar(schema, defaults, options) {
+  invariant(
+    kindOf(schema) === 'string',
+    `Scalar structs must be defined as a string, but you passed: ${schema}`
+  )
+
   const { types } = options
   const fn = types[schema]
-  invariant(typeof fn === 'function', `No struct validator function found for type "${schema}".`)
+
+  invariant(
+    typeof fn === 'function',
+    `No struct validator function found for type "${schema}".`
+  )
+
   const kind = func(fn, defaults, options)
   const name = 'scalar'
   const type = schema
@@ -323,9 +389,18 @@ function scalar(schema, defaults, options) {
 
 /**
  * Tuple.
+ *
+ * @param {Array} schema
+ * @param {Array} defaults
+ * @param {Object} options
  */
 
 function tuple(schema, defaults, options) {
+  invariant(
+    kindOf(schema) === 'array',
+    `Tuple structs must be defined as an array, but you passed: ${schema}`
+  )
+
   const kinds = schema.map(s => any(s, undefined, options))
   const array = scalar('array', undefined, options)
   const name = 'tuple'
@@ -378,9 +453,18 @@ function tuple(schema, defaults, options) {
 
 /**
  * Union.
+ *
+ * @param {Array} schema
+ * @param {Any} defaults
+ * @param {Object} options
  */
 
 function union(schema, defaults, options) {
+  invariant(
+    kindOf(schema) === 'array',
+    `Union structs must be defined as an array, but you passed: ${schema}`
+  )
+
   const kinds = schema.map(s => any(s, undefined, options))
   const name = 'union'
   const type = kinds.map(k => k.type).join(' | ')
@@ -402,9 +486,18 @@ function union(schema, defaults, options) {
 
 /**
  * Intersection.
+ *
+ * @param {Array} schema
+ * @param {Any} defaults
+ * @param {Object} options
  */
 
 function intersection(schema, defaults, options) {
+  invariant(
+    kindOf(schema) === 'array',
+    `Intersection structs must be defined as an array, but you passed: ${schema}`
+  )
+
   const types = schema.map(s => any(s, undefined, options))
   const name = 'intersection'
   const type = types.map(t => t.type).join(' & ')
