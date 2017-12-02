@@ -5,7 +5,7 @@
 
 <p align="center">
   A simple and composable way  <br/>
-  to validate data in Javascript.
+  to validate data in JavaScript.
 </p>
 <br/>
 <br/>
@@ -36,7 +36,7 @@
 <br/>
 <br/>
 
-Superstruct makes it easy to define interfaces and then validate Javascript data against them. Its type annotation API was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/), giving it a familiar and easy to understand API.
+Superstruct makes it easy to define interfaces and then validate JavaScript data against them. Its type annotation API was inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/), giving it a familiar and easy to understand API.
 
 But Superstruct is designed for validating data at runtime, so it throws (or returns) detailed runtime errors for you or your end users. This is especially useful in situations like accepting arbitrary input in a REST or GraphQL API. But it can even be used to validate internal data structures at runtime when needed.
 
@@ -75,7 +75,7 @@ const article = Article(data)
 // If you'd rather not throw, use `Struct.validate()` or `Struct.test()`.
 ```
 
-It recognizes all the native Javascript types out of the box. But you can also define your own custom data types—specific to your application's requirements—by using the `superstruct` export:
+It recognizes all the native JavaScript types out of the box. But you can also define your own custom data types—specific to your application's requirements—by using the `superstruct` export:
 
 ```js
 import { superstruct } from 'superstruct'
@@ -112,7 +112,7 @@ Superstruct supports more complex use cases too like defining list or scalar str
 
 There are lots of existing validation libraries. Some of them, like [`joi`](), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js), [`yup`](https://github.com/jquense/yup) or [`ajv`](https://github.com/epoberezkin/ajv) are decently popular. But all of them exhibit many issues that lead to hard to maintain codebases...
 
-- **They can't throw errors.** Many validators simply return `true/false` or string errors. Although helpful in the days of callbacks, not using `throw` in modern Javascript makes code much more complex.
+- **They can't throw errors.** Many validators simply return `true/false` or string errors. Although helpful in the days of callbacks, not using `throw` in modern JavaScript makes code much more complex.
 
 - **They don't expose detailed errors.** For those that do `throw`, they often throw string-only errors without any details as to why, making it difficult to customize the errors to be helpful for end-users.
 
@@ -120,7 +120,7 @@ There are lots of existing validation libraries. Some of them, like [`joi`](), [
 
 - **They don't encourage single sources of truth.** Many existing APIs encourage re-defining custom data types over and over, with the source of truth being spread out across your entire code base.
 
-- **They don't pre-compile schemas.** Many validators define schemas as plain Javascript objects, which means they delegate the parsing of the schema logic to validation time, making them much slower.
+- **They don't pre-compile schemas.** Many validators define schemas as plain JavaScript objects, which means they delegate the parsing of the schema logic to validation time, making them much slower.
 
 - **They're tightly coupled to other concerns.** Many validators are tightly coupled to Express or other frameworks, which results in one-off, confusing code that isn't reusable across your code base.
 
@@ -135,7 +135,7 @@ Which brings me to how Superstruct solves these issues...
 
 1. **Customizable types.** Superstruct's power is in making it easy to define an entire set of custom data types that are specific to your application, and defined in a _single_ place, so you have full control over your requirements.
 
-2. **Unopinionated defaults.** Superscript ships with native Javascript types, and everything else is customizable, so you never have to fight to override decisions made by "core" that differ from your application's needs.
+2. **Unopinionated defaults.** Superscript ships with native JavaScript types, and everything else is customizable, so you never have to fight to override decisions made by "core" that differ from your application's needs.
 
 4. **Composable interfaces.** Superstruct interfaces are composable, so you can break down commonly-repeated pieces of data into components, and compose them to build up the more complex objects.
 
