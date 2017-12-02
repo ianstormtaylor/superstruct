@@ -7,6 +7,20 @@ This document maintains a list of changes to the `superstruct` package with each
 ---
 
 
+### `0.4.0` — December 1, 2017
+
+###### BREAKING
+
+- **`object` structs are no longer optional-ish.** Previously object struct types would not throw if `undefined` was passed and no properties were required. This was not only confusing, but complex to maintain. Now if you want an object struct to be optional, use the `struct.optional(...)` helper.
+
+###### NEW
+
+- **Added the `dict`, `enum`, `intersection`, `union` and `tuple` structs.** These are all available as `struct.dict`, `struct.enum`, etc.
+
+
+---
+
+
 ### `0.3.0` — November 30, 2017
 
 ###### BREAKING
