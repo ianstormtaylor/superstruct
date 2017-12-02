@@ -1,6 +1,4 @@
 
-import invariant from 'invariant'
-
 import TYPES from './types'
 import KINDS from './kinds'
 import StructError from './error'
@@ -34,12 +32,20 @@ function superstruct(config = {}) {
     const kind = KINDS.any(schema, defaults, { ...options, types })
 
     function Struct(data) {
-      invariant(!(this instanceof Struct), 'The `Struct` creation function should not be used with the `new` keyword.')
+      if (this instanceof Struct) {
+        if (process.env.NODE_ENV !== 'production') {
+          throw new Error('The `Struct` creation function should not be used with the `new` keyword.')
+        } else {
+          throw new Error('Invalid `new` keyword!')
+        }
+      }
+
       return Struct.assert(data)
     }
 
-    Struct[IS_STRUCT] = true
-    Struct.__kind = kind
+    Object.defineProperty(Struct, IS_STRUCT, { value: true })
+    Object.defineProperty(Struct, '__kind', { value: kind })
+
     Struct.kind = kind.name
     Struct.type = kind.type
     Struct.schema = schema

@@ -1,6 +1,5 @@
 
 import kindOf from 'kind-of'
-import invariant from 'invariant'
 
 import isStruct from './is-struct'
 
@@ -72,10 +71,11 @@ function any(schema, defaults, options) {
     }
   }
 
-  invariant(
-    false,
-    `A schema definition must be an object, array, string or function, but you passed: ${schema}`
-  )
+  if (process.env.NODE_ENV !== 'production') {
+    throw new Error(`A schema definition must be an object, array, string or function, but you passed: ${schema}`)
+  } else {
+    throw new Error(`Invalid schema: ${schema}`)
+  }
 }
 
 /**
@@ -87,10 +87,13 @@ function any(schema, defaults, options) {
  */
 
 function dict(schema, defaults, options) {
-  invariant(
-    kindOf(schema) === 'array' && schema.length === 2,
-    `Dict structs must be defined as an array with two elements, but you passed: ${schema}`
-  )
+  if (kindOf(schema) !== 'array' || schema.length !== 2) {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Dict structs must be defined as an array with two elements, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
 
   const obj = scalar('object', undefined, options)
   const keys = any(schema[0], undefined, options)
@@ -153,10 +156,13 @@ function dict(schema, defaults, options) {
  */
 
 function enums(schema, defaults, options) {
-  invariant(
-    kindOf(schema) === 'array',
-    `Enum structs must be defined as an array, but you passed: ${schema}`
-  )
+  if (kindOf(schema) !== 'array') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Enum structs must be defined as an array, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
 
   const name = 'enum'
   const type = schema.map((s) => {
@@ -185,10 +191,13 @@ function enums(schema, defaults, options) {
  */
 
 function func(schema, defaults, options) {
-  invariant(
-    kindOf(schema) === 'function',
-    `Function structs must be defined as a function, but you passed: ${schema}`
-  )
+  if (kindOf(schema) !== 'function') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Function structs must be defined as a function, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
 
   const name = 'function'
   const type = '<function>'
@@ -210,10 +219,13 @@ function func(schema, defaults, options) {
  */
 
 function list(schema, defaults, options) {
-  invariant(
-    kindOf(schema) === 'array' && schema.length === 1,
-    `List structs must be defined as an array with a single element, but you passed: ${schema}`
-  )
+  if (kindOf(schema) !== 'array' || schema.length !== 1) {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`List structs must be defined as an array with a single element, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
 
   const array = scalar('array', undefined, options)
   const element = any(schema[0], undefined, options)
@@ -266,10 +278,13 @@ function list(schema, defaults, options) {
  */
 
 function object(schema, defaults, options) {
-  invariant(
-    kindOf(schema) === 'object',
-    `Object structs must be defined as an object, but you passed: ${schema}`
-  )
+  if (kindOf(schema) !== 'object') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Object structs must be defined as an object, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
 
   const obj = scalar('object', undefined, options)
   const ks = []
@@ -357,18 +372,24 @@ function optional(schema, defaults, options) {
  */
 
 function scalar(schema, defaults, options) {
-  invariant(
-    kindOf(schema) === 'string',
-    `Scalar structs must be defined as a string, but you passed: ${schema}`
-  )
+  if (kindOf(schema) !== 'string') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Scalar structs must be defined as a string, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
 
   const { types } = options
   const fn = types[schema]
 
-  invariant(
-    typeof fn === 'function',
-    `No struct validator function found for type "${schema}".`
-  )
+  if (kindOf(fn) !== 'function') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`No struct validator function found for type "${schema}".`)
+    } else {
+      throw new Error(`Invalid type: ${schema}`)
+    }
+  }
 
   const kind = func(fn, defaults, options)
   const name = 'scalar'
@@ -396,10 +417,13 @@ function scalar(schema, defaults, options) {
  */
 
 function tuple(schema, defaults, options) {
-  invariant(
-    kindOf(schema) === 'array',
-    `Tuple structs must be defined as an array, but you passed: ${schema}`
-  )
+  if (kindOf(schema) !== 'array') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Tuple structs must be defined as an array, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
 
   const kinds = schema.map(s => any(s, undefined, options))
   const array = scalar('array', undefined, options)
@@ -460,10 +484,13 @@ function tuple(schema, defaults, options) {
  */
 
 function union(schema, defaults, options) {
-  invariant(
-    kindOf(schema) === 'array',
-    `Union structs must be defined as an array, but you passed: ${schema}`
-  )
+  if (kindOf(schema) !== 'array') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Union structs must be defined as an array, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
 
   const kinds = schema.map(s => any(s, undefined, options))
   const name = 'union'
@@ -493,10 +520,13 @@ function union(schema, defaults, options) {
  */
 
 function intersection(schema, defaults, options) {
-  invariant(
-    kindOf(schema) === 'array',
-    `Intersection structs must be defined as an array, but you passed: ${schema}`
-  )
+  if (kindOf(schema) !== 'array') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Intersection structs must be defined as an array, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
 
   const types = schema.map(s => any(s, undefined, options))
   const name = 'intersection'

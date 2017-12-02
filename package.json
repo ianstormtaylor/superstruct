@@ -12,7 +12,6 @@
   ],
   "dependencies": {
     "clone-deep": "^2.0.1",
-    "invariant": "^2.2.2",
     "kind-of": "^6.0.1"
   },
   "devDependencies": {
@@ -38,8 +37,10 @@
     "np": "^2.17.0",
     "rollup": "^0.52.0",
     "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-buble": "^0.18.0",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^2.0.0",
     "uglifyify": "^4.0.5",
     "watchify": "^3.7.0"
   },
