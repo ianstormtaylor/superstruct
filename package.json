@@ -1,6 +1,6 @@
 {
   "name": "superstruct",
-  "description": "A simple, expressive way to validate data in Javascript.",
+  "description": "A simple, expressive way to validate data in JavaScript.",
   "version": "0.4.0",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
