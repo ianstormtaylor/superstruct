@@ -7,10 +7,16 @@
   + [`Struct`](#struct)
   + [`StructError`](#structerror)
 - [Structs](#structs)
-  + [Scalars](#scalars)
-  + [Lists](#lists)
-  + [Objects](#objects)
-  + [Functions](#functions)
+  + [`dict`](#dict)
+  + [`enum`](#enum)
+  + [`function`](#function)
+  + [`intersection`](#intersection)
+  + [`list`](#list)
+  + [`object`](#object)
+  + [`optional`](#optional)
+  + [`scalar`](#scalar)
+  + [`tuple`](#tuple)
+  + [`union`](#union)
 - [Types](#types)
 - [Errors](#errors)
 
@@ -92,11 +98,6 @@ Struct(data)
 
 Assert that `data` is valid. If the data is invalid a [`StructError`](#structerror) will be thrown, otherwise the data will be returned with defaults applied.
 
-#### `default`
-`default(data: Any) => Any`
-
-Apply the struct's defaults to `data`, returning the result. Usually you'll use [`assert`](#assert) or [`validate`](#validate), but this underlying method is exposed for more specific use cases.
-
 #### `test`
 `test(data: Any) => Boolean`
 
@@ -126,31 +127,67 @@ The error class that Superstruct uses for its validation errors. This is exposed
 
 Structs are defined by passing a schema definition to the `struct` function. The schema definition can be a string, array, object or function. They can also be composed by nesting structs inside each other.
 
-### Scalars
+### `dict`
 
 ```js
-struct('string')
+struct.dict(['string', 'number'])
 ```
 ```js
-'a string of text'
+{
+  a: 1,
+  b: 2,
+}
 ```
 
-Scalar structs are the lowest-level type of struct. They validate that a single scalar value matches a type, denoted by a type string.
+Dict structs validate an object's keys and values. But, unlike Object structs, they do not enforce a specific set of keys.
 
-### Lists
+### `enum`
+
+```js
+struct.enum(['Jane', 'John', 'Jack', 'Jill'])
+```
+```js
+'Jane'
+```
+
+Enums validate that a value is one of a specific set of constants.
+
+### `function`
+
+```js
+struct(() => typeof value === 'string')
+struct.function(() => typeof value === 'string')
+```
+```js
+'a simple string'
+```
+
+Function structs will validate using the validation function provided. They're helpful as an escape hatch in cases when you really need to write a one-off validation, and don't want to add it to your set of known data types.
+
+### `intersection`
+
+```js
+struct.intersection(['string', 'email'])
+```
+```js
+'jane@example.com'
+```
+
+Intersection structs validate that a value matches all of many structs. Their arguments are any other validate struct schema.
+
+### `list`
 
 ```js
 struct(['string'])
-struct([{ id: 'string' }])
+struct.list(['string'])
 ```
 ```js
 ['a', 'b', 'c']
-[{ id: '1' }, { id: '2' }, { id: '3' }]
 ```
 
 List structs will validate that all of the elements in an array match a specific type. The elements's schema can be any valid value for a struct—string, array, object or function.
 
-### Objects
+### `object`
 
 ```js
 struct({
@@ -169,16 +206,40 @@ struct({
 
 Object structs will validate that each of the properties in an object match a specific type. The properties's schemas can be any valid value for a struct—string, array, object or function.
 
-### Functions
+### `optional`
 
 ```js
-struct(() => typeof value === 'string')
+struct.optional('string')
 ```
 ```js
-'a simple string'
+'a string of text'
+undefined
 ```
 
-Function structs will validate using the validation function provided. They're helpful as an escape hatch in cases when you really need to write a one-off validation, and don't want to add it to your set of known data types.
+Optional structs validate that a value matches a specific kind of struct, or that it is `undefined`.
+
+### `scalar`
+
+```js
+struct('string')
+```
+```js
+'a string of text'
+```
+
+Scalar structs are the lowest-level type of struct. They validate that a single scalar value matches a type, denoted by a type string.
+
+### `union`
+
+```js
+struct.union(['string', 'number'])
+```
+```js
+'a string'
+42
+```
+
+Union structs validate that a value matches at least one of many structs. Their arguments are any other validate struct schema.
 
 
 ## Types
@@ -188,18 +249,25 @@ Out of the box, Superstruct recognizes all of the native Javascript types:
 |**Type**|**Example**|**Description**|
 |---|---|---|
 |`'any'`|`'anything'`|Any value other than `undefined`.|
+|`'arguments'`|`[...]`|An `arguments` object.|
 |`'array'`|`[1,2,3]`|An array.|
 |`'boolean'`|`false`|A boolean.|
 |`'buffer'`|`new Buffer()`|A Node.js buffer.|
 |`'date'`|`new Date()`|A date object.|
 |`'error'`|`new Error()`|An error object.|
 |`'function'`|`() => true`|A function.|
+|`'generatorfunction'`|`() => true`|A generator function.|
+|`'map'`|`() => true`|A `Map` object.|
 |`'null'`|`null`|The `null` primitive.|
 |`'number'`|`42`|A number.|
 |`'object'`|`{ key: 'value'}`|A plain object.|
 |`'regexp'`|`/a-z/g`|A regular expression object.|
+|`'set'`|`() => true`|A `Set` object.|
 |`'string'`|`'text'`|A string.|
+|`'symbol'`|`'text'`|A `Symbol`.|
 |`'undefined'`|`undefined`|The `undefined` primitive.|
+|`'weakmap'`|`() => true`|A `WeakMap` object.|
+|`'weakset'`|`() => true`|A `WeakSet` object.|
 
 
 ## Errors

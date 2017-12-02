@@ -13,6 +13,8 @@ This document maintains a list of changes to the `superstruct` package with each
 
 - **`object` structs are no longer optional-ish.** Previously object struct types would not throw if `undefined` was passed and no properties were required. This was not only confusing, but complex to maintain. Now if you want an object struct to be optional, use the `struct.optional(...)` helper.
 
+- **Removed the `Struct.default` method.** If you need to get the default value, use the `Struct.validate` or `Struct.assert` methods's return value instead.
+
 ###### NEW
 
 - **Added the `dict`, `enum`, `intersection`, `union` and `tuple` structs.** These are all available as `struct.dict`, `struct.enum`, etc.
