@@ -23,9 +23,9 @@ try {
   throw e
 }
 
-// StructError: 'Expected a value of type "string" for `name` but received `false`.' {
+// StructError: 'Expected a value of type "string" for `name` but received `true`.' {
 //   data: { ... },
 //   path: ['name'],
-//   value: false,
+//   value: true,
 //   type: 'string',
 // }
