@@ -113,13 +113,13 @@ Superstruct supports more complex use cases too like defining list or scalar str
 
 There are lots of existing validation libraries—[`joi`](https://github.com/hapijs/joi), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js), [`yup`](https://github.com/jquense/yup), [`ajv`](https://github.com/epoberezkin/ajv), [`is-my-json-valid`](https://github.com/mafintosh/is-my-json-valid)... But they exhibit many issues that lead to your codebase becoming hard to maintain...
 
-- **They can't throw errors.** Many validators simply return `true/false` or string errors. Although helpful in the days of callbacks, not using `throw` in modern JavaScript makes code much more complex.
-
-- **They don't expose detailed errors.** For those that do `throw`, they often throw string-only errors without any details as to why, making it difficult to customize the errors to be helpful for end-users.
+- **They don't expose detailed errors.** Many validators simply return string-only errors or booleans without any details as to why, making it difficult to customize the errors to be helpful for end-users.
 
 - **They make custom types hard.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no way to know what they check for, and complicated APIs for defining new types.
 
 - **They don't encourage single sources of truth.** Many existing APIs encourage re-defining custom data types over and over, with the source of truth being spread out across your entire code base.
+
+- **They don't throw errors.** Many don't actually throw the errors, forcing you to wrap everywhere. Although helpful in the days of callbacks, not using `throw` in modern JavaScript makes code much more complex.
 
 - **They don't pre-compile schemas.** Many validators define schemas as plain JavaScript objects, which means they delegate the parsing of the schema logic to validation time, making them much slower.
 
