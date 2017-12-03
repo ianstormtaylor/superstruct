@@ -111,7 +111,7 @@ Superstruct supports more complex use cases too like defining list or scalar str
 
 ### Why?
 
-There are lots of existing validation libraries—[`joi`](https://github.com/hapijs/joi), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js), [`yup`](https://github.com/jquense/yup), [`ajv`](https://github.com/epoberezkin/ajv) or [`is-my-json-valid`](https://github.com/mafintosh/is-my-json-valid). But they exhibit many issues that lead to hard to your codebase becoming hard to maintain...
+There are lots of existing validation libraries—[`joi`](https://github.com/hapijs/joi), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js), [`yup`](https://github.com/jquense/yup), [`ajv`](https://github.com/epoberezkin/ajv), [`is-my-json-valid`](https://github.com/mafintosh/is-my-json-valid)... But they exhibit many issues that lead to your codebase becoming hard to maintain...
 
 - **They can't throw errors.** Many validators simply return `true/false` or string errors. Although helpful in the days of callbacks, not using `throw` in modern JavaScript makes code much more complex.
 
