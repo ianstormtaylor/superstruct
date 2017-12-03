@@ -111,7 +111,7 @@ Superstruct supports more complex use cases too like defining list or scalar str
 
 ### Why?
 
-There are lots of existing validation libraries. Some of them, like [`joi`](), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js), [`yup`](https://github.com/jquense/yup) or [`ajv`](https://github.com/epoberezkin/ajv) are decently popular. But all of them exhibit many issues that lead to hard to maintain codebases...
+There are lots of existing validation libraries—[`joi`](https://github.com/hapijs/joi), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js), [`yup`](https://github.com/jquense/yup), [`ajv`](https://github.com/epoberezkin/ajv) or [`is-my-json-valid`](https://github.com/mafintosh/is-my-json-valid). But they exhibit many issues that lead to hard to your codebase becoming hard to maintain...
 
 - **They can't throw errors.** Many validators simply return `true/false` or string errors. Although helpful in the days of callbacks, not using `throw` in modern JavaScript makes code much more complex.
 
@@ -124,6 +124,8 @@ There are lots of existing validation libraries. Some of them, like [`joi`](), [
 - **They don't pre-compile schemas.** Many validators define schemas as plain JavaScript objects, which means they delegate the parsing of the schema logic to validation time, making them much slower.
 
 - **They're tightly coupled to other concerns.** Many validators are tightly coupled to Express or other frameworks, which results in one-off, confusing code that isn't reusable across your code base.
+
+- **They use JSON Schema.** Don't get me wrong, JSON Schema _can_ be useful. But it's kind of like HATEOS—it's usually way more complexity than you need and you aren't using any of its benefits. (Sorry, I said it.)
 
 Of course, not every validation library suffers from all of these issues, but most of them exhibit at least one. If you've run into this problem before, you might like Superstruct.
 
