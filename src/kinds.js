@@ -151,7 +151,7 @@ function dict(schema, defaults, options) {
 }
 
 /**
- * Enums.
+ * Enum.
  *
  * @param {Array} schema
  * @param {Any} defaults
@@ -214,6 +214,83 @@ function func(schema, defaults, options) {
 }
 
 /**
+ * Instance.
+ *
+ * @param {Array} schema
+ * @param {Any} defaults
+ * @param {Object} options
+ */
+
+function instance(schema, defaults, options) {
+  const name = 'instance'
+  const type = `instance<${schema.name}>`
+  const validate = (value = defaults) => {
+    return value instanceof schema
+      ? [undefined, value]
+      : [{ data: value, path: [], value, type }]
+  }
+
+  return new Kind(name, type, validate)
+}
+
+/**
+ * Interface.
+ *
+ * @param {Object} schema
+ * @param {Object} defaults
+ * @param {Object} options
+ */
+
+function inter(schema, defaults, options) {
+  if (kindOf(schema) !== 'object') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Interface structs must be defined as an object, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
+
+  const ks = []
+  const properties = {}
+
+  for (const key in schema) {
+    ks.push(key)
+    const s = schema[key]
+    const kind = any(s, undefined, options)
+    properties[key] = kind
+  }
+
+  const name = 'interface'
+  const type = `{${ks.join()}}`
+  const validate = (value = defaults) => {
+    const errors = []
+
+    for (const key in properties) {
+      const v = value[key]
+      const kind = properties[key]
+      const [ e ] = kind.validate(v)
+
+      if (e) {
+        e.path = [key].concat(e.path)
+        e.data = value
+        errors.push(e)
+        continue
+      }
+    }
+
+    if (errors.length) {
+      const first = errors[0]
+      first.errors = errors
+      return [first]
+    }
+
+    return [undefined, value]
+  }
+
+  return new Kind(name, type, validate)
+}
+
+/**
  * List.
  *
  * @param {Array} schema
@@ -267,6 +344,26 @@ function list(schema, defaults, options) {
     }
 
     return [undefined, ret]
+  }
+
+  return new Kind(name, type, validate)
+}
+
+/**
+ * Literal.
+ *
+ * @param {Array} schema
+ * @param {Any} defaults
+ * @param {Object} options
+ */
+
+function literal(schema, defaults, options) {
+  const name = 'literal'
+  const type = `literal: ${JSON.stringify(schema)}`
+  const validate = (value = defaults) => {
+    return value === schema
+      ? [undefined, value]
+      : [{ data: value, path: [], value, type }]
   }
 
   return new Kind(name, type, validate)
@@ -565,7 +662,10 @@ const Kinds = {
   dict,
   enum: enums,
   function: func,
+  instance,
+  interface: inter,
   list,
+  literal,
   object,
   optional,
   scalar,
