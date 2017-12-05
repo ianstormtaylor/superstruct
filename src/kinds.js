@@ -234,6 +234,63 @@ function instance(schema, defaults, options) {
 }
 
 /**
+ * Interface.
+ *
+ * @param {Object} schema
+ * @param {Object} defaults
+ * @param {Object} options
+ */
+
+function inter(schema, defaults, options) {
+  if (kindOf(schema) !== 'object') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Interface structs must be defined as an object, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
+
+  const ks = []
+  const properties = {}
+
+  for (const key in schema) {
+    ks.push(key)
+    const s = schema[key]
+    const kind = any(s, undefined, options)
+    properties[key] = kind
+  }
+
+  const name = 'interface'
+  const type = `{${ks.join()}}`
+  const validate = (value = defaults) => {
+    const errors = []
+
+    for (const key in properties) {
+      const v = value[key]
+      const kind = properties[key]
+      const [ e ] = kind.validate(v)
+
+      if (e) {
+        e.path = [key].concat(e.path)
+        e.data = value
+        errors.push(e)
+        continue
+      }
+    }
+
+    if (errors.length) {
+      const first = errors[0]
+      first.errors = errors
+      return [first]
+    }
+
+    return [undefined, value]
+  }
+
+  return new Kind(name, type, validate)
+}
+
+/**
  * List.
  *
  * @param {Array} schema
@@ -606,6 +663,7 @@ const Kinds = {
   enum: enums,
   function: func,
   instance,
+  interface: inter,
   list,
   literal,
   object,
