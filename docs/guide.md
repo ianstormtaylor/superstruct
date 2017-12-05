@@ -28,7 +28,7 @@ import { struct, superstruct } from 'superstruct'
 If you would rather import Superstruct with a `<script>` tag, you can use the bundled build:
 
 ```html
-<script src="https://unpkg.com/superstruct/dist/superstruct.min.js"></script>
+<script src="https://unpkg.com/superstruct/umd/superstruct.min.js"></script>
 ```
 
 This will expose the `Superstruct` global with the exported functions.
