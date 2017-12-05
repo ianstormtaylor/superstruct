@@ -53,8 +53,8 @@ import { struct } from 'superstruct'
 
 const User = struct({
   id: 'number',
-  name: 'Jane Smith',
-  email: 'jane@example.com',
+  name: 'string',
+  email: 'string',
 })
 ```
 
@@ -111,13 +111,13 @@ So now both of these pieces of data would be valid:
 
 ```js
 User({
-  id: 'number',
+  id: 43,
   name: 'Jane Smith',
   email: 'jane@example.com',
 })
 
 User({
-  id: 'number',
+  id: 43,
   name: 'Jane Smith',
   email: 'jane@example.com',
   is_admin: true,
@@ -146,7 +146,7 @@ To receive the data with the defaults applied, you'll need to store the return v
 
 ```js
 const data = {
-  id: 'number',
+  id: 43,
   name: 'Jane Smith',
   email: 'jane@example.com',
 }
@@ -154,7 +154,7 @@ const data = {
 const result = User(data)
 
 // {
-//   id: 'number',
+//   id: '43',
 //   name: 'Jane Smith',
 //   email: 'jane@example.com',
 //   is_admin: false,
@@ -181,7 +181,7 @@ const struct = superstruct({
 })
 ```
 
-To do that, we've imported import `superstruct` instead of `struct`. And with that, we've created your own `struct` factory. 
+To do that, we've imported import `superstruct` instead of `struct`. And with that, we've created your own `struct` factory.
 
 Now we can define structs know about the `'email'` type:
 
@@ -215,7 +215,7 @@ User(data)
 // }
 ```
 
-And there you have it! 
+And there you have it!
 
 
 ## Throwing Customized Errors
