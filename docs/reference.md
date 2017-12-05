@@ -18,7 +18,11 @@
   + [`tuple`](#tuple)
   + [`union`](#union)
 - [Types](#types)
+  + [Built-in Types](#built-in-types)
+  + [Custom Types](#custom-types)
 - [Errors](#errors)
+  + [Error Properties](#error-properties)
+  + [Multiple Errors](#multiple-errors)
 
 
 ## API
@@ -244,6 +248,10 @@ Union structs validate that a value matches at least one of many structs. Their 
 
 ## Types
 
+Superstruct can be used to validate the structure of data, for things like tuples, dictionaries, lists, etc. But at the lowest level, the data being validate uses type validation functions that you can define yourself.
+
+### Built-in Types 
+
 Out of the box, Superstruct recognizes all of the native JavaScript types:
 
 |**Type**|**Example**|**Description**|
@@ -269,10 +277,48 @@ Out of the box, Superstruct recognizes all of the native JavaScript types:
 |`'weakmap'`|`() => true`|A `WeakMap` object.|
 |`'weakset'`|`() => true`|A `WeakSet` object.|
 
+You can use them via the `{ struct }` export, like so:
+
+```js
+import { struct } from 'superstruct'
+
+const User = struct({
+  id: 'number',
+  name: 'string',
+  is_admin: 'boolean?',
+})
+```
+
+### Custom Types
+
+However, you can also define your own custom types that are specific to your application's requirements, using the `{ superstruct }` export, like so:
+
+```js
+import { superstruct } from 'superstruct'
+import isEmail from 'is-email'
+import isUuid from 'is-uuid'
+
+const struct = superstruct({
+  types: {
+    email: value => isEmail(value) && value.length < 256,
+    uuid: value => isUuid.v4(value),
+  }
+})
+
+const User = struct({
+  id: 'uuid',
+  name: 'string',
+  email: 'email',
+  is_admin: 'boolean?',
+})
+```
+
 
 ## Errors
 
 Superstruct throws detailed errors when data is invalid, so that you can build extremely precise errors of your own to give your end users the best possible experience. 
+
+### Error Properties
 
 Each error thrown includes the following properties:
 
@@ -283,5 +329,7 @@ Each error thrown includes the following properties:
 |`value`|`Any`|`...`|The invalid value.|
 |`type`|`String`|`'string'`|The expected scalar type of the value.|
 |`errors`|`Array`|`[...]`|All the validation errors thrown, of which this is the first.
+
+### Multiple Errors
 
 The "first" error encountered is always the one thrown, because this makes for convenient and simple logic in the majority of cases. However, the `errors` property is available with a list of all of the validation errors that occurred in case you want to add support for multiple error handling.
