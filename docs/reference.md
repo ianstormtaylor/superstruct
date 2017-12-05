@@ -313,6 +313,8 @@ const User = struct({
 })
 ```
 
+These custom types are simple functions that return `true/false` denoting whether the value passed in is valid or not.
+
 
 ## Errors
 
