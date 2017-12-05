@@ -151,7 +151,7 @@ function dict(schema, defaults, options) {
 }
 
 /**
- * Enums.
+ * Enum.
  *
  * @param {Array} schema
  * @param {Any} defaults
@@ -267,6 +267,26 @@ function list(schema, defaults, options) {
     }
 
     return [undefined, ret]
+  }
+
+  return new Kind(name, type, validate)
+}
+
+/**
+ * Literal.
+ *
+ * @param {Array} schema
+ * @param {Any} defaults
+ * @param {Object} options
+ */
+
+function literal(schema, defaults, options) {
+  const name = 'literal'
+  const type = `literal: ${JSON.stringify(schema)}`
+  const validate = (value = defaults) => {
+    return value === schema
+      ? [undefined, value]
+      : [{ data: value, path: [], value, type }]
   }
 
   return new Kind(name, type, validate)
@@ -566,6 +586,7 @@ const Kinds = {
   enum: enums,
   function: func,
   list,
+  literal,
   object,
   optional,
   scalar,
