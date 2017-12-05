@@ -6,6 +6,7 @@
 - [Defining Custom Data Types](#defining-custom-data-types)
 - [Setting Default Values](#setting-default-values)
 - [Throwing Customized Errors](#throwing-customized-errors)
+- [Validating Complex Shapes](#validating-complex-shapes)
 
 
 ## Installing Superstruct
@@ -268,3 +269,32 @@ user_name_required
 ```
 
 Although this example is simplified, the struct errors expose all of the possible information about why the validation failed, so you can use them to construct extremely detailed errors for your end users.
+
+
+## Validating Complex Shapes
+
+In the most common uses, you simply pass a schema definition to the `struct` function, and you'll receive a function that will validate that schema. However, there are more structures of data you might like to validate that simple objects with key/values.
+
+Superstruct makes it easy to validate things like tuples, enums, dictionaries, lists, unions, literals, etc.
+
+For example, say you wanted to validate coordinate tuples:
+
+```js
+const Coordinates = struct.tuple(['number', 'number'])
+
+const data = [0, 3]
+
+Coordinates(data)
+```
+
+Or, you might want to validate that one of the properties of your user objects is an enum of a particular set of values:
+
+```js
+const User = struct({
+  id: 'number',
+  name: 'string',
+  role: struct.enum(['collaborator', 'owner', 'admin']),
+})
+```
+
+All of this can be achieved using the helpers exposed on the `struct` function. For a full list of the kinds of structures you can validate, check out the [Structs Reference](./reference.md#structs).
