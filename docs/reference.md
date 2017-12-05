@@ -264,7 +264,7 @@ Out of the box, Superstruct recognizes all of the native JavaScript types:
 |`'date'`|`new Date()`|A date object.|
 |`'error'`|`new Error()`|An error object.|
 |`'function'`|`() => true`|A function.|
-|`'generatorfunction'`|`*function() {}`|A generator function.|
+|`'generatorfunction'`|`function* () {}`|A generator function.|
 |`'map'`|`new Map()`|A `Map` object.|
 |`'null'`|`null`|The `null` primitive.|
 |`'number'`|`42`|A number.|
