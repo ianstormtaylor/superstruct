@@ -264,18 +264,18 @@ Out of the box, Superstruct recognizes all of the native JavaScript types:
 |`'date'`|`new Date()`|A date object.|
 |`'error'`|`new Error()`|An error object.|
 |`'function'`|`() => true`|A function.|
-|`'generatorfunction'`|`() => true`|A generator function.|
-|`'map'`|`() => true`|A `Map` object.|
+|`'generatorfunction'`|`*function() {}`|A generator function.|
+|`'map'`|`new Map()`|A `Map` object.|
 |`'null'`|`null`|The `null` primitive.|
 |`'number'`|`42`|A number.|
 |`'object'`|`{ key: 'value'}`|A plain object.|
 |`'regexp'`|`/a-z/g`|A regular expression object.|
-|`'set'`|`() => true`|A `Set` object.|
+|`'set'`|`new Set()`|A `Set` object.|
 |`'string'`|`'text'`|A string.|
-|`'symbol'`|`'text'`|A `Symbol`.|
+|`'symbol'`|`new Symbol()`|A `Symbol`.|
 |`'undefined'`|`undefined`|The `undefined` primitive.|
-|`'weakmap'`|`() => true`|A `WeakMap` object.|
-|`'weakset'`|`() => true`|A `WeakSet` object.|
+|`'weakmap'`|`new WeakMap()`|A `WeakMap` object.|
+|`'weakset'`|`new WeakSet()`|A `WeakSet` object.|
 
 You can use them via the `{ struct }` export, like so:
 
