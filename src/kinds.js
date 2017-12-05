@@ -214,6 +214,26 @@ function func(schema, defaults, options) {
 }
 
 /**
+ * Instance.
+ *
+ * @param {Array} schema
+ * @param {Any} defaults
+ * @param {Object} options
+ */
+
+function instance(schema, defaults, options) {
+  const name = 'instance'
+  const type = `instance<${schema.name}>`
+  const validate = (value = defaults) => {
+    return value instanceof schema
+      ? [undefined, value]
+      : [{ data: value, path: [], value, type }]
+  }
+
+  return new Kind(name, type, validate)
+}
+
+/**
  * List.
  *
  * @param {Array} schema
@@ -585,6 +605,7 @@ const Kinds = {
   dict,
   enum: enums,
   function: func,
+  instance,
   list,
   literal,
   object,
