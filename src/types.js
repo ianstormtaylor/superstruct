@@ -25,6 +25,7 @@ const TYPES = [
   'null',
   'number',
   'object',
+  'promise',
   'regexp',
   'set',
   'string',
