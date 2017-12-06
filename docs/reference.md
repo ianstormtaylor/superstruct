@@ -269,6 +269,7 @@ Out of the box, Superstruct recognizes all of the native JavaScript types:
 |`'null'`|`null`|The `null` primitive.|
 |`'number'`|`42`|A number.|
 |`'object'`|`{ key: 'value'}`|A plain object.|
+|`'promise'`|`new Promise(...)`|A `Promise` object.|
 |`'regexp'`|`/a-z/g`|A regular expression object.|
 |`'set'`|`new Set()`|A `Set` object.|
 |`'string'`|`'text'`|A string.|
