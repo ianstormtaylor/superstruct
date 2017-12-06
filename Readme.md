@@ -189,6 +189,7 @@ Read the getting started guide to familiarize yourself with how Superstruct work
   - [Setting Default Values](./docs/guide.md#setting-default-values)
   - [Throwing Customized Errors](./docs/guide.md#throwing-customized-errors)
   - [Validating Complex Shapes](./docs/guide.md#validating-complex-shapes)
+  - [Composing Structs](./docs/guide.md#composing-structs)
 - [**Reference**](./docs/reference.md)
   - [API](./docs/reference.md#api)
   - [Structs](./docs/reference.md#structs)

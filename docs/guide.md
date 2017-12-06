@@ -7,6 +7,7 @@
 - [Setting Default Values](#setting-default-values)
 - [Throwing Customized Errors](#throwing-customized-errors)
 - [Validating Complex Shapes](#validating-complex-shapes)
+- [Composing Structs](#composing-structs)
 
 
 ## Installing Superstruct
@@ -298,3 +299,33 @@ const User = struct({
 ```
 
 All of this can be achieved using the helpers exposed on the `struct` function. For a full list of the kinds of structures you can validate, check out the [Structs Reference](./reference.md#structs).
+
+
+## Composing Structs
+
+Sometimes you want to break validations down into components, and compose them together to validate more complex objects. Superstruct makes this easy by allowing an existing struct to be passed in as a schema. For example:
+
+```js
+const User = struct({
+  id: 'number',
+  name: 'string',
+})
+
+const Article = struct({
+  id: 'number',
+  title: 'string',
+  author: User,
+})
+```
+
+Anywhere that you can use a 'number' style string to represent a schema, you can pass a full-fledged Struct in too. So you could use it in `tuple`, `enum`, `list`, `dict`, etc. as well:
+
+```js
+const Filter = struct({
+  eq: 'object?',
+  lt: 'object?',
+  gt: 'object?',
+})
+
+const Filters = struct.dict(['string', Filter])
+```
