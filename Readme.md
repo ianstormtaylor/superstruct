@@ -79,7 +79,7 @@ const article = Article(data)
 It recognizes all the native JavaScript types out of the box. But you can also define your own custom data types—specific to your application's requirements—by using the `superstruct` export:
 
 ```js
-import { superstruct } from 'superstruct'
+import { struct, superstruct } from 'superstruct'
 import isUuid from 'is-uuid'
 import isEmail from 'is-email'
 
