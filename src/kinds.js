@@ -401,19 +401,18 @@ function object(schema, defaults, options) {
   const name = 'object'
   const type = `{${ks.join()}}`
   const validate = (value = defaults) => {
-    const [ error, result ] = obj.validate(value)
+    const [ error ] = obj.validate(value)
 
     if (error) {
       error.type = type
       return [error]
     }
 
-    value = result
     const errors = []
     const ret = {}
     const valueKeys = Object.keys(value)
-    const schemaKeys = Object.keys(properties)
-    const keys = new Set(valueKeys.concat(schemaKeys))
+    const propertiesKeys = Object.keys(properties)
+    const keys = new Set(valueKeys.concat(propertiesKeys))
 
     keys.forEach((key) => {
       const v = value[key]
@@ -434,7 +433,7 @@ function object(schema, defaults, options) {
         return
       }
 
-      if (key in value) {
+      if (key in value || r !== undefined) {
         ret[key] = r
       }
     })
