@@ -1,8 +1,8 @@
 
 import kindOf from 'kind-of'
 
-import isStruct from './is-struct'
 import { KIND } from './constants'
+import { isStruct, resolveDefaults } from './utils'
 
 /**
  * Kind.
@@ -103,7 +103,7 @@ function dict(schema, defaults, options) {
   const values = any(schema[1], undefined, options)
   const name = 'dict'
   const type = `dict<${keys.type},${values.type}>`
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     const [ error ] = obj.validate(value)
 
     if (error) {
@@ -176,7 +176,7 @@ function enums(schema, defaults, options) {
     }
   }).join(' | ')
 
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     return schema.includes(value)
       ? [undefined, value]
       : [{ data: value, path: [], value, type }]
@@ -204,7 +204,7 @@ function func(schema, defaults, options) {
 
   const name = 'function'
   const type = '<function>'
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     return schema(value)
       ? [undefined, value]
       : [{ type, value, data: value, path: [] }]
@@ -224,7 +224,7 @@ function func(schema, defaults, options) {
 function instance(schema, defaults, options) {
   const name = 'instance'
   const type = `instance<${schema.name}>`
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     return value instanceof schema
       ? [undefined, value]
       : [{ data: value, path: [], value, type }]
@@ -262,7 +262,7 @@ function inter(schema, defaults, options) {
 
   const name = 'interface'
   const type = `{${ks.join()}}`
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     const errors = []
 
     for (const key in properties) {
@@ -311,7 +311,7 @@ function list(schema, defaults, options) {
   const element = any(schema[0], undefined, options)
   const name = 'list'
   const type = `[${element.type}]`
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     const [ error, result ] = array.validate(value)
 
     if (error) {
@@ -360,7 +360,7 @@ function list(schema, defaults, options) {
 function literal(schema, defaults, options) {
   const name = 'literal'
   const type = `literal: ${JSON.stringify(schema)}`
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     return value === schema
       ? [undefined, value]
       : [{ data: value, path: [], value, type }]
@@ -400,7 +400,7 @@ function object(schema, defaults, options) {
 
   const name = 'object'
   const type = `{${ks.join()}}`
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     const [ error ] = obj.validate(value)
 
     if (error) {
@@ -528,7 +528,7 @@ function tuple(schema, defaults, options) {
   const array = scalar('array', undefined, options)
   const name = 'tuple'
   const type = `[${kinds.map(k => k.type).join()}]`
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     const [ error ] = array.validate(value)
 
     if (error) {
@@ -594,7 +594,7 @@ function union(schema, defaults, options) {
   const kinds = schema.map(s => any(s, undefined, options))
   const name = 'union'
   const type = kinds.map(k => k.type).join(' | ')
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     let error
 
     for (const k of kinds) {
@@ -630,7 +630,7 @@ function intersection(schema, defaults, options) {
   const types = schema.map(s => any(s, undefined, options))
   const name = 'intersection'
   const type = types.map(t => t.type).join(' & ')
-  const validate = (value = defaults) => {
+  const validate = (value = resolveDefaults(defaults)) => {
     let v = value
 
     for (const t of types) {

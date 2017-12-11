@@ -2,7 +2,7 @@
 import Kinds from './kinds'
 import StructError from './error'
 import Types from './types'
-import isStruct from './is-struct'
+import { isStruct } from './utils'
 import { IS_STRUCT, KIND } from './constants'
 
 /**
@@ -28,7 +28,9 @@ function superstruct(config = {}) {
    */
 
   function struct(schema, defaults, options = {}) {
-    if (isStruct(schema)) schema = schema.schema
+    if (isStruct(schema)) {
+      schema = schema.schema
+    }
 
     const kind = Kinds.any(schema, defaults, { ...options, types })
 
