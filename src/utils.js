@@ -13,12 +13,13 @@ export function isStruct(value) {
 }
 
 /**
- * Resolve a `defaults` value.
+ * Resolve `defaults`, for an optional `value`.
  *
  * @param {Function|Any} defaults
+ * @param {Any} value
  * @return {Any}
  */
 
-export function resolveDefaults(defaults) {
-  return typeof defaults === 'function' ? defaults() : defaults
+export function resolveDefaults(defaults, value) {
+  return typeof defaults === 'function' ? defaults(value) : defaults
 }

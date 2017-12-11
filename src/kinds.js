@@ -433,7 +433,7 @@ function object(schema, defaults, options) {
 
       if (v === undefined) {
         const d = defaults && defaults[key]
-        v = resolveDefaults(d)
+        v = resolveDefaults(d, value)
       }
 
       if (!kind) {
