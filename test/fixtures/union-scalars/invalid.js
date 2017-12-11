@@ -1,12 +1,12 @@
 
 import { struct } from '../../..'
 
-export const Struct = struct.enum(['one', 'two'])
+export const Struct = struct.union(['string', 'number'])
 
-export const data = 'three'
+export const data = false
 
 export const error = {
   path: [],
-  value: 'three',
-  type: '"one" | "two"',
+  value: false,
+  type: 'string | number',
 }

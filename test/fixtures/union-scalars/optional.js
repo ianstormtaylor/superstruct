@@ -1,7 +1,7 @@
 
 import { struct } from '../../..'
 
-export const Struct = struct.optional(struct.enum(['one', 'two']))
+export const Struct = struct.optional(struct.union(['string', 'number']))
 
 export const data = undefined
 

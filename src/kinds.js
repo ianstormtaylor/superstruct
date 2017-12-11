@@ -158,7 +158,7 @@ function dict(schema, defaults, options) {
  * @param {Object} options
  */
 
-function enums(schema, defaults, options) {
+function en(schema, defaults, options) {
   if (kindOf(schema) !== 'array') {
     if (process.env.NODE_ENV !== 'production') {
       throw new Error(`Enum structs must be defined as an array, but you passed: ${schema}`)
@@ -183,6 +183,20 @@ function enums(schema, defaults, options) {
   }
 
   return new Kind(name, type, validate)
+}
+
+/**
+ * Enums.
+ *
+ * @param {Array} schema
+ * @param {Any} defaults
+ * @param {Object} options
+ */
+
+function enums(schema, defaults, options) {
+  const e = en(schema, undefined, options)
+  const l = list([e], defaults, options)
+  return l
 }
 
 /**
@@ -659,7 +673,8 @@ function intersection(schema, defaults, options) {
 const Kinds = {
   any,
   dict,
-  enum: enums,
+  enum: en,
+  enums,
   function: func,
   instance,
   interface: inter,

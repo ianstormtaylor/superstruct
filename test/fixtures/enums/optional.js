@@ -1,7 +1,7 @@
 
 import { struct } from '../../..'
 
-export const Struct = struct.optional(struct.enum(['one', 'two']))
+export const Struct = struct.optional(struct.enums(['one', 'two']))
 
 export const data = undefined
 

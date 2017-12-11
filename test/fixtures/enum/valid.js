@@ -1,8 +1,8 @@
 
 import { struct } from '../../..'
 
-export const Struct = struct.union(['string', 'number'])
+export const Struct = struct.enum(['one', 'two'])
 
-export const data = 42
+export const data = 'two'
 
-export const output = 42
+export const output = 'two'
