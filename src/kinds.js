@@ -407,8 +407,7 @@ function object(schema, defaults, options) {
   for (const key in schema) {
     ks.push(key)
     const s = schema[key]
-    const d = defaults && defaults[key]
-    const kind = any(s, d, options)
+    const kind = any(s, undefined, options)
     properties[key] = kind
   }
 
@@ -429,15 +428,19 @@ function object(schema, defaults, options) {
     const keys = new Set(valueKeys.concat(propertiesKeys))
 
     keys.forEach((key) => {
-      const v = value[key]
+      let v = value[key]
       const kind = properties[key]
+
+      if (v === undefined) {
+        const d = defaults && defaults[key]
+        v = resolveDefaults(d)
+      }
 
       if (!kind) {
         const e = { data: value, path: [key], value: v }
         errors.push(e)
         return
       }
-
       const [ e, r ] = kind.validate(v)
 
       if (e) {
