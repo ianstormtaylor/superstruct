@@ -441,6 +441,7 @@ function object(schema, defaults, options) {
         errors.push(e)
         return
       }
+
       const [ e, r ] = kind.validate(v)
 
       if (e) {
@@ -477,6 +478,82 @@ function object(schema, defaults, options) {
 
 function optional(schema, defaults, options) {
   return union([schema, 'undefined'], defaults, options)
+}
+
+/**
+ * Partial.
+ *
+ * @param {Object} schema
+ * @param {Object} defaults
+ * @param {Object} options
+ */
+
+function partial(schema, defaults, options) {
+  if (kindOf(schema) !== 'object') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Partial structs must be defined as an object, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
+
+  const obj = scalar('object', undefined, options)
+  const ks = []
+  const properties = {}
+
+  for (const key in schema) {
+    ks.push(key)
+    const s = schema[key]
+    const kind = any(s, undefined, options)
+    properties[key] = kind
+  }
+
+  const name = 'partial'
+  const type = `{${ks.join()},...}`
+  const validate = (value = resolveDefaults(defaults)) => {
+    const [ error ] = obj.validate(value)
+
+    if (error) {
+      error.type = type
+      return [error]
+    }
+
+    const errors = []
+    const ret = {}
+
+    for (const key in properties) {
+      let v = value[key]
+      const kind = properties[key]
+
+      if (v === undefined) {
+        const d = defaults && defaults[key]
+        v = resolveDefaults(d, value)
+      }
+
+      const [ e, r ] = kind.validate(v)
+
+      if (e) {
+        e.path = [key].concat(e.path)
+        e.data = value
+        errors.push(e)
+        continue
+      }
+
+      if (key in value || r !== undefined) {
+        ret[key] = r
+      }
+    }
+
+    if (errors.length) {
+      const first = errors[0]
+      first.errors = errors
+      return [first]
+    }
+
+    return [undefined, ret]
+  }
+
+  return new Kind(name, type, validate)
 }
 
 /**
@@ -685,6 +762,7 @@ const Kinds = {
   literal,
   object,
   optional,
+  partial,
   scalar,
   tuple,
   union,
