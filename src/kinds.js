@@ -305,6 +305,39 @@ function inter(schema, defaults, options) {
 }
 
 /**
+ * Lazy.
+ *
+ * @param {Function} schema
+ * @param {Any} defaults
+ * @param {Object} options
+ */
+
+function lazy(schema, defaults, options) {
+  if (kindOf(schema) !== 'function') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(`Lazy structs must be defined as an function that returns a schema, but you passed: ${schema}`)
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
+
+  let kind
+  let struct
+  const name = 'lazy'
+  const type = `lazy...`
+  const compile = (value) => {
+    struct = schema()
+    kind.name = struct.kind
+    kind.type = struct.type
+    kind.validate = struct.validate
+    return kind.validate(value)
+  }
+
+  kind = new Kind(name, type, compile)
+  return kind
+}
+
+/**
  * List.
  *
  * @param {Array} schema
@@ -758,6 +791,7 @@ const Kinds = {
   function: func,
   instance,
   interface: inter,
+  lazy,
   list,
   literal,
   object,
