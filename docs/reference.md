@@ -266,7 +266,7 @@ const BinaryTree = struct({
 }
 ```
 
-Lazy structs accepts a function that will return a struct. It is useful to create recursive structs.
+Lazy structs accepts a function that will return a struct. They are useful to create recursive structs.
 
 ## Types
 
