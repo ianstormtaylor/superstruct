@@ -29,18 +29,9 @@ describe('superstruct', () => {
           }
 
           else if ('error' in module) {
-            const [ err ] = Struct.validate(data)
-            const act = pick(err, 'type', 'path', 'value')
-            assert.deepEqual(act, module.error)
-
-            assert.throws(() => {
-              Struct(data)
-            }, (e) => {
-              const expected = module.error
-              const actual = pick(e, 'type', 'path', 'value')
-              assert.deepEqual(actual, expected)
-              return true
-            })
+            const [ error ] = Struct.validate(data)
+            const actual = pick(error, 'type', 'path', 'value')
+            assert.deepEqual(actual, module.error)
           }
 
           else {
