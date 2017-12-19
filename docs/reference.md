@@ -245,6 +245,28 @@ struct.union(['string', 'number'])
 
 Union structs validate that a value matches at least one of many structs. Their arguments are any other validate struct schema.
 
+### `lazy`
+
+```js
+const BinaryTree = struct({
+  value: 'any',
+  left: struct.lazy(() => struct.optional(BinaryTree)),
+  right: struct.lazy(() => struct.optional(BinaryTree)),
+})
+```
+```js
+{
+  value: 4,
+  left: {
+    value: 2,
+    left: { value: 1 },
+    right: { value: 3 },
+  },
+  right: { value: 5 },
+}
+```
+
+Lazy structs accepts a function that will return a struct. They are useful to create recursive structs.
 
 ## Types
 
