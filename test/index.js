@@ -30,7 +30,7 @@ describe('superstruct', () => {
 
           else if ('error' in module) {
             const [ error ] = Struct.validate(data)
-            const actual = pick(error, 'type', 'path', 'value')
+            const actual = pick(error, 'type', 'path', 'value', 'code')
             assert.deepEqual(actual, module.error)
           }
 
