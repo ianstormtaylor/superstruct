@@ -326,8 +326,8 @@ const struct = superstruct({
     email: value => isEmail(value) && value.length < 256,
     uuid: value => isUuid.v4(value),
     age: value => {
-      if (value < 16) return "age must be 16 and above"
-      if (value > 125) return "age exceeds theoretical max limit"
+      if (value < 16) return "age_too_small"
+      if (value > 125) return "age_too_big"
       return true;
     }
   }
@@ -342,7 +342,7 @@ const User = struct({
 })
 ```
 
-These custom types are simple functions that return `true/false` or an error message denoting whether the value passed in is valid or not.
+These custom types are simple functions that return `true/false` or a string denoting the reason the value passed in is invalid, in case you want to build more helpful error messages.
 
 
 ## Errors

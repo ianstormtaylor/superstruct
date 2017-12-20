@@ -9,8 +9,8 @@ const struct = superstruct({
   types: {
     uuid: v => isUuid.v4(v),
     email: (v) => {
-      if (!isEmail(v)) return `${v} is not email`
-      if (v.length >= 256) return 'email length must be less than 256 characters'
+      if (!isEmail(v)) return `not_email`
+      if (v.length >= 256) return 'too_long'
       return true
     },
     url: v => isUrl(v) && v.length < 2048,

@@ -5,7 +5,7 @@ import { superstruct } from '../../..'
 const struct = superstruct({
   types: {
     email: (v) => {
-      if (!isEmail(v)) return `${v} is not email`
+      if (!isEmail(v)) return `not_email`
     }
   }
 })
@@ -18,5 +18,5 @@ export const error = {
   path: [],
   value: 'invalid',
   type: 'email',
-  code: 'invalid is not email'
+  reason: 'not_email'
 }
