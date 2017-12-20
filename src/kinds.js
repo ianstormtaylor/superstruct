@@ -218,8 +218,8 @@ function func(schema, defaults, options) {
 
   const name = 'function'
   const type = '<function>'
-  const validate = (value = resolveDefaults(defaults)) => {
-    return schema(value)
+  const validate = (value = resolveDefaults(defaults), data) => {
+    return schema(value, data)
       ? [undefined, value]
       : [{ type, value, data: value, path: [] }]
   }
@@ -475,7 +475,7 @@ function object(schema, defaults, options) {
         return
       }
 
-      const [ e, r ] = kind.validate(v)
+      const [ e, r ] = kind.validate(v, value)
 
       if (e) {
         e.path = [key].concat(e.path)
@@ -563,7 +563,7 @@ function partial(schema, defaults, options) {
         v = resolveDefaults(d, value)
       }
 
-      const [ e, r ] = kind.validate(v)
+      const [ e, r ] = kind.validate(v, value)
 
       if (e) {
         e.path = [key].concat(e.path)
