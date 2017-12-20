@@ -158,7 +158,7 @@ function dict(schema, defaults, options) {
  * @param {Object} options
  */
 
-function en(schema, defaults, options) {
+function en(schema, defaults, options = {strict: true}) {
   if (kindOf(schema) !== 'array') {
     if (process.env.NODE_ENV !== 'production') {
       throw new Error(`Enum structs must be defined as an array, but you passed: ${schema}`)
@@ -168,15 +168,20 @@ function en(schema, defaults, options) {
   }
 
   const name = 'enum'
-  const type = schema.map((s) => {
+  const schemaStr = schema.map((s) => {
     try {
       return JSON.stringify(s)
     } catch (e) {
       return String(s)
     }
-  }).join(' | ')
+  })
+  const type = schemaStr.join(' | ')
 
   const validate = (value = resolveDefaults(defaults)) => {
+    if (options && !options.strict) {
+        schema = schemaStr
+        value = String(value)
+    }
     return schema.includes(value)
       ? [undefined, value]
       : [{ data: value, path: [], value, type }]

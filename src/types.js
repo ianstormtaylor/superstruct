@@ -53,6 +53,8 @@ TYPES.forEach((type) => {
   Types[type] = value => kindOf(value) === type
 })
 
+Types.numeric = value => TYPES.number(Number(value))
+
 /**
  * Export.
  *
