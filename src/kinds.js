@@ -223,7 +223,7 @@ function func(schema, defaults, options) {
     const reasonOrIsValid = schema(value, data)
     const isReason = kindOf(reasonOrIsValid) === 'string'
     const isValid = !isReason && reasonOrIsValid
-    const reason = isReason ? reasonOrIsValid : null
+    const reason = isReason ? reasonOrIsValid : undefined
 
     return isValid
       ? [undefined, value]

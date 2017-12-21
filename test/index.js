@@ -30,7 +30,7 @@ describe('superstruct', () => {
 
           else if ('error' in module) {
             const [ error ] = Struct.validate(data)
-            const actual = error.reason !== null || 'reason' in module.error
+            const actual = error.reason !== undefined || 'reason' in module.error
               ? pick(error, 'type', 'path', 'value', 'reason')
               : pick(error, 'type', 'path', 'value')
             assert.deepEqual(actual, module.error)
