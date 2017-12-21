@@ -219,11 +219,20 @@ function func(schema, defaults, options) {
   const name = 'function'
   const type = '<function>'
   const validate = (value = resolveDefaults(defaults), data) => {
-    // can return string reason or isValid
-    const reasonOrIsValid = schema(value, data)
-    const isReason = kindOf(reasonOrIsValid) === 'string'
-    const isValid = !isReason && reasonOrIsValid
-    const reason = isReason ? reasonOrIsValid : undefined
+    const result = schema(value, data)
+    const isReason = kindOf(result) === 'string'
+    const isBoolean = kindOf(result) === 'boolean'
+
+    if (!isReason && !isBoolean) {
+      if (process.env.NODE_ENV !== 'production') {
+        throw new Error(`Validator functions must return a boolean or an error reason string, but you passed: ${schema}`)
+      } else {
+        throw new Error(`Invalid result: ${result}`)
+      }
+    }
+
+    const isValid = isReason ? false : result
+    const reason = isReason ? result : undefined
 
     return isValid
       ? [undefined, value]
