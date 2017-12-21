@@ -7,6 +7,22 @@ This document maintains a list of changes to the `superstruct` package with each
 ---
 
 
+### `0.5.0` — December 21, 2017
+
+###### BREAKING
+
+- **Validators must now return `true`, `false` or an error reason string.** Previously any truthy value would be considered valid. Now you can provide more information for the thrown errors by providing a string which will be attached as `error.reason`. However, this means that truthy string values now equate to invalid, not valid.
+
+- **Property validators now receive `data` as their second argument.** Previously you only had access to the property `value`, but now you also have access to the entire object's `data`.
+
+###### NEW
+
+- **Errors can now contain reason information.** Validator functions can now return string instead of a boolean, denoting the reason a value was invalid. This can then be used to create more helpful error messages.
+
+
+---
+
+
 ### `0.4.0` — December 1, 2017
 
 ###### BREAKING
