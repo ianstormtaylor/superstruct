@@ -8,7 +8,11 @@ import isUrl from 'is-url'
 const struct = superstruct({
   types: {
     uuid: v => isUuid.v4(v),
-    email: v => isEmail(v) && v.length < 256,
+    email: (v) => {
+      if (!isEmail(v)) return `not_email`
+      if (v.length >= 256) return 'too_long'
+      return true
+    },
     url: v => isUrl(v) && v.length < 2048,
   }
 })

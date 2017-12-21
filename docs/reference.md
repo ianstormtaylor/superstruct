@@ -47,8 +47,8 @@ const Struct = struct({
   id: 'number',
   name: 'string',
   is_admin: 'boolean?',
-}, { 
-  is_admin: false 
+}, {
+  is_admin: false
 })
 
 Struct({
@@ -57,7 +57,7 @@ Struct({
 })
 ```
 
-The `struct` function ships with Superstruct by default, and recognizes all of the native JavaScript types in its definitions. It's the easiest way to quickly define structs. 
+The `struct` function ships with Superstruct by default, and recognizes all of the native JavaScript types in its definitions. It's the easiest way to quickly define structs.
 
 If you need to define custom data types, use the [`superstruct`](#superstruct) export instead...
 
@@ -272,7 +272,7 @@ Lazy structs accepts a function that will return a struct. They are useful to cr
 
 Superstruct can be used to validate the structure of data, for things like tuples, dictionaries, lists, etc. But at the lowest level, the data being validate uses type validation functions that you can define yourself.
 
-### Built-in Types 
+### Built-in Types
 
 Out of the box, Superstruct recognizes all of the native JavaScript types:
 
@@ -325,6 +325,11 @@ const struct = superstruct({
   types: {
     email: value => isEmail(value) && value.length < 256,
     uuid: value => isUuid.v4(value),
+    age: value => {
+      if (value < 16) return "age_too_small"
+      if (value > 125) return "age_too_big"
+      return true;
+    }
   }
 })
 
@@ -332,16 +337,17 @@ const User = struct({
   id: 'uuid',
   name: 'string',
   email: 'email',
+  age: 30,
   is_admin: 'boolean?',
 })
 ```
 
-These custom types are simple functions that return `true/false` denoting whether the value passed in is valid or not.
+These custom types are simple functions that return `true/false` or a string denoting the reason the value passed in is invalid, in case you want to build more helpful error messages.
 
 
 ## Errors
 
-Superstruct throws detailed errors when data is invalid, so that you can build extremely precise errors of your own to give your end users the best possible experience. 
+Superstruct throws detailed errors when data is invalid, so that you can build extremely precise errors of your own to give your end users the best possible experience.
 
 ### Error Properties
 

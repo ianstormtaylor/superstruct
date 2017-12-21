@@ -219,9 +219,15 @@ function func(schema, defaults, options) {
   const name = 'function'
   const type = '<function>'
   const validate = (value = resolveDefaults(defaults), data) => {
-    return schema(value, data)
+    // can return string reason or isValid
+    const reasonOrIsValid = schema(value, data)
+    const isReason = kindOf(reasonOrIsValid) === 'string'
+    const isValid = !isReason && reasonOrIsValid
+    const reason = isReason ? reasonOrIsValid : undefined
+
+    return isValid
       ? [undefined, value]
-      : [{ type, value, data: value, path: [] }]
+      : [{ type, value, data: value, path: [], reason }]
   }
 
   return new Kind(name, type, validate)
