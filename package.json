@@ -40,15 +40,15 @@
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^2.0.0",
-    "uglifyify": "^4.0.5",
-    "watchify": "^3.7.0"
+    "rollup-plugin-uglify": "^2.0.1",
+    "uglify-es": "^3.2.2"
   },
   "scripts": {
     "build": "yarn run build:es && yarn run build:cjs && yarn run build:max && yarn run build:min",
     "build:cjs": "rollup --config ./config/rollup-cjs.js",
     "build:es": "rollup --config ./config/rollup.js",
     "build:max": "rollup --config ./config/rollup-umd.js",
-    "build:min": "NODE_ENV=production rollup --config ./config/rollup-umd-min.js | uglifyjs > ./umd/superstruct.min.js",
+    "build:min": "rollup --config ./config/rollup-umd-min.js",
     "clean": "rm -rf ./lib ./umd ./node_modules",
     "lint": "eslint src/* test/*",
     "prepublish": "yarn run build",
