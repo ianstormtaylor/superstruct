@@ -18,7 +18,7 @@ export const data = {
 }
 
 export const error = {
-  path: ['address','city'],
+  path: ['address', 'city'],
   value: 'Manchester',
   type: '<function>'
 }
