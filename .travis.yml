@@ -4,3 +4,13 @@ node_js:
 - stable
 cache:
   yarn: true
+
+env:
+  # Do two runs, one for testing and one for linting.
+  matrix:
+    - TEST_TYPE=test
+    - TEST_TYPE=lint
+
+script:
+  # Run testing or linting depending on the environment.
+  - yarn run $TEST_TYPE
