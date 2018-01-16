@@ -195,6 +195,7 @@ Read the getting started guide to familiarize yourself with how Superstruct work
   - [Structs](./docs/reference.md#structs)
   - [Types](./docs/reference.md#types)
   - [Errors](./docs/reference.md#errors)
+- [**Resources**](/docs/resources.md)
 
 
 <br/>
