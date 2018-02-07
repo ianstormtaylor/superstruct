@@ -488,7 +488,9 @@ function object(schema, defaults, options) {
         const d = defaults && defaults[key]
         v = resolveDefaults(d, value)
       }
-
+      if (v === undefined) {
+        return
+      }
       if (!kind) {
         const e = { data: value, path: [key], value: v }
         errors.push(e)
