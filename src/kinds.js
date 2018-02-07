@@ -285,7 +285,12 @@ function inter(schema, defaults, options) {
   for (const key in schema) {
     ks.push(key)
     const s = schema[key]
-    const kind = any(s, undefined, options)
+    let kind
+    if(kindOf(s) === 'object'){
+      kind = inter(s, undefined, options)
+    }else{
+      kind = any(s, undefined, options)
+    }
     properties[key] = kind
   }
 
@@ -552,7 +557,12 @@ function partial(schema, defaults, options) {
   for (const key in schema) {
     ks.push(key)
     const s = schema[key]
-    const kind = any(s, undefined, options)
+    let kind
+    if(kindOf(s) === 'object'){
+      kind = partial(s, undefined, options)
+    }else{
+      kind = any(s, undefined, options)
+    }
     properties[key] = kind
   }
 
