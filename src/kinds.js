@@ -104,7 +104,7 @@ function dict(schema, defaults, options) {
   const name = 'dict'
   const type = `dict<${keys.type},${values.type}>`
   const validate = (value = resolveDefaults(defaults)) => {
-    const [ error ] = obj.validate(value)
+    const [error] = obj.validate(value)
 
     if (error) {
       error.type = type
@@ -116,7 +116,7 @@ function dict(schema, defaults, options) {
 
     for (let k in value) {
       const v = value[k]
-      const [ e, r ] = keys.validate(k)
+      const [e, r] = keys.validate(k)
 
       if (e) {
         e.path = [k].concat(e.path)
@@ -126,7 +126,7 @@ function dict(schema, defaults, options) {
       }
 
       k = r
-      const [ e2, r2 ] = values.validate(v)
+      const [e2, r2] = values.validate(v)
 
       if (e2) {
         e2.path = [k].concat(e2.path)
@@ -286,9 +286,9 @@ function inter(schema, defaults, options) {
     ks.push(key)
     const s = schema[key]
     let kind
-    if(kindOf(s) === 'object'){
+    if (kindOf(s) === 'object') {
       kind = inter(s, undefined, options)
-    }else{
+    } else {
       kind = any(s, undefined, options)
     }
     properties[key] = kind
@@ -302,7 +302,7 @@ function inter(schema, defaults, options) {
     for (const key in properties) {
       const v = value[key]
       const kind = properties[key]
-      const [ e ] = kind.validate(v)
+      const [e] = kind.validate(v)
 
       if (e) {
         e.path = [key].concat(e.path)
@@ -379,7 +379,7 @@ function list(schema, defaults, options) {
   const name = 'list'
   const type = `[${element.type}]`
   const validate = (value = resolveDefaults(defaults)) => {
-    const [ error, result ] = array.validate(value)
+    const [error, result] = array.validate(value)
 
     if (error) {
       error.type = type
@@ -392,7 +392,7 @@ function list(schema, defaults, options) {
 
     for (let i = 0; i < value.length; i++) {
       const v = value[i]
-      const [ e, r ] = element.validate(v)
+      const [e, r] = element.validate(v)
 
       if (e) {
         e.path = [i].concat(e.path)
@@ -467,7 +467,7 @@ function object(schema, defaults, options) {
   const name = 'object'
   const type = `{${ks.join()}}`
   const validate = (value = resolveDefaults(defaults)) => {
-    const [ error ] = obj.validate(value)
+    const [error] = obj.validate(value)
 
     if (error) {
       error.type = type
@@ -497,7 +497,7 @@ function object(schema, defaults, options) {
         return
       }
 
-      const [ e, r ] = kind.validate(v, value)
+      const [e, r] = kind.validate(v, value)
 
       if (e) {
         e.path = [key].concat(e.path)
@@ -560,9 +560,9 @@ function partial(schema, defaults, options) {
     ks.push(key)
     const s = schema[key]
     let kind
-    if(kindOf(s) === 'object'){
+    if (kindOf(s) === 'object') {
       kind = partial(s, undefined, options)
-    }else{
+    } else {
       kind = any(s, undefined, options)
     }
     properties[key] = kind
@@ -571,7 +571,7 @@ function partial(schema, defaults, options) {
   const name = 'partial'
   const type = `{${ks.join()},...}`
   const validate = (value = resolveDefaults(defaults)) => {
-    const [ error ] = obj.validate(value)
+    const [error] = obj.validate(value)
 
     if (error) {
       error.type = type
@@ -590,7 +590,7 @@ function partial(schema, defaults, options) {
         v = resolveDefaults(d, value)
       }
 
-      const [ e, r ] = kind.validate(v, value)
+      const [e, r] = kind.validate(v, value)
 
       if (e) {
         e.path = [key].concat(e.path)
@@ -648,7 +648,7 @@ function scalar(schema, defaults, options) {
   const name = 'scalar'
   const type = schema
   const validate = (value) => {
-    const [ error, result ] = kind.validate(value)
+    const [error, result] = kind.validate(value)
 
     if (error) {
       error.type = type
@@ -683,7 +683,7 @@ function tuple(schema, defaults, options) {
   const name = 'tuple'
   const type = `[${kinds.map(k => k.type).join()}]`
   const validate = (value = resolveDefaults(defaults)) => {
-    const [ error ] = array.validate(value)
+    const [error] = array.validate(value)
 
     if (error) {
       error.type = type
@@ -704,7 +704,7 @@ function tuple(schema, defaults, options) {
         continue
       }
 
-      const [ e, r ] = kind.validate(v)
+      const [e, r] = kind.validate(v)
 
       if (e) {
         e.path = [i].concat(e.path)
@@ -752,7 +752,7 @@ function union(schema, defaults, options) {
     let error
 
     for (const k of kinds) {
-      const [ e, r ] = k.validate(value)
+      const [e, r] = k.validate(value)
       if (!e) return [undefined, r]
       error = e
     }
@@ -788,7 +788,7 @@ function intersection(schema, defaults, options) {
     let v = value
 
     for (const t of types) {
-      const [ e, r ] = t.validate(v)
+      const [e, r] = t.validate(v)
 
       if (e) {
         e.type = type
