@@ -488,7 +488,6 @@ function object(schema, defaults, options) {
         const d = defaults && defaults[key]
         v = resolveDefaults(d, value)
       }
-      
       if (!kind) {
         if (v === undefined) {
           return
