@@ -488,10 +488,11 @@ function object(schema, defaults, options) {
         const d = defaults && defaults[key]
         v = resolveDefaults(d, value)
       }
-      if (v === undefined) {
-        return
-      }
+      
       if (!kind) {
+        if (v === undefined) {
+          return
+        }
         const e = { data: value, path: [key], value: v }
         errors.push(e)
         return
