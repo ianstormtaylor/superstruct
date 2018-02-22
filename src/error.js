@@ -6,6 +6,7 @@
  */
 
 class StructError extends TypeError {
+
   constructor(attrs) {
     super()
     const errors = attrs.errors || []
@@ -25,9 +26,10 @@ class StructError extends TypeError {
   }
 
   static format(attrs) {
-    let path = attrs.path.join('.')
+    const path = attrs.path.join('.')
     return `Expected a value of type \`${attrs.type}\`${path.length ? ` for \`${path}\`` : ''} but received \`${JSON.stringify(attrs.value)}\`.`
   }
+
 }
 
 /**
