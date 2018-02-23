@@ -1,4 +1,3 @@
-
 import cjs from 'rollup-plugin-commonjs'
 import babel from 'rollup-plugin-babel'
 import node from 'rollup-plugin-node-resolve'
@@ -19,13 +18,13 @@ export default {
         'external-helpers',
         'transform-async-to-generator',
         'transform-object-rest-spread',
-      ]
+      ],
     }),
 
     cjs({
-      sourceMap: true
+      sourceMap: true,
     }),
 
     node(),
-  ]
+  ],
 }

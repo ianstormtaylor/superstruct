@@ -1,24 +1,23 @@
-
 import { struct } from '../../..'
 
 const address = struct({
   country: 'string',
-  city: (value, data) => !!(data.country === 'UK' && value === 'London')
+  city: (value, data) => !!(data.country === 'UK' && value === 'London'),
 })
 
 export const Struct = struct({
-  address
+  address,
 })
 
 export const data = {
   address: {
     country: 'UK',
-    city: 'Manchester'
-  }
+    city: 'Manchester',
+  },
 }
 
 export const error = {
   path: ['address', 'city'],
   value: 'Manchester',
-  type: '<function>'
+  type: '<function>',
 }

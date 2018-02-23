@@ -1,4 +1,3 @@
-
 /**
  * A private string to identify structs by.
  *
@@ -21,7 +20,4 @@ const KIND = '@@__KIND__@@'
  * @type {Object}
  */
 
-export {
-  IS_STRUCT,
-  KIND,
-}
+export { IS_STRUCT, KIND }

@@ -1,4 +1,3 @@
-
 import { struct } from '../../..'
 
 export const Struct = struct({
@@ -17,7 +16,7 @@ export const data = {
       key: 'b',
       children: [],
     },
-  ]
+  ],
 }
 
 export const output = {
@@ -31,5 +30,5 @@ export const output = {
       key: 'b',
       children: [],
     },
-  ]
+  ],
 }

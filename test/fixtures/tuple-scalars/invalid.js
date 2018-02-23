@@ -1,4 +1,3 @@
-
 import { struct } from '../../..'
 
 export const Struct = struct(['string', 'number'])

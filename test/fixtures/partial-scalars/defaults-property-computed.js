@@ -1,12 +1,14 @@
-
 import { struct } from '../../..'
 
-export const Struct = struct.partial({
-  username: 'string',
-  email: 'string',
-}, {
-  username: v => v.email.split('@')[0],
-})
+export const Struct = struct.partial(
+  {
+    username: 'string',
+    email: 'string',
+  },
+  {
+    username: v => v.email.split('@')[0],
+  }
+)
 
 export const data = {
   name: 'Jane Smith',

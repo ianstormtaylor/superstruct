@@ -1,4 +1,3 @@
-
 import { IS_STRUCT } from './constants'
 
 /**

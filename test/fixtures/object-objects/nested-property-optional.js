@@ -1,4 +1,3 @@
-
 import { struct } from '../../..'
 
 export const Struct = struct({
@@ -7,7 +6,7 @@ export const Struct = struct({
   address: {
     street: 'string?',
     city: 'string',
-  }
+  },
 })
 
 export const data = {
@@ -15,7 +14,7 @@ export const data = {
   age: 42,
   address: {
     city: 'springfield',
-  }
+  },
 }
 
 export const output = {
@@ -23,5 +22,5 @@ export const output = {
   age: 42,
   address: {
     city: 'springfield',
-  }
+  },
 }

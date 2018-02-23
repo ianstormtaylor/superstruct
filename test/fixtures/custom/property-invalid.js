@@ -1,11 +1,10 @@
-
 import isEmail from 'is-email'
 import { superstruct } from '../../..'
 
 const struct = superstruct({
   types: {
-    email: isEmail
-  }
+    email: isEmail,
+  },
 })
 
 export const Struct = struct({
@@ -13,7 +12,7 @@ export const Struct = struct({
 })
 
 export const data = {
-  email: 'invalid'
+  email: 'invalid',
 }
 
 export const error = {

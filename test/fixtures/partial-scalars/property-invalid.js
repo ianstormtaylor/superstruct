@@ -1,9 +1,8 @@
-
 import { struct } from '../../..'
 
 export const Struct = struct.partial({
   name: 'string',
-  age: 'number'
+  age: 'number',
 })
 
 export const data = {

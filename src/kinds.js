@@ -1,4 +1,3 @@
-
 import kindOf from 'kind-of'
 
 import { KIND } from './constants'
@@ -11,13 +10,11 @@ import { isStruct, resolveDefaults } from './utils'
  */
 
 class Kind {
-
   constructor(name, type, validate) {
     this.name = name
     this.type = type
     this.validate = validate
   }
-
 }
 
 /**
@@ -80,7 +77,9 @@ function any(schema, defaults, options) {
   }
 
   if (process.env.NODE_ENV !== 'production') {
-    throw new Error(`A schema definition must be an object, array, string or function, but you passed: ${schema}`)
+    throw new Error(
+      `A schema definition must be an object, array, string or function, but you passed: ${schema}`
+    )
   } else {
     throw new Error(`Invalid schema: ${schema}`)
   }
@@ -97,7 +96,9 @@ function any(schema, defaults, options) {
 function dict(schema, defaults, options) {
   if (kindOf(schema) !== 'array' || schema.length !== 2) {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Dict structs must be defined as an array with two elements, but you passed: ${schema}`)
+      throw new Error(
+        `Dict structs must be defined as an array with two elements, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -109,7 +110,7 @@ function dict(schema, defaults, options) {
   const name = 'dict'
   const type = `dict<${keys.type},${values.type}>`
   const validate = (value = resolveDefaults(defaults)) => {
-    const [ error ] = obj.validate(value)
+    const [error] = obj.validate(value)
 
     if (error) {
       error.type = type
@@ -121,7 +122,7 @@ function dict(schema, defaults, options) {
 
     for (let k in value) {
       const v = value[k]
-      const [ e, r ] = keys.validate(k)
+      const [e, r] = keys.validate(k)
 
       if (e) {
         e.path = [k].concat(e.path)
@@ -131,7 +132,7 @@ function dict(schema, defaults, options) {
       }
 
       k = r
-      const [ e2, r2 ] = values.validate(v)
+      const [e2, r2] = values.validate(v)
 
       if (e2) {
         e2.path = [k].concat(e2.path)
@@ -166,20 +167,24 @@ function dict(schema, defaults, options) {
 function en(schema, defaults, options) {
   if (kindOf(schema) !== 'array') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Enum structs must be defined as an array, but you passed: ${schema}`)
+      throw new Error(
+        `Enum structs must be defined as an array, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
   }
 
   const name = 'enum'
-  const type = schema.map((s) => {
-    try {
-      return JSON.stringify(s)
-    } catch (e) {
-      return String(s)
-    }
-  }).join(' | ')
+  const type = schema
+    .map(s => {
+      try {
+        return JSON.stringify(s)
+      } catch (e) {
+        return String(s)
+      }
+    })
+    .join(' | ')
 
   const validate = (value = resolveDefaults(defaults)) => {
     return schema.includes(value)
@@ -215,7 +220,9 @@ function enums(schema, defaults, options) {
 function func(schema, defaults, options) {
   if (kindOf(schema) !== 'function') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Function structs must be defined as a function, but you passed: ${schema}`)
+      throw new Error(
+        `Function structs must be defined as a function, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -230,7 +237,9 @@ function func(schema, defaults, options) {
 
     if (!isReason && !isBoolean) {
       if (process.env.NODE_ENV !== 'production') {
-        throw new Error(`Validator functions must return a boolean or an error reason string, but you passed: ${schema}`)
+        throw new Error(
+          `Validator functions must return a boolean or an error reason string, but you passed: ${schema}`
+        )
       } else {
         throw new Error(`Invalid result: ${result}`)
       }
@@ -278,7 +287,9 @@ function instance(schema, defaults, options) {
 function inter(schema, defaults, options) {
   if (kindOf(schema) !== 'object') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Interface structs must be defined as an object, but you passed: ${schema}`)
+      throw new Error(
+        `Interface structs must be defined as an object, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -302,7 +313,7 @@ function inter(schema, defaults, options) {
     for (const key in properties) {
       const v = value[key]
       const kind = properties[key]
-      const [ e ] = kind.validate(v)
+      const [e] = kind.validate(v)
 
       if (e) {
         e.path = [key].concat(e.path)
@@ -335,7 +346,9 @@ function inter(schema, defaults, options) {
 function lazy(schema, defaults, options) {
   if (kindOf(schema) !== 'function') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Lazy structs must be defined as an function that returns a schema, but you passed: ${schema}`)
+      throw new Error(
+        `Lazy structs must be defined as an function that returns a schema, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -345,7 +358,7 @@ function lazy(schema, defaults, options) {
   let struct
   const name = 'lazy'
   const type = `lazy...`
-  const compile = (value) => {
+  const compile = value => {
     struct = schema()
     kind.name = struct.kind
     kind.type = struct.type
@@ -368,7 +381,9 @@ function lazy(schema, defaults, options) {
 function list(schema, defaults, options) {
   if (kindOf(schema) !== 'array' || schema.length !== 1) {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`List structs must be defined as an array with a single element, but you passed: ${schema}`)
+      throw new Error(
+        `List structs must be defined as an array with a single element, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -379,7 +394,7 @@ function list(schema, defaults, options) {
   const name = 'list'
   const type = `[${element.type}]`
   const validate = (value = resolveDefaults(defaults)) => {
-    const [ error, result ] = array.validate(value)
+    const [error, result] = array.validate(value)
 
     if (error) {
       error.type = type
@@ -392,7 +407,7 @@ function list(schema, defaults, options) {
 
     for (let i = 0; i < value.length; i++) {
       const v = value[i]
-      const [ e, r ] = element.validate(v)
+      const [e, r] = element.validate(v)
 
       if (e) {
         e.path = [i].concat(e.path)
@@ -447,7 +462,9 @@ function literal(schema, defaults, options) {
 function object(schema, defaults, options) {
   if (kindOf(schema) !== 'object') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Object structs must be defined as an object, but you passed: ${schema}`)
+      throw new Error(
+        `Object structs must be defined as an object, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -467,7 +484,7 @@ function object(schema, defaults, options) {
   const name = 'object'
   const type = `{${ks.join()}}`
   const validate = (value = resolveDefaults(defaults)) => {
-    const [ error ] = obj.validate(value)
+    const [error] = obj.validate(value)
 
     if (error) {
       error.type = type
@@ -480,7 +497,7 @@ function object(schema, defaults, options) {
     const propertiesKeys = Object.keys(properties)
     const keys = new Set(valueKeys.concat(propertiesKeys))
 
-    keys.forEach((key) => {
+    keys.forEach(key => {
       let v = value[key]
       const kind = properties[key]
 
@@ -495,7 +512,7 @@ function object(schema, defaults, options) {
         return
       }
 
-      const [ e, r ] = kind.validate(v, value)
+      const [e, r] = kind.validate(v, value)
 
       if (e) {
         e.path = [key].concat(e.path)
@@ -544,7 +561,9 @@ function optional(schema, defaults, options) {
 function partial(schema, defaults, options) {
   if (kindOf(schema) !== 'object') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Partial structs must be defined as an object, but you passed: ${schema}`)
+      throw new Error(
+        `Partial structs must be defined as an object, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -564,7 +583,7 @@ function partial(schema, defaults, options) {
   const name = 'partial'
   const type = `{${ks.join()},...}`
   const validate = (value = resolveDefaults(defaults)) => {
-    const [ error ] = obj.validate(value)
+    const [error] = obj.validate(value)
 
     if (error) {
       error.type = type
@@ -583,7 +602,7 @@ function partial(schema, defaults, options) {
         v = resolveDefaults(d, value)
       }
 
-      const [ e, r ] = kind.validate(v, value)
+      const [e, r] = kind.validate(v, value)
 
       if (e) {
         e.path = [key].concat(e.path)
@@ -620,7 +639,9 @@ function partial(schema, defaults, options) {
 function scalar(schema, defaults, options) {
   if (kindOf(schema) !== 'string') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Scalar structs must be defined as a string, but you passed: ${schema}`)
+      throw new Error(
+        `Scalar structs must be defined as a string, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -631,7 +652,9 @@ function scalar(schema, defaults, options) {
 
   if (kindOf(fn) !== 'function') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`No struct validator function found for type "${schema}".`)
+      throw new Error(
+        `No struct validator function found for type "${schema}".`
+      )
     } else {
       throw new Error(`Invalid type: ${schema}`)
     }
@@ -640,8 +663,8 @@ function scalar(schema, defaults, options) {
   const kind = func(fn, defaults, options)
   const name = 'scalar'
   const type = schema
-  const validate = (value) => {
-    const [ error, result ] = kind.validate(value)
+  const validate = value => {
+    const [error, result] = kind.validate(value)
 
     if (error) {
       error.type = type
@@ -665,7 +688,9 @@ function scalar(schema, defaults, options) {
 function tuple(schema, defaults, options) {
   if (kindOf(schema) !== 'array') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Tuple structs must be defined as an array, but you passed: ${schema}`)
+      throw new Error(
+        `Tuple structs must be defined as an array, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -676,7 +701,7 @@ function tuple(schema, defaults, options) {
   const name = 'tuple'
   const type = `[${kinds.map(k => k.type).join()}]`
   const validate = (value = resolveDefaults(defaults)) => {
-    const [ error ] = array.validate(value)
+    const [error] = array.validate(value)
 
     if (error) {
       error.type = type
@@ -697,7 +722,7 @@ function tuple(schema, defaults, options) {
         continue
       }
 
-      const [ e, r ] = kind.validate(v)
+      const [e, r] = kind.validate(v)
 
       if (e) {
         e.path = [i].concat(e.path)
@@ -732,7 +757,9 @@ function tuple(schema, defaults, options) {
 function union(schema, defaults, options) {
   if (kindOf(schema) !== 'array') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Union structs must be defined as an array, but you passed: ${schema}`)
+      throw new Error(
+        `Union structs must be defined as an array, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -745,7 +772,7 @@ function union(schema, defaults, options) {
     let error
 
     for (const k of kinds) {
-      const [ e, r ] = k.validate(value)
+      const [e, r] = k.validate(value)
 
       if (!e) {
         return [undefined, r]
@@ -772,7 +799,9 @@ function union(schema, defaults, options) {
 function intersection(schema, defaults, options) {
   if (kindOf(schema) !== 'array') {
     if (process.env.NODE_ENV !== 'production') {
-      throw new Error(`Intersection structs must be defined as an array, but you passed: ${schema}`)
+      throw new Error(
+        `Intersection structs must be defined as an array, but you passed: ${schema}`
+      )
     } else {
       throw new Error(`Invalid schema: ${schema}`)
     }
@@ -785,7 +814,7 @@ function intersection(schema, defaults, options) {
     let v = value
 
     for (const t of types) {
-      const [ e, r ] = t.validate(v)
+      const [e, r] = t.validate(v)
 
       if (e) {
         e.type = type

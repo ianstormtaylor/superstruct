@@ -1,12 +1,14 @@
-
 import { struct } from '../../..'
 
-export const Struct = struct.partial({
-  name: 'string?',
-  age: 'number'
-}, {
-  name: 'unknown',
-})
+export const Struct = struct.partial(
+  {
+    name: 'string?',
+    age: 'number',
+  },
+  {
+    name: 'unknown',
+  }
+)
 
 export const data = {
   age: 42,

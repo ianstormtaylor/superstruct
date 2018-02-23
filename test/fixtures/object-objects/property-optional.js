@@ -1,4 +1,3 @@
-
 import { struct } from '../../..'
 
 export const Struct = struct({
@@ -7,7 +6,7 @@ export const Struct = struct({
   address: struct.optional({
     street: 'string?',
     city: 'string?',
-  })
+  }),
 })
 
 export const data = {

@@ -1,23 +1,25 @@
-
 import { struct } from 'superstruct'
 
 // Define an auto-incrementing unique id.
 let uid = 1
 
 // Define a struct to validate with.
-const User = struct({
-  id: 'number',
-  name: 'string',
-  email: 'string',
-  age: 'number',
-  is_admin: 'boolean?',
-  created_at: 'date',
-}, {
-  id: () => uid++,
-  is_admin: false,
-  age: 0,
-  created_at: () => new Date(),
-})
+const User = struct(
+  {
+    id: 'number',
+    name: 'string',
+    email: 'string',
+    age: 'number',
+    is_admin: 'boolean?',
+    created_at: 'date',
+  },
+  {
+    id: () => uid++,
+    is_admin: false,
+    age: 0,
+    created_at: () => new Date(),
+  }
+)
 
 // Define data to be validated.
 const data = {

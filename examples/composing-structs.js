@@ -1,4 +1,3 @@
-
 import { struct } from 'superstruct'
 
 // Define a `user` struct.
@@ -25,7 +24,7 @@ const data = {
   author: {
     id: 1,
     name: 'Jane Smith',
-  }
+  },
 }
 
 // Validate the data. In this case, the data is valid, so it won't throw.

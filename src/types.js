@@ -1,4 +1,3 @@
-
 import kindOf from 'kind-of'
 
 /**
@@ -49,7 +48,7 @@ const Types = {
   any: value => value !== undefined,
 }
 
-TYPES.forEach((type) => {
+TYPES.forEach(type => {
   Types[type] = value => kindOf(value) === type
 })
 

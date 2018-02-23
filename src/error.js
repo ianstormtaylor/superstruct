@@ -1,4 +1,3 @@
-
 /**
  * Define a struct error.
  *
@@ -6,10 +5,11 @@
  */
 
 class StructError extends TypeError {
-
   static format(attrs) {
     const { type, path, value } = attrs
-    const message = `Expected a value of type \`${type}\`${path.length ? ` for \`${path.join('.')}\`` : ''} but received \`${JSON.stringify(value)}\`.`
+    const message = `Expected a value of type \`${type}\`${
+      path.length ? ` for \`${path.join('.')}\`` : ''
+    } but received \`${JSON.stringify(value)}\`.`
     return message
   }
 
@@ -32,10 +32,9 @@ class StructError extends TypeError {
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, this.constructor)
     } else {
-      this.stack = (new Error()).stack
+      this.stack = new Error().stack
     }
   }
-
 }
 
 /**

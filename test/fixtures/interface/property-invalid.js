@@ -1,9 +1,8 @@
-
 import { struct } from '../../..'
 
 export const Struct = struct.interface({
   name: 'string',
-  age: 'number'
+  age: 'number',
 })
 
 export const data = {

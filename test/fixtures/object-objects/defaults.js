@@ -1,21 +1,23 @@
-
 import { struct } from '../../..'
 
-export const Struct = struct({
-  name: 'string',
-  age: 'number',
-  address: {
-    street: 'string',
-    city: 'string',
+export const Struct = struct(
+  {
+    name: 'string',
+    age: 'number',
+    address: {
+      street: 'string',
+      city: 'string',
+    },
+  },
+  {
+    name: 'john',
+    age: 42,
+    address: {
+      street: '123 fake st',
+      city: 'springfield',
+    },
   }
-}, {
-  name: 'john',
-  age: 42,
-  address: {
-    street: '123 fake st',
-    city: 'springfield',
-  }
-})
+)
 
 export const data = undefined
 
@@ -25,5 +27,5 @@ export const output = {
   address: {
     street: '123 fake st',
     city: 'springfield',
-  }
+  },
 }

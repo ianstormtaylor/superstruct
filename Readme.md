@@ -1,4 +1,3 @@
-
 <p align="center">
   <a href="#"><img src="./docs/images/banner.png" /></a>
 </p>
@@ -41,7 +40,6 @@ Superstruct makes it easy to define interfaces and then validate JavaScript data
 
 But Superstruct is designed for validating data at runtime, so it throws (or returns) detailed runtime errors for you or your end users. This is especially useful in situations like accepting arbitrary input in a REST or GraphQL API. But it can even be used to validate internal data structures at runtime when needed.
 
-
 <br/>
 
 ### Usage
@@ -58,7 +56,7 @@ const Article = struct({
   tags: ['string'],
   author: {
     id: 'number',
-  }
+  },
 })
 
 const data = {
@@ -67,7 +65,7 @@ const data = {
   tags: ['news', 'features'],
   author: {
     id: 1,
-  }
+  },
 }
 
 const article = Article(data)
@@ -87,7 +85,7 @@ const struct = superstruct({
   types: {
     uuid: value => isUuid.v4(value),
     email: value => isEmail(value) && value.length < 256,
-  }
+  },
 })
 
 const User = struct({
@@ -106,31 +104,29 @@ const user = User(data)
 
 Superstruct supports more complex use cases too like defining list or scalar structs, applying default values, composing structs inside each other, returning errors instead of throwing them, etc. For more information read the full [Documentation](#documentation).
 
-
 <br/>
 
 ### Why?
 
 There are lots of existing validation libraries—[`joi`](https://github.com/hapijs/joi), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js), [`yup`](https://github.com/jquense/yup), [`ajv`](https://github.com/epoberezkin/ajv), [`is-my-json-valid`](https://github.com/mafintosh/is-my-json-valid)... But they exhibit many issues that lead to your codebase becoming hard to maintain...
 
-- **They don't expose detailed errors.** Many validators simply return string-only errors or booleans without any details as to why, making it difficult to customize the errors to be helpful for end-users.
+* **They don't expose detailed errors.** Many validators simply return string-only errors or booleans without any details as to why, making it difficult to customize the errors to be helpful for end-users.
 
-- **They make custom types hard.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no way to know what they check for, and complicated APIs for defining new types.
+* **They make custom types hard.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no way to know what they check for, and complicated APIs for defining new types.
 
-- **They don't encourage single sources of truth.** Many existing APIs encourage re-defining custom data types over and over, with the source of truth being spread out across your entire code base.
+* **They don't encourage single sources of truth.** Many existing APIs encourage re-defining custom data types over and over, with the source of truth being spread out across your entire code base.
 
-- **They don't throw errors.** Many don't actually throw the errors, forcing you to wrap everywhere. Although helpful in the days of callbacks, not using `throw` in modern JavaScript makes code much more complex.
+* **They don't throw errors.** Many don't actually throw the errors, forcing you to wrap everywhere. Although helpful in the days of callbacks, not using `throw` in modern JavaScript makes code much more complex.
 
-- **They don't pre-compile schemas.** Many validators define schemas as plain JavaScript objects, which means they delegate the parsing of the schema logic to validation time, making them much slower.
+* **They don't pre-compile schemas.** Many validators define schemas as plain JavaScript objects, which means they delegate the parsing of the schema logic to validation time, making them much slower.
 
-- **They're tightly coupled to other concerns.** Many validators are tightly coupled to Express or other frameworks, which results in one-off, confusing code that isn't reusable across your code base.
+* **They're tightly coupled to other concerns.** Many validators are tightly coupled to Express or other frameworks, which results in one-off, confusing code that isn't reusable across your code base.
 
-- **They use JSON Schema.** Don't get me wrong, JSON Schema _can_ be useful. But it's kind of like HATEOAS—it's usually way more complexity than you need and you aren't using any of its benefits. (Sorry, I said it.)
+* **They use JSON Schema.** Don't get me wrong, JSON Schema _can_ be useful. But it's kind of like HATEOAS—it's usually way more complexity than you need and you aren't using any of its benefits. (Sorry, I said it.)
 
 Of course, not every validation library suffers from all of these issues, but most of them exhibit at least one. If you've run into this problem before, you might like Superstruct.
 
 Which brings me to how Superstruct solves these issues...
-
 
 <br/>
 
@@ -140,16 +136,15 @@ Which brings me to how Superstruct solves these issues...
 
 2. **Unopinionated defaults.** Superstruct ships with native JavaScript types, and everything else is customizable, so you never have to fight to override decisions made by "core" that differ from your application's needs.
 
-4. **Composable interfaces.** Superstruct interfaces are composable, so you can break down commonly-repeated pieces of data into components, and compose them to build up the more complex objects.
+3. **Composable interfaces.** Superstruct interfaces are composable, so you can break down commonly-repeated pieces of data into components, and compose them to build up the more complex objects.
 
-5. **Terse schemas.** The schemas in Superstruct are designed to be extremely terse and expressive. This makes them very easy to read and write, encouraging you to have full data validation coverage.
+4. **Terse schemas.** The schemas in Superstruct are designed to be extremely terse and expressive. This makes them very easy to read and write, encouraging you to have full data validation coverage.
 
-7. **Compiled validators.** Superstruct does the work of compiling its schemas up front, so that it doesn't  spend time performing expensive tasks for every call to the validation functions in your hot code paths.
+5. **Compiled validators.** Superstruct does the work of compiling its schemas up front, so that it doesn't spend time performing expensive tasks for every call to the validation functions in your hot code paths.
 
 6. **Useful errors.** The errors that Superstruct throws contain all the information you need to convert them into your own application-specific errors easy, which means more helpful errors for your end users!
 
-3. **Familiar API.** The Superstruct API was heavily inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/). If you're familiar with any of those, then its schema definition API will feel very natural to use, so you can get started quickly.
-
+7. **Familiar API.** The Superstruct API was heavily inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/). If you're familiar with any of those, then its schema definition API will feel very natural to use, so you can get started quickly.
 
 <br/>
 
@@ -159,22 +154,20 @@ Try out the [live demo on JSFiddle](https://jsfiddle.net/yjugaeg8/2/) to get an 
 
 [![Demo screenshot.](./docs/images/demo-screenshot.png)](https://jsfiddle.net/yjugaeg8/2/)
 
-
 <br/>
 
 ### Examples
 
 Superstruct's API is very flexible, allowing it to be used for a variety of use cases on your servers and in the browser. Here are a few examples of common patterns...
 
-- [Basic Validation](./examples/basic-validation.js)
-- [Custom Types](./examples/custom-types.js)
-- [Default Values](./examples/default-values.js)
-- [Optional Values](./examples/optional-values.js)
-- [Composing Structs](./examples/composing-structs.js)
-- [Throwing Errors](./examples/throwing-errors.js)
-- [Returning Errors](./examples/returning-errors.js)
-- [Custom Errors](./examples/custom-errors.js)
-
+* [Basic Validation](./examples/basic-validation.js)
+* [Custom Types](./examples/custom-types.js)
+* [Default Values](./examples/default-values.js)
+* [Optional Values](./examples/optional-values.js)
+* [Composing Structs](./examples/composing-structs.js)
+* [Throwing Errors](./examples/throwing-errors.js)
+* [Returning Errors](./examples/returning-errors.js)
+* [Custom Errors](./examples/custom-errors.js)
 
 <br/>
 
@@ -182,21 +175,20 @@ Superstruct's API is very flexible, allowing it to be used for a variety of use 
 
 Read the getting started guide to familiarize yourself with how Superstruct works. After that, check out the full API reference for more detailed information about structs, types and errors...
 
-- [**Guide**](./docs/guide.md)
-  - [Installing Superstruct](./docs/guide.md#installing-superstruct)
-  - [Creating Structs](./docs/guide.md#creating-structs)
-  - [Defining Custom Data Types](./docs/guide.md#defining-custom-data-types)
-  - [Setting Default Values](./docs/guide.md#setting-default-values)
-  - [Throwing Customized Errors](./docs/guide.md#throwing-customized-errors)
-  - [Validating Complex Shapes](./docs/guide.md#validating-complex-shapes)
-  - [Composing Structs](./docs/guide.md#composing-structs)
-- [**Reference**](./docs/reference.md)
-  - [API](./docs/reference.md#api)
-  - [Structs](./docs/reference.md#structs)
-  - [Types](./docs/reference.md#types)
-  - [Errors](./docs/reference.md#errors)
-- [**Resources**](/docs/resources.md)
-
+* [**Guide**](./docs/guide.md)
+  * [Installing Superstruct](./docs/guide.md#installing-superstruct)
+  * [Creating Structs](./docs/guide.md#creating-structs)
+  * [Defining Custom Data Types](./docs/guide.md#defining-custom-data-types)
+  * [Setting Default Values](./docs/guide.md#setting-default-values)
+  * [Throwing Customized Errors](./docs/guide.md#throwing-customized-errors)
+  * [Validating Complex Shapes](./docs/guide.md#validating-complex-shapes)
+  * [Composing Structs](./docs/guide.md#composing-structs)
+* [**Reference**](./docs/reference.md)
+  * [API](./docs/reference.md#api)
+  * [Structs](./docs/reference.md#structs)
+  * [Types](./docs/reference.md#types)
+  * [Errors](./docs/reference.md#errors)
+* [**Resources**](/docs/resources.md)
 
 <br/>
 

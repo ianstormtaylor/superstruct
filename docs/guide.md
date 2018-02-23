@@ -1,14 +1,12 @@
-
 # Getting Started
 
-- [Installing Superstruct](#installing-superstruct)
-- [Creating Structs](#creating-structs)
-- [Defining Custom Data Types](#defining-custom-data-types)
-- [Setting Default Values](#setting-default-values)
-- [Throwing Customized Errors](#throwing-customized-errors)
-- [Validating Complex Shapes](#validating-complex-shapes)
-- [Composing Structs](#composing-structs)
-
+* [Installing Superstruct](#installing-superstruct)
+* [Creating Structs](#creating-structs)
+* [Defining Custom Data Types](#defining-custom-data-types)
+* [Setting Default Values](#setting-default-values)
+* [Throwing Customized Errors](#throwing-customized-errors)
+* [Validating Complex Shapes](#validating-complex-shapes)
+* [Composing Structs](#composing-structs)
 
 ## Installing Superstruct
 
@@ -17,6 +15,7 @@ To install Superstruct with Yarn or Npm, simply:
 ```bash
 yarn add superstruct
 ```
+
 ```bash
 npm install --save superstruct
 ```
@@ -34,7 +33,6 @@ If you would rather import Superstruct with a `<script>` tag, you can use the bu
 ```
 
 This will expose the `Superstruct` global with the exported functions.
-
 
 ## Creating Structs
 
@@ -93,7 +91,6 @@ An error was thrown! That's what we expected.
 
 If you'd rather have the error returned instead of thrown, you can use the `Struct.validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `Struct.test()` method. Check out the [Reference](./reference.md) for more information.
 
-
 ## Making Values Optional
 
 What about when you have a property like `is_admin` that only appears on a few special users? In that case you can make certain properties optional, like so:
@@ -126,7 +123,6 @@ User({
 })
 ```
 
-
 ## Setting Default Values
 
 In the case of optional values, you might also want to define a default value for a property if the input is `undefined`. This is helpful for data consistency. For example, you can make the new `is_admin` property default to `false`.
@@ -134,14 +130,17 @@ In the case of optional values, you might also want to define a default value fo
 To do that, pass a second argument into `struct` which contains the defaults:
 
 ```js
-const User = struct({
-  id: 'number',
-  name: 'string',
-  email: 'string',
-  is_admin: 'boolean?',
-}, {
-  is_admin: false,
-})
+const User = struct(
+  {
+    id: 'number',
+    name: 'string',
+    email: 'string',
+    is_admin: 'boolean?',
+  },
+  {
+    is_admin: false,
+  }
+)
 ```
 
 To receive the data with the defaults applied, you'll need to store the return value from calling `User()`. So your validation becomes:
@@ -165,7 +164,6 @@ const result = User(data)
 
 The original `data` did not define an `is_admin` property, but in the `result` returned from the validation the default has been applied.
 
-
 ## Defining Custom Data Types
 
 Next up, you might have been wondering about the `email` property. So far we've just been using a `'string'` type for it, which means that any old string will pass validation.
@@ -179,7 +177,7 @@ import isEmail from 'is-email'
 const struct = superstruct({
   types: {
     email: isEmail,
-  }
+  },
 })
 ```
 
@@ -188,14 +186,17 @@ To do that, we've imported import `superstruct` instead of `struct`. And with th
 Now we can define structs know about the `'email'` type:
 
 ```js
-const User = struct({
-  id: 'number',
-  name: 'string',
-  email: 'email',
-  is_admin: 'boolean?',
-}, {
-  is_admin: false,
-})
+const User = struct(
+  {
+    id: 'number',
+    name: 'string',
+    email: 'email',
+    is_admin: 'boolean?',
+  },
+  {
+    is_admin: false,
+  }
+)
 ```
 
 Now if you pass in an email string that is invalid, it will throw:
@@ -218,7 +219,6 @@ User(data)
 ```
 
 And there you have it!
-
 
 ## Throwing Customized Errors
 
@@ -271,7 +271,6 @@ user_name_required
 
 Although this example is simplified, the struct errors expose all of the possible information about why the validation failed, so you can use them to construct extremely detailed errors for your end users.
 
-
 ## Validating Complex Shapes
 
 In the most common uses, you simply pass a schema definition to the `struct` function, and you'll receive a function that will validate that schema. However, there are more structures of data you might like to validate that simple objects with key/values.
@@ -299,7 +298,6 @@ const User = struct({
 ```
 
 All of this can be achieved using the helpers exposed on the `struct` function. For a full list of the kinds of structures you can validate, check out the [Structs Reference](./reference.md#structs).
-
 
 ## Composing Structs
 

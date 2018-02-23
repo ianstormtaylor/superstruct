@@ -1,4 +1,3 @@
-
 import Kinds from './kinds'
 import StructError from './error'
 import Types from './types'
@@ -37,7 +36,9 @@ function superstruct(config = {}) {
     function Struct(data) {
       if (this instanceof Struct) {
         if (process.env.NODE_ENV !== 'production') {
-          throw new Error('The `Struct` creation function should not be used with the `new` keyword.')
+          throw new Error(
+            'The `Struct` creation function should not be used with the `new` keyword.'
+          )
         } else {
           throw new Error('Invalid `new` keyword!')
         }
@@ -55,8 +56,8 @@ function superstruct(config = {}) {
     Struct.defaults = defaults
     Struct.options = options
 
-    Struct.assert = (value) => {
-      const [ error, result ] = kind.validate(value)
+    Struct.assert = value => {
+      const [error, result] = kind.validate(value)
 
       if (error) {
         throw new StructError(error)
@@ -65,13 +66,13 @@ function superstruct(config = {}) {
       return result
     }
 
-    Struct.test = (value) => {
-      const [ error ] = kind.validate(value)
+    Struct.test = value => {
+      const [error] = kind.validate(value)
       return !error
     }
 
-    Struct.validate = (value) => {
-      const [ error, result ] = kind.validate(value)
+    Struct.validate = value => {
+      const [error, result] = kind.validate(value)
 
       if (error) {
         return [new StructError(error)]
@@ -87,7 +88,7 @@ function superstruct(config = {}) {
    * Mix in a factory for each specific kind of struct.
    */
 
-  Object.keys(Kinds).forEach((name) => {
+  Object.keys(Kinds).forEach(name => {
     const kind = Kinds[name]
 
     struct[name] = (schema, defaults, options) => {

@@ -1,4 +1,3 @@
-
 import StructError from './error'
 import superstruct from './superstruct'
 import { isStruct } from './utils'
@@ -17,9 +16,4 @@ const struct = superstruct()
  * @type {Function}
  */
 
-export {
-  struct,
-  superstruct,
-  isStruct,
-  StructError,
-}
+export { struct, superstruct, isStruct, StructError }

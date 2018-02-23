@@ -1,4 +1,3 @@
-
 import config from './rollup'
 
 config.output = {

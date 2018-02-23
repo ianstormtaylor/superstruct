@@ -1,4 +1,3 @@
-
 import babel from 'rollup-plugin-babel'
 import cjs from 'rollup-plugin-commonjs'
 import node from 'rollup-plugin-node-resolve'
@@ -24,13 +23,13 @@ config.plugins = [
       'transform-inline-environment-variables',
       'transform-async-to-generator',
       'transform-object-rest-spread',
-    ]
+    ],
   }),
   cjs({
     sourceMap: false,
   }),
   node(),
-  uglify({}, minify)
+  uglify({}, minify),
 ]
 
 export default config

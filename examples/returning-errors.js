@@ -1,4 +1,3 @@
-
 import { struct, StructError } from 'superstruct'
 
 // Define a struct to validate with.
