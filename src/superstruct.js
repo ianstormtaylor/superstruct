@@ -57,7 +57,11 @@ function superstruct(config = {}) {
 
     Struct.assert = (value) => {
       const [ error, result ] = kind.validate(value)
-      if (error) throw new StructError(error)
+
+      if (error) {
+        throw new StructError(error)
+      }
+
       return result
     }
 
@@ -68,7 +72,11 @@ function superstruct(config = {}) {
 
     Struct.validate = (value) => {
       const [ error, result ] = kind.validate(value)
-      if (error) return [new StructError(error)]
+
+      if (error) {
+        return [new StructError(error)]
+      }
+
       return [undefined, result]
     }
 

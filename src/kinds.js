@@ -29,8 +29,13 @@ class Kind {
  */
 
 function any(schema, defaults, options) {
-  if (isStruct(schema)) return schema[KIND]
-  if (schema instanceof Kind) return schema
+  if (isStruct(schema)) {
+    return schema[KIND]
+  }
+
+  if (schema instanceof Kind) {
+    return schema
+  }
 
   switch (kindOf(schema)) {
     case 'array': {
@@ -741,7 +746,11 @@ function union(schema, defaults, options) {
 
     for (const k of kinds) {
       const [ e, r ] = k.validate(value)
-      if (!e) return [undefined, r]
+
+      if (!e) {
+        return [undefined, r]
+      }
+
       error = e
     }
 
