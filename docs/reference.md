@@ -225,6 +225,7 @@ struct.interface({
 ### `intersection`
 
 ```js
+struct('string&email')
 struct.intersection(['string', 'email'])
 ```
 
@@ -289,7 +290,11 @@ struct.literal(42)
 struct({
   id: 'number',
   name: 'string',
-  age: 'number',
+})
+
+struct.object({
+  id: 'number',
+  name: 'string',
 })
 ```
 
@@ -297,7 +302,6 @@ struct({
 {
   id: 1,
   name: 'Jane Smith',
-  age: 42,
 }
 ```
 
@@ -307,6 +311,7 @@ struct({
 
 ```js
 struct.optional('string')
+struct('string?')
 ```
 
 ```js
@@ -339,6 +344,7 @@ struct.partial({
 
 ```js
 struct('string')
+struct.scalar('string')
 ```
 
 ```js
@@ -362,6 +368,7 @@ struct.tuple(['string', 'number', 'boolean'])
 ### `union`
 
 ```js
+struct('string|number')
 struct.union(['string', 'number'])
 ```
 
