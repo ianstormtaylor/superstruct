@@ -6,14 +6,19 @@
   * [`Struct`](#struct)
   * [`StructError`](#structerror)
 * [Structs](#structs)
+  * [`any`](#any)
   * [`dict`](#dict)
   * [`enum`](#enum)
   * [`function`](#function)
+  * [`instance`](#instance)
+  * [`interface`](#interface)
   * [`intersection`](#intersection)
   * [`lazy`](#lazy)
   * [`list`](#list)
+  * [`literal`](#literal)
   * [`object`](#object)
   * [`optional`](#optional)
+  * [`partial`](#partial)
   * [`scalar`](#scalar)
   * [`union`](#union)
 * [Types](#types)
@@ -133,6 +138,18 @@ The error class that Superstruct uses for its validation errors. This is exposed
 
 Structs are defined by passing a schema definition to the `struct` function. The schema definition can be a string, array, object or function. They can also be composed by nesting structs inside each other.
 
+### `any`
+
+```js
+struct.any(['string'])
+```
+
+```js
+;['a', 'b', 'c']
+```
+
+`any` structs are the equivalent of using the `struct()` function directly, providing the shorthands for commonly used notations.
+
 ### `dict`
 
 ```js
@@ -146,7 +163,7 @@ struct.dict(['string', 'number'])
 }
 ```
 
-Dict structs validate an object's keys and values. But, unlike Object structs, they do not enforce a specific set of keys.
+`dict` structs validate an object's keys and values. But, unlike `object` structs, they do not enforce a specific set of keys.
 
 ### `enum`
 
@@ -158,7 +175,7 @@ struct.enum(['Jane', 'John', 'Jack', 'Jill'])
 'Jane'
 ```
 
-Enums validate that a value is one of a specific set of constants.
+`enum` structs validate that a value is one of a specific set of literals.
 
 ### `function`
 
@@ -171,7 +188,39 @@ struct.function(() => typeof value === 'string')
 'a simple string'
 ```
 
-Function structs will validate using the validation function provided. They're helpful as an escape hatch in cases when you really need to write a one-off validation, and don't want to add it to your set of known data types.
+`function` structs will validate using the validation function provided. They're helpful as an escape hatch in cases when you really need to write a one-off validation, and don't want to add it to your set of known data types.
+
+### `instance`
+
+```js
+struct.instance(MyObject)
+```
+
+```js
+new MyObject()
+```
+
+`instance` structs validate that an object is an instance of a particular class, using the built-in `instanceof` operator.
+
+### `interface`
+
+```js
+struct.interface({
+  property: 'number',
+  method: 'function',
+})
+```
+
+```js
+{
+  property: 42,
+  method: () => true,
+  anotherProperty: 'string',
+  anotherMethod: () => false,
+}
+```
+
+`interface` structs validate that a value has a set of properties on it, but it does not assert anything about unspecified properties. This allows you to assert that a particular set of functionality exists without a strict equality check for properties.
 
 ### `intersection`
 
@@ -183,7 +232,7 @@ struct.intersection(['string', 'email'])
 'jane@example.com'
 ```
 
-Intersection structs validate that a value matches all of many structs. Their arguments are any other validate struct schema.
+`intersection` structs validate that a value matches all of many structs. Their arguments are any other validate struct schema.
 
 ### `lazy`
 
@@ -207,7 +256,7 @@ const BinaryTree = struct({
 }
 ```
 
-Lazy structs accepts a function that will return a struct. They are useful to create recursive structs.
+`lazy` structs accepts a function that will return a struct. They are useful to create recursive structs.
 
 ### `list`
 
@@ -220,7 +269,19 @@ struct.list(['string'])
 ;['a', 'b', 'c']
 ```
 
-List structs will validate that all of the elements in an array match a specific type. The elements's schema can be any valid value for a struct—string, array, object or function.
+`list` structs will validate that all of the elements in an array match a specific type. The elements's schema can be any valid value for a struct—string, array, object or function.
+
+### `literal`
+
+```js
+struct.literal(42)
+```
+
+```js
+42
+```
+
+`literal` structs enforces that a value matches an exact, pre-defined value, using the `===` operator.
 
 ### `object`
 
@@ -240,7 +301,7 @@ struct({
 }
 ```
 
-Object structs will validate that each of the properties in an object match a specific type. The properties's schemas can be any valid value for a struct—string, array, object or function.
+`object` structs will validate that each of the properties in an object match a specific type. The properties's schemas can be any valid value for a struct—string, array, object or function.
 
 ### `optional`
 
@@ -253,7 +314,26 @@ struct.optional('string')
 undefined
 ```
 
-Optional structs validate that a value matches a specific kind of struct, or that it is `undefined`.
+`optional` structs validate that a value matches a specific kind of struct, or that it is `undefined`.
+
+### `partial`
+
+```js
+struct.partial({
+  a: 'number',
+  b: 'number',
+})
+```
+
+```js
+{
+  a: 1,
+  b: 2,
+  c: 3,
+}
+```
+
+`partial` structs are similar to `object` structs, but they only require that the specified properties exist, and they don't care about other properties on the object. They differ from `interface` structs in that they only return the specified properties.
 
 ### `scalar`
 
@@ -265,7 +345,19 @@ struct('string')
 'a string of text'
 ```
 
-Scalar structs are the lowest-level type of struct. They validate that a single scalar value matches a type, denoted by a type string.
+`scalar` structs are the lowest-level type of struct. They validate that a single scalar value matches a type, denoted by a type string.
+
+### `tuple`
+
+```js
+struct.tuple(['string', 'number', 'boolean'])
+```
+
+```js
+;['a', 1, true]
+```
+
+`tuple` structs validate that a value is a specific array tuple of values.
 
 ### `union`
 
@@ -278,7 +370,7 @@ struct.union(['string', 'number'])
 42
 ```
 
-Union structs validate that a value matches at least one of many structs. Their arguments are any other validate struct schema.
+`union` structs validate that a value matches at least one of many structs. Their arguments are any other validate struct schema.
 
 ## Types
 
