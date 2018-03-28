@@ -769,7 +769,7 @@ function union(schema, defaults, options) {
   const name = 'union'
   const type = kinds.map(k => k.type).join(' | ')
   const validate = (value = resolveDefaults(defaults)) => {
-    let error
+    const errors = []
 
     for (const k of kinds) {
       const [e, r] = k.validate(value)
@@ -778,11 +778,10 @@ function union(schema, defaults, options) {
         return [undefined, r]
       }
 
-      error = e
+      errors.push(e)
     }
-
-    error.type = type
-    return [error]
+    errors[0].type = type
+    return errors
   }
 
   return new Kind(name, type, validate)
