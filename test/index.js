@@ -24,8 +24,8 @@ describe('superstruct', () => {
 
       for (const test of tests) {
         const module = require(resolve(testsDir, test))
-        const { Struct, data, only } = module
-        const run = only ? it.only : it
+        const { Struct, data, only, skip } = module
+        const run = only ? it.only : skip ? it.skip : it
         run(test, () => {
           if ('output' in module) {
             const expected = module.output
