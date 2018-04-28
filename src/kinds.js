@@ -109,7 +109,9 @@ function dict(schema, defaults, options) {
   const values = any(schema[1], undefined, options)
   const name = 'dict'
   const type = `dict<${keys.type},${values.type}>`
-  const validate = (value = resolveDefaults(defaults)) => {
+  const validate = value => {
+    const resolved = resolveDefaults(defaults)
+    value = resolved ? { ...resolved, ...value } : value
     const [error] = obj.validate(value)
 
     if (error) {
@@ -307,7 +309,9 @@ function inter(schema, defaults, options) {
 
   const name = 'interface'
   const type = `{${ks.join()}}`
-  const validate = (value = resolveDefaults(defaults)) => {
+  const validate = value => {
+    const resolved = resolveDefaults(defaults)
+    value = resolved ? { ...resolved, ...value } : value
     const errors = []
 
     for (const key in properties) {
