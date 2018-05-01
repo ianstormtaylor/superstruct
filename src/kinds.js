@@ -1,6 +1,6 @@
 import kindOf from 'kind-of'
 
-import { KIND, ALLOWED_RETURN_TYPES } from './constants'
+import { KIND } from './constants'
 import { isStruct, resolveDefaults } from './utils'
 
 /**
@@ -232,36 +232,38 @@ function func(schema, defaults, options) {
   const type = '<function>'
   const validate = (value = resolveDefaults(defaults), data) => {
     const result = schema(value, data)
-    const resultType = kindOf(result)
-    const defaultPath = { path: [] }
+    let failure = { path: [] }
+    let isValid
 
-    if (!ALLOWED_RETURN_TYPES.includes(resultType)) {
-      if (process.env.NODE_ENV !== 'production') {
-        throw new Error(
-          `Validator functions must return a boolean, an error reason string or an error reason object {message?, path?}, but you passed: ${schema}`
-        )
-      } else {
-        throw new Error(`Invalid result: ${result}`)
+    switch (kindOf(result)) {
+      case 'boolean': {
+        isValid = result
+        break
+      }
+      case 'string': {
+        isValid = false
+        failure.reason = result
+        break
+      }
+      case 'object': {
+        isValid = false
+        failure = { ...failure, ...result }
+        break
+      }
+      default: {
+        if (process.env.NODE_ENV !== 'production') {
+          throw new Error(
+            `Validator functions must return a boolean, an error reason string or an error reason object, but you passed: ${schema}`
+          )
+        } else {
+          throw new Error(`Invalid result: ${result}`)
+        }
       }
     }
 
-    const resultKind = {
-      string: reason => ({ reason, ...defaultPath }),
-      boolean: () => defaultPath,
-      object: ({ message, path = [] }) => ({
-        reason: message,
-        path,
-      }),
-    }
-
-    const errorObject = resultKind[resultType](result)
-    const hasReason = errorObject.hasOwnProperty('reason')
-
-    const isValid = hasReason ? false : result
-
     return isValid
       ? [undefined, value]
-      : [{ type, value, data: value, ...errorObject }]
+      : [{ type, value, data: value, ...failure }]
   }
 
   return new Kind(name, type, validate)
