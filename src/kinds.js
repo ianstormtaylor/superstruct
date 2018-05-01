@@ -232,7 +232,7 @@ function func(schema, defaults, options) {
   const type = '<function>'
   const validate = (value = resolveDefaults(defaults), data) => {
     const result = schema(value, data)
-    let failure = { path: [] }
+    let failure = { path: [], reason: null }
     let isValid
 
     switch (kindOf(result)) {

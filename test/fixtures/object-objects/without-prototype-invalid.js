@@ -13,4 +13,5 @@ export const error = {
   path: ['city'],
   value: false,
   type: 'string',
+  reason: null,
 }

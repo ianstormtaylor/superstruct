@@ -8,4 +8,5 @@ export const error = {
   path: [],
   value: 'three',
   type: '"one" | "two"',
+  reason: null,
 }

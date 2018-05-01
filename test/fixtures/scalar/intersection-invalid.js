@@ -14,4 +14,5 @@ export const error = {
   path: [],
   value: 'a',
   type: 'string & empty',
+  reason: null,
 }

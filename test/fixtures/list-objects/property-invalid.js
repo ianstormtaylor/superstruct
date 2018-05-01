@@ -8,4 +8,5 @@ export const error = {
   path: [1, 'id'],
   value: false,
   type: 'string',
+  reason: null,
 }

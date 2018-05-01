@@ -20,4 +20,5 @@ export const error = {
   path: ['address', 'city'],
   value: 'Manchester',
   type: '<function>',
+  reason: null,
 }

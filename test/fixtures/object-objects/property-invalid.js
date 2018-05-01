@@ -19,4 +19,5 @@ export const error = {
   path: ['address'],
   value: 'invalid',
   type: '{street,city}',
+  reason: null,
 }
