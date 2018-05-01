@@ -232,25 +232,38 @@ function func(schema, defaults, options) {
   const type = '<function>'
   const validate = (value = resolveDefaults(defaults), data) => {
     const result = schema(value, data)
-    const isReason = kindOf(result) === 'string'
-    const isBoolean = kindOf(result) === 'boolean'
+    let failure = { path: [], reason: null }
+    let isValid
 
-    if (!isReason && !isBoolean) {
-      if (process.env.NODE_ENV !== 'production') {
-        throw new Error(
-          `Validator functions must return a boolean or an error reason string, but you passed: ${schema}`
-        )
-      } else {
-        throw new Error(`Invalid result: ${result}`)
+    switch (kindOf(result)) {
+      case 'boolean': {
+        isValid = result
+        break
+      }
+      case 'string': {
+        isValid = false
+        failure.reason = result
+        break
+      }
+      case 'object': {
+        isValid = false
+        failure = { ...failure, ...result }
+        break
+      }
+      default: {
+        if (process.env.NODE_ENV !== 'production') {
+          throw new Error(
+            `Validator functions must return a boolean, an error reason string or an error reason object, but you passed: ${schema}`
+          )
+        } else {
+          throw new Error(`Invalid result: ${result}`)
+        }
       }
     }
 
-    const isValid = isReason ? false : result
-    const reason = isReason ? result : undefined
-
     return isValid
       ? [undefined, value]
-      : [{ type, value, data: value, path: [], reason }]
+      : [{ type, value, data: value, ...failure }]
   }
 
   return new Kind(name, type, validate)

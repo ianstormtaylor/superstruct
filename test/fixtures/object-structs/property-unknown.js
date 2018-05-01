@@ -21,4 +21,5 @@ export const error = {
   path: ['address', 'state'],
   value: 'unknown',
   type: undefined,
+  reason: null,
 }

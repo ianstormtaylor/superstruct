@@ -3,17 +3,19 @@ import { superstruct } from '../../..'
 
 const struct = superstruct({
   types: {
-    email: isEmail,
+    email: v => {
+      if (!isEmail(v)) return { reason: `not_email`, path: ['email'] }
+    },
   },
 })
 
 export const Struct = struct('email')
 
-export const data = undefined
+export const data = 'invalid'
 
 export const error = {
-  path: [],
-  value: undefined,
+  path: ['email'],
+  value: 'invalid',
   type: 'email',
-  reason: null,
+  reason: 'not_email',
 }

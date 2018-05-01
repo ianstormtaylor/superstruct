@@ -13,4 +13,5 @@ export const error = {
   path: ['tags'],
   value: undefined,
   type: '[string]',
+  reason: null,
 }
