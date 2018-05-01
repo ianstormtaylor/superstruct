@@ -15,9 +15,17 @@ const IS_STRUCT = '@@__STRUCT__@@'
 const KIND = '@@__KIND__@@'
 
 /**
+ * Allowed types to be returned from custom types function
+ *
+ * @type {Array}
+ */
+
+const ALLOWED_RETURN_TYPES = ['boolean', 'string', 'object']
+
+/**
  * Export.
  *
  * @type {Object}
  */
 
-export { IS_STRUCT, KIND }
+export { IS_STRUCT, KIND, ALLOWED_RETURN_TYPES }

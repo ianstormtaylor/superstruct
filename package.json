@@ -53,7 +53,7 @@
     "build:max": "rollup --config ./config/rollup-umd.js",
     "build:min": "rollup --config ./config/rollup-umd-min.js",
     "clean": "rm -rf ./lib ./umd ./node_modules",
-    "lint": "eslint '{src,test}/*' && prettier --list-different '**/*.{js,json,md}'",
+    "lint": "eslint \"{src,test}/*\" && prettier --list-different \"**/*.{js,json}\"",
     "prepublish": "yarn build",
     "prettier": "prettier --write '**/*.{js,json,md}'",
     "release": "np",

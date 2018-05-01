@@ -1,6 +1,6 @@
 import kindOf from 'kind-of'
 
-import { KIND } from './constants'
+import { KIND, ALLOWED_RETURN_TYPES } from './constants'
 import { isStruct, resolveDefaults } from './utils'
 
 /**
@@ -232,25 +232,36 @@ function func(schema, defaults, options) {
   const type = '<function>'
   const validate = (value = resolveDefaults(defaults), data) => {
     const result = schema(value, data)
-    const isReason = kindOf(result) === 'string'
-    const isBoolean = kindOf(result) === 'boolean'
+    const resultType = kindOf(result)
+    const defaultPath = { path: [] }
 
-    if (!isReason && !isBoolean) {
+    if (!ALLOWED_RETURN_TYPES.includes(resultType)) {
       if (process.env.NODE_ENV !== 'production') {
         throw new Error(
-          `Validator functions must return a boolean or an error reason string, but you passed: ${schema}`
+          `Validator functions must return a boolean, an error reason string or an error reason object {message?, path?}, but you passed: ${schema}`
         )
       } else {
         throw new Error(`Invalid result: ${result}`)
       }
     }
 
-    const isValid = isReason ? false : result
-    const reason = isReason ? result : undefined
+    const resultKind = {
+      string: reason => ({ reason, ...defaultPath }),
+      boolean: () => defaultPath,
+      object: ({ message, path = [] }) => ({
+        reason: message,
+        path,
+      }),
+    }
+
+    const errorObject = resultKind[resultType](result)
+    const hasReason = errorObject.hasOwnProperty('reason')
+
+    const isValid = hasReason ? false : result
 
     return isValid
       ? [undefined, value]
-      : [{ type, value, data: value, path: [], reason }]
+      : [{ type, value, data: value, ...errorObject }]
   }
 
   return new Kind(name, type, validate)
