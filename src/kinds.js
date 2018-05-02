@@ -109,7 +109,9 @@ function dict(schema, defaults, options) {
   const values = any(schema[1], undefined, options)
   const name = 'dict'
   const type = `dict<${keys.type},${values.type}>`
-  const validate = (value = resolveDefaults(defaults)) => {
+  const validate = value => {
+    const resolved = resolveDefaults(defaults)
+    value = resolved ? { ...resolved, ...value } : value
     const [error] = obj.validate(value)
 
     if (error) {
@@ -320,19 +322,32 @@ function inter(schema, defaults, options) {
 
   const name = 'interface'
   const type = `{${ks.join()}}`
-  const validate = (value = resolveDefaults(defaults)) => {
+  const validate = value => {
+    const resolved = resolveDefaults(defaults)
+    value = resolved ? { ...resolved, ...value } : value
     const errors = []
+    const ret = value
 
     for (const key in properties) {
-      const v = value[key]
+      let v = value[key]
       const kind = properties[key]
-      const [e] = kind.validate(v)
+
+      if (v === undefined) {
+        const d = defaults && defaults[key]
+        v = resolveDefaults(d, value)
+      }
+
+      const [e, r] = kind.validate(v, value)
 
       if (e) {
         e.path = [key].concat(e.path)
         e.data = value
         errors.push(e)
         continue
+      }
+
+      if (key in value || r !== undefined) {
+        ret[key] = r
       }
     }
 
@@ -342,7 +357,7 @@ function inter(schema, defaults, options) {
       return [first]
     }
 
-    return [undefined, value]
+    return [undefined, ret]
   }
 
   return new Kind(name, type, validate)
