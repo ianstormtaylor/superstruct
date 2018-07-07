@@ -60,6 +60,8 @@
     "test": "yarn build:cjs && yarn lint && mocha --require babel-core/register ./test/index.js",
     "watch": "rollup --config ./config/rollup-cjs.js --watch"
   },
+  "types": "index.d.ts",
+  "typings": "index.d.ts",
   "keywords": [
     "api",
     "array",
