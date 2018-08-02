@@ -543,9 +543,12 @@ function object(schema, defaults, options) {
       const [e, r] = kind.validate(v, value)
 
       if (e) {
-        e.path = [key].concat(e.path)
-        e.data = value
-        errors.push(e)
+        const allErrors = e.errors || [e]
+        allErrors.forEach(err => {
+          err.path = [key].concat(err.path)
+          err.data = value
+          errors.push(err)
+        })
         return
       }
 
