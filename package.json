@@ -36,7 +36,6 @@
     "is-uuid": "^1.0.2",
     "lodash": "^4.17.4",
     "mocha": "^4.0.1",
-    "np": "^2.17.0",
     "prettier": "^1.10.2",
     "rollup": "^0.52.0",
     "rollup-plugin-babel": "^3.0.2",
