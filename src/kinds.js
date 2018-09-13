@@ -127,9 +127,12 @@ function dict(schema, defaults, options) {
       const [e, r] = keys.validate(k)
 
       if (e) {
-        e.path = [k].concat(e.path)
-        e.data = value
-        errors.push(e)
+        const allE = e.errors || [e]
+        allE.forEach(singleE => {
+          singleE.path = [k].concat(singleE.path)
+          singleE.data = value
+          errors.push(singleE)
+        })
         continue
       }
 
@@ -137,9 +140,12 @@ function dict(schema, defaults, options) {
       const [e2, r2] = values.validate(v)
 
       if (e2) {
-        e2.path = [k].concat(e2.path)
-        e2.data = value
-        errors.push(e2)
+        const allE2 = e2.errors || [e2]
+        allE2.forEach(singleE => {
+          singleE.path = [k].concat(singleE.path)
+          singleE.data = value
+          errors.push(singleE)
+        })
         continue
       }
 
@@ -340,9 +346,12 @@ function inter(schema, defaults, options) {
       const [e, r] = kind.validate(v, value)
 
       if (e) {
-        e.path = [key].concat(e.path)
-        e.data = value
-        errors.push(e)
+        const allE = e.errors || [e]
+        allE.forEach(singleE => {
+          singleE.path = [key].concat(singleE.path)
+          singleE.data = value
+          errors.push(singleE)
+        })
         continue
       }
 
@@ -438,9 +447,12 @@ function list(schema, defaults, options) {
       const [e, r] = element.validate(v)
 
       if (e) {
-        e.path = [i].concat(e.path)
-        e.data = value
-        errors.push(e)
+        const allE = e.errors || [e]
+        allE.forEach(singleE => {
+          singleE.path = [i].concat(singleE.path)
+          singleE.data = value
+          errors.push(singleE)
+        })
         continue
       }
 
@@ -543,9 +555,12 @@ function object(schema, defaults, options) {
       const [e, r] = kind.validate(v, value)
 
       if (e) {
-        e.path = [key].concat(e.path)
-        e.data = value
-        errors.push(e)
+        const allE = e.errors || [e]
+        allE.forEach(singleE => {
+          singleE.path = [key].concat(singleE.path)
+          singleE.data = value
+          errors.push(singleE)
+        })
         return
       }
 
@@ -633,9 +648,12 @@ function partial(schema, defaults, options) {
       const [e, r] = kind.validate(v, value)
 
       if (e) {
-        e.path = [key].concat(e.path)
-        e.data = value
-        errors.push(e)
+        const allE = e.errors || [e]
+        allE.forEach(singleE => {
+          singleE.path = [key].concat(singleE.path)
+          singleE.data = value
+          errors.push(singleE)
+        })
         continue
       }
 
@@ -753,9 +771,12 @@ function tuple(schema, defaults, options) {
       const [e, r] = kind.validate(v)
 
       if (e) {
-        e.path = [i].concat(e.path)
-        e.data = value
-        errors.push(e)
+        const allE = e.errors || [e]
+        allE.forEach(singleE => {
+          singleE.path = [i].concat(singleE.path)
+          singleE.data = value
+          errors.push(singleE)
+        })
         continue
       }
 
