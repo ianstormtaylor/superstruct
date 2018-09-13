@@ -4,6 +4,14 @@ This document maintains a list of changes to the `superstruct` package with each
 
 ---
 
+### `0.6.0` — September 13, 2018
+
+###### BREAKING
+
+* **Invalid `Date` objects are now considered invalid.** Previously using the built-in `'date'` validator would only check that the object was a `Date` instance, and not that it was a valid one. This has been fixed, and although it is technically a breaking change, most everyone would have expected this behavior to begin with.
+
+---
+
 ### `0.5.0` — December 21, 2017
 
 ###### BREAKING
