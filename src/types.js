@@ -11,7 +11,6 @@ const TYPES = [
   'array',
   'boolean',
   'buffer',
-  'date',
   'error',
   'float32array',
   'float64array',
@@ -51,6 +50,15 @@ const Types = {
 TYPES.forEach(type => {
   Types[type] = value => kindOf(value) === type
 })
+
+/**
+ * Handle the 'date' case specially, to throw out invalid `Date` objects.
+ *
+ * @param {Mixed} value
+ * @return {Boolean}
+ */
+
+Types.date = value => kindOf(value) === 'date' && !isNaN(value)
 
 /**
  * Export.
