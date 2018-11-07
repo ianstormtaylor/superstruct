@@ -859,17 +859,28 @@ function intersection(schema, defaults, options) {
   const name = 'intersection'
   const type = types.map(t => t.type).join(' & ')
   const validate = (value = resolveDefaults(defaults)) => {
+    const errors = []
     let v = value
 
     for (const t of types) {
       const [e, r] = t.validate(v)
 
       if (e) {
-        e.type = type
-        return [e]
+        const allE = e.errors || [e]
+        allE.forEach(singleE => {
+          errors.push(singleE)
+        })
+        continue
       }
 
       v = r
+    }
+
+    if (errors.length) {
+      const first = errors[0]
+      first.type = type
+      first.errors = errors
+      return [first]
     }
 
     return [undefined, v]
