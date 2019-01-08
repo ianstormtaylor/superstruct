@@ -154,7 +154,7 @@ function dict(schema, defaults, options) {
 
     if (errors.length) {
       const first = errors[0]
-      first.errors = errors
+      first.errors = JSON.parse(JSON.stringify(errors))
       return [first]
     }
 
@@ -362,7 +362,7 @@ function inter(schema, defaults, options) {
 
     if (errors.length) {
       const first = errors[0]
-      first.errors = errors
+      first.errors = JSON.parse(JSON.stringify(errors))
       return [first]
     }
 
@@ -461,7 +461,7 @@ function list(schema, defaults, options) {
 
     if (errors.length) {
       const first = errors[0]
-      first.errors = errors
+      first.errors = JSON.parse(JSON.stringify(errors))
       return [first]
     }
 
@@ -571,7 +571,7 @@ function object(schema, defaults, options) {
 
     if (errors.length) {
       const first = errors[0]
-      first.errors = errors
+      first.errors = JSON.parse(JSON.stringify(errors))
       return [first]
     }
 
@@ -664,7 +664,7 @@ function partial(schema, defaults, options) {
 
     if (errors.length) {
       const first = errors[0]
-      first.errors = errors
+      first.errors = JSON.parse(JSON.stringify(errors))
       return [first]
     }
 
@@ -785,7 +785,7 @@ function tuple(schema, defaults, options) {
 
     if (errors.length) {
       const first = errors[0]
-      first.errors = errors
+      first.errors = JSON.parse(JSON.stringify(errors))
       return [first]
     }
 
