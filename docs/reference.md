@@ -180,8 +180,8 @@ struct.enum(['Jane', 'John', 'Jack', 'Jill'])
 ### `function`
 
 ```js
-struct(() => typeof value === 'string')
-struct.function(() => typeof value === 'string')
+struct((value) => typeof value === 'string')
+struct.function((value) => typeof value === 'string')
 ```
 
 ```js
