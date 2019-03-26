@@ -259,6 +259,60 @@ const BinaryTree = struct({
 
 `lazy` structs accepts a function that will return a struct. They are useful to create recursive structs.
 
+### `dynamic`
+
+```js
+const map = {
+  TEXT: struct({
+    content: 'string'
+  }),
+  IMAGE: struct({
+    url: 'string'
+  })
+}
+
+const Node = struct({
+  type: struct.enum(['TEXT', 'IMAGE']),
+  value: struct.dynamic((value, parent) => {
+    // Make sure your function never comes back with anything but a struct.
+    return map[parent.type] || struct('undefined')
+  })
+})
+
+const Struct = struct({
+  nodes: [Node]
+})
+```
+
+```js
+{
+  nodes: [
+    {
+      type: 'TEXT',
+      value: {
+        content: 'Hello, world!'
+      }
+    },
+    {
+      type: 'IMAGE',
+      value: {
+        url: 'https://example.com/test.png'
+      }
+    }
+  ]
+}
+```
+
+Dynamic sctructs are functions that return other structs. Use this to dynamically determine the applicable struct for your dataset based on arbitrary and/or deterministic conditions.
+
+The passed function should accept two arguments:
+
+```js
+struct.dynamic((value, parent) => SomeStruct)
+```
+
+Where `value` is the currently validated data and `parent` is the root object of `value`.
+
 ### `list`
 
 ```js
