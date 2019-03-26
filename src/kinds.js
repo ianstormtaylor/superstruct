@@ -408,6 +408,52 @@ function lazy(schema, defaults, options) {
 }
 
 /**
+ * Dynamic.
+ *
+ * @param {Function} createSchema
+ * @param {Any} defaults
+ * @param {Object} options
+ */
+
+function dynamic(createSchema, defaults, options) {
+  if (kindOf(createSchema) !== 'function') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(
+        `Dynamic structs must be defined as a function, but you passed: ${createSchema}`
+      )
+    } else {
+      throw new Error(`Invalid schema: ${createSchema}`)
+    }
+  }
+
+  const name = 'dynamic'
+  const type = 'dynamic...'
+  const validate = (value = resolveDefaults(defaults), data) => {
+    const schema = createSchema(value, data)
+
+    if (kindOf(schema) !== 'function') {
+      if (process.env.NODE_ENV !== 'production') {
+        throw new Error(
+          `Dynamic structs must return a schema, but you passed: ${schema}`
+        )
+      } else {
+        throw new Error(`Invalid schema: ${schema}`)
+      }
+    }
+
+    const [error, result] = schema.validate(value)
+
+    if (error) {
+      return [error]
+    }
+
+    return [undefined, result]
+  }
+
+  return new Kind(name, type, validate)
+}
+
+/**
  * List.
  *
  * @param {Array} schema
@@ -902,6 +948,7 @@ const Kinds = {
   tuple,
   union,
   intersection,
+  dynamic,
 }
 
 /**
