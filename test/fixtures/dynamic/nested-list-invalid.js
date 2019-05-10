@@ -54,6 +54,6 @@ export const data = {
 export const error = {
   path: ['nodes', 0, 'options', 'nodes', 1, 'kind'],
   value: 'WHOOPS',
-  type: '{kind,options} | undefined',
+  type: '"PERSON" | "PRODUCT"',
   reason: undefined,
 }
