@@ -1,8 +1,22 @@
 {
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": [
+            "last 1 version"
+          ]
+        },
+        "modules": false,
+        "useBuiltIns": false,
+        "loose": true
+      }
+    ]
+  ],
   "plugins": [
-    "dev-expression",
-    "transform-async-to-generator",
-    "transform-es2015-modules-commonjs",
-    "transform-object-rest-spread"
+    "babel-plugin-dev-expression",
+    "@babel/plugin-transform-modules-commonjs",
+    "@babel/plugin-proposal-object-rest-spread"
   ]
 }

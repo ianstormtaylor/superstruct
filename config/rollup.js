@@ -14,11 +14,20 @@ export default {
       exclude: 'node_modules/**',
       sourceMap: true,
       babelrc: false,
-      plugins: [
-        'external-helpers',
-        'transform-async-to-generator',
-        'transform-object-rest-spread',
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            targets: {
+              browsers: ['last 2 versions'],
+            },
+            modules: false,
+            useBuiltIns: false,
+            loose: true,
+          },
+        ],
       ],
+      plugins: ['@babel/plugin-proposal-object-rest-spread'],
     }),
 
     cjs({
