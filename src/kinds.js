@@ -310,6 +310,7 @@ function inter(schema, defaults, options) {
     }
   }
 
+  const obj = scalar('object', undefined, options)
   const ks = []
   const properties = {}
 
@@ -323,6 +324,13 @@ function inter(schema, defaults, options) {
   const name = 'interface'
   const type = `{${ks.join()}}`
   const validate = (value = resolveDefaults(defaults)) => {
+    const [error] = obj.validate(value)
+
+    if (error) {
+      error.type = type
+      return [error]
+    }
+
     const errors = []
     const ret = value
 
