@@ -328,9 +328,7 @@ function inter(schema, defaults, options) {
 
   const name = 'interface'
   const type = `{${ks.join()}}`
-  const validate = value => {
-    const resolved = resolveDefaults(defaults)
-    value = resolved ? { ...resolved, ...value } : value
+  const validate = (value = resolveDefaults(defaults)) => {
     const errors = []
     const ret = value
 
