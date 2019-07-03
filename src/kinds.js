@@ -152,13 +152,7 @@ function dict(schema, defaults, options) {
       ret[k] = r2
     }
 
-    if (errors.length) {
-      const first = errors[0]
-      first.errors = errors
-      return [first]
-    }
-
-    return [undefined, ret]
+    return errors.length ? [{ ...errors[0], errors }] : [undefined, ret]
   }
 
   return new Kind(name, type, validate)
@@ -358,13 +352,7 @@ function inter(schema, defaults, options) {
       }
     }
 
-    if (errors.length) {
-      const first = errors[0]
-      first.errors = errors
-      return [first]
-    }
-
-    return [undefined, ret]
+    return errors.length ? [{ ...errors[0], errors }] : [undefined, ret]
   }
 
   return new Kind(name, type, validate)
@@ -503,13 +491,7 @@ function list(schema, defaults, options) {
       ret[i] = r
     }
 
-    if (errors.length) {
-      const first = errors[0]
-      first.errors = errors
-      return [first]
-    }
-
-    return [undefined, ret]
+    return errors.length ? [{ ...errors[0], errors }] : [undefined, ret]
   }
 
   return new Kind(name, type, validate)
@@ -613,13 +595,7 @@ function object(schema, defaults, options) {
       }
     })
 
-    if (errors.length) {
-      const first = errors[0]
-      first.errors = errors
-      return [first]
-    }
-
-    return [undefined, ret]
+    return errors.length ? [{ ...errors[0], errors }] : [undefined, ret]
   }
 
   return new Kind(name, type, validate)
@@ -706,13 +682,7 @@ function partial(schema, defaults, options) {
       }
     }
 
-    if (errors.length) {
-      const first = errors[0]
-      first.errors = errors
-      return [first]
-    }
-
-    return [undefined, ret]
+    return errors.length ? [{ ...errors[0], errors }] : [undefined, ret]
   }
 
   return new Kind(name, type, validate)
@@ -827,13 +797,7 @@ function tuple(schema, defaults, options) {
       ret[i] = r
     }
 
-    if (errors.length) {
-      const first = errors[0]
-      first.errors = errors
-      return [first]
-    }
-
-    return [undefined, ret]
+    return errors.length ? [{ ...errors[0], errors }] : [undefined, ret]
   }
 
   return new Kind(name, type, validate)
