@@ -15,6 +15,7 @@
   * [`intersection`](#intersection)
   * [`lazy`](#lazy)
   * [`list`](#list)
+  * [`notEmptyList`](#notEmptyList)
   * [`literal`](#literal)
   * [`object`](#object)
   * [`optional`](#optional)
@@ -325,6 +326,18 @@ struct.list(['string'])
 ```
 
 `list` structs will validate that all of the elements in an array match a specific type. The elements's schema can be any valid value for a struct—string, array, object or function.
+
+### `notEmptyList`
+
+```js
+struct.notEmptyList(['string'])
+```
+
+```js
+;['a', 'b', 'c']
+```
+
+`notEmptyList` structs will validate that an array has at least one element, an all of them match a specific type. The elements's schema can be any valid value for a struct—string, array, object or function.
 
 ### `literal`
 
