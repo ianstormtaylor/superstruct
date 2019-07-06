@@ -498,6 +498,74 @@ function list(schema, defaults, options) {
 }
 
 /**
+ * Not empty list.
+ *
+ * @param {Array} schema
+ * @param {Array} defaults
+ * @param {Object} options
+ */
+
+function notEmptyList(schema, defaults, options) {
+  if (kindOf(schema) !== 'array' || schema.length !== 1) {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(
+        `List structs must be defined as an array with a single element, but you passed: ${schema}`
+      )
+    } else {
+      throw new Error(`Invalid schema: ${schema}`)
+    }
+  }
+
+  const array = scalar('array', undefined, options)
+  const element = any(schema[0], undefined, options)
+  const name = 'notEmptyList'
+  const type = `[${element.type}]`
+  const validate = (value = resolveDefaults(defaults)) => {
+    const [error, result] = array.validate(value)
+
+    if (error) {
+      error.type = type
+      return [error]
+    }
+
+    value = result
+    const errors = []
+    const ret = []
+
+    if (value.length === 0) {
+      errors.push({
+        path: [],
+        type,
+        value,
+        data: value,
+        reason: null,
+      })
+    }
+
+    for (let i = 0; i < value.length; i++) {
+      const v = value[i]
+      const [e, r] = element.validate(v)
+
+      if (e) {
+        const allE = e.errors || [e]
+        allE.forEach(singleE => {
+          singleE.path = [i].concat(singleE.path)
+          singleE.data = value
+          errors.push(singleE)
+        })
+        continue
+      }
+
+      ret[i] = r
+    }
+
+    return errors.length ? [{ ...errors[0], errors }] : [undefined, ret]
+  }
+
+  return new Kind(name, type, validate)
+}
+
+/**
  * Literal.
  *
  * @param {Array} schema
@@ -902,6 +970,7 @@ const Kinds = {
   interface: inter,
   lazy,
   list,
+  notEmptyList,
   literal,
   object,
   optional,
