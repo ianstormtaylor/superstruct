@@ -8,8 +8,8 @@ export const Struct = struct.interface({
 export const data = 'invalid'
 
 export const error = {
-  path: ['name'],
-  value: undefined,
-  type: 'string',
+  path: [],
+  value: 'invalid',
+  type: '{name,age}',
   reason: null,
 }
