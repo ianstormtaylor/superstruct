@@ -2,6 +2,12 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
+### `0.7.0` — September 21, 2019
+
+###### BREAKING
+
+* **The build process now outputs ES5 code.** Previously it was outputting ES6 code, which posed problems for some builders. This change shouldn't really affect anyone negatively, but it's being released as a breaking version just in case.
+
 ---
 
 ### `0.6.0` — September 13, 2018
