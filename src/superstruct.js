@@ -1,5 +1,5 @@
 import Kinds from './kinds'
-import StructError from './error'
+import DefaultStructError from './error'
 import Types from './types'
 import { isStruct } from './utils'
 import { IS_STRUCT, KIND } from './constants'
@@ -16,6 +16,8 @@ function superstruct(config = {}) {
     ...Types,
     ...(config.types || {}),
   }
+
+  const StructError = config.error || DefaultStructError
 
   /**
    * Create a `kind` struct with `schema`, `defaults` and `options`.

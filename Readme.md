@@ -104,6 +104,17 @@ const user = User(data)
 
 Superstruct supports more complex use cases too like defining list or scalar structs, applying default values, composing structs inside each other, returning errors instead of throwing them, etc. For more information read the full [Documentation](#documentation).
 
+You could also define a custom error object derived from a TypeError by using the `superstruct` export. Maybe you do not want to expose sensitive user data in the logs for example.
+
+```js
+import { superstruct } from 'superstruct'
+import CustomError from './somewhere/CustomError'
+
+const struct = superstruct({
+  error: CustomError,
+})
+```
+
 <br/>
 
 ### Why?
