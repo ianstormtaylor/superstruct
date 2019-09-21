@@ -17,12 +17,23 @@ config.plugins = [
     exclude: 'node_modules/**',
     sourceMap: true,
     babelrc: false,
+    presets: [
+      [
+        '@babel/preset-env',
+        {
+          targets: {
+            browsers: ['last 2 versions'],
+          },
+          modules: false,
+          useBuiltIns: false,
+          loose: true,
+        },
+      ],
+    ],
     plugins: [
-      'external-helpers',
-      'dev-expression',
-      'transform-inline-environment-variables',
-      'transform-async-to-generator',
-      'transform-object-rest-spread',
+      'babel-plugin-dev-expression',
+      'babel-plugin-transform-inline-environment-variables',
+      '@babel/plugin-proposal-object-rest-spread',
     ],
   }),
   cjs({
