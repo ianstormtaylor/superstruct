@@ -1,4 +1,34 @@
-import { struct } from 'superstruct'
+import { superstruct } from 'superstruct'
+
+class CustomError extends TypeError {
+  constructor({ data, path, value, reason, type, errors = [] }) {
+    const message = `This is a custom error.`
+
+    super(message)
+
+    this.data = data
+    this.path = path
+    this.value = value
+    this.reason = reason
+    this.type = type
+    this.errors = errors
+
+    if (!errors.length) {
+      errors.push(this)
+    }
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor)
+    } else {
+      this.stack = new Error().stack
+    }
+  }
+}
+
+// Define the CustomError with the superstruct factory
+const struct = superstruct({
+  error: CustomError,
+})
 
 // Define a struct to validate with.
 const User = struct({
@@ -14,34 +44,9 @@ const data = {
   email: 'jane@example.com',
 }
 
-// Validate the data. In this case the `name` property is invalid, so an error
-// will be thrown that you can catch and customize to your needs.
-try {
-  User(data)
-  console.log('Valid!')
-} catch (e) {
-  const { path, value, type } = e
-  const key = path[0]
+// Validate the data. In this case the `name` property is invalid, 
+// so the CustomError will be thrown.
 
-  if (value === undefined) {
-    const error = new Error(`user_${key}_required`)
-    error.attribute = key
-    throw error
-  }
+User(data)
 
-  if (type === undefined) {
-    const error = new Error(`user_attribute_unknown`)
-    error.attribute = key
-    throw error
-  }
-
-  const error = new Error(`user_${key}_invalid`)
-  error.attribute = key
-  error.value = value
-  throw error
-}
-
-// Error: 'user_name_invalid' {
-//   attribute: 'name',
-//   value: false,
-// }
+// Error: This is a custom error.
