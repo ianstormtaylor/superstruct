@@ -1,19 +1,13 @@
 import { superstruct } from '../../..'
 
 class StructErrorWithoutValue extends TypeError {
-  static format(attrs) {
-    const { type, path } = attrs
+  constructor({ path, reason, type, errors = [] }) {
     const message = `Expected a value of type \`${type}\`${
       path.length ? ` for \`${path.join('.')}\`` : ''
     }.`
-    return message
-  }
 
-  constructor(attrs) {
-    const message = StructErrorWithoutValue.format(attrs)
     super(message)
 
-    const { path, reason, type, errors = [] } = attrs
     this.path = path
     this.reason = reason
     this.type = type
