@@ -511,7 +511,7 @@ These custom types are simple functions that return `true/false` or a string den
 
 ## Errors
 
-Superstruct throws detailed errors when data is invalid, so that you can build extremely precise errors of your own to give your end users the best possible experience.
+Superstruct per default throws detailed errors when data is invalid, so that you can build extremely precise errors of your own to give your end users the best possible experience.
 
 ### Error Properties
 
