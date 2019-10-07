@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { createStruct } from '../struct'
 import { createShorthand } from './shorthand'
 import { Branch, Failure, Path, Struct, StructOptions } from '../interfaces'
@@ -11,11 +12,10 @@ export const createUnion = (
   defaults: any,
   options: StructOptions
 ): Struct => {
-  if (!Array.isArray(schema) || schema.length < 1) {
-    throw new Error(
-      `Union structs must be defined as a non-empty array, but you passed: ${schema}`
-    )
-  }
+  invariant(
+    Array.isArray(schema) && schema.length !== 0,
+    `Union structs must be defined as a non-empty array, but you passed: ${schema}`
+  )
 
   const Structs = schema.map(sch => createShorthand(sch, undefined, options))
   const type = Structs.map(s => s.type).join(' | ')

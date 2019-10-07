@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import kindOf from 'kind-of'
 import { createStruct } from '../struct'
 import { createShorthand } from './shorthand'
@@ -12,11 +13,10 @@ export const createObject = (
   defaults: any,
   options: StructOptions
 ): Struct => {
-  if (typeof schema !== 'object') {
-    throw new Error(
-      `Object structs must be defined as an object, but you passed: ${schema}`
-    )
-  }
+  invariant(
+    typeof schema === 'object',
+    `Object structs must be defined as an object, but you passed: ${schema}`
+  )
 
   const Props: Record<string, Struct> = {}
 

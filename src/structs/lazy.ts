@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { createStruct } from '../struct'
 import { Failure, Struct, StructOptions } from '../interfaces'
 
@@ -12,11 +13,10 @@ export const createLazy = (
   defaults: any,
   options: StructOptions
 ): Struct => {
-  if (typeof schema !== 'function') {
-    throw new Error(
-      `Lazy structs must be defined as a function, but you passed: ${schema}`
-    )
-  }
+  invariant(
+    typeof schema === 'function',
+    `Lazy structs must be defined as a function, but you passed: ${schema}`
+  )
 
   const Lazy = createStruct({
     kind: 'lazy',

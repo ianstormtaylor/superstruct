@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { createStruct } from '../struct'
 import { Branch, Failure, Path, Struct, StructOptions } from '../interfaces'
 
@@ -12,11 +13,10 @@ export const createDynamic = (
   defaults: any,
   options: StructOptions
 ): Struct => {
-  if (typeof schema !== 'function') {
-    throw new Error(
-      `Dynamic structs must be defined as a function, but you passed: ${schema}`
-    )
-  }
+  invariant(
+    typeof schema === 'function',
+    `Dynamic structs must be defined as a function, but you passed: ${schema}`
+  )
 
   const Dynamic = createStruct({
     kind: 'dynamic',

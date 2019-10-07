@@ -4,8 +4,6 @@ This document maintains a list of changes to the `superstruct` package with each
 
 ### `0.8.0` — October 7, 2019
 
-- add `tiny-invariant`
-
 ###### BREAKING
 
 - improve flexibility:

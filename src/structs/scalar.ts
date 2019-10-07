@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { Struct, StructOptions } from '../interfaces'
 import { createFunction } from './function'
 
@@ -10,17 +11,17 @@ export const createScalar = (
   defaults: any,
   options: StructOptions
 ): Struct => {
-  if (typeof schema !== 'string') {
-    throw new Error(
-      `Scalar structs must be defined as a string, but you passed: ${schema}`
-    )
-  }
+  invariant(
+    typeof schema === 'string',
+    `Scalar structs must be defined as a string, but you passed: ${schema}`
+  )
 
   const { types } = options
 
-  if (!(schema in types)) {
-    throw new Error(`No struct validator function found for type "${schema}".`)
-  }
+  invariant(
+    schema in types,
+    `No struct validator function found for type "${schema}".`
+  )
 
   const validator = types[schema]
   const Struct = createFunction(validator, defaults, options)

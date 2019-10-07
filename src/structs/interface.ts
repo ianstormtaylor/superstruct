@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { createStruct } from '../struct'
 import { createShorthand } from './shorthand'
 import { Branch, Failure, Path, Struct, StructOptions } from '../interfaces'
@@ -11,11 +12,10 @@ export const createInterface = (
   defaults: any,
   options: StructOptions
 ): Struct => {
-  if (typeof schema !== 'object') {
-    throw new Error(
-      `Interface structs must be defined as an object, but you passed: ${schema}`
-    )
-  }
+  invariant(
+    typeof schema === 'object',
+    `Interface structs must be defined as an object, but you passed: ${schema}`
+  )
 
   const Props: Record<string, Struct> = {}
 

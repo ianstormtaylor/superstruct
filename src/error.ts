@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { Branch, Failure, Path } from './interfaces'
 
 /**
@@ -9,14 +10,12 @@ import { Branch, Failure, Path } from './interfaces'
 
 class StructError extends TypeError {
   constructor(failures: Failure[]) {
+    invariant(
+      failures.length > 0,
+      `StructError requires being passed a failure, but received: ${failures}`
+    )
+
     const [first] = failures
-
-    if (!first) {
-      throw new Error(
-        `StructError requires being passed a failure, but received: ${failures}`
-      )
-    }
-
     const { branch, path, value, reason, type } = first
     const message = `Expected a value of type \`${type}\`${
       path.length ? ` for \`${path.join('.')}\`` : ''

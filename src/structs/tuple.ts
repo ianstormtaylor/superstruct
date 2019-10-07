@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { createStruct } from '../struct'
 import { createShorthand } from './shorthand'
 import { Branch, Failure, Path, Struct, StructOptions } from '../interfaces'
@@ -11,11 +12,10 @@ export const createTuple = (
   defaults: any,
   options: StructOptions
 ): Struct => {
-  if (!Array.isArray(schema)) {
-    throw new Error(
-      `Tuple structs must be defined as an array, but you passed: ${schema}`
-    )
-  }
+  invariant(
+    Array.isArray(schema),
+    `Tuple structs must be defined as an array, but you passed: ${schema}`
+  )
 
   const Elements = schema.map(s => createShorthand(s, undefined, options))
   const Struct = createStruct({

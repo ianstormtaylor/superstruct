@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import kindOf from 'kind-of'
 import { createStruct } from '../struct'
 import { createShorthand } from './shorthand'
@@ -12,11 +13,10 @@ export const createRecord = (
   defaults: any,
   options: StructOptions
 ): Struct => {
-  if (!Array.isArray(schema) || schema.length !== 2) {
-    throw new Error(
-      `Record structs must be defined as an array with two elements, but you passed: ${schema}`
-    )
-  }
+  invariant(
+    Array.isArray(schema) && schema.length === 2,
+    `Record structs must be defined as an array with two elements, but you passed: ${schema}`
+  )
 
   const Key = createShorthand(schema[0], undefined, options)
   const Value = createShorthand(schema[1], undefined, options)

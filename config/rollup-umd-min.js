@@ -1,5 +1,6 @@
 import babel from 'rollup-plugin-babel'
 import cjs from 'rollup-plugin-commonjs'
+import replace from 'rollup-plugin-replace'
 import node from 'rollup-plugin-node-resolve'
 import uglify from 'rollup-plugin-uglify'
 import { minify } from 'uglify-es'
@@ -34,7 +35,6 @@ config.plugins = [
     ],
     plugins: [
       'babel-plugin-dev-expression',
-      'babel-plugin-transform-inline-environment-variables',
       '@babel/plugin-proposal-object-rest-spread',
       '@babel/plugin-proposal-class-properties',
     ],
@@ -46,6 +46,10 @@ config.plugins = [
 
   node({
     extensions: ['.ts'],
+  }),
+
+  replace({
+    'process.env.NODE_ENV': JSON.stringify('production'),
   }),
 
   uglify({}, minify),

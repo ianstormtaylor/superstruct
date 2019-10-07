@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { Struct, StructOptions } from '../interfaces'
 import { createFunction } from './function'
 
@@ -10,11 +11,10 @@ export const createEnum = (
   defaults: any,
   options: StructOptions
 ): Struct => {
-  if (!Array.isArray(schema)) {
-    throw new Error(
-      `Enum structs must be defined as an array, but you passed: ${schema}`
-    )
-  }
+  invariant(
+    Array.isArray(schema),
+    `Enum structs must be defined as an array, but you passed: ${schema}`
+  )
 
   const validator = (value: any) => schema.includes(value)
   const Struct = createFunction(validator, defaults, options)

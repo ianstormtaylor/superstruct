@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { Struct, StructOptions } from '../interfaces'
 import { createFunction } from './function'
 
@@ -10,11 +11,10 @@ export const createInstance = (
   defaults: any,
   options: StructOptions
 ): Struct => {
-  if (typeof schema !== 'function') {
-    throw new Error(
-      `Instance structs must be defined as a function, but you passed: ${schema}`
-    )
-  }
+  invariant(
+    typeof schema === 'function',
+    `Instance structs must be defined as a function, but you passed: ${schema}`
+  )
 
   const validator = (value: any) => value instanceof schema
   const Struct = createFunction(validator, defaults, options)

@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { createStruct } from '../struct'
 import {
   Branch,
@@ -48,7 +49,8 @@ export const createFunction = (
     } else if (typeof result === 'object') {
       failures.push(Struct.fail({ value, branch, path, ...result }))
     } else {
-      throw new Error(
+      invariant(
+        false,
         `Validator functions must return a boolean, an error reason string or an error reason object, but you passed: ${result}`
       )
     }
