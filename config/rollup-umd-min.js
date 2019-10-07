@@ -17,7 +17,9 @@ config.plugins = [
     exclude: 'node_modules/**',
     sourceMap: true,
     babelrc: false,
+    extensions: ['.ts'],
     presets: [
+      '@babel/typescript',
       [
         '@babel/preset-env',
         {
@@ -34,12 +36,18 @@ config.plugins = [
       'babel-plugin-dev-expression',
       'babel-plugin-transform-inline-environment-variables',
       '@babel/plugin-proposal-object-rest-spread',
+      '@babel/plugin-proposal-class-properties',
     ],
   }),
+
   cjs({
     sourceMap: false,
   }),
-  node(),
+
+  node({
+    extensions: ['.ts'],
+  }),
+
   uglify({}, minify),
 ]
 

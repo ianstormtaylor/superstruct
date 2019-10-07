@@ -7,6 +7,6 @@ export const data = false
 export const error = {
   path: [],
   value: false,
-  type: 'literal: 42',
+  type: '42',
   reason: null,
 }

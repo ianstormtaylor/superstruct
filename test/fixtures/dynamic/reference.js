@@ -1,12 +1,12 @@
 import { struct } from '../../..'
 
 const User = struct({
-  kind: struct.enum(['USER']),
-  display: 'string',
+  object: struct.enum(['USER']),
+  username: 'string',
 })
 
 const Product = struct({
-  kind: struct.enum(['PRODUCT']),
+  object: struct.enum(['PRODUCT']),
   price: 'string',
 })
 
@@ -16,15 +16,15 @@ const map = {
 }
 
 export const Struct = struct.dynamic(entity => {
-  return map[entity.kind]
+  return map[entity.object]
 })
 
 export const data = {
-  kind: 'PRODUCT',
+  object: 'PRODUCT',
   price: 'Only $19.99!',
 }
 
 export const output = {
-  kind: 'PRODUCT',
+  object: 'PRODUCT',
   price: 'Only $19.99!',
 }

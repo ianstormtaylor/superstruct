@@ -1,7 +1,0 @@
-import { struct } from '../../..'
-
-export const Struct = struct([{ id: 'string?' }])
-
-export const data = [{ id: '1' }, {}, { id: '3' }]
-
-export const output = [{ id: '1' }, {}, { id: '3' }]

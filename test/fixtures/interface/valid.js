@@ -10,7 +10,4 @@ export const data = {
   age: 42,
 }
 
-export const output = {
-  name: 'john',
-  age: 42,
-}
+export const output = data

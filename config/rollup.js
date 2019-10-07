@@ -3,7 +3,7 @@ import babel from 'rollup-plugin-babel'
 import node from 'rollup-plugin-node-resolve'
 
 export default {
-  input: './src/index.js',
+  input: './src/index.ts',
   output: {
     file: './lib/index.es.js',
     format: 'es',
@@ -14,7 +14,9 @@ export default {
       exclude: 'node_modules/**',
       sourceMap: true,
       babelrc: false,
+      extensions: ['.ts'],
       presets: [
+        '@babel/typescript',
         [
           '@babel/preset-env',
           {
@@ -27,13 +29,18 @@ export default {
           },
         ],
       ],
-      plugins: ['@babel/plugin-proposal-object-rest-spread'],
+      plugins: [
+        '@babel/plugin-proposal-object-rest-spread',
+        '@babel/plugin-proposal-class-properties',
+      ],
     }),
 
     cjs({
       sourceMap: true,
     }),
 
-    node(),
+    node({
+      extensions: ['.ts'],
+    }),
   ],
 }

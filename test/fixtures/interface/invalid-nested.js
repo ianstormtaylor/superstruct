@@ -15,6 +15,6 @@ export const data = {
 export const error = {
   path: ['person'],
   value: undefined,
-  type: '{name,age}',
+  type: 'interface<{name,age}>',
   reason: null,
 }

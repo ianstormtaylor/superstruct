@@ -1,16 +1,17 @@
 {
   "extends": [
-    "prettier"
+    "prettier",
+    "plugin:import/typescript",
   ],
   "plugins": [
     "import",
-    "prettier"
+    "prettier",
+    "@typescript-eslint"
   ],
-  "settings": {
-    "import/extensions": [".js"]
-  },
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2020,
     "ecmaFeatures": {
       "jsx": true
     }
@@ -21,7 +22,11 @@
     "mocha": true,
     "node": true
   },
+  "settings": {
+    "import/extensions": [".js", ".ts"]
+  },
   "rules": {
+    "@typescript-eslint/no-unused-vars": ["error", { "vars": "all", "args": "none" }],
     "constructor-super": "error",
     "dot-notation": ["error", { "allowKeywords": true }],
     "eqeqeq": ["error", "smart"],
@@ -77,7 +82,8 @@
     "no-unsafe-finally": "error",
     "no-unsafe-negation": "error",
     "no-unused-expressions": "error",
-    "no-unused-vars": ["error", { "vars": "all", "args": "none" }],
+    "no-unused-vars": "off",
+    
     "no-useless-call": "error",
     "no-useless-computed-key": "error",
     "no-useless-constructor": "error",

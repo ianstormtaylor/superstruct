@@ -2,6 +2,28 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
+### `0.8.0` — October 7, 2019
+
+- add `tiny-invariant`
+
+###### BREAKING
+
+- improve flexibility:
+    - root -> branch
+    - error takes failures
+    - errors aren't cyclical
+    - type strings more clear
+- mimic typescript:
+    - list -> array
+    - partial -> pick
+    - enums xxx
+    - dict -> record
+- interface -> return the object itself
+
+###### NEW
+
+- add typescript
+
 ### `0.7.0` — September 21, 2019
 
 ###### BREAKING

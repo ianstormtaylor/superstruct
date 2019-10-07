@@ -3,10 +3,6 @@ import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
 
-/**
- * Tests.
- */
-
 describe('superstruct', () => {
   const kindsDir = resolve(__dirname, 'fixtures')
   const kinds = fs
@@ -33,8 +29,15 @@ describe('superstruct', () => {
             assert.deepEqual(actual, expected)
           } else if ('error' in module) {
             const [error] = Struct.validate(data)
+
+            if (!error) {
+              throw new Error(
+                `Expected "${test}" fixture to throw an error but it did not.`
+              )
+            }
+
             const actual =
-              error.reason !== undefined || 'reason' in module.error
+              error.reason != null || 'reason' in module.error
                 ? pick(error, 'type', 'path', 'value', 'reason')
                 : pick(error, 'type', 'path', 'value')
             assert.deepEqual(actual, module.error)

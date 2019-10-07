@@ -1,7 +1,8 @@
 .DS_Store
-umd
 lib
 node_modules
 npm-debug.log
 package-lock.json
 tmp
+umd
+yarn-error.log

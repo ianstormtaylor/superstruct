@@ -1,52 +1,36 @@
 import { struct } from '../../..'
 
-const Person = struct({
-  age: 'number',
-  nodes: [struct.lazy(() => struct.optional(node))],
+const Container = struct({
+  object: struct.literal('CONTAINER'),
+  nodes: struct.lazy(() => struct([Struct])),
 })
 
-const Product = struct({
-  price: 'string',
+const Leaf = struct({
+  object: struct.literal('LEAF'),
+  text: 'string',
 })
 
-const map = {
-  PERSON: Person,
-  PRODUCT: Product,
-}
-
-const node = struct({
-  kind: struct.enum(Object.keys(map)),
-  options: struct.dynamic((value, parent) => {
-    return map[parent.kind] || struct('undefined')
-  }),
-})
-
-export const Struct = struct({
-  nodes: [node],
+export const Struct = struct.dynamic(value => {
+  switch (value.object) {
+    case 'CONTAINER':
+      return Container
+    case 'LEAF':
+      return Leaf
+    default:
+      return struct('undefined')
+  }
 })
 
 export const data = {
+  object: 'CONTAINER',
   nodes: [
     {
-      kind: 'PERSON',
-      options: {
-        age: 34,
-        nodes: [
-          {
-            kind: 'PERSON',
-            options: {
-              age: 23,
-              nodes: [],
-            },
-          },
-          {
-            kind: 'PRODUCT',
-            options: {
-              price: 'Only $19.99!',
-            },
-          },
-        ],
-      },
+      object: 'CONTAINER',
+      nodes: [],
+    },
+    {
+      object: 'LEAF',
+      text: 'Only $19.99!',
     },
   ],
 }

@@ -1,6 +1,6 @@
 import { struct } from '../../..'
 
-export const Struct = struct({
+export const Struct = struct.object({
   title: 'string',
   tags: ['string'],
 })

@@ -2,11 +2,11 @@ import { struct } from '../../..'
 
 export const Struct = struct.enum(['one', 'two'])
 
-export const data = 'three'
+export const data = 'invalid'
 
 export const error = {
   path: [],
-  value: 'three',
+  value: 'invalid',
   type: '"one" | "two"',
   reason: null,
 }
