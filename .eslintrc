@@ -1,12 +1,13 @@
 {
   "extends": [
-    "prettier",
     "plugin:import/typescript",
+    "prettier",
+    "prettier/@typescript-eslint"
   ],
   "plugins": [
+    "@typescript-eslint",
     "import",
-    "prettier",
-    "@typescript-eslint"
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -43,7 +44,6 @@
     "import/no-named-as-default-member": "error",
     "import/no-unresolved": "error",
     "linebreak-style": "error",
-    "lines-around-comment": ["error", { "beforeBlockComment": true, "afterBlockComment": true, "allowBlockStart": true, "allowObjectStart": true, "allowArrayStart": true }],
     "new-parens": "error",
     "no-array-constructor": "error",
     "no-class-assign": "error",
@@ -83,7 +83,6 @@
     "no-unsafe-negation": "error",
     "no-unused-expressions": "error",
     "no-unused-vars": "off",
-    
     "no-useless-call": "error",
     "no-useless-computed-key": "error",
     "no-useless-constructor": "error",
