@@ -1,11 +1,7 @@
 import invariant from 'tiny-invariant'
-import { createStruct } from '../struct'
-import { createShorthand } from './shorthand'
-import { Branch, Failure, Path, Struct, StructOptions } from '../interfaces'
-
-/**
- * TODO.
- */
+import { createStruct, Struct, StructOptions } from '../struct'
+import { createShorthand } from './'
+import { Branch, Failure, Path } from '../struct-error'
 
 export const createIntersection = (
   schema: any[],
@@ -31,23 +27,19 @@ export const createIntersection = (
     branch: Branch,
     path: Path
   ): [Failure[]?, any?] => {
-    let result: any
-    let matched = false
+    let result: any = value
 
     for (const struct of Structs) {
       const [fs, v] = struct.check(value, branch, path)
 
       if (fs) {
         return [[Struct.fail({ value, branch, path })]]
-      } else if (!matched) {
+      } else {
         result = v
-        matched = true
       }
     }
 
-    return matched
-      ? [undefined, result]
-      : [[Struct.fail({ value, branch, path })]]
+    return [undefined, result]
   }
 
   return Struct

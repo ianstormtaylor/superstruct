@@ -1,5 +1,4 @@
-import { Struct, StructOptions } from '../interfaces'
-import { isStruct } from '../struct'
+import { isStruct, Struct, StructOptions } from '../struct'
 import {
   createArray,
   createFunction,
@@ -9,10 +8,6 @@ import {
   createTuple,
   createUnion,
 } from './'
-
-/**
- * TODO.
- */
 
 export const createShorthand = (
   schema: any,

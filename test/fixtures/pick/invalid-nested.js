@@ -16,5 +16,4 @@ export const error = {
   path: ['person'],
   value: undefined,
   type: 'pick<{name,age}>',
-  reason: null,
 }

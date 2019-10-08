@@ -16,5 +16,4 @@ export const error = {
   path: ['person'],
   value: undefined,
   type: 'interface<{name,age}>',
-  reason: null,
 }

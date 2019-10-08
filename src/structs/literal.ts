@@ -1,9 +1,5 @@
-import { Struct, StructOptions } from '../interfaces'
-import { createFunction } from './function'
-
-/**
- * Literal structs validate their input against a literal value.
- */
+import { Struct, StructOptions } from '../struct'
+import { createFunction } from './'
 
 export const createLiteral = (
   schema: any,

@@ -10,5 +10,4 @@ export const error = {
   path: [],
   value: 3,
   type: 'string',
-  reason: null,
 }

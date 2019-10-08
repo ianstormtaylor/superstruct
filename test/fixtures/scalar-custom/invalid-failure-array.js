@@ -4,7 +4,7 @@ import { superstruct } from '../../..'
 const struct = superstruct({
   types: {
     email: v => {
-      if (!isEmail(v)) return `not_email`
+      if (!isEmail(v)) return [{ reason: `not_email` }]
     },
   },
 })

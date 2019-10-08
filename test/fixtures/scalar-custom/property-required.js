@@ -17,5 +17,4 @@ export const error = {
   path: ['email'],
   type: 'email',
   value: undefined,
-  reason: null,
 }

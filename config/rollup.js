@@ -1,6 +1,7 @@
-import cjs from 'rollup-plugin-commonjs'
 import babel from 'rollup-plugin-babel'
+import cjs from 'rollup-plugin-commonjs'
 import node from 'rollup-plugin-node-resolve'
+import typescript from 'rollup-plugin-typescript2'
 
 export default {
   input: './src/index.ts',
@@ -10,6 +11,8 @@ export default {
     sourcemap: true,
   },
   plugins: [
+    typescript(),
+
     babel({
       exclude: 'node_modules/**',
       sourceMap: true,

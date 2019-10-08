@@ -14,5 +14,4 @@ export const error = {
   path: ['age'],
   value: 'invalid',
   type: 'number',
-  reason: null,
 }

@@ -1,17 +1,7 @@
 import invariant from 'tiny-invariant'
-import { createStruct } from '../struct'
-import {
-  Branch,
-  Failure,
-  Path,
-  Struct,
-  StructOptions,
-  Validator,
-} from '../interfaces'
-
-/**
- * Function structs validate their inputs against a validator function.
- */
+import { createStruct, Struct, StructOptions } from '../struct'
+import { Branch, Failure, Path } from '../struct-error'
+import { Validator } from '../validators'
 
 export const createFunction = (
   schema: Validator,
@@ -40,8 +30,6 @@ export const createFunction = (
 
     if (result === false) {
       failures.push(Struct.fail({ value, branch, path }))
-    } else if (typeof result === 'string') {
-      failures.push(Struct.fail({ value, branch, path, reason: result }))
     } else if (Array.isArray(result) && result.length > 0) {
       for (const r of result) {
         failures.push(Struct.fail({ value, branch, path, ...r }))
@@ -51,7 +39,7 @@ export const createFunction = (
     } else {
       invariant(
         false,
-        `Validator functions must return a boolean, an error reason string or an error reason object, but you passed: ${result}`
+        `Validator functions must return a boolean, a failure object, or an array of failure objects, but you passed: ${result}`
       )
     }
 

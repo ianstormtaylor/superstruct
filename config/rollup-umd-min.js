@@ -3,6 +3,7 @@ import cjs from 'rollup-plugin-commonjs'
 import replace from 'rollup-plugin-replace'
 import node from 'rollup-plugin-node-resolve'
 import uglify from 'rollup-plugin-uglify'
+import typescript from 'rollup-plugin-typescript2'
 import { minify } from 'uglify-es'
 
 import config from './rollup'
@@ -14,6 +15,8 @@ config.output = {
 }
 
 config.plugins = [
+  typescript(),
+
   babel({
     exclude: 'node_modules/**',
     sourceMap: true,

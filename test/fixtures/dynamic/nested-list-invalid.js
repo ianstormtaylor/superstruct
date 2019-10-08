@@ -39,5 +39,4 @@ export const error = {
   path: ['nodes', 1, 'text'],
   value: null,
   type: 'string',
-  reason: null,
 }

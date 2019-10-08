@@ -20,5 +20,4 @@ export const error = {
   path: ['address', 'street'],
   value: false,
   type: 'string | undefined',
-  reason: null,
 }

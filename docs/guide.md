@@ -1,12 +1,12 @@
 # Getting Started
 
-* [Installing Superstruct](#installing-superstruct)
-* [Creating Structs](#creating-structs)
-* [Defining Custom Data Types](#defining-custom-data-types)
-* [Setting Default Values](#setting-default-values)
-* [Throwing Customized Errors](#throwing-customized-errors)
-* [Validating Complex Shapes](#validating-complex-shapes)
-* [Composing Structs](#composing-structs)
+- [Installing Superstruct](#installing-superstruct)
+- [Creating Structs](#creating-structs)
+- [Defining Custom Data Types](#defining-custom-data-types)
+- [Setting Default Values](#setting-default-values)
+- [Throwing Customized Errors](#throwing-customized-errors)
+- [Validating Complex Shapes](#validating-complex-shapes)
+- [Composing Structs](#composing-structs)
 
 ## Installing Superstruct
 

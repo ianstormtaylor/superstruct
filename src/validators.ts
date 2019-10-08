@@ -1,4 +1,16 @@
 import kindOf from 'kind-of'
+import { Branch, Path, Failure } from './struct-error'
+
+/**
+ * `Validator` functions allow developers to define their own types for
+ * Superstruct to validate against, and return an indication of what is invalid.
+ */
+
+export type Validator = (
+  value: any,
+  branch: Branch,
+  path: Path
+) => Partial<Failure>[] | Partial<Failure> | string | boolean
 
 /**
  * Superstruct ships by default with an unopinionated set of types that express
@@ -8,7 +20,7 @@ import kindOf from 'kind-of'
  * validator functions and configure Superstruct to use them..
  */
 
-const Builtins = {
+export const VALIDATORS = {
   any: (value: any) => value !== undefined,
   arguments: (value: any) => kindOf(value) === 'arguments',
   array: (value: any) => kindOf(value) === 'array',
@@ -41,5 +53,3 @@ const Builtins = {
   weakmap: (value: any) => kindOf(value) === 'weakmap',
   weakset: (value: any) => kindOf(value) === 'weakset',
 }
-
-export default Builtins

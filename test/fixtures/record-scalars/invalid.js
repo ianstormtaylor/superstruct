@@ -8,5 +8,4 @@ export const error = {
   path: [],
   value: 'invalid',
   type: 'record<string,number>',
-  reason: null,
 }

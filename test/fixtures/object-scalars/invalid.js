@@ -11,5 +11,4 @@ export const error = {
   path: [],
   value: 'invalid',
   type: '{name,age}',
-  reason: null,
 }

@@ -1,11 +1,7 @@
 import invariant from 'tiny-invariant'
-import { createStruct } from '../struct'
-import { createShorthand } from './shorthand'
-import { Branch, Failure, Path, Struct, StructOptions } from '../interfaces'
-
-/**
- * TODO.
- */
+import { Branch, Failure, Path } from '../struct-error'
+import { createShorthand } from './'
+import { createStruct, Struct, StructOptions } from '../struct'
 
 export const createArray = (
   schema: [any],

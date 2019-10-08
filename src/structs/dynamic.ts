@@ -1,12 +1,6 @@
 import invariant from 'tiny-invariant'
-import { createStruct } from '../struct'
-import { Branch, Failure, Path, Struct, StructOptions } from '../interfaces'
-
-/**
- * Dynamic structs allow you to initialize a struct lazily, only initializing it
- * once on the first time it attempts to be validated. They are helpful for
- * defining recursive structs.
- */
+import { createStruct, Struct, StructOptions } from '../struct'
+import { Branch, Failure, Path } from '../struct-error'
 
 export const createDynamic = (
   schema: (value: any, branch: Branch, path: Path) => Struct,

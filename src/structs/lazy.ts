@@ -1,12 +1,6 @@
 import invariant from 'tiny-invariant'
-import { createStruct } from '../struct'
-import { Failure, Struct, StructOptions } from '../interfaces'
-
-/**
- * Lazy structs allow you to initialize a struct lazily, only initializing it
- * once on the first time it attempts to be validated. They are helpful for
- * defining recursive structs.
- */
+import { createStruct, Struct, StructOptions } from '../struct'
+import { Failure } from '../struct-error'
 
 export const createLazy = (
   schema: () => Struct,

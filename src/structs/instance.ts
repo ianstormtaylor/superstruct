@@ -1,10 +1,6 @@
 import invariant from 'tiny-invariant'
-import { Struct, StructOptions } from '../interfaces'
-import { createFunction } from './function'
-
-/**
- * TODO.
- */
+import { Struct, StructOptions } from '../struct'
+import { createFunction } from './'
 
 export const createInstance = (
   schema: any,

@@ -1,12 +1,8 @@
 import invariant from 'tiny-invariant'
 import kindOf from 'kind-of'
-import { createStruct } from '../struct'
-import { createShorthand } from './shorthand'
-import { Branch, Failure, Path, Struct, StructOptions } from '../interfaces'
-
-/**
- * TODO.
- */
+import { createStruct, Struct, StructOptions } from '../struct'
+import { createShorthand } from './'
+import { Branch, Failure, Path } from '../struct-error'
 
 export const createObject = (
   schema: {},

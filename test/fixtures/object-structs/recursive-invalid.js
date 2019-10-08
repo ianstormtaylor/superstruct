@@ -23,5 +23,4 @@ export const error = {
   path: ['children', 0, 'key'],
   value: 1,
   type: 'string',
-  reason: null,
 }

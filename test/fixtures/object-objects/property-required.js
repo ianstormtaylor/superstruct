@@ -18,5 +18,4 @@ export const error = {
   path: ['address'],
   value: undefined,
   type: '{street,city}',
-  reason: null,
 }

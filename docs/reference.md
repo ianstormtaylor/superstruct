@@ -1,32 +1,32 @@
 # API Reference
 
-* [API](#api)
-  * [`struct`](#struct)
-  * [`superstruct`](#superstruct)
-  * [`Struct`](#struct)
-  * [`StructError`](#structerror)
-* [Structs](#structs)
-  * [`any`](#any)
-  * [`dict`](#dict)
-  * [`enum`](#enum)
-  * [`function`](#function)
-  * [`instance`](#instance)
-  * [`interface`](#interface)
-  * [`intersection`](#intersection)
-  * [`lazy`](#lazy)
-  * [`list`](#list)
-  * [`literal`](#literal)
-  * [`object`](#object)
-  * [`optional`](#optional)
-  * [`partial`](#partial)
-  * [`scalar`](#scalar)
-  * [`union`](#union)
-* [Types](#types)
-  * [Built-in Types](#built-in-types)
-  * [Custom Types](#custom-types)
-* [Errors](#errors)
-  * [Error Properties](#error-properties)
-  * [Multiple Errors](#multiple-errors)
+- [API](#api)
+  - [`struct`](#struct)
+  - [`superstruct`](#superstruct)
+  - [`Struct`](#struct)
+  - [`StructError`](#structerror)
+- [Structs](#structs)
+  - [`any`](#any)
+  - [`dict`](#dict)
+  - [`enum`](#enum)
+  - [`function`](#function)
+  - [`instance`](#instance)
+  - [`interface`](#interface)
+  - [`intersection`](#intersection)
+  - [`lazy`](#lazy)
+  - [`list`](#list)
+  - [`literal`](#literal)
+  - [`object`](#object)
+  - [`optional`](#optional)
+  - [`partial`](#partial)
+  - [`scalar`](#scalar)
+  - [`union`](#union)
+- [Types](#types)
+  - [Built-in Types](#built-in-types)
+  - [Custom Types](#custom-types)
+- [Errors](#errors)
+  - [Error Properties](#error-properties)
+  - [Multiple Errors](#multiple-errors)
 
 ## API
 
@@ -180,8 +180,8 @@ struct.enum(['Jane', 'John', 'Jack', 'Jill'])
 ### `function`
 
 ```js
-struct((value) => typeof value === 'string')
-struct.function((value) => typeof value === 'string')
+struct(value => typeof value === 'string')
+struct.function(value => typeof value === 'string')
 ```
 
 ```js
@@ -264,11 +264,11 @@ const BinaryTree = struct({
 ```js
 const map = {
   TEXT: struct({
-    content: 'string'
+    content: 'string',
   }),
   IMAGE: struct({
-    url: 'string'
-  })
+    url: 'string',
+  }),
 }
 
 const Node = struct({
@@ -276,11 +276,11 @@ const Node = struct({
   value: struct.dynamic((value, parent) => {
     // Make sure your function never comes back with anything but a struct.
     return map[parent.type] || struct('undefined')
-  })
+  }),
 })
 
 const Struct = struct({
-  nodes: [Node]
+  nodes: [Node],
 })
 ```
 
@@ -290,15 +290,15 @@ const Struct = struct({
     {
       type: 'TEXT',
       value: {
-        content: 'Hello, world!'
-      }
+        content: 'Hello, world!',
+      },
     },
     {
       type: 'IMAGE',
       value: {
-        url: 'https://example.com/test.png'
-      }
-    }
+        url: 'https://example.com/test.png',
+      },
+    },
   ]
 }
 ```

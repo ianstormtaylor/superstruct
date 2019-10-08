@@ -1,11 +1,7 @@
 import invariant from 'tiny-invariant'
-import { createStruct } from '../struct'
-import { createShorthand } from './shorthand'
-import { Branch, Failure, Path, Struct, StructOptions } from '../interfaces'
-
-/**
- * TODO.
- */
+import { createStruct, Struct, StructOptions } from '../struct'
+import { createShorthand } from './'
+import { Branch, Failure, Path } from '../struct-error'
 
 export const createUnion = (
   schema: any[],
@@ -31,19 +27,15 @@ export const createUnion = (
     branch: Branch,
     path: Path
   ): [Failure[]?, any?] => {
-    const failures: Failure[] = []
-
     for (const struct of Structs) {
       const [fs, v] = struct.check(value, branch, path)
 
       if (!fs) {
         return [undefined, v]
-      } else {
-        failures.push(Struct.fail({ value, branch, path }))
       }
     }
 
-    return failures.length ? [failures] : [undefined, value]
+    return [[Struct.fail({ value, branch, path })]]
   }
 
   return Struct

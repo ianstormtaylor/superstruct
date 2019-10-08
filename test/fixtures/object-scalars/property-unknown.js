@@ -15,5 +15,4 @@ export const error = {
   path: ['unknown'],
   value: true,
   type: undefined,
-  reason: null,
 }
