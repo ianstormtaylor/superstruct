@@ -57,19 +57,20 @@ export const createStruct = (props: {
   defaults: () => any
   options: StructOptions
 }): Struct => {
-  const { kind, type, defaults, options } = props
-  const { Error: ErrorConstructor } = options
+  const { Error: ErrorConstructor } = props.options
   const Struct = (value: any): any => Struct.assert(value)
 
   // Set a hidden symbol property so that we can check it later to see if an
   // object is a struct object.
   Object.defineProperty(Struct, STRUCT, { value: true })
 
-  Struct.kind = kind
-  Struct.type = type
+  Struct.kind = props.kind
+  Struct.type = props.type
 
   Struct.default = () => {
-    return typeof defaults === 'function' ? defaults() : defaults
+    return typeof props.defaults === 'function'
+      ? props.defaults()
+      : props.defaults
   }
 
   Struct.test = (value: any): boolean => {
@@ -106,13 +107,13 @@ export const createStruct = (props: {
     return [failures]
   }
 
-  Struct.fail = (props: {
+  Struct.fail = (obj: {
     value: any
     branch: Branch
     path: Path
     type?: string | null
   }): Failure => {
-    const { type = Struct.type, ...rest } = props
+    const { type = Struct.type, ...rest } = obj
     return { type, ...rest }
   }
 
