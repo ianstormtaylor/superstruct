@@ -13,12 +13,6 @@ const struct = superstruct()
 
 export { struct, superstruct }
 export { Superstruct } from './superstruct'
-export {
-  StructError,
-  StructErrorConstructor,
-  Failure,
-  Path,
-  Branch,
-} from './struct-error'
+export { StructError, Failure, Path, Branch } from './struct-error'
 export { Types, Validator } from './types'
 export { isStruct, Struct } from './struct'
