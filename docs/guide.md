@@ -93,7 +93,7 @@ An error was thrown! That's what we expected.
 
 If you'd rather have the error returned instead of thrown, you can use the `Struct.validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `Struct.test()` method. 
 
-> 🤖 Check out the [`Struct` interface](https://superstruct.netlify.com/interfaces/struct) for more information.
+> 🤖 Check out the [`Struct` interface](https://superstructjs.org/interfaces/struct) for more information.
 
 ## Making Values Optional
 
@@ -174,7 +174,7 @@ Next up, you might have been wondering about the `email` property. So far we've 
 
 But we'd really like to validate that the email is a valid email address. 
 
-The `struct` factory that ships with Superstruct by default recognizes all of the native JavaScript data types in its definitions. To define custom data types, we can use the [`Superstruct` reference](https://superstruct.netlify.com/interfaces/superstruct) export instead...
+The `struct` factory that ships with Superstruct by default recognizes all of the native JavaScript data types in its definitions. To define custom data types, we can use the [`Superstruct` reference](https://superstructjs.org/interfaces/superstruct) export instead...
 
 ```js
 import { superstruct } from 'superstruct'
@@ -226,7 +226,7 @@ User(data)
 
 And there you have it!
 
-> 🤖 For the full list of built-in data types, check out the [`Types` reference](https://superstruct.netlify.com/#types).
+> 🤖 For the full list of built-in data types, check out the [`Types` reference](https://superstructjs.org/#types).
 
 ## Throwing Customized Errors
 
@@ -279,7 +279,7 @@ user_name_required
 
 Although this example is simplified, the struct errors expose all of the possible information about why the validation failed, so you can use them to construct extremely detailed errors for your end users.
 
-> To see all of the information embedded in `StructError` objects, check out the [`StructError` reference](https://superstruct.netlify.com/classes/structerror).
+> To see all of the information embedded in `StructError` objects, check out the [`StructError` reference](https://superstructjs.org/classes/structerror).
 
 ## Validating Complex Shapes
 
@@ -309,7 +309,7 @@ const User = struct({
 
 All of this can be achieved using the helpers exposed on the `struct` function. 
 
-> 🤖 For a full list of the kinds of structs you can create, check out the [`Superstruct` interface](https://superstruct.netlify.com/interfaces/superstruct).
+> 🤖 For a full list of the kinds of structs you can create, check out the [`Superstruct` interface](https://superstructjs.org/interfaces/superstruct).
 
 ## Composing Structs
 

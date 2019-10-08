@@ -183,12 +183,12 @@ Read the getting started guide to familiarize yourself with how Superstruct work
   - [Throwing Customized Errors](./docs/guide.md#throwing-customized-errors)
   - [Validating Complex Shapes](./docs/guide.md#validating-complex-shapes)
   - [Composing Structs](./docs/guide.md#composing-structs)
-- [**Reference**](https://superstruct.netlify.com)
-  - [`Struct`](https://superstruct.netlify.com/interfaces/struct)
-  - [`Superstruct`](https://superstruct.netlify.com/interfaces/superstruct)
-  - [`Types`](https://superstruct.netlify.com#types)
-  - [`StructError`](https://superstruct.netlify.com/classes/structerror)
-  - [`isStruct`](https://superstruct.netlify.com#isstruct)
+- [**Reference**](https://superstructjs.org)
+  - [`Struct`](https://superstructjs.org/interfaces/struct)
+  - [`Superstruct`](https://superstructjs.org/interfaces/superstruct)
+  - [`Types`](https://superstructjs.org#types)
+  - [`StructError`](https://superstructjs.org/classes/structerror)
+  - [`isStruct`](https://superstructjs.org#isstruct)
 - [**Resources**](/docs/resources.md)
 
 <br/>
