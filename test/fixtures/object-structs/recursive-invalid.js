@@ -1,6 +1,6 @@
 import { struct } from '../../..'
 
-export const Struct = struct({
+export const Struct = struct.object({
   key: 'string',
   children: [struct.lazy(() => Struct)],
 })
@@ -23,5 +23,4 @@ export const error = {
   path: ['children', 0, 'key'],
   value: 1,
   type: 'string',
-  reason: null,
 }

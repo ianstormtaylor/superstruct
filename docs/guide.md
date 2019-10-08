@@ -1,12 +1,14 @@
 # Getting Started
 
-* [Installing Superstruct](#installing-superstruct)
-* [Creating Structs](#creating-structs)
-* [Defining Custom Data Types](#defining-custom-data-types)
-* [Setting Default Values](#setting-default-values)
-* [Throwing Customized Errors](#throwing-customized-errors)
-* [Validating Complex Shapes](#validating-complex-shapes)
-* [Composing Structs](#composing-structs)
+- [Getting Started](#getting-started)
+  - [Installing Superstruct](#installing-superstruct)
+  - [Creating Structs](#creating-structs)
+  - [Making Values Optional](#making-values-optional)
+  - [Setting Default Values](#setting-default-values)
+  - [Defining Custom Data Types](#defining-custom-data-types)
+  - [Throwing Customized Errors](#throwing-customized-errors)
+  - [Validating Complex Shapes](#validating-complex-shapes)
+  - [Composing Structs](#composing-structs)
 
 ## Installing Superstruct
 
@@ -80,16 +82,18 @@ const data = {
 User(data)
 
 // StructError: 'Expected a value of type "string" for `name` but received `false`.' {
-//   data: { ... },
-//   path: ['name'],
-//   value: false,
 //   type: 'string',
+//   value: false,
+//   branch: [{ ... }, false],
+//   path: ['name'],
 // }
 ```
 
 An error was thrown! That's what we expected.
 
-If you'd rather have the error returned instead of thrown, you can use the `Struct.validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `Struct.test()` method. Check out the [Reference](./reference.md) for more information.
+If you'd rather have the error returned instead of thrown, you can use the `Struct.validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `Struct.test()` method. 
+
+> 🤖 Check out the [`Struct` interface](https://superstructjs.org/interfaces/struct) for more information.
 
 ## Making Values Optional
 
@@ -168,7 +172,9 @@ The original `data` did not define an `is_admin` property, but in the `result` r
 
 Next up, you might have been wondering about the `email` property. So far we've just been using a `'string'` type for it, which means that any old string will pass validation.
 
-But we'd really like to validate that the email is a valid email address. To do that, we can define custom data types (which are just functions that return `true` or `false`) using the `superstruct` export, and build structs that are aware of them.
+But we'd really like to validate that the email is a valid email address. 
+
+The `struct` factory that ships with Superstruct by default recognizes all of the native JavaScript data types in its definitions. To define custom data types, we can use the [`Superstruct` reference](https://superstructjs.org/interfaces/superstruct) export instead...
 
 ```js
 import { superstruct } from 'superstruct'
@@ -176,12 +182,12 @@ import isEmail from 'is-email'
 
 const struct = superstruct({
   types: {
-    email: isEmail,
+    email: value => isEmail(value),
   },
 })
 ```
 
-To do that, we've imported import `superstruct` instead of `struct`. And with that, we've created your own `struct` factory.
+The `superstruct` super-factory returns your very own `struct` factory, that recognizes all of the built-in types, as wel as any custom data types you configure.
 
 Now we can define structs know about the `'email'` type:
 
@@ -211,14 +217,16 @@ const data = {
 User(data)
 
 // StructError: 'Expected a value of type "email" for `email` but received `'jane'`.' {
-//   data: { ... },
-//   path: ['email'],
-//   value: 'jane',
 //   type: 'email',
+//   value: 'jane',
+//   branch: [{ ... }, 'jane'],
+//   path: ['email'],
 // }
 ```
 
 And there you have it!
+
+> 🤖 For the full list of built-in data types, check out the [`Types` reference](https://superstructjs.org/#types).
 
 ## Throwing Customized Errors
 
@@ -271,6 +279,8 @@ user_name_required
 
 Although this example is simplified, the struct errors expose all of the possible information about why the validation failed, so you can use them to construct extremely detailed errors for your end users.
 
+> To see all of the information embedded in `StructError` objects, check out the [`StructError` reference](https://superstructjs.org/classes/structerror).
+
 ## Validating Complex Shapes
 
 In the most common uses, you simply pass a schema definition to the `struct` function, and you'll receive a function that will validate that schema. However, there are more structures of data you might like to validate that simple objects with key/values.
@@ -297,7 +307,9 @@ const User = struct({
 })
 ```
 
-All of this can be achieved using the helpers exposed on the `struct` function. For a full list of the kinds of structures you can validate, check out the [Structs Reference](./reference.md#structs).
+All of this can be achieved using the helpers exposed on the `struct` function. 
+
+> 🤖 For a full list of the kinds of structs you can create, check out the [`Superstruct` interface](https://superstructjs.org/interfaces/superstruct).
 
 ## Composing Structs
 
@@ -316,7 +328,7 @@ const Article = struct({
 })
 ```
 
-Anywhere that you can use a 'number' style string to represent a schema, you can pass a full-fledged Struct in too. So you could use it in `tuple`, `enum`, `list`, `dict`, etc. as well:
+Anywhere that you can use a 'number' style string to represent a schema, you can pass a full-fledged Struct in too. So you could use it in `tuple`, `enum`, `array`, `record`, etc. as well:
 
 ```js
 const Filter = struct({
@@ -325,5 +337,5 @@ const Filter = struct({
   gt: 'object?',
 })
 
-const Filters = struct.dict(['string', Filter])
+const Filters = struct.record(['string', Filter])
 ```

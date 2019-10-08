@@ -1,11 +1,14 @@
 import { struct } from '../../..'
 
-const address = struct({
+const address = struct.object({
   country: 'string',
-  city: (value, data) => !!(data.country === 'UK' && value === 'London'),
+  city: (value, branch) => {
+    const parent = branch[branch.length - 2]
+    return parent.country === 'UK' && value === 'London'
+  },
 })
 
-export const Struct = struct({
+export const Struct = struct.object({
   address,
 })
 
@@ -19,6 +22,5 @@ export const data = {
 export const error = {
   path: ['address', 'city'],
   value: 'Manchester',
-  type: '<function>',
-  reason: null,
+  type: 'function<…>',
 }

@@ -1,8 +1,8 @@
 import { struct } from '../../..'
 
-const validator = struct.optional('string')
+const Other = struct.optional('string')
 
-export const Struct = struct.lazy(() => validator)
+export const Struct = struct.lazy(() => Other)
 
 export const data = undefined
 

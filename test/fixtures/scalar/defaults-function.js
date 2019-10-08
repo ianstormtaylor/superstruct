@@ -1,6 +1,6 @@
 import { struct } from '../../..'
 
-export const Struct = struct('number', () => 42)
+export const Struct = struct.scalar('number', () => 42)
 
 export const data = undefined
 

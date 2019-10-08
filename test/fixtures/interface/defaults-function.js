@@ -3,15 +3,19 @@ import { struct } from '../../..'
 export const Struct = struct.interface(
   {
     name: 'string',
+    age: 'number',
   },
-  {
-    name: () => 'John Doe',
+  () => {
+    return {
+      name: 'john',
+      age: 42,
+    }
   }
 )
 
-export const data = { age: 26 }
+export const data = undefined
 
 export const output = {
-  name: 'John Doe',
-  age: 26,
+  name: 'john',
+  age: 42,
 }

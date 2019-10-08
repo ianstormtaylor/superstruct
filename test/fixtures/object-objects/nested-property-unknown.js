@@ -1,6 +1,6 @@
 import { struct } from '../../..'
 
-export const Struct = struct({
+export const Struct = struct.object({
   name: 'string',
   age: 'number',
   address: {
@@ -22,6 +22,5 @@ export const data = {
 export const error = {
   path: ['address', 'state'],
   value: 'unknown',
-  type: undefined,
-  reason: null,
+  type: null,
 }

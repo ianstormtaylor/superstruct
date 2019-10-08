@@ -1,11 +1,11 @@
 import { struct } from '../../..'
 
-const address = struct({
+const address = struct.object({
   street: 'string',
   city: 'string',
 })
 
-export const Struct = struct({
+export const Struct = struct.object({
   address,
 })
 
@@ -21,5 +21,4 @@ export const error = {
   path: ['address', 'state'],
   value: 'unknown',
   type: undefined,
-  reason: null,
 }

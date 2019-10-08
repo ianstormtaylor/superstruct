@@ -10,6 +10,5 @@ export const data = 'invalid'
 export const error = {
   path: [],
   value: 'invalid',
-  type: '{name,age}',
-  reason: null,
+  type: 'interface<{name,age}>',
 }

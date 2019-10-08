@@ -1,12 +1,15 @@
 import { struct } from '../../../'
 
-const address = struct({
+const Address = struct.object({
   country: 'string',
-  city: (value, data) => !!(data.country === 'UK' && value === 'London'),
+  city: (value, branch) => {
+    const parent = branch[branch.length - 2]
+    return parent.country === 'UK' && value === 'London'
+  },
 })
 
-export const Struct = struct({
-  address,
+export const Struct = struct.object({
+  address: Address,
 })
 
 export const data = {

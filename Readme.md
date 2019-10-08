@@ -110,19 +110,19 @@ Superstruct supports more complex use cases too like defining list or scalar str
 
 There are lots of existing validation libraries—[`joi`](https://github.com/hapijs/joi), [`express-validator`](https://github.com/ctavan/express-validator), [`validator.js`](https://github.com/chriso/validator.js), [`yup`](https://github.com/jquense/yup), [`ajv`](https://github.com/epoberezkin/ajv), [`is-my-json-valid`](https://github.com/mafintosh/is-my-json-valid)... But they exhibit many issues that lead to your codebase becoming hard to maintain...
 
-* **They don't expose detailed errors.** Many validators simply return string-only errors or booleans without any details as to why, making it difficult to customize the errors to be helpful for end-users.
+- **They don't expose detailed errors.** Many validators simply return string-only errors or booleans without any details as to why, making it difficult to customize the errors to be helpful for end-users.
 
-* **They make custom types hard.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no way to know what they check for, and complicated APIs for defining new types.
+- **They make custom types hard.** Many validators ship with built-in types like emails, URLs, UUIDs, etc. with no way to know what they check for, and complicated APIs for defining new types.
 
-* **They don't encourage single sources of truth.** Many existing APIs encourage re-defining custom data types over and over, with the source of truth being spread out across your entire code base.
+- **They don't encourage single sources of truth.** Many existing APIs encourage re-defining custom data types over and over, with the source of truth being spread out across your entire code base.
 
-* **They don't throw errors.** Many don't actually throw the errors, forcing you to wrap everywhere. Although helpful in the days of callbacks, not using `throw` in modern JavaScript makes code much more complex.
+- **They don't throw errors.** Many don't actually throw the errors, forcing you to wrap everywhere. Although helpful in the days of callbacks, not using `throw` in modern JavaScript makes code much more complex.
 
-* **They don't pre-compile schemas.** Many validators define schemas as plain JavaScript objects, which means they delegate the parsing of the schema logic to validation time, making them much slower.
+- **They don't pre-compile schemas.** Many validators define schemas as plain JavaScript objects, which means they delegate the parsing of the schema logic to validation time, making them much slower.
 
-* **They're tightly coupled to other concerns.** Many validators are tightly coupled to Express or other frameworks, which results in one-off, confusing code that isn't reusable across your code base.
+- **They're tightly coupled to other concerns.** Many validators are tightly coupled to Express or other frameworks, which results in one-off, confusing code that isn't reusable across your code base.
 
-* **They use JSON Schema.** Don't get me wrong, JSON Schema _can_ be useful. But it's kind of like HATEOAS—it's usually way more complexity than you need and you aren't using any of its benefits. (Sorry, I said it.)
+- **They use JSON Schema.** Don't get me wrong, JSON Schema _can_ be useful. But it's kind of like HATEOAS—it's usually way more complexity than you need and you aren't using any of its benefits. (Sorry, I said it.)
 
 Of course, not every validation library suffers from all of these issues, but most of them exhibit at least one. If you've run into this problem before, you might like Superstruct.
 
@@ -160,14 +160,14 @@ Try out the [live demo on JSFiddle](https://jsfiddle.net/yjugaeg8/2/) to get an 
 
 Superstruct's API is very flexible, allowing it to be used for a variety of use cases on your servers and in the browser. Here are a few examples of common patterns...
 
-* [Basic Validation](./examples/basic-validation.js)
-* [Custom Types](./examples/custom-types.js)
-* [Default Values](./examples/default-values.js)
-* [Optional Values](./examples/optional-values.js)
-* [Composing Structs](./examples/composing-structs.js)
-* [Throwing Errors](./examples/throwing-errors.js)
-* [Returning Errors](./examples/returning-errors.js)
-* [Custom Errors](./examples/custom-errors.js)
+- [Basic Validation](./examples/basic-validation.js)
+- [Custom Types](./examples/custom-types.js)
+- [Default Values](./examples/default-values.js)
+- [Optional Values](./examples/optional-values.js)
+- [Composing Structs](./examples/composing-structs.js)
+- [Throwing Errors](./examples/throwing-errors.js)
+- [Returning Errors](./examples/returning-errors.js)
+- [Custom Errors](./examples/custom-errors.js)
 
 <br/>
 
@@ -175,20 +175,21 @@ Superstruct's API is very flexible, allowing it to be used for a variety of use 
 
 Read the getting started guide to familiarize yourself with how Superstruct works. After that, check out the full API reference for more detailed information about structs, types and errors...
 
-* [**Guide**](./docs/guide.md)
-  * [Installing Superstruct](./docs/guide.md#installing-superstruct)
-  * [Creating Structs](./docs/guide.md#creating-structs)
-  * [Defining Custom Data Types](./docs/guide.md#defining-custom-data-types)
-  * [Setting Default Values](./docs/guide.md#setting-default-values)
-  * [Throwing Customized Errors](./docs/guide.md#throwing-customized-errors)
-  * [Validating Complex Shapes](./docs/guide.md#validating-complex-shapes)
-  * [Composing Structs](./docs/guide.md#composing-structs)
-* [**Reference**](./docs/reference.md)
-  * [API](./docs/reference.md#api)
-  * [Structs](./docs/reference.md#structs)
-  * [Types](./docs/reference.md#types)
-  * [Errors](./docs/reference.md#errors)
-* [**Resources**](/docs/resources.md)
+- [**Guide**](./docs/guide.md)
+  - [Installing Superstruct](./docs/guide.md#installing-superstruct)
+  - [Creating Structs](./docs/guide.md#creating-structs)
+  - [Defining Custom Data Types](./docs/guide.md#defining-custom-data-types)
+  - [Setting Default Values](./docs/guide.md#setting-default-values)
+  - [Throwing Customized Errors](./docs/guide.md#throwing-customized-errors)
+  - [Validating Complex Shapes](./docs/guide.md#validating-complex-shapes)
+  - [Composing Structs](./docs/guide.md#composing-structs)
+- [**Reference**](https://superstructjs.org)
+  - [`Struct`](https://superstructjs.org/interfaces/struct)
+  - [`Superstruct`](https://superstructjs.org/interfaces/superstruct)
+  - [`Types`](https://superstructjs.org#types)
+  - [`StructError`](https://superstructjs.org/classes/structerror)
+  - [`isStruct`](https://superstructjs.org#isstruct)
+- [**Resources**](/docs/resources.md)
 
 <br/>
 
