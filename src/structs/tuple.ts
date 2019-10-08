@@ -41,7 +41,9 @@ export const createTuple = (
       const b = branch.concat(v)
 
       if (!Element) {
-        failures.push(Struct.fail({ type: null, value: v, path: p, branch: b }))
+        failures.push(
+          Struct.fail({ type: undefined, value: v, path: p, branch: b })
+        )
       } else {
         const [efs, er] = Element.check(v, b, p)
 

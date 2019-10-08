@@ -1,8 +1,9 @@
 .DS_Store
-lib
-node_modules
+lib/
+node_modules/
 npm-debug.log
 package-lock.json
-tmp
-umd
+site/
+tmp/
+umd/
 yarn-error.log

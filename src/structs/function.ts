@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant'
 import { createStruct, Struct, StructOptions } from '../struct'
 import { Branch, Failure, Path } from '../struct-error'
-import { Validator } from '../validators'
+import { Validator } from '../types'
 
 export const createFunction = (
   schema: Validator,

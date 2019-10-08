@@ -5,6 +5,8 @@
   "version": "0.7.0",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
+  "source": "./src/index.ts",
+  "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
   "module": "./lib/index.es.js",
   "files": [
@@ -56,23 +58,25 @@
     "uglify-es": "^3.2.2"
   },
   "scripts": {
-    "build": "yarn build:es && yarn build:cjs && yarn build:max && yarn build:min",
+    "build": "yarn build:es && yarn build:cjs && yarn build:max && yarn build:min && yarn build:types && yarn build:docs",
     "build:cjs": "rollup --config ./config/rollup-cjs.js",
+    "build:docs": "typedoc ./src/index.ts && cp -f ./site/globals.html ./site/index.html",
     "build:es": "rollup --config ./config/rollup.js",
     "build:max": "rollup --config ./config/rollup-umd.js",
     "build:min": "rollup --config ./config/rollup-umd-min.js",
-    "clean": "rm -rf ./lib ./umd ./node_modules",
+    "build:types": "tsc --emitDeclarationOnly --declarationMap",
+    "clean": "rm -rf ./{lib,umd,node_modules}",
+    "fix": "yarn fix:prettier",
+    "fix:prettier": "prettier --write '**/*.{js,json,md}'",
     "lint": "yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint '{src,test}/*'",
     "lint:prettier": "prettier --list-different '**/*.{js,json}'",
-    "fix": "yarn fix:prettier",
-    "fix:prettier": "prettier --write '**/*.{js,json,md}'",
     "prepublish": "yarn build",
     "release": "np",
     "test": "yarn test:types && yarn test:mocha",
-    "test:types": "tsc",
     "test:mocha": "yarn build:cjs && mocha --require @babel/register --require source-map-support/register ./test/index.js",
-    "watch": "rollup --config ./config/rollup-cjs.js --watch"
+    "test:types": "tsc --noEmit",
+    "watch": "yarn build:cjs --watch"
   },
   "keywords": [
     "api",

@@ -1,4 +1,4 @@
-import { Validator, VALIDATORS } from './validators'
+import { Validator, Types } from './types'
 import {
   Branch,
   Path,
@@ -28,7 +28,8 @@ import {
 } from './structs'
 
 /**
- * Create a struct factory with a configuration of types.
+ * Create a struct singleton with settings that include your own domain-specific
+ * data `types`, and an optional custom `Error` class.
  */
 
 export const superstruct = (
@@ -39,10 +40,141 @@ export const superstruct = (
 ): Superstruct => {
   const options = {
     Error: settings.Error || DefaultError,
-    types: { ...VALIDATORS, ...settings.types },
+    types: { ...Types, ...settings.types },
   }
 
+  const struct = (schema: any, defaults: any): Struct => {
+    return createShorthand(schema, defaults, options)
+  }
+
+  struct.array = (schema: [any], defaults: any): Struct => {
+    return createArray(schema, defaults, options)
+  }
+
+  struct.dynamic = (
+    schema: (value: any, branch: Branch, path: Path) => Struct,
+    defaults: any
+  ): Struct => {
+    return createDynamic(schema, defaults, options)
+  }
+
+  struct.enum = (schema: any[], defaults: any): Struct => {
+    return createEnum(schema, defaults, options)
+  }
+
+  struct.function = (schema: Validator, defaults: any): Struct => {
+    return createFunction(schema, defaults, options)
+  }
+
+  struct.instance = (schema: any, defaults: any): Struct => {
+    return createInstance(schema, defaults, options)
+  }
+
+  struct.interface = (schema: any, defaults: any): Struct => {
+    return createInterface(schema, defaults, options)
+  }
+
+  struct.intersection = (schema: any[], defaults: any): Struct => {
+    return createIntersection(schema, defaults, options)
+  }
+
+  struct.lazy = (schema: () => Struct, defaults: any): Struct => {
+    return createLazy(schema, defaults, options)
+  }
+
+  struct.literal = (schema: any, defaults: any): Struct => {
+    return createLiteral(schema, defaults, options)
+  }
+
+  struct.object = (schema: {}, defaults: any): Struct => {
+    return createObject(schema, defaults, options)
+  }
+
+  struct.optional = (schema: any, defaults: any): Struct => {
+    return createUnion([schema, 'undefined'], defaults, options)
+  }
+
+  struct.partial = (schema: {}, defaults: any): Struct => {
+    return createPartial(schema, defaults, options)
+  }
+
+  struct.pick = (schema: {}, defaults: any): Struct => {
+    return createPick(schema, defaults, options)
+  }
+
+  struct.record = (schema: [any, any], defaults: any): Struct => {
+    return createRecord(schema, defaults, options)
+  }
+
+  struct.scalar = (schema: string, defaults: any): Struct => {
+    return createScalar(schema, defaults, options)
+  }
+
+  struct.size = (schema: [number, number], defaults: any): Struct => {
+    return createSize(schema, defaults, options)
+  }
+
+  struct.tuple = (schema: any[], defaults: any): Struct => {
+    return createTuple(schema, defaults, options)
+  }
+
+  struct.union = (schema: any[], defaults: any): Struct => {
+    return createUnion(schema, defaults, options)
+  }
+
+  return struct
+}
+
+/**
+ * `Superstruct` factories create different kinds of [[Struct]] validators, and
+ * encapsulate the user-defined data types.
+ *
+ * The [[struct]] export is a factory that ships with Superstruct by default,
+ * pre-configured with all of the built-in JavaScript data types. It's the
+ * easiest way to quickly define structs:
+ *
+ * ```js
+ * import { struct } from 'superstruct'
+ *
+ * const User = struct({
+ *   id: 'number',
+ *   name: 'string',
+ * })
+ * ```
+ *
+ * If you need to define custom data types, you can define your own by using
+ * the [[superstruct]] export:
+ *
+ * ```js
+ * import { superstruct } from 'superstruct'
+ * import isEmail from 'is-email'
+ * import isUrl from 'is-url'
+ *
+ * const struct = superstruct({
+ *   types: {
+ *     email: value => isEmail(value) && value.length < 256,
+ *     url: value => isUrl(value) && value.length < 2048,
+ *   }
+ * })
+ *
+ * const User = struct({
+ *   id: 'number',
+ *   name: 'string',
+ *   email: 'email',
+ *   website: 'url?',
+ * })
+ * ```
+ *
+ * This way you can easily define structs that contain types like `'email'`,
+ * `'url'`, or whatever else your application may need.
+ */
+
+export interface Superstruct {
   /**
+   * Structs are defined by passing a schema definition to the struct factory.
+   * The schema definition can be a string, array, object or function. They can
+   * also be composed by nesting structs inside each other.
+   *
    * The default struct factory allows you to write structs using a shorthand
    * syntax for the most common cases—arrays, objects, scalars, tuples, etc.
    *
@@ -57,11 +189,42 @@ export const superstruct = (
    * struct(value => true || false) // Function
    * struct(Struct) // Pass-through
    * ```
+   *
+   * Each shorthand is equivalent to a method on the [[Superstruct]] factory:
+   *
+   * ```js
+   * // These are equivalent...
+   * struct(['number'])
+   * struct.array(['number'])
+   *
+   * struct('string & email')
+   * struct.union(['string', 'email'])
+   * ```
+   *
+   * And each one can use your custom types, or even other structs:
+   *
+   * ```js
+   * struct('email')
+   * struct(User)
+   * ```
+   *
+   * The second argument to struct factories is always a `defaults` value. It
+   * can either be the default itself or a function that returns the default.
+   *
+   * ```js
+   * struct('id', uuid.v4)
+   *
+   * struct({
+   *   id: 'number',
+   *   name: 'string',
+   *   is_admin: 'boolean?',
+   * }, {
+   *   is_admin: false,
+   * })
+   * ```
    */
 
-  const struct = (schema: any, defaults: any): Struct => {
-    return createShorthand(schema, defaults, options)
-  }
+  (schema: any, defaults: any): Struct
 
   /**
    * Array structs validate that their input is an array with elements that
@@ -69,100 +232,101 @@ export const superstruct = (
    * validate the length of the array.
    *
    * ```js
-   * struct.array(['number'])
+   * const Struct = struct.array(['number'])
+   *
+   * Struct([1, 2, 3])
    * ```
    *
    * They are similar to the `Array` type in TypeScript.
    */
 
-  struct.array = (schema: [any], defaults: any): Struct => {
-    return createArray(schema, defaults, options)
-  }
+  array(schema: [any], defaults: any): Struct
 
   /**
    * Dynamic structs are defined by a function that is passed the value being
    * validated, and they determine which struct to use at runtime.
    *
    * ```js
-   * struct.dynamic(value => StructA || StructB)
+   * const Struct = struct.dynamic(value => StructA || StructB)
    * ```
    *
    * They are inhernetly less performant that compile-time structs, but they
    * unlock a set of possibilities that aren't possible at compile time alone.
    */
 
-  struct.dynamic = (
+  dynamic(
     schema: (value: any, branch: Branch, path: Path) => Struct,
     defaults: any
-  ): Struct => {
-    return createDynamic(schema, defaults, options)
-  }
+  ): Struct
 
   /**
    * Enum structs validate that their input is one of a set of values.
    *
    * ```js
-   * struct.enum(['fruit', 'vegetable', 'meat'])
+   * const Struct = struct.enum(['fruit', 'vegetable', 'meat'])
+   *
+   * Struct('fruit')
    * ```
    *
    * They are similar to the `enum` type in TypeScript.
    */
 
-  struct.enum = (schema: any[], defaults: any): Struct => {
-    return createEnum(schema, defaults, options)
-  }
+  enum(schema: any[], defaults: any): Struct
 
   /**
    * Function structs validate their input against a one-off validator function.
    *
    * ```js
-   * struct.function(value => true || false)
+   * const Struct = struct.function(value => typeof value === 'string')
+   *
+   * Struct('a simple string')
    * ```
    *
    * They can't provide as detailed of errors as other struct types, but they do
    * allow for customization for easy one-off cases.
    */
 
-  struct.function = (schema: Validator, defaults: any): Struct => {
-    return createFunction(schema, defaults, options)
-  }
+  function(schema: Validator, defaults: any): Struct
 
   /**
    * Instance structs validate that their input is an instance of a class.
    *
    * ```js
-   * struct.instance(MyClass)
+   * const Struct = struct.instance(MyClass)
+   *
+   * Struct(new MyClass())
    * ```
    */
 
-  struct.instance = (schema: any, defaults: any): Struct => {
-    return createInstance(schema, defaults, options)
-  }
+  instance(schema: any, defaults: any): Struct
 
   /**
    * Interface structs validate that their input matches an interface defined as
    * a set of properties with associated types.
    *
    * ```js
-   * struct.interface({
+   * const Struct = struct.interface({
    *   length: 'number',
    *   indexOf: 'function',
    * })
+   *
+   * Struct([1, 2, 3])
+   * Struct('abc')
    * ```
    *
    * They are similar to the structural-typing granted by TypeScript.
    */
 
-  struct.interface = (schema: any, defaults: any): Struct => {
-    return createInterface(schema, defaults, options)
-  }
+  interface(schema: any, defaults: any): Struct
 
   /**
    * Intersection structs validate that their input matches **all** of a set of
    * different structs.
    *
    * ```js
-   * struct.intersection('string & email')
+   * const Struct = struct.intersection('string & email')
+   *
+   * Struct('jane@example.com')
    * ```
    *
    * Note: The structs will be validated in order, so validators on the right
@@ -171,73 +335,77 @@ export const superstruct = (
    * They are similar to the `&` operator in TypeScript.
    */
 
-  struct.intersection = (schema: any[], defaults: any): Struct => {
-    return createIntersection(schema, defaults, options)
-  }
+  intersection(schema: any[], defaults: any): Struct
 
   /**
    * Lazy structs allow you to initialize a struct lazily, only initializing it
    * once on the first time it attempts to be validated.
    *
    * ```js
-   * struct.lazy(() => NodeStruct)
+   * const Struct = struct({
+   *   nodes: struct.lazy(() => Struct)
+   * })
+   *
+   * Struct({
+   *   nodes: {
+   *     nodes: { ... }
+   *   }
+   * })
    * ```
    *
    * They are helpful for defining recursive structs.
    */
 
-  struct.lazy = (schema: () => Struct, defaults: any): Struct => {
-    return createLazy(schema, defaults, options)
-  }
+  lazy(schema: () => Struct, defaults: any): Struct
 
   /**
    * Literal structs validate their input against a literal value.
    *
    * ```js
-   * struct.literal(42)
+   * const Struct = struct.literal(42)
+   *
+   * Struct(42)
    * ```
    */
 
-  struct.literal = (schema: any, defaults: any): Struct => {
-    return createLiteral(schema, defaults, options)
-  }
+  literal(schema: any, defaults: any): Struct
 
   /**
    * Object structs validate that their input exactly matches an object defined
    * as a set of properties with associated types.
    *
    * ```js
-   * struct.object({
+   * const Struct = struct.object({
+   *   id: 'number',
    *   name: 'string',
-   *   email: 'email',
-   *   address: {
-   *     street: 'string',
-   *     city: 'string',
-   *   }
+   * })
+   *
+   * Struct({
+   *   id: 1,
+   *   name: 'Jane Smith',
    * })
    * ```
    *
    * They are similar to the `?` qualifier in TypeScript.
    */
 
-  struct.object = (schema: {}, defaults: any): Struct => {
-    return createObject(schema, defaults, options)
-  }
+  object(schema: {}, defaults: any): Struct
 
   /**
    * Optional structs validate that their input passes a specific struct, or
    * `undefined`.
    *
    * ```js
-   * struct.optional('email')
+   * const Struct = struct.optional('string?')
+   *
+   * Struct('a string of text')
+   * Struct(undefined)
    * ```
    *
    * This is a shorthand for using `struct.union` with `undefined`.
    */
 
-  struct.optional = (schema: any, defaults: any): Struct => {
-    return createUnion([schema, 'undefined'], defaults, options)
-  }
+  optional(schema: any, defaults: any): Struct
 
   /**
    * Partial structs validate that their input partially matches an object
@@ -245,17 +413,20 @@ export const superstruct = (
    * of the object are optional.
    *
    * ```js
-   * struct.partial({
-   *   id: 'string'
+   * const Struct = struct.partial({
+   *   id: 'number'
+   *   name: 'string',
+   * })
+   *
+   * Struct({
+   *   name: 'Jane Smith',
    * })
    * ```
    *
    * They are similar to the `Partial` utility in TypeScript.
    */
 
-  struct.partial = (schema: {}, defaults: any): Struct => {
-    return createPartial(schema, defaults, options)
-  }
+  partial(schema: {}, defaults: any): Struct
 
   /**
    * Pick structs validate that their input exactly matches a subset of an
@@ -264,18 +435,22 @@ export const superstruct = (
    * does not concern itself with.
    *
    * ```js
-   * struct.pick({
+   * const Struct = struct.pick({
    *   id: 'string',
    *   name: 'string',
+   * })
+   *
+   * Struct({
+   *   id: 1,
+   *   name: 'James Smith',
+   *   email: 'james@example.com',
    * })
    * ```
    *
    * They are similar to the `Pick` utility in TypeScript.
    */
 
-  struct.pick = (schema: {}, defaults: any): Struct => {
-    return createPick(schema, defaults, options)
-  }
+  pick(schema: {}, defaults: any): Struct
 
   /**
    * Record structs validate that their input is an object with keys that match
@@ -283,15 +458,18 @@ export const superstruct = (
    * properties set on it.
    *
    * ```js
-   * struct.record('email', UserStruct)
+   * const Struct = struct.record('string', 'number')
+   *
+   * Struct({
+   *   a: 1,
+   *   b: 2,
+   * })
    * ```
    *
    * They are similar to the `Record` utility in TypeScript.
    */
 
-  struct.record = (schema: [any, any], defaults: any): Struct => {
-    return createRecord(schema, defaults, options)
-  }
+  record(schema: [any, any], defaults: any): Struct
 
   /**
    * Scalar structs validate that their input passes the `Validator` function
@@ -300,86 +478,56 @@ export const superstruct = (
    * match your domain.
    *
    * ```js
-   * struct.scalar('email')
+   * const Struct = struct.scalar('string')
+   *
+   * Struct('a string of text')
    * ```
    */
 
-  struct.scalar = (schema: string, defaults: any): Struct => {
-    return createScalar(schema, defaults, options)
-  }
+  scalar(schema: string, defaults: any): Struct
 
   /**
    * Size structs validate their input has a certain length, by checking its
    * `length` property. This works strings or arrays.
    *
    * ```js
-   * struct.size([0, 7])
+   * const Struct = struct.size([0, 7])
+   *
+   * Struct([1, 2, 3])
+   * Struct('abcdefg')
    * ```
    *
    * They are helpful for defining unions with array structs.
    */
 
-  struct.size = (schema: [number, number], defaults: any): Struct => {
-    return createSize(schema, defaults, options)
-  }
+  size(schema: [number, number], defaults: any): Struct
 
   /**
    * Tuple structs validate that their input exactly matches a tuple of values,
    * in length and in type.
    *
    * ```js
-   * struct.tuple(['string', 'boolean'])
+   * const Struct = struct.tuple(['string', 'boolean'])
+   *
+   * Struct(['one', true])
    * ```
    */
 
-  struct.tuple = (schema: any[], defaults: any): Struct => {
-    return createTuple(schema, defaults, options)
-  }
+  tuple(schema: any[], defaults: any): Struct
 
   /**
    * Union structs validate that their input matches **at least one** of a set
    * of different structs.
    *
    * ```js
-   * struct.union(['string', 'email'])
+   * const Struct = struct.union(['string', 'number'])
+   *
+   * Struct('a string')
+   * Struct(42)
    * ```
    *
    * They are similar to the `|` operator in TypeScript.
    */
 
-  struct.union = (schema: any[], defaults: any): Struct => {
-    return createUnion(schema, defaults, options)
-  }
-
-  return struct
-}
-
-/**
- * `Superstruct` objects are the factories that create different kinds of
- * structs, and encapsulate the user-defined data types.
- */
-
-export interface Superstruct {
-  (schema: any, defaults: any): Struct
-  array(schema: [any], defaults: any): Struct
-  dynamic(
-    schema: (value: any, branch: Branch, path: Path) => Struct,
-    defaults: any
-  ): Struct
-  enum(schema: any[], defaults: any): Struct
-  function(schema: Validator, defaults: any): Struct
-  instance(schema: any, defaults: any): Struct
-  interface(schema: any, defaults: any): Struct
-  intersection(schema: any[], defaults: any): Struct
-  lazy(schema: () => Struct, defaults: any): Struct
-  literal(schema: any, defaults: any): Struct
-  object(schema: {}, defaults: any): Struct
-  optional(schema: any, defaults: any): Struct
-  partial(schema: {}, defaults: any): Struct
-  pick(schema: {}, defaults: any): Struct
-  record(schema: [any, any], defaults: any): Struct
-  scalar(schema: string, defaults: any): Struct
-  size(schema: [number, number], defaults: any): Struct
-  tuple(schema: any[], defaults: any): Struct
   union(schema: any[], defaults: any): Struct
 }

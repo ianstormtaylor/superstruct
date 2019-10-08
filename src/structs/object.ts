@@ -59,7 +59,7 @@ export const createObject = (
       if (!(k in Props)) {
         failures.push(
           Struct.fail({
-            type: null,
+            type: undefined,
             value: v,
             path: p,
             branch: value,
