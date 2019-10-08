@@ -2,7 +2,7 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
-### `0.8.0` — October 7, 2019
+### `0.8.0` — October 8, 2019
 
 ###### BREAKING
 
