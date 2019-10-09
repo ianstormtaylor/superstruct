@@ -1,13 +1,12 @@
 import invariant from 'tiny-invariant'
 import kindOf from 'kind-of'
-import { createStruct, Struct, StructOptions } from '../struct'
-import { createUnion } from './'
-import { Branch, Failure, Path } from '../struct-error'
+import { Branch, Failure, Path, Struct, Superstruct } from '..'
+import { createStruct } from '../struct'
 
 export const createPartial = (
   schema: {},
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     typeof schema === 'object',
@@ -17,14 +16,14 @@ export const createPartial = (
   const Props: Record<string, Struct> = {}
 
   for (const key in schema) {
-    Props[key] = createUnion([schema[key], 'undefined'], undefined, options)
+    Props[key] = struct.union([schema[key], 'undefined'])
   }
 
   const Struct = createStruct({
     kind: 'object',
     type: `{${Object.keys(schema).join()}}`,
     defaults,
-    options,
+    struct,
   })
 
   Struct.check = (

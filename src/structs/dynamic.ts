@@ -1,11 +1,11 @@
 import invariant from 'tiny-invariant'
-import { createStruct, Struct, StructOptions } from '../struct'
-import { Branch, Failure, Path } from '../struct-error'
+import { Branch, Failure, Path, Struct, Superstruct } from '..'
+import { createStruct } from '../struct'
 
 export const createDynamic = (
   schema: (value: any, branch: Branch, path: Path) => Struct,
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     typeof schema === 'function',
@@ -16,7 +16,7 @@ export const createDynamic = (
     kind: 'dynamic',
     type: `dynamic<…>`,
     defaults,
-    options,
+    struct,
   })
 
   Dynamic.check = (

@@ -1,18 +1,17 @@
 import invariant from 'tiny-invariant'
-import { createStruct, Struct, StructOptions } from '../struct'
-import { Branch, Failure, Path } from '../struct-error'
-import { Validator } from '../types'
+import { Branch, Failure, Path, Struct, Superstruct, Validator } from '..'
+import { createStruct } from '../struct'
 
 export const createFunction = (
   schema: Validator,
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   const Struct = createStruct({
     kind: 'function',
     type: `function<…>`,
     defaults,
-    options,
+    struct,
   })
 
   Struct.check = (

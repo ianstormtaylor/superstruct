@@ -1,12 +1,11 @@
 import invariant from 'tiny-invariant'
-import { createStruct, Struct, StructOptions } from '../struct'
-import { createShorthand } from './'
-import { Branch, Failure, Path } from '../struct-error'
+import { Branch, Failure, Path, Struct, Superstruct } from '..'
+import { createStruct } from '../struct'
 
 export const createInterface = (
   schema: any,
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     typeof schema === 'object',
@@ -16,14 +15,14 @@ export const createInterface = (
   const Props: Record<string, Struct> = {}
 
   for (const key in schema) {
-    Props[key] = createShorthand(schema[key], undefined, options)
+    Props[key] = struct(schema[key])
   }
 
   const Struct = createStruct({
     kind: 'interface',
     type: `interface<{${Object.keys(schema).join()}}>`,
     defaults,
-    options,
+    struct,
   })
 
   Struct.check = (

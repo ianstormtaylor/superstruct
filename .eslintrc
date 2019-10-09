@@ -4,11 +4,7 @@
     "prettier",
     "prettier/@typescript-eslint"
   ],
-  "plugins": [
-    "@typescript-eslint",
-    "import",
-    "prettier"
-  ],
+  "plugins": ["@typescript-eslint", "import", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",
@@ -27,7 +23,10 @@
     "import/extensions": [".js", ".ts"]
   },
   "rules": {
-    "@typescript-eslint/no-unused-vars": ["error", { "vars": "all", "args": "none" }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "vars": "all", "args": "none" }
+    ],
     "constructor-super": "error",
     "dot-notation": ["error", { "allowKeywords": true }],
     "eqeqeq": ["error", "smart"],
@@ -38,7 +37,10 @@
     "import/namespace": "error",
     "import/newline-after-import": "error",
     "import/no-deprecated": "error",
-    "import/no-extraneous-dependencies": ["error", { "peerDependencies": true }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "peerDependencies": true }
+    ],
     "import/no-mutable-exports": "error",
     "import/no-named-as-default": "error",
     "import/no-named-as-default-member": "error",
@@ -92,15 +94,21 @@
     "no-with": "error",
     "object-shorthand": ["error", "always"],
     "prefer-arrow-callback": "error",
-    "prefer-const": ["error", { "destructuring": "all", "ignoreReadBeforeAssign": true }],
+    "prefer-const": [
+      "error",
+      { "destructuring": "all", "ignoreReadBeforeAssign": true }
+    ],
     "prefer-rest-params": "error",
     "prefer-spread": "error",
     "prefer-template": "error",
     "prettier/prettier": "error",
     "radix": "error",
-    "spaced-comment": ["error", "always", { "exceptions": ["-"]}],
+    "spaced-comment": ["error", "always", { "exceptions": ["-"] }],
     "use-isnan": "error",
-    "valid-jsdoc": ["error", { "prefer": { "return": "returns" }, "requireReturn": false }],
+    "valid-jsdoc": [
+      "error",
+      { "prefer": { "return": "returns" }, "requireReturn": false }
+    ],
     "valid-typeof": "error",
     "yield-star-spacing": ["error", "after"],
     "yoda": ["error", "never"]

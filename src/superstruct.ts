@@ -1,10 +1,5 @@
-import { Validator, Types } from './types'
-import {
-  Branch,
-  Path,
-  StructError as DefaultError,
-  StructErrorConstructor,
-} from './struct-error'
+import { Validator, Types as BuiltinTypes } from './types'
+import { Branch, Failure, Path, StructError } from './struct-error'
 import { Struct } from './struct'
 import {
   createArray,
@@ -28,100 +23,103 @@ import {
 } from './structs'
 
 /**
+ * `SuperstructSettings` are passed in when creating a `Superstruct` factory.
+ */
+
+export type SuperstructSettings = {
+  types: Record<string, Validator>
+  error: { new (failures: Failure[]): Error }
+}
+
+/**
  * Create a struct singleton with settings that include your own domain-specific
  * data `types`, and an optional custom `Error` class.
  */
 
 export const superstruct = (
-  settings: {
-    types?: Record<string, Validator>
-    Error?: StructErrorConstructor
-  } = {}
+  settings: Partial<SuperstructSettings> = {}
 ): Superstruct => {
-  const options = {
-    Error: settings.Error || DefaultError,
-    types: { ...Types, ...settings.types },
+  const struct = (schema: any, defaults?: any): Struct => {
+    return createShorthand(schema, defaults, struct)
   }
 
-  const struct = (schema: any, defaults: any): Struct => {
-    return createShorthand(schema, defaults, options)
-  }
-
-  struct.array = (schema: [any], defaults: any): Struct => {
-    return createArray(schema, defaults, options)
+  struct.array = (schema: [any], defaults?: any): Struct => {
+    return createArray(schema, defaults, struct)
   }
 
   struct.dynamic = (
     schema: (value: any, branch: Branch, path: Path) => Struct,
-    defaults: any
+    defaults?: any
   ): Struct => {
-    return createDynamic(schema, defaults, options)
+    return createDynamic(schema, defaults, struct)
   }
 
-  struct.enum = (schema: any[], defaults: any): Struct => {
-    return createEnum(schema, defaults, options)
+  struct.enum = (schema: any[], defaults?: any): Struct => {
+    return createEnum(schema, defaults, struct)
   }
 
-  struct.function = (schema: Validator, defaults: any): Struct => {
-    return createFunction(schema, defaults, options)
+  struct.function = (schema: Validator, defaults?: any): Struct => {
+    return createFunction(schema, defaults, struct)
   }
 
-  struct.instance = (schema: any, defaults: any): Struct => {
-    return createInstance(schema, defaults, options)
+  struct.instance = (schema: any, defaults?: any): Struct => {
+    return createInstance(schema, defaults, struct)
   }
 
-  struct.interface = (schema: any, defaults: any): Struct => {
-    return createInterface(schema, defaults, options)
+  struct.interface = (schema: any, defaults?: any): Struct => {
+    return createInterface(schema, defaults, struct)
   }
 
-  struct.intersection = (schema: any[], defaults: any): Struct => {
-    return createIntersection(schema, defaults, options)
+  struct.intersection = (schema: any[], defaults?: any): Struct => {
+    return createIntersection(schema, defaults, struct)
   }
 
-  struct.lazy = (schema: () => Struct, defaults: any): Struct => {
-    return createLazy(schema, defaults, options)
+  struct.lazy = (schema: () => Struct, defaults?: any): Struct => {
+    return createLazy(schema, defaults, struct)
   }
 
-  struct.literal = (schema: any, defaults: any): Struct => {
-    return createLiteral(schema, defaults, options)
+  struct.literal = (schema: any, defaults?: any): Struct => {
+    return createLiteral(schema, defaults, struct)
   }
 
-  struct.object = (schema: {}, defaults: any): Struct => {
-    return createObject(schema, defaults, options)
+  struct.object = (schema: {}, defaults?: any): Struct => {
+    return createObject(schema, defaults, struct)
   }
 
-  struct.optional = (schema: any, defaults: any): Struct => {
-    return createUnion([schema, 'undefined'], defaults, options)
+  struct.optional = (schema: any, defaults?: any): Struct => {
+    return createUnion([schema, 'undefined'], defaults, struct)
   }
 
-  struct.partial = (schema: {}, defaults: any): Struct => {
-    return createPartial(schema, defaults, options)
+  struct.partial = (schema: {}, defaults?: any): Struct => {
+    return createPartial(schema, defaults, struct)
   }
 
-  struct.pick = (schema: {}, defaults: any): Struct => {
-    return createPick(schema, defaults, options)
+  struct.pick = (schema: {}, defaults?: any): Struct => {
+    return createPick(schema, defaults, struct)
   }
 
-  struct.record = (schema: [any, any], defaults: any): Struct => {
-    return createRecord(schema, defaults, options)
+  struct.record = (schema: [any, any], defaults?: any): Struct => {
+    return createRecord(schema, defaults, struct)
   }
 
-  struct.scalar = (schema: string, defaults: any): Struct => {
-    return createScalar(schema, defaults, options)
+  struct.scalar = (schema: string, defaults?: any): Struct => {
+    return createScalar(schema, defaults, struct)
   }
 
-  struct.size = (schema: [number, number], defaults: any): Struct => {
-    return createSize(schema, defaults, options)
+  struct.size = (schema: [number, number], defaults?: any): Struct => {
+    return createSize(schema, defaults, struct)
   }
 
-  struct.tuple = (schema: any[], defaults: any): Struct => {
-    return createTuple(schema, defaults, options)
+  struct.tuple = (schema: any[], defaults?: any): Struct => {
+    return createTuple(schema, defaults, struct)
   }
 
-  struct.union = (schema: any[], defaults: any): Struct => {
-    return createUnion(schema, defaults, options)
+  struct.union = (schema: any[], defaults?: any): Struct => {
+    return createUnion(schema, defaults, struct)
   }
 
+  struct.Error = settings.error || StructError
+  struct.Types = { ...BuiltinTypes, ...settings.types }
   return struct
 }
 
@@ -224,7 +222,7 @@ export interface Superstruct {
    * ```
    */
 
-  (schema: any, defaults: any): Struct
+  (schema: any, defaults?: any): Struct
 
   /**
    * Array structs validate that their input is an array with elements that
@@ -240,7 +238,7 @@ export interface Superstruct {
    * They are similar to the `Array` type in TypeScript.
    */
 
-  array(schema: [any], defaults: any): Struct
+  array(schema: [any], defaults?: any): Struct
 
   /**
    * Dynamic structs are defined by a function that is passed the value being
@@ -256,7 +254,7 @@ export interface Superstruct {
 
   dynamic(
     schema: (value: any, branch: Branch, path: Path) => Struct,
-    defaults: any
+    defaults?: any
   ): Struct
 
   /**
@@ -271,7 +269,7 @@ export interface Superstruct {
    * They are similar to the `enum` type in TypeScript.
    */
 
-  enum(schema: any[], defaults: any): Struct
+  enum(schema: any[], defaults?: any): Struct
 
   /**
    * Function structs validate their input against a one-off validator function.
@@ -286,7 +284,7 @@ export interface Superstruct {
    * allow for customization for easy one-off cases.
    */
 
-  function(schema: Validator, defaults: any): Struct
+  function(schema: Validator, defaults?: any): Struct
 
   /**
    * Instance structs validate that their input is an instance of a class.
@@ -298,7 +296,7 @@ export interface Superstruct {
    * ```
    */
 
-  instance(schema: any, defaults: any): Struct
+  instance(schema: any, defaults?: any): Struct
 
   /**
    * Interface structs validate that their input matches an interface defined as
@@ -317,7 +315,7 @@ export interface Superstruct {
    * They are similar to the structural-typing granted by TypeScript.
    */
 
-  interface(schema: any, defaults: any): Struct
+  interface(schema: any, defaults?: any): Struct
 
   /**
    * Intersection structs validate that their input matches **all** of a set of
@@ -335,7 +333,7 @@ export interface Superstruct {
    * They are similar to the `&` operator in TypeScript.
    */
 
-  intersection(schema: any[], defaults: any): Struct
+  intersection(schema: any[], defaults?: any): Struct
 
   /**
    * Lazy structs allow you to initialize a struct lazily, only initializing it
@@ -356,7 +354,7 @@ export interface Superstruct {
    * They are helpful for defining recursive structs.
    */
 
-  lazy(schema: () => Struct, defaults: any): Struct
+  lazy(schema: () => Struct, defaults?: any): Struct
 
   /**
    * Literal structs validate their input against a literal value.
@@ -368,7 +366,7 @@ export interface Superstruct {
    * ```
    */
 
-  literal(schema: any, defaults: any): Struct
+  literal(schema: any, defaults?: any): Struct
 
   /**
    * Object structs validate that their input exactly matches an object defined
@@ -389,7 +387,7 @@ export interface Superstruct {
    * They are similar to the `?` qualifier in TypeScript.
    */
 
-  object(schema: {}, defaults: any): Struct
+  object(schema: {}, defaults?: any): Struct
 
   /**
    * Optional structs validate that their input passes a specific struct, or
@@ -405,7 +403,7 @@ export interface Superstruct {
    * This is a shorthand for using `struct.union` with `undefined`.
    */
 
-  optional(schema: any, defaults: any): Struct
+  optional(schema: any, defaults?: any): Struct
 
   /**
    * Partial structs validate that their input partially matches an object
@@ -426,7 +424,7 @@ export interface Superstruct {
    * They are similar to the `Partial` utility in TypeScript.
    */
 
-  partial(schema: {}, defaults: any): Struct
+  partial(schema: {}, defaults?: any): Struct
 
   /**
    * Pick structs validate that their input exactly matches a subset of an
@@ -450,7 +448,7 @@ export interface Superstruct {
    * They are similar to the `Pick` utility in TypeScript.
    */
 
-  pick(schema: {}, defaults: any): Struct
+  pick(schema: {}, defaults?: any): Struct
 
   /**
    * Record structs validate that their input is an object with keys that match
@@ -469,7 +467,7 @@ export interface Superstruct {
    * They are similar to the `Record` utility in TypeScript.
    */
 
-  record(schema: [any, any], defaults: any): Struct
+  record(schema: [any, any], defaults?: any): Struct
 
   /**
    * Scalar structs validate that their input passes the `Validator` function
@@ -484,7 +482,7 @@ export interface Superstruct {
    * ```
    */
 
-  scalar(schema: string, defaults: any): Struct
+  scalar(schema: string, defaults?: any): Struct
 
   /**
    * Size structs validate their input has a certain length, by checking its
@@ -500,7 +498,7 @@ export interface Superstruct {
    * They are helpful for defining unions with array structs.
    */
 
-  size(schema: [number, number], defaults: any): Struct
+  size(schema: [number, number], defaults?: any): Struct
 
   /**
    * Tuple structs validate that their input exactly matches a tuple of values,
@@ -513,7 +511,7 @@ export interface Superstruct {
    * ```
    */
 
-  tuple(schema: any[], defaults: any): Struct
+  tuple(schema: any[], defaults?: any): Struct
 
   /**
    * Union structs validate that their input matches **at least one** of a set
@@ -529,5 +527,17 @@ export interface Superstruct {
    * They are similar to the `|` operator in TypeScript.
    */
 
-  union(schema: any[], defaults: any): Struct
+  union(schema: any[], defaults?: any): Struct
+
+  /**
+   * The class for errors thrown by `Structs`, defaults to [[StructError]].
+   */
+
+  Error: { new (failures: Failure[]): Error }
+
+  /**
+   * The set of data types that the factory knows.
+   */
+
+  Types: Record<string, Validator>
 }

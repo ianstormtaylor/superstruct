@@ -1,24 +1,23 @@
 import invariant from 'tiny-invariant'
-import { createStruct, Struct, StructOptions } from '../struct'
-import { createShorthand } from './'
-import { Branch, Failure, Path } from '../struct-error'
+import { Branch, Failure, Path, Struct, Superstruct } from '..'
+import { createStruct } from '../struct'
 
 export const createTuple = (
   schema: any[],
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     Array.isArray(schema),
     `Tuple structs must be defined as an array, but you passed: ${schema}`
   )
 
-  const Elements = schema.map(s => createShorthand(s, undefined, options))
+  const Elements = schema.map(s => struct(s))
   const Struct = createStruct({
     kind: 'tuple',
     type: `[${Elements.map(S => S.type).join()}]`,
     defaults,
-    options,
+    struct,
   })
 
   Struct.check = (

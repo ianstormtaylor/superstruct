@@ -1,5 +1,5 @@
-import { Failure, Branch, Path, StructErrorConstructor } from './struct-error'
-import { Validator } from './types'
+import { Failure, Branch, Path } from './struct-error'
+import { Superstruct } from './superstruct'
 
 /**
  * A symbol to set on `Struct` objects to test them against later.
@@ -24,9 +24,10 @@ export const createStruct = (props: {
   kind: string
   type: string
   defaults: () => any
-  options: StructOptions
+  struct: Superstruct
 }): Struct => {
-  const { Error: ErrorConstructor } = props.options
+  const { struct } = props
+  const { Error } = struct
   const Struct = (value: any): any => Struct.assert(value)
 
   // Set a hidden symbol property so that we can check it later to see if an
@@ -51,7 +52,7 @@ export const createStruct = (props: {
     const [failures, result] = Struct.check(value, [value], [])
 
     if (failures) {
-      throw new ErrorConstructor(failures)
+      throw new Error(failures)
     } else {
       return result
     }
@@ -61,7 +62,7 @@ export const createStruct = (props: {
     const [failures, result] = Struct.check(value, [value], [])
 
     if (failures) {
-      return [new ErrorConstructor(failures)]
+      return [new Error(failures)]
     } else {
       return [undefined, result]
     }
@@ -220,13 +221,4 @@ export interface Struct {
    */
 
   fail(obj: { value: any; branch: Branch; path: Path; type?: string }): Failure
-}
-
-/**
- * `StructOptions` are passed in when creating a struct.
- */
-
-export type StructOptions = {
-  types: Record<string, Validator>
-  Error: StructErrorConstructor
 }

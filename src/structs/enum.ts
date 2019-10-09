@@ -1,11 +1,10 @@
 import invariant from 'tiny-invariant'
-import { Struct, StructOptions } from '../struct'
-import { createFunction } from './'
+import { Struct, Superstruct } from '..'
 
 export const createEnum = (
   schema: any[],
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     Array.isArray(schema),
@@ -13,7 +12,7 @@ export const createEnum = (
   )
 
   const validator = (value: any) => schema.includes(value)
-  const Struct = createFunction(validator, defaults, options)
+  const Struct = struct(validator, defaults)
   Struct.kind = 'enum'
   Struct.type = schema
     .map(s => (typeof s === 'string' ? `"${s}"` : `${s}`))

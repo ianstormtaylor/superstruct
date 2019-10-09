@@ -1,13 +1,12 @@
-import { Struct, StructOptions } from '../struct'
-import { createFunction } from './'
+import { Struct, Superstruct } from '..'
 
 export const createLiteral = (
   schema: any,
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   const validator = (value: any) => value === schema
-  const Struct = createFunction(validator, defaults, options)
+  const Struct = struct(validator, defaults)
   Struct.kind = 'literal'
   Struct.type = typeof schema === 'string' ? `"${schema}"` : `${schema}`
   return Struct

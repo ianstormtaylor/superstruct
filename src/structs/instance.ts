@@ -1,11 +1,10 @@
 import invariant from 'tiny-invariant'
-import { Struct, StructOptions } from '../struct'
-import { createFunction } from './'
+import { Struct, Superstruct } from '..'
 
 export const createInstance = (
   schema: any,
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     typeof schema === 'function',
@@ -13,7 +12,7 @@ export const createInstance = (
   )
 
   const validator = (value: any) => value instanceof schema
-  const Struct = createFunction(validator, defaults, options)
+  const Struct = struct(validator, defaults)
   Struct.kind = 'instance'
   Struct.type = `instance<${schema.name}>`
   return Struct

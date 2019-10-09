@@ -1,24 +1,23 @@
 import invariant from 'tiny-invariant'
-import { Branch, Failure, Path } from '../struct-error'
-import { createShorthand } from './'
-import { createStruct, Struct, StructOptions } from '../struct'
+import { Branch, Failure, Path, Struct, Superstruct } from '..'
+import { createStruct } from '../struct'
 
 export const createArray = (
   schema: [any],
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     Array.isArray(schema) && schema.length === 1,
     `Array structs must be defined as an array with one element, but you passed: ${schema}`
   )
 
-  const Element = createShorthand(schema[0], undefined, options)
+  const Element = struct(schema[0], undefined)
   const Struct = createStruct({
     kind: 'array',
     type: `${Element.type}[]`,
     defaults,
-    options,
+    struct,
   })
 
   Struct.check = (

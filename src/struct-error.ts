@@ -13,6 +13,7 @@ export class StructError extends TypeError {
   path: Path
   type: string | undefined
   value: any
+  [key: string]: any
 
   constructor(failures: Failure[]) {
     invariant(
@@ -36,10 +37,6 @@ export class StructError extends TypeError {
     this.stack = new Error().stack
     ;(this as any).__proto__ = StructError.prototype
   }
-}
-
-export interface StructErrorConstructor {
-  new (failures: Failure[]): StructError
 }
 
 /**
@@ -104,4 +101,10 @@ export type Failure = {
    */
 
   type: string | undefined
+
+  /**
+   * Failures can also be augmented with any of your on custom properties.
+   */
+
+  [key: string]: any
 }

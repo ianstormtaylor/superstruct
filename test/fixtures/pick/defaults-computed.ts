@@ -1,20 +1,21 @@
 import { struct } from '../../..'
 
-export const Struct = struct.object(
+export const Struct = struct.pick(
   {
-    username: 'string',
     email: 'string',
+    username: 'string',
   },
   {
-    username: v => v.email.split('@')[0],
+    username: (v: any) => v.email.split('@')[0],
   }
 )
 
 export const data = {
+  name: 'Jane Smith',
   email: 'jane@example.com',
 }
 
 export const output = {
-  username: 'jane',
   email: 'jane@example.com',
+  username: 'jane',
 }

@@ -1,18 +1,9 @@
-import { isStruct, Struct, StructOptions } from '../struct'
-import {
-  createArray,
-  createFunction,
-  createIntersection,
-  createObject,
-  createScalar,
-  createTuple,
-  createUnion,
-} from './'
+import { isStruct, Struct, Superstruct } from '..'
 
 export const createShorthand = (
   schema: any,
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   if (isStruct(schema)) {
     return schema
@@ -21,18 +12,18 @@ export const createShorthand = (
   if (Array.isArray(schema)) {
     if (schema.length === 1) {
       const [first] = schema
-      return createArray([first], defaults, options)
+      return struct.array([first], defaults)
     } else if (schema.length > 1) {
-      return createTuple(schema, defaults, options)
+      return struct.tuple(schema, defaults)
     }
   }
 
   if (typeof schema === 'function') {
-    return createFunction(schema, defaults, options)
+    return struct.function(schema, defaults)
   }
 
   if (typeof schema === 'object') {
-    return createObject(schema, defaults, options)
+    return struct.object(schema, defaults)
   }
 
   if (typeof schema === 'string') {
@@ -46,16 +37,16 @@ export const createShorthand = (
 
     if (schema.includes('|')) {
       const scalars = schema.split(/\s*\|\s*/g)
-      Struct = createUnion(scalars, defaults, options)
+      Struct = struct.union(scalars, defaults)
     } else if (schema.includes('&')) {
       const scalars = schema.split(/\s*&\s*/g)
-      Struct = createIntersection(scalars, defaults, options)
+      Struct = struct.intersection(scalars, defaults)
     } else {
-      Struct = createScalar(schema, defaults, options)
+      Struct = struct.scalar(schema, defaults)
     }
 
     if (optional) {
-      Struct = createUnion([Struct, 'undefined'], undefined, options)
+      Struct = struct.union([Struct, 'undefined'], undefined)
     }
 
     return Struct

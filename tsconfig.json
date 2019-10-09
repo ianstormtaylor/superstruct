@@ -1,11 +1,11 @@
 {
-  "include": ["./src/*"],
+  "include": ["./src/**/*.ts"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "module": "es6",
+    "esModuleInterop": true,
+    "module": "esnext",
     "moduleResolution": "node",
-    "outDir": "./lib",
     "sourceMap": true,
     "strict": true,
     "suppressImplicitAnyIndexErrors": true,

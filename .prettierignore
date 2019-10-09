@@ -1,6 +1,4 @@
 lib/
 node_modules/
+site/
 umd/
-.babelrc
-.eslintrc
-package.json

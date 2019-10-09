@@ -1,10 +1,10 @@
 import isEmail from 'is-email'
-import { superstruct } from '../../../lib'
+import { superstruct } from '../../..'
 
 const struct = superstruct({
   types: {
     email: v => {
-      if (!isEmail(v)) return { reason: `not_email` }
+      return isEmail(v) || [{ reason: `not_email` }]
     },
   },
 })

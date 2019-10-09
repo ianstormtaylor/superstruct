@@ -1,25 +1,24 @@
 import invariant from 'tiny-invariant'
-import { createStruct, Struct, StructOptions } from '../struct'
-import { createShorthand } from './'
-import { Branch, Failure, Path } from '../struct-error'
+import { Branch, Failure, Path, Struct, Superstruct } from '..'
+import { createStruct } from '../struct'
 
 export const createIntersection = (
   schema: any[],
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     Array.isArray(schema) && schema.length !== 0,
     `Intersection structs must be defined as a non-empty array, but you passed: ${schema}`
   )
 
-  const Structs = schema.map(sch => createShorthand(sch, undefined, options))
+  const Structs = schema.map(sch => struct(sch))
   const type = Structs.map(s => s.type).join(' & ')
   const Struct = createStruct({
     kind: 'intersection',
     type,
     defaults,
-    options,
+    struct,
   })
 
   Struct.check = (

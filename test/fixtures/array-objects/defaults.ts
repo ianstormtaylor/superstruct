@@ -1,4 +1,4 @@
-import { struct } from '../../..'
+import { struct } from '../../../lib'
 
 export const Struct = struct.array([{ id: 'string' }], [{ id: '0' }])
 

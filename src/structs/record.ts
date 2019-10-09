@@ -1,26 +1,25 @@
 import invariant from 'tiny-invariant'
 import kindOf from 'kind-of'
-import { createStruct, Struct, StructOptions } from '../struct'
-import { createShorthand } from './'
-import { Branch, Failure, Path } from '../struct-error'
+import { Branch, Failure, Path, Struct, Superstruct } from '..'
+import { createStruct } from '../struct'
 
 export const createRecord = (
   schema: [any, any],
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     Array.isArray(schema) && schema.length === 2,
     `Record structs must be defined as an array with two elements, but you passed: ${schema}`
   )
 
-  const Key = createShorthand(schema[0], undefined, options)
-  const Value = createShorthand(schema[1], undefined, options)
+  const Key = struct(schema[0])
+  const Value = struct(schema[1])
   const Struct = createStruct({
     kind: 'record',
     type: `record<${Key.type},${Value.type}>`,
     defaults,
-    options,
+    struct,
   })
 
   Struct.check = (

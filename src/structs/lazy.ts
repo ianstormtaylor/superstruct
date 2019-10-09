@@ -1,11 +1,11 @@
 import invariant from 'tiny-invariant'
-import { createStruct, Struct, StructOptions } from '../struct'
-import { Failure } from '../struct-error'
+import { Failure, Struct, Superstruct } from '..'
+import { createStruct } from '../struct'
 
 export const createLazy = (
   schema: () => Struct,
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     typeof schema === 'function',
@@ -16,7 +16,7 @@ export const createLazy = (
     kind: 'lazy',
     type: `lazy<…>`,
     defaults,
-    options,
+    struct,
   })
 
   Lazy.check = (...args): [Failure[]?, any?] => {

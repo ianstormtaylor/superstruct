@@ -1,17 +1,17 @@
 import { struct } from '../../../lib'
 
 class Person {
-  constructor(name, age) {
+  name: string
+
+  constructor(name: string) {
     this.name = name
-    this.age = age
   }
 }
 
 export const Struct = struct.interface({
   name: 'string',
-  age: 'number',
 })
 
-export const data = new Person('john', 42)
+export const data = new Person('john')
 
 export const output = data

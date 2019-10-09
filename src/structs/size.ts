@@ -1,11 +1,10 @@
 import invariant from 'tiny-invariant'
-import { createFunction } from '.'
-import { Struct, StructOptions } from '../struct'
+import { Struct, Superstruct } from '..'
 
 export const createSize = (
   schema: [number, number],
   defaults: any,
-  options: StructOptions
+  struct: Superstruct
 ): Struct => {
   invariant(
     Array.isArray(schema) &&
@@ -21,7 +20,7 @@ export const createSize = (
     value.length >= min &&
     value.length <= max
 
-  const Struct = createFunction(validator, defaults, options)
+  const Struct = struct(validator, defaults)
   Struct.kind = 'size'
   Struct.type = `size<${min},${max}>`
   return Struct
