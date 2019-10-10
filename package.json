@@ -69,7 +69,7 @@
     "fix:eslint": "yarn lint:eslint --fix",
     "fix:prettier": "yarn lint:prettier --write",
     "lint": "yarn lint:eslint && yarn lint:prettier",
-    "lint:eslint": "eslint '{src,test}/*'",
+    "lint:eslint": "eslint '{src,test}/*.{js,ts}'",
     "lint:prettier": "prettier --list-different '**/*.{js,json,ts}'",
     "release": "yarn build && yarn lint && np",
     "test": "yarn test:types && yarn test:mocha",
