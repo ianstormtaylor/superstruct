@@ -2,10 +2,8 @@ import babel from 'rollup-plugin-babel'
 import cjs from 'rollup-plugin-commonjs'
 import replace from 'rollup-plugin-replace'
 import node from 'rollup-plugin-node-resolve'
-import uglify from 'rollup-plugin-uglify'
 import typescript from 'rollup-plugin-typescript2'
-import { minify } from 'uglify-es'
-
+import { terser } from 'rollup-plugin-terser'
 import config from './rollup'
 
 config.output = {
@@ -55,7 +53,7 @@ config.plugins = [
     'process.env.NODE_ENV': JSON.stringify('production'),
   }),
 
-  uglify({}, minify),
+  terser(),
 ]
 
 export default config
