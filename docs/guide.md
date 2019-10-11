@@ -91,7 +91,7 @@ User(data)
 
 An error was thrown! That's what we expected.
 
-If you'd rather have the error returned instead of thrown, you can use the `Struct.validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `Struct.test()` method. 
+If you'd rather have the error returned instead of thrown, you can use the `Struct.validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `Struct.test()` method.
 
 > 🤖 Check out the [`Struct` interface](https://superstructjs.org/interfaces/struct) for more information.
 
@@ -172,7 +172,7 @@ The original `data` did not define an `is_admin` property, but in the `result` r
 
 Next up, you might have been wondering about the `email` property. So far we've just been using a `'string'` type for it, which means that any old string will pass validation.
 
-But we'd really like to validate that the email is a valid email address. 
+But we'd really like to validate that the email is a valid email address.
 
 The `struct` factory that ships with Superstruct by default recognizes all of the native JavaScript data types in its definitions. To define custom data types, we can use the [`Superstruct` reference](https://superstructjs.org/interfaces/superstruct) export instead...
 
@@ -219,8 +219,9 @@ User(data)
 // StructError: 'Expected a value of type "email" for `email` but received `'jane'`.' {
 //   type: 'email',
 //   value: 'jane',
-//   branch: [{ ... }, 'jane'],
 //   path: ['email'],
+//   branch: [{...}, 'jane'],
+//   failures: [...]
 // }
 ```
 
@@ -307,7 +308,7 @@ const User = struct({
 })
 ```
 
-All of this can be achieved using the helpers exposed on the `struct` function. 
+All of this can be achieved using the helpers exposed on the `struct` function.
 
 > 🤖 For a full list of the kinds of structs you can create, check out the [`Superstruct` interface](https://superstructjs.org/interfaces/superstruct).
 

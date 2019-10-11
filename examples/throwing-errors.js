@@ -23,8 +23,9 @@ try {
 }
 
 // StructError: 'Expected a value of type "string" for `name` but received `true`.' {
-//   data: { ... },
-//   path: ['name'],
-//   value: true,
 //   type: 'string',
+//   value: true,
+//   path: ['name'],
+//   branch: [{...}, true],
+//   failures: [...],
 // }

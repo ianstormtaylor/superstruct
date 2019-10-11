@@ -16,17 +16,18 @@ const data = {
 
 // Validate the data with the `validate` method. In this case the `name`
 // property is invalid, so a `property_invalid` error will be returned.
-const result = User.validate(data)
+const [error, result] = User.validate(data)
 
-if (result instanceof StructError) {
-  console.error(result)
+if (error) {
+  console.error(error)
 } else {
-  console.log('Valid!')
+  console.log('Valid!', result)
 }
 
 // StructError: 'Expected a value of type "string" for `name` but received `false`.' {
-//   data: { ... },
-//   path: ['name'],
-//   value: false,
 //   type: 'string',
+//   value: false,
+//   path: ['name'],
+//   branch: [{...}, false],
+//   failures: [...],
 // }
