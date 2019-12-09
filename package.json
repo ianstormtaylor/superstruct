@@ -70,7 +70,7 @@
     "lint:prettier": "prettier --list-different '**/*.{js,json,ts}'",
     "release": "yarn build && yarn lint && np",
     "test": "yarn test:types && yarn test:mocha",
-    "test:mocha": "yarn build:cjs && mocha --require ./test/register --require source-map-support/register ./test/index.ts",
+    "test:mocha": "yarn build:cjs && mocha --require ./test/register.cjs --require source-map-support/register ./test/index.ts",
     "test:types": "yarn build:types && tsc --noEmit && tsc --project ./test/tsconfig.json --noEmit",
     "watch": "yarn build:cjs --watch"
   },
