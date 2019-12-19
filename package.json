@@ -7,7 +7,7 @@
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
   "source": "./src/index.ts",
   "types": "./lib/index.d.ts",
-  "main": "./lib/index.js",
+  "main": "./lib/index.cjs",
   "module": "./lib/index.es.js",
   "files": [
     "umd",
