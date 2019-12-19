@@ -1,4 +1,4 @@
-import { struct } from '../../../lib'
+import { struct } from '../../..'
 
 export const Struct = struct.size([0, 2])
 

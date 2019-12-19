@@ -1,5 +1,5 @@
 import isEmail from 'is-email'
-import { superstruct, Failure } from '../../../lib'
+import { superstruct, Failure } from '../../..'
 
 const struct = superstruct({
   types: {

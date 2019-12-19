@@ -1,4 +1,4 @@
-import { struct } from '../../../lib'
+import { struct } from '../../..'
 
 class Person {
   name: string
