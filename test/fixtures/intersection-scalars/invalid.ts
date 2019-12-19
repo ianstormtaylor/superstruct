@@ -11,7 +11,7 @@ export const Struct = struct.intersection(['string', 'empty'])
 export const data = 'invalid'
 
 export const error = {
-  type: 'string & empty',
+  type: 'empty',
   value: 'invalid',
   path: [],
 }

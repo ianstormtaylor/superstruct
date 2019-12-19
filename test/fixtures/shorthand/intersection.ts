@@ -11,7 +11,7 @@ export const Struct = struct('string & empty')
 export const data = 'a'
 
 export const error = {
-  type: 'string & empty',
+  type: 'empty',
   value: 'a',
   path: [],
 }

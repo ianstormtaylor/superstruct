@@ -32,7 +32,7 @@ export const createIntersection = (
       const [fs, v] = struct.check(value, branch, path)
 
       if (fs) {
-        return [[Struct.fail({ value, branch, path })]]
+        return [[Struct.fail({ value, branch, path, type: struct.type })]]
       } else {
         result = v
       }
