@@ -44,7 +44,7 @@ export const createPartial = (
     const result = {}
     const failures: Failure[] = []
 
-    for (const k of value) {
+    for (const k in value) {
       let v = value[k]
       const p = path.concat(k)
       const b = branch.concat(v)
