@@ -29,7 +29,7 @@
     "@gnd/typedoc": "^0.15.0-0",
     "@types/lodash": "^4.14.144",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.7.12",
+    "@types/node": "^13.13.4",
     "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
     "babel-eslint": "^10.0.3",
