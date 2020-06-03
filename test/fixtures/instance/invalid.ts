@@ -1,11 +1,11 @@
-import { struct } from '../../..'
+import { instance } from '../../..'
 
-export const Struct = struct.instance(Array)
+export const Struct = instance(Array)
 
 export const data = false
 
 export const error = {
   path: [],
   value: false,
-  type: 'instance<Array>',
+  type: 'InstanceOf<Array>',
 }

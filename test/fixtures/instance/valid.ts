@@ -1,6 +1,6 @@
-import { struct } from '../../..'
+import { instance } from '../../..'
 
-export const Struct = struct.instance(Array)
+export const Struct = instance(Array)
 
 export const data = [1]
 

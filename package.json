@@ -14,8 +14,7 @@
     "lib"
   ],
   "dependencies": {
-    "kind-of": "^6.0.2",
-    "tiny-invariant": "^1.0.6"
+    "@babel/runtime": "^7.10.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.3",
@@ -23,6 +22,7 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/plugin-transform-modules-commonjs": "^7.6.0",
+    "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-typescript": "^7.6.0",
     "@babel/register": "^7.6.2",
@@ -43,7 +43,7 @@
     "is-uuid": "^1.0.2",
     "lodash": "^4.17.15",
     "mocha": "^6.2.1",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "rollup": "^1.23.1",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -51,12 +51,12 @@
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-terser": "^5.1.2",
     "rollup-plugin-typescript2": "^0.24.3",
-    "typescript": "^3.6.4"
+    "typescript": "^3.9.3"
   },
   "scripts": {
     "build": "yarn build:es && yarn build:cjs && yarn build:max && yarn build:min && yarn build:types && yarn build:docs",
     "build:cjs": "rollup --config ./config/rollup-cjs.js",
-    "build:docs": "typedoc ./src/index.ts ./src/@types/*.ts && cp -f ./site/globals.html ./site/index.html",
+    "build:docs": "typedoc ./src/index.ts && cp -f ./site/globals.html ./site/index.html",
     "build:es": "rollup --config ./config/rollup.js",
     "build:max": "rollup --config ./config/rollup-umd.js",
     "build:min": "rollup --config ./config/rollup-umd-min.js",
@@ -69,9 +69,9 @@
     "lint:eslint": "eslint '{src,test}/*.{js,ts}'",
     "lint:prettier": "prettier --list-different '**/*.{js,json,ts}'",
     "release": "yarn build && yarn lint && np",
-    "test": "yarn test:types && yarn test:mocha",
-    "test:mocha": "yarn build:cjs && mocha --require ./test/register.cjs --require source-map-support/register ./test/index.ts",
-    "test:types": "yarn build:types && tsc --noEmit && tsc --project ./test/tsconfig.json --noEmit",
+    "test": "yarn build:types && yarn test:types && yarn build:cjs && yarn test:mocha",
+    "test:mocha": "mocha --require ./test/register.cjs --require source-map-support/register ./test/index.ts",
+    "test:types": "tsc --noEmit && tsc --project ./test/tsconfig.json --noEmit",
     "watch": "yarn build:cjs --watch"
   },
   "keywords": [

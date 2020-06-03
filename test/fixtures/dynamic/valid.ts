@@ -1,9 +1,7 @@
-import { struct } from '../../..'
+import { dynamic, string } from '../../..'
 
-const validator = struct('string')
+export const Struct = dynamic(() => string())
 
-export const Struct = struct.dynamic(() => validator)
+export const data = 'valid'
 
-export const data = 'two'
-
-export const output = 'two'
+export const output = 'valid'

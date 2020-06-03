@@ -1,8 +1,6 @@
-import { struct } from '../../..'
+import { lazy, string } from '../../..'
 
-const Other = struct('string')
-
-export const Struct = struct.lazy(() => Other)
+export const Struct = lazy(() => string())
 
 export const data = 'two'
 
