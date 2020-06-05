@@ -2,7 +2,7 @@
   "name": "superstruct",
   "type": "module",
   "description": "A simple, expressive way to validate data in JavaScript.",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
   "source": "./src/index.ts",
