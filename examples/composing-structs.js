@@ -1,12 +1,12 @@
-import { assert, object, number, optional, string } from 'superstruct'
+import { assert, object, number, string } from 'superstruct'
 
-// Define a `user` struct.
+// Define a `User` struct.
 const User = object({
   id: number(),
   name: string(),
 })
 
-// Define an `article` struct, composing the user struct in the article's
+// Define an `Article` struct, composing the `User` struct in the article's
 // `author` property.
 const Article = object({
   id: number(),

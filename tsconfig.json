@@ -10,13 +10,5 @@
     "strict": true,
     "suppressImplicitAnyIndexErrors": true,
     "target": "esnext"
-  },
-  "typedocOptions": {
-    "excludeExternals": true,
-    "hideGenerator": true,
-    "mode": "file",
-    "name": "Superstruct API Reference",
-    "out": "./site",
-    "readme": null
   }
 }

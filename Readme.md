@@ -138,13 +138,9 @@ Which brings me to how Superstruct solves these issues...
 
 3. **Composable interfaces.** Superstruct interfaces are composable, so you can break down commonly-repeated pieces of data into components, and compose them to build up the more complex objects.
 
-4. **Terse schemas.** The schemas in Superstruct are designed to be extremely terse and expressive. This makes them very easy to read and write, encouraging you to have full data validation coverage.
+4. **Useful errors.** The errors that Superstruct throws contain all the information you need to convert them into your own application-specific errors easy, which means more helpful errors for your end users!
 
-5. **Compiled validators.** Superstruct does the work of compiling its schemas up front, so that it doesn't spend time performing expensive tasks for every call to the validation functions in your hot code paths.
-
-6. **Useful errors.** The errors that Superstruct throws contain all the information you need to convert them into your own application-specific errors easy, which means more helpful errors for your end users!
-
-7. **Familiar API.** The Superstruct API was heavily inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/). If you're familiar with any of those, then its schema definition API will feel very natural to use, so you can get started quickly.
+5. **Familiar API.** The Superstruct API was heavily inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/). If you're familiar with any of those, then its schema definition API will feel very natural to use, so you can get started quickly.
 
 <br/>
 
@@ -167,6 +163,7 @@ Superstruct's API is very flexible, allowing it to be used for a variety of use 
 - [Composing Structs](./examples/composing-structs.js)
 - [Throwing Errors](./examples/throwing-errors.js)
 - [Returning Errors](./examples/returning-errors.js)
+- [Testing Values](./examples/testing-values.js)
 - [Custom Errors](./examples/custom-errors.js)
 
 <br/>

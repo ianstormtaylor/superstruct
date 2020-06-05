@@ -28,7 +28,7 @@ try {
     throw error
   }
 
-  if (type === undefined) {
+  if (type === 'never') {
     const error = new Error(`user_attribute_unknown`)
     error.attribute = key
     throw error

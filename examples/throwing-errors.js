@@ -15,5 +15,5 @@ const data = {
 }
 
 // Validate the data with the `validate` method. In this case the `name`
-// property is invalid, so a `property_invalid` error will be returned.
+// property is invalid, so an error will be thrown.
 assert(data, User)

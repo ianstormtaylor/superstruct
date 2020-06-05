@@ -1,19 +1,27 @@
 import {
-  string,
+  array,
+  assert,
+  date,
+  defaulted,
+  intersection,
+  is,
   number,
   object,
   optional,
-  array,
   partial,
-  date,
-  defaulted,
-  union,
-  intersection,
+  refinement,
+  string,
+  struct,
+  StructType,
   tuple,
   type,
-  refinement,
-} from './structs'
-import { struct, assert, is } from './struct'
+  union,
+} from '../lib'
+
+{
+  const String = string()
+  type T = StructType<typeof String>
+}
 
 {
   const x: unknown = null
@@ -101,8 +109,8 @@ import { struct, assert, is } from './struct'
 
 {
   const x: unknown = null
-  const Optional = defaulted(object({ name: string() }), { name: '' })
-  assert(x, Optional)
+  const Defaults = defaulted(object({ name: string() }), { name: '' })
+  assert(x, Defaults)
   x
 }
 

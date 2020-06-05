@@ -1,6 +1,11 @@
-import { Struct, StructType, check, struct, coerce, toFailures } from './struct'
-import { wrap } from './failure'
-import { isPlainObject, toLiteralString } from './utils'
+import {
+  Struct,
+  StructType,
+  struct,
+  coerce,
+  toFailures,
+  StructContext,
+} from './struct'
 
 type StructRecord<T> = Record<string, Struct<T>>
 type StructTuple<T> = { [K in keyof T]: Struct<T[K]> }
@@ -20,14 +25,14 @@ export function any(): Struct<any> {
 export function array<T>(Element: Struct<T>): Struct<T[]> {
   return struct(
     `Array<${Element.type}>`,
-    function*(value, fail) {
+    function*(value, ctx) {
       if (!Array.isArray(value)) {
-        yield fail()
+        yield ctx.fail()
         return
       }
 
       for (const [i, v] of value.entries()) {
-        yield* wrap(check(v, Element), value, i)
+        yield* ctx.check(v, Element, value, i)
       }
     },
     value => {
@@ -119,9 +124,11 @@ export function defaulted<T>(
  * Validate that a value dynamically, determing which struct to use at runtime.
  */
 
-export function dynamic<T>(fn: (x: unknown) => Struct<T>): Struct<T> {
-  return struct('Dynamic<...>', value => {
-    return check(value, fn(value))
+export function dynamic<T>(
+  fn: (value: unknown, ctx: StructContext) => Struct<T>
+): Struct<T> {
+  return struct('Dynamic<...>', (value, ctx) => {
+    return ctx.check(value, fn(value, ctx))
   })
 }
 
@@ -173,9 +180,9 @@ export function intersection<A, B, C, D, E>(
   Structs: StructTuple<[A, B, C, D, E]>
 ): Struct<A & B & C & D & E>
 export function intersection(Structs: Struct<any>[]): any {
-  return struct(Structs.map(s => s.type).join(' & '), function*(value) {
+  return struct(Structs.map(s => s.type).join(' & '), function*(value, ctx) {
     for (const S of Structs) {
-      yield* check(value, S)
+      yield* ctx.check(value, S)
     }
   })
 }
@@ -189,12 +196,12 @@ export function intersection(Structs: Struct<any>[]): any {
 export function lazy<T>(fn: () => Struct<T>): Struct<T> {
   let S: Struct<T> | undefined
 
-  return struct('Lazy<Struct>', value => {
+  return struct('Lazy<...>', (value, ctx) => {
     if (!S) {
       S = fn()
     }
 
-    return check(value, S)
+    return ctx.check(value, S)
   })
 }
 
@@ -230,15 +237,15 @@ export function literal<T>(constant: T): Struct<T> {
 export function map<K, V>(Structs: StructTuple<[K, V]>): Struct<Map<K, V>> {
   const [Key, Value] = Structs
 
-  return struct(`Map<${Key.type},${Value.type}>`, function*(value, fail) {
+  return struct(`Map<${Key.type},${Value.type}>`, function*(value, ctx) {
     if (!(value instanceof Map)) {
-      yield fail()
+      yield ctx.fail()
       return
     }
 
     for (const [k, v] of value.entries()) {
-      yield* wrap(check(k, Key), value, k)
-      yield* wrap(check(v, Value), value, k)
+      yield* ctx.check(k, Key, value, k)
+      yield* ctx.check(v, Value, value, k)
     }
   })
 }
@@ -273,9 +280,9 @@ export function object<V extends StructRecord<any>>(
 
   return struct(
     `Object<{${knowns.join(',')}}>`,
-    function*(value, fail) {
+    function*(value, ctx) {
       if (typeof value !== 'object' || value == null) {
-        yield fail()
+        yield ctx.fail()
         return
       }
 
@@ -285,12 +292,12 @@ export function object<V extends StructRecord<any>>(
         unknowns.delete(key)
         const Value = Structs[key]
         const v = value[key]
-        yield* wrap(check(v, Value), value, key)
+        yield* ctx.check(v, Value, value, key)
       }
 
       for (const key of unknowns) {
         const v = value[key]
-        yield* wrap(check(v, Never), value, key)
+        yield* ctx.check(v, Never, value, key)
       }
     },
     value => {
@@ -322,8 +329,8 @@ export function object<V extends StructRecord<any>>(
  */
 
 export function optional<T>(S: Struct<T>): Struct<T | undefined> {
-  return struct(`${S.type}?`, value => {
-    return value === undefined || check(value, S)
+  return struct(`${S.type}?`, (value, ctx) => {
+    return value === undefined || ctx.check(value, S)
   })
 }
 
@@ -337,9 +344,9 @@ export function partial<V extends StructRecord<any>>(
   const knowns = Object.keys(Structs)
   const Never = never()
 
-  return struct(`Partial<{${knowns.join(',')}}>`, function*(value, fail) {
+  return struct(`Partial<{${knowns.join(',')}}>`, function*(value, ctx) {
     if (typeof value !== 'object' || value == null) {
-      yield fail()
+      yield ctx.fail()
       return
     }
 
@@ -354,12 +361,12 @@ export function partial<V extends StructRecord<any>>(
 
       const Value = Structs[key]
       const v = value[key]
-      yield* wrap(check(v, Value), value, key)
+      yield* ctx.check(v, Value, value, key)
     }
 
     for (const key of unknowns) {
       const v = value[key]
-      yield* wrap(check(v, Never), value, key)
+      yield* ctx.check(v, Never, value, key)
     }
   })
 }
@@ -387,16 +394,16 @@ export function record<K extends string | number, V>(
 ): Struct<Record<K, V>> {
   const [Key, Value] = Structs
 
-  return struct(`Record<${Key.type},${Value.type}>`, function*(value, fail) {
+  return struct(`Record<${Key.type},${Value.type}>`, function*(value, ctx) {
     if (typeof value !== 'object' || value == null) {
-      yield fail()
+      yield ctx.fail()
       return
     }
 
     for (const k in value) {
       const v = value[k]
-      yield* wrap(check(k, Key), value, k)
-      yield* wrap(check(v, Value), value, k)
+      yield* ctx.check(k, Key, value, k)
+      yield* ctx.check(v, Value, value, k)
     }
   })
 }
@@ -426,13 +433,13 @@ export function refinement<T>(
  */
 
 export function set<T>(Element: Struct<T>): Struct<Set<T>> {
-  return struct(`Set<${Element.type}>`, value => {
+  return struct(`Set<${Element.type}>`, (value, ctx) => {
     if (!(value instanceof Set)) {
       return false
     }
 
     for (const val of value) {
-      const [failure] = check(val, Element)
+      const [failure] = ctx.check(val, Element)
 
       if (failure) {
         return false
@@ -483,22 +490,22 @@ export function tuple(Elements: Struct<any>[]): any {
 
   return struct(`[${Elements.map(s => s.type).join(',')}]`, function*(
     value,
-    fail
+    ctx
   ) {
     if (!Array.isArray(value)) {
-      yield fail()
+      yield ctx.fail()
       return
     }
 
     for (const [index, Element] of Elements.entries()) {
       const v = value[index]
-      yield* wrap(check(v, Element), value, index)
+      yield* ctx.check(v, Element, value, index)
     }
 
     if (value.length > Elements.length) {
       const index = Elements.length
       const v = value[index]
-      yield* wrap(check(v, Never), value, index)
+      yield* ctx.check(v, Never, value, index)
     }
   })
 }
@@ -513,16 +520,16 @@ export function type<V extends StructRecord<any>>(
 ): Struct<{ [K in keyof V]: StructType<V[K]> }> {
   const keys = Object.keys(Structs)
 
-  return struct(`Type<{${keys.join(',')}}>`, function*(value, fail) {
+  return struct(`Type<{${keys.join(',')}}>`, function*(value, ctx) {
     if (typeof value !== 'object' || value == null) {
-      yield fail()
+      yield ctx.fail()
       return
     }
 
     for (const key of keys) {
       const Value = Structs[key]
       const v = (value as any)[key]
-      yield* wrap(check(v, Value), value, key)
+      yield* ctx.check(v, Value, value, key)
     }
   })
 }
@@ -553,16 +560,39 @@ export function union<A, B, C, D, E>(
 export function union(Structs: Struct<any>[]): any {
   return struct(`${Structs.map(s => s.type).join(' | ')}`, function*(
     value,
-    fail
+    ctx
   ) {
     for (const S of Structs) {
-      const [...failures] = check(value, S)
+      const [...failures] = ctx.check(value, S)
 
       if (failures.length === 0) {
         return
       }
     }
 
-    yield fail()
+    yield ctx.fail()
   })
+}
+
+/**
+ * Check if a value is a plain object.
+ */
+
+function isPlainObject(value: unknown): value is Object {
+  if (Object.prototype.toString.call(value) !== '[object Object]') {
+    return false
+  }
+
+  const prototype = Object.getPrototypeOf(value)
+  return prototype === null || prototype === Object.prototype
+}
+
+/**
+ * Convert a value to a literal string.
+ */
+
+function toLiteralString(value: any): string {
+  return typeof value === 'string'
+    ? `"${value.replace(/"/g, '"')}"`
+    : `${value}`
 }

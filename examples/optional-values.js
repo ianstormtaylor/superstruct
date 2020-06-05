@@ -13,6 +13,5 @@ const data = {
   email: 'jane@example.com',
 }
 
-// Validate the data and store the return value in the `user` variable. Here
-// the `is_admin` property is optional, so it won't throw.
+// Validate the data. In this case `is_admin` is optional, so it won't throw.
 assert(data, User)

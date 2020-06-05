@@ -1,11 +1,12 @@
 import {
-  object,
-  number,
-  string,
+  assert,
   boolean,
+  coerce,
   date,
   defaulted,
-  assert,
+  number,
+  object,
+  string,
 } from 'superstruct'
 
 // Define an auto-incrementing unique id.
@@ -21,16 +22,13 @@ const User = object({
 })
 
 // Define data to be validated.
-const data = {
+let data = {
   name: 'Jane Smith',
   email: 'jane@example.com',
 }
 
-// Validate the data and store the return value in the `user` variable. Any
-// property that wasn't defined will be set to its default.
-const user = assert(data, User, true)
-console.log(user)
-
+// Coerce the data using the struct's default values.
+data = coerce(data, User)
 // {
 //   id: 1,
 //   name: 'Jane Smith',
@@ -39,3 +37,7 @@ console.log(user)
 //   is_admin: false,
 //   created_at: Date,
 // }
+
+// Validate the data. In this case the data is valid once it has had the
+// defaults applied, so it won't throw.
+assert(data, User)
