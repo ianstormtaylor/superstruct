@@ -7,5 +7,5 @@ export const data = ''
 export const error = {
   path: [],
   value: '',
-  type: 'Constrained<string>',
+  type: 'string & Length<1,5>',
 }

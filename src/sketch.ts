@@ -6,99 +6,114 @@ import {
   array,
   partial,
   date,
+  defaulted,
   union,
   intersection,
   tuple,
   type,
+  refinement,
 } from './structs'
-import { Struct, assert, is, constrain } from './struct'
-
-const input = 0 as unknown
+import { struct, assert, is } from './struct'
 
 {
-  const Url = new Struct<string>({
-    type: 'Url',
-    validate: (value, fail) => {
-      return typeof value === 'string' && value.startsWith('http')
-        ? []
-        : [fail()]
-    },
+  const x: unknown = null
+  const Url = struct<string>('Url', value => {
+    return typeof value === 'string' && value.startsWith('http')
   })
 
-  const value = assert(input, Url, true)
+  assert(x, Url)
+  x
 }
 
 {
-  const Email = constrain(string(), (value, fail) => {
-    return value.includes('@') ? [] : [fail()]
-  })
-
-  const value = assert(input, Email, true)
+  const x: unknown = null
+  const Email = refinement(string(), 'Email', value => value.includes('@'))
+  assert(x, Email)
+  x
 }
 
 {
+  const x: unknown = null
   const String = string()
-  const value = assert(input, String, true)
+  assert(x, String)
+  x
 }
 
 {
+  const x: unknown = null
   const Number = number()
-  assert(input, Number)
-  input
+  assert(x, Number)
+  x
 }
 
 {
+  const x: unknown = null
   const User = object({ name: string() })
 
-  if (is(input, User)) {
-    input
+  if (is(x, User)) {
+    x
   }
 }
 
 {
+  const x: unknown = null
   const Path = array(number())
 
-  if (is(input, Path, true)) {
-    input
+  if (is(x, Path)) {
+    x
   }
 }
 
 {
+  const x: unknown = null
   const Article = partial({ name: string() })
-  const value = assert(input, Article, true)
+  assert(x, Article)
+  x
 }
 
 {
+  const x: unknown = null
   const Or = union([string(), number()])
-  const value = assert(input, Or, true)
+  assert(x, Or)
+  x
 }
 
 {
+  const x: unknown = null
   const And = intersection([string(), number()])
-  const value = assert(input, And, true)
+  assert(x, And)
+  x
 }
 
 {
+  const x: unknown = null
   const Tuple = tuple([string(), number()])
-  const value = assert(input, Tuple, true)
+  assert(x, Tuple)
+  x
 }
 
 {
+  const x: unknown = null
   const Struct = type({ a: string() })
-  const value = assert(input, Struct, true)
+  assert(x, Struct)
+  x
 }
 
 {
-  const Optional = optional(object({ name: string() }), { name: '' })
-  const value = assert(input, Optional, true)
+  const x: unknown = null
+  const Optional = defaulted(object({ name: string() }), { name: '' })
+  assert(x, Optional)
+  x
 }
 
 {
+  const x: unknown = null
   const Article = object({
-    title: optional(string(), 'Untitled'),
+    title: defaulted(string(), 'Untitled'),
     content: string(),
-    published_at: optional(date(), () => new Date()),
+    published_at: optional(date()),
   })
 
-  const value = assert(input, Article, true)
+  assert(x, Article)
+  x
 }

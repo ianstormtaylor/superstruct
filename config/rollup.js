@@ -17,7 +17,6 @@ export default {
       exclude: 'node_modules/**',
       sourceMap: true,
       babelrc: false,
-      runtimeHelpers: true,
       extensions: ['.ts'],
       presets: [
         '@babel/typescript',

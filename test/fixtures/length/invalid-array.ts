@@ -7,5 +7,5 @@ export const data = []
 export const error = {
   path: [],
   value: [],
-  type: 'Constrained<Array<number>>',
+  type: 'Array<number> & Length<1,5>',
 }

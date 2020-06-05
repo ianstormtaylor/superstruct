@@ -19,7 +19,6 @@ config.plugins = [
     exclude: 'node_modules/**',
     sourceMap: true,
     babelrc: false,
-    runtimeHelpers: true,
     extensions: ['.ts'],
     presets: [
       '@babel/typescript',
@@ -37,7 +36,6 @@ config.plugins = [
     ],
     plugins: [
       'babel-plugin-dev-expression',
-      '@babel/plugin-transform-runtime',
       '@babel/plugin-proposal-object-rest-spread',
       '@babel/plugin-proposal-class-properties',
     ],
