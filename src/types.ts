@@ -1,14 +1,5 @@
-import {
-  Struct,
-  StructType,
-  struct,
-  coerce,
-  toFailures,
-  StructContext,
-} from './struct'
-
-type StructRecord<T> = Record<string, Struct<T>>
-type StructTuple<T> = { [K in keyof T]: Struct<T[K]> }
+import { Struct, StructType, coerce, StructContext } from './struct'
+import { StructRecord, StructTuple } from './utils'
 
 /**
  * Validate any value.
@@ -22,10 +13,14 @@ export function any(): Struct<any> {
  * Validate that an array of values of a specific type.
  */
 
-export function array<T>(Element: Struct<T>): Struct<T[]> {
-  return struct(
-    `Array<${Element.type}>`,
-    function*(value, ctx) {
+export function array<T>(Element: Struct<T>): Struct<T[], Struct<T>> {
+  return new Struct({
+    type: `Array<${Element.type}>`,
+    schema: Element,
+    coercer: value => {
+      return Array.isArray(value) ? value.map(v => coerce(v, Element)) : value
+    },
+    validator: function*(value, ctx) {
       if (!Array.isArray(value)) {
         yield ctx.fail()
         return
@@ -35,10 +30,7 @@ export function array<T>(Element: Struct<T>): Struct<T[]> {
         yield* ctx.check(v, Element, value, i)
       }
     },
-    value => {
-      return Array.isArray(value) ? value.map(v => coerce(v, Element)) : value
-    }
-  )
+  })
 }
 
 /**
@@ -52,23 +44,6 @@ export function boolean(): Struct<boolean> {
 }
 
 /**
- * Augment a `Struct` to add an additional coercion step to its input.
- */
-
-export function coercion<T>(
-  struct: Struct<T>,
-  coercer: Struct<T>['coercer']
-): Struct<T> {
-  const fn = struct.coercer
-  return new Struct({
-    ...struct,
-    coercer: value => {
-      return fn(coercer(value))
-    },
-  })
-}
-
-/**
  * Validate that `Date` values.
  *
  * Note: this also ensures that the value is *not* an invalid `Date` object,
@@ -78,45 +53,6 @@ export function coercion<T>(
 export function date(): Struct<Date> {
   return struct('Date', value => {
     return value instanceof Date && !isNaN(value.getTime())
-  })
-}
-
-/**
- * Augment a struct to coerce a default value for missing values.
- *
- * Note: You must use `coerce(value, Struct)` on the value before validating it
- * to have the value defaulted!
- */
-
-export function defaulted<T>(
-  S: Struct<T>,
-  fallback: any,
-  strict?: true
-): Struct<T> {
-  return coercion(S, x => {
-    const f = typeof fallback === 'function' ? fallback() : fallback
-
-    if (x === undefined) {
-      return f
-    }
-
-    if (strict !== true && isPlainObject(x) && isPlainObject(f)) {
-      const ret = { ...x }
-      let changed = false
-
-      for (const key in f) {
-        if (ret[key] === undefined) {
-          ret[key] = f[key]
-          changed = true
-        }
-      }
-
-      if (changed) {
-        return ret
-      }
-    }
-
-    return x
   })
 }
 
@@ -143,6 +79,16 @@ export function enums<T>(values: T[]): Struct<T> {
 }
 
 /**
+ * Validate that a value is a function.
+ */
+
+export function func(): Struct<Function> {
+  return struct('Function', value => {
+    return typeof value === 'function'
+  })
+}
+
+/**
  * Validate that a value is an instance of a class.
  */
 
@@ -151,16 +97,6 @@ export function instance<T extends { new (...args: any): any }>(
 ): Struct<InstanceType<T>> {
   return struct(`InstanceOf<${Class.name}>`, value => {
     return value instanceof Class
-  })
-}
-
-/**
- * Validate that a value is an integer.
- */
-
-export function integer(): Struct<number> {
-  return struct(`integer`, value => {
-    return typeof value === 'number' && Number.isInteger(value)
   })
 }
 
@@ -206,21 +142,6 @@ export function lazy<T>(fn: () => Struct<T>): Struct<T> {
 }
 
 /**
- * Augment a string or array struct to constrain its length to being between a
- * minimum and maximum size.
- */
-
-export function length<T extends string | any[]>(
-  S: Struct<T>,
-  min: number,
-  max: number = Infinity
-): Struct<T> {
-  return refinement(S, `${S.type} & Length<${min},${max}>`, value => {
-    return min < value.length && value.length < max
-  })
-}
-
-/**
  * Validate that a value is a specific constant.
  */
 
@@ -234,9 +155,7 @@ export function literal<T>(constant: T): Struct<T> {
  * Validate that a value is a map with specific key and value entries.
  */
 
-export function map<K, V>(Structs: StructTuple<[K, V]>): Struct<Map<K, V>> {
-  const [Key, Value] = Structs
-
+export function map<K, V>(Key: Struct<K>, Value: Struct<V>): Struct<Map<K, V>> {
   return struct(`Map<${Key.type},${Value.type}>`, function*(value, ctx) {
     if (!(value instanceof Map)) {
       yield ctx.fail()
@@ -274,13 +193,14 @@ export function number(): Struct<number> {
 
 export function object<V extends StructRecord<any>>(
   Structs: V
-): Struct<{ [K in keyof V]: StructType<V[K]> }> {
+): Struct<{ [K in keyof V]: StructType<V[K]> }, V> {
   const knowns = Object.keys(Structs)
   const Never = never()
-
-  return struct(
-    `Object<{${knowns.join(',')}}>`,
-    function*(value, ctx) {
+  return new Struct({
+    type: `Object<{${knowns.join(',')}}>`,
+    schema: Structs,
+    coercer: createObjectCoercer(Structs),
+    validator: function*(value, ctx) {
       if (typeof value !== 'object' || value == null) {
         yield ctx.fail()
         return
@@ -300,28 +220,7 @@ export function object<V extends StructRecord<any>>(
         yield* ctx.check(v, Never, value, key)
       }
     },
-    value => {
-      if (typeof value !== 'object' || value == null) {
-        return value
-      }
-
-      const ret = {}
-      const unknowns = new Set(Object.keys(value))
-
-      for (const key of knowns) {
-        unknowns.delete(key)
-        const Value = Structs[key]
-        const v = value[key]
-        ret[key] = coerce(v, Value)
-      }
-
-      for (const key of unknowns) {
-        ret[key] = value[key]
-      }
-
-      return ret
-    }
-  )
+  })
 }
 
 /**
@@ -338,49 +237,44 @@ export function optional<T>(S: Struct<T>): Struct<T | undefined> {
  * Validate that a partial object with specific entry values.
  */
 
-export function partial<V extends StructRecord<any>>(
-  Structs: V
+export function partial<T, V extends StructRecord<any>>(
+  Structs: V | Struct<T, V>
 ): Struct<{ [K in keyof V]?: StructType<V[K]> }> {
+  if (Structs instanceof Struct) {
+    Structs = Structs.schema
+  }
+
   const knowns = Object.keys(Structs)
   const Never = never()
-
-  return struct(`Partial<{${knowns.join(',')}}>`, function*(value, ctx) {
-    if (typeof value !== 'object' || value == null) {
-      yield ctx.fail()
-      return
-    }
-
-    const unknowns = new Set(Object.keys(value))
-
-    for (const key of knowns) {
-      unknowns.delete(key)
-
-      if (!(key in value)) {
-        continue
+  return new Struct({
+    type: `Partial<{${knowns.join(',')}}>`,
+    schema: Structs,
+    coercer: createObjectCoercer(Structs),
+    validator: function*(value, ctx) {
+      if (typeof value !== 'object' || value == null) {
+        yield ctx.fail()
+        return
       }
 
-      const Value = Structs[key]
-      const v = value[key]
-      yield* ctx.check(v, Value, value, key)
-    }
+      const unknowns = new Set(Object.keys(value))
 
-    for (const key of unknowns) {
-      const v = value[key]
-      yield* ctx.check(v, Never, value, key)
-    }
-  })
-}
+      for (const key of knowns) {
+        unknowns.delete(key)
 
-/**
- * Refine a string struct to match a specific regexp pattern.
- */
+        if (!(key in value)) {
+          continue
+        }
 
-export function pattern<T extends string>(
-  S: Struct<T>,
-  regexp: RegExp
-): Struct<T> {
-  return refinement(S, `${S.type} & Pattern<${regexp.source}>`, value => {
-    return regexp.test(value)
+        const Value = Structs[key]
+        const v = value[key]
+        yield* ctx.check(v, Value, value, key)
+      }
+
+      for (const key of unknowns) {
+        const v = value[key]
+        yield* ctx.check(v, Never, value, key)
+      }
+    },
   })
 }
 
@@ -390,10 +284,9 @@ export function pattern<T extends string>(
  */
 
 export function record<K extends string | number, V>(
-  Structs: StructTuple<[K, V]>
+  Key: Struct<K>,
+  Value: Struct<V>
 ): Struct<Record<K, V>> {
-  const [Key, Value] = Structs
-
   return struct(`Record<${Key.type},${Value.type}>`, function*(value, ctx) {
     if (typeof value !== 'object' || value == null) {
       yield ctx.fail()
@@ -405,26 +298,6 @@ export function record<K extends string | number, V>(
       yield* ctx.check(k, Key, value, k)
       yield* ctx.check(v, Value, value, k)
     }
-  })
-}
-
-/**
- * Augment a `Struct` to add an additional refinement to the validation.
- */
-
-export function refinement<T>(
-  struct: Struct<T>,
-  type: string,
-  refiner: Struct<T>['refiner']
-): Struct<T> {
-  const fn = struct.refiner
-  return new Struct({
-    ...struct,
-    type,
-    *refiner(value, fail) {
-      yield* toFailures(fn(value, fail), fail)
-      yield* toFailures(refiner(value, fail), fail)
-    },
   })
 }
 
@@ -461,13 +334,14 @@ export function string(): Struct<string> {
 }
 
 /**
- * Coerce a string value to ensure it is trimmed.
+ * Define a `Struct` instance with a type and validation function.
  */
 
-export function trimmed<T extends string>(S: Struct<T>): Struct<T> {
-  return coercion(S, x => {
-    return typeof x === 'string' ? x.trim() : x
-  })
+export function struct<T>(
+  type: string,
+  validator: Struct<T>['validator']
+): Struct<T, null> {
+  return new Struct({ type, validator, schema: null })
 }
 
 /**
@@ -535,14 +409,6 @@ export function type<V extends StructRecord<any>>(
 }
 
 /**
- * Validate an unknown value, accepting anything but not narrowing the type.
- */
-
-export function unknown(): Struct<unknown> {
-  return struct('unknown', () => true)
-}
-
-/**
  * Validate that a value is one of a set of types.
  */
 
@@ -575,19 +441,6 @@ export function union(Structs: Struct<any>[]): any {
 }
 
 /**
- * Check if a value is a plain object.
- */
-
-function isPlainObject(value: unknown): value is Object {
-  if (Object.prototype.toString.call(value) !== '[object Object]') {
-    return false
-  }
-
-  const prototype = Object.getPrototypeOf(value)
-  return prototype === null || prototype === Object.prototype
-}
-
-/**
  * Convert a value to a literal string.
  */
 
@@ -595,4 +448,36 @@ function toLiteralString(value: any): string {
   return typeof value === 'string'
     ? `"${value.replace(/"/g, '"')}"`
     : `${value}`
+}
+
+/**
+ * Coerce the values of an object-like struct.
+ */
+
+function createObjectCoercer<V extends StructRecord<any>>(
+  Structs: V
+): (value: unknown) => unknown {
+  const knowns = Object.keys(Structs)
+
+  return value => {
+    if (typeof value !== 'object' || value == null) {
+      return value
+    }
+
+    const ret = {}
+    const unknowns = new Set(Object.keys(value))
+
+    for (const key of knowns) {
+      unknowns.delete(key)
+      const Value = Structs[key]
+      const v = value[key]
+      ret[key] = coerce(v, Value)
+    }
+
+    for (const key of unknowns) {
+      ret[key] = value[key]
+    }
+
+    return ret
+  }
 }

@@ -1,6 +1,6 @@
 import { map, string, number } from '../../..'
 
-export const Struct = map([string(), number()])
+export const Struct = map(string(), number())
 
 export const data = 'invalid'
 

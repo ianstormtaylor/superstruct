@@ -1,30 +1,34 @@
+import { toFailures } from './utils'
+
 /**
  * `Struct` objects encapsulate the schema for a specific data type (with
  * optional coercion). You can then use the `assert`, `is` or `validate` helpers
  * to validate unknown data against a struct.
  */
 
-export class Struct<T> {
+export class Struct<T, S = any> {
   type: string
+  schema: S
   coercer: (value: unknown) => unknown
   validator: (value: unknown, context: StructContext) => StructResult
   refiner: (value: T, context: StructContext) => StructResult
 
-  constructor(
-    props: {
-      type?: Struct<T>['type']
-      coercer?: Struct<T>['coercer']
-      validator?: Struct<T>['validator']
-      refiner?: Struct<T>['refiner']
-    } = {}
-  ) {
+  constructor(props: {
+    type: Struct<T>['type']
+    schema: S
+    coercer?: Struct<T>['coercer']
+    validator?: Struct<T>['validator']
+    refiner?: Struct<T>['refiner']
+  }) {
     const {
-      type = 'unknown',
+      type,
+      schema,
       coercer = (value: unknown) => value,
       validator = () => [],
       refiner = () => [],
     } = props
     this.type = type
+    this.schema = schema
     this.coercer = coercer
     this.validator = validator
     this.refiner = refiner
@@ -113,19 +117,6 @@ export type StructResult = boolean | Iterable<StructFailure>
 export type StructType<T extends Struct<any>> = Parameters<T['refiner']>[0]
 
 /**
- * Define a `Struct` instance with a type and validation function.
- */
-
-export function struct<T>(
-  type: string,
-  validator: Struct<T>['validator'],
-  coercer: Struct<T>['coercer'] = x => x,
-  refiner: Struct<T>['refiner'] = () => []
-): Struct<T> {
-  return new Struct({ type, validator, coercer, refiner })
-}
-
-/**
  * Assert that a value passes a `Struct`, throwing if it doesn't.
  */
 
@@ -138,6 +129,16 @@ export function assert<T>(
   if (result[0]) {
     throw result[0]
   }
+}
+
+/**
+ * Coerce a value with the coercion logic of `Struct` and validate it.
+ */
+
+export function coerce<T>(value: unknown, struct: Struct<T>): T {
+  const ret = struct.coercer(value)
+  assert(ret, struct)
+  return ret
 }
 
 /**
@@ -172,7 +173,7 @@ export function validate<T>(
  * Check a value against a `Struct`, returning an iterable of failures.
  */
 
-export function* check<T>(
+function* check<T>(
   value: unknown,
   struct: Struct<T>,
   path: any[] = [],
@@ -202,30 +203,5 @@ export function* check<T>(
     yield* failures
   } else {
     yield* toFailures(struct.refiner(value as T, ctx), ctx)
-  }
-}
-
-/**
- * Coerce a value with a `Struct`.
- */
-
-export function coerce<T>(value: unknown, struct: Struct<T>) {
-  return struct.coercer(value)
-}
-
-/**
- * Convert a validation result to an iterable of failures.
- */
-
-export function toFailures(
-  result: StructResult,
-  context: StructContext
-): Iterable<StructFailure> {
-  if (result === true) {
-    return []
-  } else if (result === false) {
-    return [context.fail()]
-  } else {
-    return result
   }
 }

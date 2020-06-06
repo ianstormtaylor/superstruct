@@ -1,6 +1,6 @@
 import { record, string, number } from '../../..'
 
-export const Struct = record([string(), number()])
+export const Struct = record(string(), number())
 
 export const data = {
   a: 'a',

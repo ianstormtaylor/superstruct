@@ -2,7 +2,7 @@ import assert from 'assert'
 import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
-import { validate, coerce as coerceValue } from '..'
+import { assert as assertValue, coerce as coerceValue } from '..'
 
 describe('superstruct', () => {
   const kindsDir = resolve(__dirname, 'fixtures')
@@ -24,13 +24,19 @@ describe('superstruct', () => {
         const { Struct, data, coerce, only, skip, output, error } = module
         const run = only ? it.only : skip ? it.skip : it
         run(test, () => {
-          let input = data
+          let actual
+          let err
 
-          if (coerce) {
-            input = coerceValue(input, Struct)
+          try {
+            if (coerce) {
+              actual = coerceValue(data, Struct)
+            } else {
+              assertValue(data, Struct)
+              actual = data
+            }
+          } catch (e) {
+            err = e
           }
-
-          const [err, actual] = validate(input, Struct)
 
           if ('output' in module) {
             if (err) {
