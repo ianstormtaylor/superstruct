@@ -1,18 +1,17 @@
-import { struct } from 'superstruct'
+import { assert, object, number, string } from 'superstruct'
 
-// Define a `user` struct.
-const User = struct({
-  id: 'number',
-  name: 'string',
+// Define a `User` struct.
+const User = object({
+  id: number(),
+  name: string(),
 })
 
-// Define an `article` struct, composing the user struct in the article's
+// Define an `Article` struct, composing the `User` struct in the article's
 // `author` property.
-const Article = struct({
-  id: 'number',
-  title: 'string',
-  created_at: 'date',
-  published_at: 'date?',
+const Article = object({
+  id: number(),
+  title: string(),
+  published_at: date(),
   author: User,
 })
 
@@ -20,7 +19,7 @@ const Article = struct({
 const data = {
   id: 1,
   title: 'Hello, World!',
-  created_at: new Date(),
+  published_at: new Date(),
   author: {
     id: 1,
     name: 'Jane Smith',
@@ -28,11 +27,4 @@ const data = {
 }
 
 // Validate the data. In this case, the data is valid, so it won't throw.
-try {
-  Article(data)
-  console.log('Valid!')
-} catch (e) {
-  throw e
-}
-
-// 'Valid!'
+assert(data, Article)

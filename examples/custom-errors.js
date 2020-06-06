@@ -1,10 +1,10 @@
-import { struct } from 'superstruct'
+import { assert, number, object, string } from 'superstruct'
 
 // Define a struct to validate with.
-const User = struct({
-  id: 'number',
-  name: 'string',
-  email: 'string',
+const User = object({
+  id: number(),
+  name: string(),
+  email: string(),
 })
 
 // Define data to be validated.
@@ -17,8 +17,7 @@ const data = {
 // Validate the data. In this case the `name` property is invalid, so an error
 // will be thrown that you can catch and customize to your needs.
 try {
-  User(data)
-  console.log('Valid!')
+  assert(data, User)
 } catch (e) {
   const { path, value, type } = e
   const key = path[0]
@@ -29,7 +28,7 @@ try {
     throw error
   }
 
-  if (type === undefined) {
+  if (type === 'never') {
     const error = new Error(`user_attribute_unknown`)
     error.attribute = key
     throw error

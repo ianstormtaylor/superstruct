@@ -44,19 +44,18 @@ But Superstruct is designed for validating data at runtime, so it throws (or ret
 
 ### Usage
 
-Superstruct exports a `struct` factory for creating structs that can validate data against a specific schema:
+Superstruct allows you to define the shape of data you want to validate:
 
 ```js
-import { struct } from 'superstruct'
+import { assert, object, number, string, boolean, array } from 'superstruct'
 
-const Article = struct({
-  id: 'number',
-  title: 'string',
-  is_published: 'boolean?',
-  tags: ['string'],
-  author: {
-    id: 'number',
-  },
+const Article = object({
+  id: number(),
+  title: string(),
+  tags: array(string()),
+  author: object({
+    id: number(),
+  }),
 })
 
 const data = {
@@ -68,41 +67,79 @@ const data = {
   },
 }
 
-const article = Article(data)
-
-// This will throw when the data is invalid, and return the data otherwise.
-// If you'd rather not throw, use `Struct.validate()` or `Struct.test()`.
+assert(data, Article)
+// This will throw an error when the data is invalid.
+// If you'd rather not throw, you can use `is()` or `validate()`.
 ```
 
-It recognizes all the native JavaScript types out of the box. But you can also define your own custom data types—specific to your application's requirements—by using the `superstruct` export:
+Superstruct comes with validators for all common JavaScript data types out of the box. And you can also define your own custom validations:
 
 ```js
-import { superstruct } from 'superstruct'
+import { is, struct, object, string } from 'superstruct'
 import isUuid from 'is-uuid'
 import isEmail from 'is-email'
 
-const struct = superstruct({
-  types: {
-    uuid: value => isUuid.v4(value),
-    email: value => isEmail(value) && value.length < 256,
-  },
-})
+const Email = struct('Email', isEmail)
+const Uuid = struct('Uuid', isUuid.v4)
 
-const User = struct({
-  id: 'uuid',
-  email: 'email',
-  is_admin: 'boolean?',
+const User = object({
+  id: Uuid,
+  email: Email,
+  name: string(),
 })
 
 const data = {
   id: 'c8d63140-a1f7-45e0-bfc6-df72973fea86',
   email: 'jane@example.com',
+  name: 'Jane',
 }
 
-const user = User(data)
+if (is(data, User)) {
+  // Your data is guaranteed to be valid in this block.
+}
 ```
 
-Superstruct supports more complex use cases too like defining list or scalar structs, applying default values, composing structs inside each other, returning errors instead of throwing them, etc. For more information read the full [Documentation](#documentation).
+Superstruct can also handle coercion of your data before validating it, for example to mix in default values (or trimming, parsing, sanitizing, etc.):
+
+```ts
+import { assert, coerce, object, number, string, defaulted } from 'superstruct'
+
+const User = object({
+  id: defaulted(number(), () => i++),
+  name: string(),
+})
+
+const data = {
+  name: 'Jane',
+}
+
+// You can apply the defaults to your data while validating.
+const user = coerce(data, User)
+// {
+//   id: 1,
+//   name: 'Jane',
+// }
+```
+
+And if you use TypeScript, Superstruct automatically ensures that your data has proper typings whenever you validate it:
+
+```ts
+import { is, object, number, string } from 'superstruct'
+
+const User = object({
+  id: number(),
+  name: string()
+})
+
+const data: unknown = { ... }
+
+if (is(data, User)) {
+  // TypeScript knows the shape of `data` here, so it is safe to access
+  // properties like `data.id` and `data.name`.
+}
+```
+
+Superstruct supports more complex use cases too like defining arrays or nested objects, composing structs inside each other, returning errors instead of throwing them, and more! For more information read the full [Documentation](#documentation).
 
 <br/>
 
@@ -138,13 +175,9 @@ Which brings me to how Superstruct solves these issues...
 
 3. **Composable interfaces.** Superstruct interfaces are composable, so you can break down commonly-repeated pieces of data into components, and compose them to build up the more complex objects.
 
-4. **Terse schemas.** The schemas in Superstruct are designed to be extremely terse and expressive. This makes them very easy to read and write, encouraging you to have full data validation coverage.
+4. **Useful errors.** The errors that Superstruct throws contain all the information you need to convert them into your own application-specific errors easy, which means more helpful errors for your end users!
 
-5. **Compiled validators.** Superstruct does the work of compiling its schemas up front, so that it doesn't spend time performing expensive tasks for every call to the validation functions in your hot code paths.
-
-6. **Useful errors.** The errors that Superstruct throws contain all the information you need to convert them into your own application-specific errors easy, which means more helpful errors for your end users!
-
-7. **Familiar API.** The Superstruct API was heavily inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/). If you're familiar with any of those, then its schema definition API will feel very natural to use, so you can get started quickly.
+5. **Familiar API.** The Superstruct API was heavily inspired by [Typescript](https://www.typescriptlang.org/docs/handbook/basic-types.html), [Flow](https://flow.org/en/docs/types/), [Go](https://gobyexample.com/structs), and [GraphQL](http://graphql.org/learn/schema/). If you're familiar with any of those, then its schema definition API will feel very natural to use, so you can get started quickly.
 
 <br/>
 
@@ -167,6 +200,7 @@ Superstruct's API is very flexible, allowing it to be used for a variety of use 
 - [Composing Structs](./examples/composing-structs.js)
 - [Throwing Errors](./examples/throwing-errors.js)
 - [Returning Errors](./examples/returning-errors.js)
+- [Testing Values](./examples/testing-values.js)
 - [Custom Errors](./examples/custom-errors.js)
 
 <br/>
@@ -183,12 +217,48 @@ Read the getting started guide to familiarize yourself with how Superstruct work
   - [Throwing Customized Errors](./docs/guide.md#throwing-customized-errors)
   - [Validating Complex Shapes](./docs/guide.md#validating-complex-shapes)
   - [Composing Structs](./docs/guide.md#composing-structs)
-- [**Reference**](https://superstructjs.org)
-  - [`Struct`](https://superstructjs.org/interfaces/struct)
-  - [`Superstruct`](https://superstructjs.org/interfaces/superstruct)
-  - [`Types`](https://superstructjs.org#types)
-  - [`StructError`](https://superstructjs.org/classes/structerror)
-  - [`isStruct`](https://superstructjs.org#isstruct)
+- [**Reference**](./docs/reference.md)
+  - [Validation](./docs/reference.md#validation)
+    - [`assert`](./docs/reference.md#assert)
+    - [`coerce`](./docs/reference.md#coerce)
+    - [`is`](./docs/reference.md#is)
+    - [`validate`](./docs/reference.md#validate)
+  - [Types](./docs/reference.md#types)
+    - [`any`](./docs/reference.md#any)
+    - [`array`](./docs/reference.md#array)
+    - [`boolean`](./docs/reference.md#boolean)
+    - [`date`](./docs/reference.md#date)
+    - [`enums`](./docs/reference.md#enums)
+    - [`instance`](./docs/reference.md#instance)
+    - [`intersection`](./docs/reference.md#intersection)
+    - [`literal`](./docs/reference.md#literal)
+    - [`map`](./docs/reference.md#map)
+    - [`never`](./docs/reference.md#never)
+    - [`number`](./docs/reference.md#number)
+    - [`object`](./docs/reference.md#object)
+    - [`optional`](./docs/reference.md#optional)
+    - [`partial`](./docs/reference.md#partial)
+    - [`record`](./docs/reference.md#record)
+    - [`set`](./docs/reference.md#set)
+    - [`string`](./docs/reference.md#string)
+    - [`tuple`](./docs/reference.md#tuple)
+    - [`type`](./docs/reference.md#type)
+    - [`union`](./docs/reference.md#union)
+    - [Custom Types](./docs/reference.md#custom-types)
+  - [Refinements](./docs/reference.md#refinements)
+    - [`length`](./docs/reference.md#length)
+    - [`pattern`](./docs/reference.md#pattern)
+    - [Custom Refinements](./docs/reference.md#custom-refinements)
+  - [Coercions](./docs/reference.md#coercions)
+    - [`defaulted`](./docs/reference.md#defaulted)
+    - [`masked`](./docs/reference.md#masked)
+    - [Custom Coercions](./docs/reference.md#custom-coercions)
+  - [Errors](./docs/reference.md#errors)
+    - [`StructError`](./docs/reference.md#structerror)
+    - [Error Properties](./docs/reference.md#error-properties)
+    - [Multiple Errors](./docs/reference.md#multiple-errors)
+  - [Utilities](./docs/reference.md#utilities)
+    - [`StructType`](./docs/reference.md#structtype)
 - [**Resources**](/docs/resources.md)
 
 <br/>

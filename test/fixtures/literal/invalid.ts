@@ -1,11 +1,11 @@
-import { struct } from '../../..'
+import { literal } from '../../..'
 
-export const Struct = struct.literal(42)
+export const Struct = literal(42)
 
 export const data = false
 
 export const error = {
   path: [],
   value: false,
-  type: '42',
+  type: 'Literal<42>',
 }

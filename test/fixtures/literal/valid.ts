@@ -1,6 +1,6 @@
-import { struct } from '../../..'
+import { literal } from '../../..'
 
-export const Struct = struct.literal(42)
+export const Struct = literal(42)
 
 export const data = 42
 

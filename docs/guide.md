@@ -9,6 +9,8 @@
   - [Throwing Customized Errors](#throwing-customized-errors)
   - [Validating Complex Shapes](#validating-complex-shapes)
   - [Composing Structs](#composing-structs)
+  - [Refining Types](#refining-types)
+  - [Coercing Values](#coercing-values)
 
 ## Installing Superstruct
 
@@ -24,8 +26,8 @@ npm install --save superstruct
 
 And then you can import it into your code base:
 
-```js
-import { struct, superstruct } from 'superstruct'
+```ts
+import { assert } from 'superstruct'
 ```
 
 If you would rather import Superstruct with a `<script>` tag, you can use the bundled build:
@@ -40,7 +42,7 @@ This will expose the `Superstruct` global with the exported functions.
 
 Once you've got Superstruct installed, the next step is to create a struct for some data you want validate. In our case, lets start with data describing a user:
 
-```js
+```ts
 const data = {
   id: 42,
   name: 'Jane Smith',
@@ -50,80 +52,83 @@ const data = {
 
 We'll import Superstruct and create a struct with it:
 
-```js
-import { struct } from 'superstruct'
+```ts
+import { object, number, string } from 'superstruct'
 
-const User = struct({
-  id: 'number',
-  name: 'string',
-  email: 'string',
+const User = object({
+  id: number(),
+  name: string(),
+  email: string(),
 })
 ```
 
-Now we can use our `User` struct to validate the data. The easiest way to do this is to just call `User` as a function, like so:
+Now we can use our `User` struct to validate the data. The easiest way to do this is to use the `assert` helper, like so:
 
+```ts
+import { assert } from 'superstruct'
+
+assert(data, User)
 ```
-User(data)
-```
 
-This will either throw an error if the data is invalid, or return the validated data if the data is valid.
-
-In this case, the data is valid, so no error is thrown.
+This will throw an error if the data is invalid. In this case, the data is valid, so no error is thrown.
 
 But what if we pass it an invalid user object, where the name is not a string:
 
-```js
+```ts
 const data = {
   id: 43,
   name: false,
   email: 'jane@example.com',
 }
 
-User(data)
+assert(data, User)
 
 // StructError: 'Expected a value of type "string" for `name` but received `false`.' {
 //   type: 'string',
 //   value: false,
 //   branch: [{ ... }, false],
 //   path: ['name'],
+//   failures: [...],
 // }
 ```
 
 An error was thrown! That's what we expected.
 
-If you'd rather have the error returned instead of thrown, you can use the `Struct.validate()` method. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `Struct.test()` method.
+If you'd rather have the error returned instead of thrown, you can use the `validate` helper. Or, if you'd just like receive a boolean of whether the data is valid or not, use the `is` helper.
 
-> 🤖 Check out the [`Struct` interface](https://superstructjs.org/interfaces/struct) for more information.
+> 🤖 Check out the [Validation reference](https://superstructjs.org/interfaces/struct) for more information.
 
 ## Making Values Optional
 
 What about when you have a property like `is_admin` that only appears on a few special users? In that case you can make certain properties optional, like so:
 
-```js
-const User = struct({
-  id: 'number',
-  name: 'string',
-  email: 'string',
-  is_admin: 'boolean?',
+```ts
+import { optional } from 'superstruct'
+
+const User = object({
+  id: number(),
+  name: string(),
+  email: string(),
+  is_admin: optional(boolean()),
 })
 ```
 
-That `'boolean?'` with a question mark at the end means that the value can also be `undefined` and it will still be considered valid.
+Wrapping a struct in `optional` means that the value can also be `undefined` and it will still be considered valid.
 
 So now both of these pieces of data would be valid:
 
-```js
-User({
-  id: 43,
-  name: 'Jane Smith',
-  email: 'jane@example.com',
-})
-
-User({
+```ts
+const jane = {
   id: 43,
   name: 'Jane Smith',
   email: 'jane@example.com',
   is_admin: true,
+})
+
+const jack = {
+  id: 44,
+  name: 'Jack Smith',
+  email: 'jack@example.com',
 })
 ```
 
@@ -131,33 +136,38 @@ User({
 
 In the case of optional values, you might also want to define a default value for a property if the input is `undefined`. This is helpful for data consistency. For example, you can make the new `is_admin` property default to `false`.
 
-To do that, pass a second argument into `struct` which contains the defaults:
+To allow for these use cases, Superstruct has a concept called "coercion", which allows you to encode specific logic about how to transform a piece of data before validating it.
 
-```js
-const User = struct(
-  {
-    id: 'number',
-    name: 'string',
-    email: 'string',
-    is_admin: 'boolean?',
-  },
+To apply default values, you can use the `defaulted` coercion:
+
+```ts
+import { defaulted } from 'superstruct'
+
+const User = defaulted(
+  object({
+    id: number(),
+    name: string(),
+    email: string(),
+    is_admin: optional(boolean()),
+  }),
   {
     is_admin: false,
   }
 )
 ```
 
-To receive the data with the defaults applied, you'll need to store the return value from calling `User()`. So your validation becomes:
+To receive the data with the defaults applied, you'll need to use `coerce` to retrieve the coerced value:
 
-```js
+```ts
+import { coerce } from 'superstruct'
+
 const data = {
   id: 43,
   name: 'Jane Smith',
   email: 'jane@example.com',
 }
 
-const result = User(data)
-
+const user = coerce(data, User)
 // {
 //   id: '43',
 //   name: 'Jane Smith',
@@ -166,57 +176,45 @@ const result = User(data)
 // }
 ```
 
-The original `data` did not define an `is_admin` property, but in the `result` returned from the validation the default has been applied.
+The original `data` did not define an `is_admin` property, but after running the struct's coercion logic the default was applied. If the value had been invalid, an error would have been thrown.
 
 ## Defining Custom Data Types
 
-Next up, you might have been wondering about the `email` property. So far we've just been using a `'string'` type for it, which means that any old string will pass validation.
+Next up, you might have been wondering about the `email` property. So far we've just defined it as a string, which means that any old string will pass validation.
 
 But we'd really like to validate that the email is a valid email address.
 
-The `struct` factory that ships with Superstruct by default recognizes all of the native JavaScript data types in its definitions. To define custom data types, we can use the [`Superstruct` reference](https://superstructjs.org/interfaces/superstruct) export instead...
+To define custom data types, we can use the [`struct`](https://superstructjs.org/interfaces/superstruct) factory...
 
-```js
-import { superstruct } from 'superstruct'
+```ts
+import { struct } from 'superstruct'
 import isEmail from 'is-email'
 
-const struct = superstruct({
-  types: {
-    email: value => isEmail(value),
-  },
-})
+const Email = struct('Email', value => isEmail(value))
 ```
-
-The `superstruct` super-factory returns your very own `struct` factory, that recognizes all of the built-in types, as wel as any custom data types you configure.
 
 Now we can define structs know about the `'email'` type:
 
-```js
-const User = struct(
-  {
-    id: 'number',
-    name: 'string',
-    email: 'email',
-    is_admin: 'boolean?',
-  },
-  {
-    is_admin: false,
-  }
-)
+```ts
+const User = object({
+  id: number(),
+  name: string(),
+  email: email(),
+  is_admin: optional(boolean()),
+})
 ```
 
 Now if you pass in an email string that is invalid, it will throw:
 
-```js
+```ts
 const data = {
   id: 43,
   name: 'Jane Smith',
   email: 'jane',
 }
 
-User(data)
-
-// StructError: 'Expected a value of type "email" for `email` but received `'jane'`.' {
+assert(data, User)
+// StructError: 'Expected a value of type "Email" for `email` but received `'jane'`.' {
 //   type: 'email',
 //   value: 'jane',
 //   path: ['email'],
@@ -227,22 +225,22 @@ User(data)
 
 And there you have it!
 
-> 🤖 For the full list of built-in data types, check out the [`Types` reference](https://superstructjs.org/#types).
+> 🤖 For the full list of built-in data types, check out the [Types reference](https://superstructjs.org/#types).
 
 ## Throwing Customized Errors
 
-Finally, although the errors Superstruct throws are very descriptive, they're not really domain-specific. If you're building a REST or GraphQL API, you probably want to customize your errors to be specific to your application, and to follow a spec.
+Finally, although the errors Superstruct throws are very descriptive, and developer readable, they're not really domain-specific. If you're building a REST or GraphQL API, you probably want to customize your errors to be specific to your application, and to follow a spec.
 
-Doing that with Superstruct is easy. Just `try/catch` the errors like any other error, and then use the exposed information to build your own errors.
+Doing that with Superstruct is easy. Just `try/catch` the errors like usual, and then use the exposed information to build your own errors.
 
 For example, lets throw a `'user_email_invalid'` error using the `User` struct from above...
 
-```js
+```ts
 router.post('/users', ({ request, response }) => {
   const data = request.body
 
   try {
-    User(data)
+    assert(data, User)
   } catch (e) {
     const { path, value, type } = e
     const key = path[0]
@@ -251,18 +249,17 @@ router.post('/users', ({ request, response }) => {
       const error = new Error(`user_${key}_required`)
       error.attribute = key
       throw error
-    }
-
-    if (type === undefined) {
+    } else if (type === 'never') {
       const error = new Error(`user_attribute_unknown`)
       error.attribute = key
       throw error
+    } else {
+      const error = new Error(`user_${key}_invalid`)
+      error.attribute = key
+      error.value = value
+      throw error
     }
-
-    const error = new Error(`user_${key}_invalid`)
-    error.attribute = key
-    error.value = value
-    throw error
+  }
 })
 ```
 
@@ -284,59 +281,91 @@ Although this example is simplified, the struct errors expose all of the possibl
 
 ## Validating Complex Shapes
 
-In the most common uses, you simply pass a schema definition to the `struct` function, and you'll receive a function that will validate that schema. However, there are more structures of data you might like to validate that simple objects with key/values.
+In the most common uses, you'll be modeling your data using `object` structs at the top level. However, there are more structures of data you might like to validate that simple objects with key/values.
 
 Superstruct makes it easy to validate things like tuples, enums, dictionaries, lists, unions, literals, etc.
 
 For example, say you wanted to validate coordinate tuples:
 
-```js
-const Coordinates = struct.tuple(['number', 'number'])
+```ts
+import { tuple } from 'superstruct'
 
+const Coordinates = tuple([number(), number()])
 const data = [0, 3]
-
-Coordinates(data)
+assert(data, Coordinates)
 ```
 
 Or, you might want to validate that one of the properties of your user objects is an enum of a particular set of values:
 
-```js
-const User = struct({
-  id: 'number',
-  name: 'string',
-  role: struct.enum(['collaborator', 'owner', 'admin']),
+```ts
+import { enums } from 'superstruct'
+
+const User = object({
+  id: number(),
+  name: string(),
+  role: enums(['collaborator', 'owner', 'admin']),
 })
 ```
 
-All of this can be achieved using the helpers exposed on the `struct` function.
+All of this can be achieved using the helpers that ship with Superstruct by default.
 
-> 🤖 For a full list of the kinds of structs you can create, check out the [`Superstruct` interface](https://superstructjs.org/interfaces/superstruct).
+> 🤖 For a full list of the kinds of structs you can create, check out the [Superstruct reference](https://superstructjs.org/interfaces/superstruct).
 
 ## Composing Structs
 
 Sometimes you want to break validations down into components, and compose them together to validate more complex objects. Superstruct makes this easy by allowing an existing struct to be passed in as a schema. For example:
 
-```js
+```ts
 const User = struct({
-  id: 'number',
-  name: 'string',
+  id: number(),
+  name: string(),
 })
 
 const Article = struct({
-  id: 'number',
-  title: 'string',
+  id: number(),
+  title: string(),
   author: User,
 })
 ```
 
-Anywhere that you can use a 'number' style string to represent a schema, you can pass a full-fledged Struct in too. So you could use it in `tuple`, `enum`, `array`, `record`, etc. as well:
+## Refining Types
 
-```js
-const Filter = struct({
-  eq: 'object?',
-  lt: 'object?',
-  gt: 'object?',
+There are some cases where you want to create a validation that is more fine-grained than a "type". For example, you might want not just a `string`, but a specific format of string. Or not just a `User`, but a user that is also an administrator.
+
+For these situations, you can use refinements. They allow you to create a new struct that is derived from an exsisting struct with an extra bit of validation layered on top.
+
+For example, for a specific kind of string:
+
+```ts
+import { refinement } from 'superstruct'
+
+const MyString = refinement(string(), value => {
+  return value.startsWith('The') && value.length > 20)
 })
+```
 
-const Filters = struct.record(['string', Filter])
+Now the `MyString` will only validate strings that begin with "The" and are longer than 20 characters.
+
+## Coercing Values
+
+We've already covered default values, but sometimes you'll need to create coercions that aren't just defaulted `undefined` values, but instead transforming the input data from one format to another.
+
+For example, maybe you want to ensure that any string is trimmed before passing it into the validator:
+
+```ts
+import { coercion } from 'superstruct'
+
+const TrimmedString = coercion(string, value => {
+  return typeof value === 'string' ? value.trim() : value
+})
+```
+
+Now before using `assert()` or `is()` you can use `coerce()` to apply your custom coercion logic:
+
+```ts
+import { coerce } from 'superstruct'
+
+const data = '  a wEird str1ng        '
+const output = coerce(data, TrimmedString)
+// "a wEird str1ng"
 ```

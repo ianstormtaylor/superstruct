@@ -1,13 +1,21 @@
-import { struct } from 'superstruct'
+import {
+  array,
+  assert,
+  boolean,
+  number,
+  object,
+  optional,
+  string,
+} from 'superstruct'
 
 // Define a struct to validate with.
-const User = struct({
-  id: 'number',
-  name: 'string',
-  email: 'string',
-  age: 'number',
-  departments: ['string'],
-  is_admin: 'boolean?',
+const User = object({
+  id: number(),
+  name: string(),
+  email: string(),
+  age: number(),
+  departments: array(string()),
+  is_admin: optional(boolean()),
 })
 
 // Define data to be validated.
@@ -20,11 +28,4 @@ const data = {
 }
 
 // Validate the data. In this case, the data is valid, so it won't throw.
-try {
-  User(data)
-  console.log('Valid!')
-} catch (e) {
-  throw e
-}
-
-// 'Valid!'
+assert(data, User)

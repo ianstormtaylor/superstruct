@@ -1,11 +1,11 @@
-import { struct } from '../../..'
+import { func } from '../../..'
 
-export const Struct = struct(() => false)
+export const Struct = func()
 
-export const data = 'invalid'
+export const data = false
 
 export const error = {
-  value: 'invalid',
-  type: 'function<…>',
   path: [],
+  value: false,
+  type: 'Function',
 }

@@ -1,10 +1,10 @@
-import { struct } from 'superstruct'
+import { object, number, string, assert } from 'superstruct'
 
 // Define a struct to validate with.
-const User = struct({
-  id: 'number',
-  name: 'string',
-  email: 'string',
+const User = object({
+  id: number(),
+  name: string(),
+  email: string(),
 })
 
 // Define data to be validated.
@@ -14,18 +14,6 @@ const data = {
   email: 'jane@example.com',
 }
 
-// Validate the data. In this case the `name` property is invalid, so a
-// `property_invalid` error will be thrown.
-try {
-  User(data)
-} catch (e) {
-  throw e
-}
-
-// StructError: 'Expected a value of type "string" for `name` but received `true`.' {
-//   type: 'string',
-//   value: true,
-//   path: ['name'],
-//   branch: [{...}, true],
-//   failures: [...],
-// }
+// Validate the data with the `validate` method. In this case the `name`
+// property is invalid, so an error will be thrown.
+assert(data, User)

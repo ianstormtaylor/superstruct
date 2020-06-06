@@ -2,6 +2,155 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
+### `0.10.0` — June 5, 2020
+
+The `0.10` version is a complete overhaul with the goal of making Superstruct much simpler and easier to understand, and with complete support for runtime type signatures TypeScript.
+
+This makes it much more powerful, however the core architecture has had to change to make it happen. It will still look very similar, but migrating between the versions _will be more work than usual_. There's no requirement to upgrade, although if you're using Superstruct in concert with TypeScript you will have a much better experience.
+
+###### BREAKING
+
+**All types are created from factories.** Previously depending on whether the type was a complex type or a scalar type they'd be defined different. Complex types used factories, whereas scalars used strings. Now all types are exposed as factories.
+
+For example, previously:
+
+```ts
+import { struct } from 'superstruct'
+
+const User = struct.object({
+  name: 'string',
+  age: 'number',
+})
+```
+
+Now becomes:
+
+```ts
+import { object, string, number } from 'superstruct'
+
+const User = object({
+  name: string(),
+  age: number(),
+})
+```
+
+**Custom scalars are no longer pre-defined as strings.** Previously, you would define all of your "custom" types in a single place in your codebase and then refer to them in structs later on with a string value. This worked, but added a layer of unnecessary indirection, and made it impossible to accomodate runtime type signatures.
+
+In the new version, custom types are defined extremely similarly to non-custom types. And this has the added benefit that you can easily trace the custom type definitions by just following `import` statements.
+
+Here's how it used to work:
+
+```ts
+import { superstruct } from 'superstruct'
+import isEmail from 'is-email'
+
+const struct = superstruct({
+  types: {
+    email: isEmail,
+  },
+})
+
+const Email = struct('email')
+```
+
+And here's what it would look like now:
+
+```ts
+import { struct } from 'superstruct'
+import isEmail from 'is-email'
+
+const Email = struct('email', isEmail)
+```
+
+**Validation logic has been moved to helper functions.** Previously the `assert` and `is` helpers lived on the struct objects themselves. Now, these functions have been extracted into separate helpers. This was unfortunately necessary to work around limitations in TypeScript's `asserts` keyword.
+
+For example, before:
+
+```ts
+User.assert(data)
+```
+
+Now would be:
+
+```ts
+import { assert } from 'superstruct'
+
+assert(data, User)
+```
+
+**Coercion is now separate from validation.** Previously there was native logic for handling default values for structs when validating them. This has been abstracted into the ability to define _any_ custom coercion logic for structs, and it has been separate from validation to make it very clear when data can change and when it cannot.
+
+For example, previously:
+
+```ts
+const output = User.assert(input)
+```
+
+Would now be:
+
+```ts
+input = coerce(input, User)
+assert(input, User)
+```
+
+With two clear steps. The `coerce` step is the only time that data will be transformed at all by coercion logic, and the `assert` step no longer needs to return any values. This makes it easy to do things like:
+
+```ts
+if (is(input, User)) {
+  // ...
+}
+```
+
+**Validation context is now a dictionary of properties.** Previously when performing complex validation logic that was dependent on other properties on the root object, you could use the second `branch` argument to the validation function. This argument has been changed to be a `context` dictionary with more information. The same branch argument can now be accessed as `context.branch`, along with the new information.
+
+**Unknown properties of objects now have a `'never'` type.** Previously unknown properties would throw errors with `type === null`, however the newly introduced `'never'` type is now used instead.
+
+**The `function` struct was removed.** There's no longer any need for it, because you can define one-off validations directly with the custom `struct` factory.
+
+**Defaults are now defined with a separate coercion helper.** Previously all structs took a second argument that defined the default value to use if an `undefined` value was present. This has been pulled out into a separate helper now to clearly distinguish coercion logic.
+
+For example, previously you'd do:
+
+```ts
+const Article = struct.object(
+  {
+    title: 'string',
+  },
+  {
+    title: 'Untitled',
+  }
+)
+```
+
+Whereas now you'd do:
+
+```ts
+const Article = defaulted(
+  object({
+    title: string(),
+  }),
+  {
+    title: 'Untitled',
+  }
+)
+```
+
+**Optional arguments are now defined with a seperate factory.** Similarly to defaults, there is a new `optional` factory for defined values that can also be `undefined`.
+
+Previously you'd do:
+
+```ts
+const Flag = struct('string?')
+```
+
+Now you'd do:
+
+```ts
+const Flag = optional(string())
+```
+
+- `interface` is now called `type`
+
 ### `0.8.0` — October 8, 2019
 
 ###### BREAKING

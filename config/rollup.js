@@ -24,7 +24,8 @@ export default {
           '@babel/preset-env',
           {
             targets: {
-              browsers: ['last 2 versions'],
+              // browsers: ['last 2 versions'],
+              node: true,
             },
             modules: false,
             useBuiltIns: false,

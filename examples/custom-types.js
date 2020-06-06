@@ -1,27 +1,31 @@
-import { superstruct } from 'superstruct'
+import { object, string, optional, struct, assert } from 'superstruct'
 import isEmail from 'is-email'
 import isUuid from 'is-uuid'
 import isUrl from 'is-url'
 
-// Define a `struct` with custom types.
-const struct = superstruct({
-  types: {
-    uuid: v => isUuid.v4(v),
-    email: v => {
-      if (!isEmail(v)) return `not_email`
-      if (v.length >= 256) return 'too_long'
-      return true
-    },
-    url: v => isUrl(v) && v.length < 2048,
-  },
+// Define custom structs with validation functions.
+const Uuid = struct('Uuid', isUuid.v4)
+
+const Url = struct('Url', (value) => {
+  return isUrl(value) && value.length < 2048
+})
+
+const Email = struct('Email', (value, context) => {
+  if (!isEmail(value)) {
+    return [context.fail({ code: 'not_email' })]
+  } else if (value.length >= 256) {
+    return [context.fail({ code: 'too_long' })]
+  } else {
+    return []
+  }
 })
 
 // Define a struct to validate with.
-const User = struct({
-  id: 'uuid',
-  name: 'string',
-  email: 'email',
-  website: 'url?',
+const User = object({
+  id: Uuid,
+  name: string(),
+  email: Email,
+  website: optional(Url),
 })
 
 // Define data to be validated.
@@ -32,12 +36,5 @@ const data = {
   website: 'https://jane.example.com',
 }
 
-// Validate the data. In this case, the data is valid, so it won't throw.
-try {
-  User(data)
-  console.log('Valid!')
-} catch (e) {
-  throw e
-}
-
-// 'Valid!'
+// Validate the data. In this case the data is valid, so it won't throw.
+assert(data, User)

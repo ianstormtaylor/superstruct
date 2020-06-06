@@ -1,7 +1,7 @@
-import { struct } from '../../..'
+import { func } from '../../..'
 
-export const Struct = struct(() => true)
+export const Struct = func()
 
-export const data = 'valid'
+export const data = function () {}
 
-export const output = 'valid'
+export const output = data

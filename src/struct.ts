@@ -1,224 +1,212 @@
-import { Failure, Branch, Path } from './struct-error'
-import { Superstruct } from './superstruct'
+import { toFailures } from './utils'
 
 /**
- * A symbol to set on `Struct` objects to test them against later.
+ * `Struct` objects encapsulate the schema for a specific data type (with
+ * optional coercion). You can then use the `assert`, `is` or `validate` helpers
+ * to validate unknown data against a struct.
  */
 
-export const STRUCT = Symbol('STRUCT')
+export class Struct<T, S = any> {
+  type: string
+  schema: S
+  coercer: (value: unknown) => unknown
+  validator: (value: unknown, context: StructContext) => StructResult
+  refiner: (value: T, context: StructContext) => StructResult
 
-/**
- * Check if a value is a `Struct` object.
- */
-
-export const isStruct = (value: any): value is Struct => {
-  return typeof value === 'function' && value[STRUCT]
+  constructor(props: {
+    type: Struct<T>['type']
+    schema: S
+    coercer?: Struct<T>['coercer']
+    validator?: Struct<T>['validator']
+    refiner?: Struct<T>['refiner']
+  }) {
+    const {
+      type,
+      schema,
+      coercer = (value: unknown) => value,
+      validator = () => [],
+      refiner = () => [],
+    } = props
+    this.type = type
+    this.schema = schema
+    this.coercer = coercer
+    this.validator = validator
+    this.refiner = refiner
+  }
 }
 
 /**
- * This abstract `Struct` factory creates a generic struct that validates values
- * against a `Validator` function.
+ * `StructError` objects are thrown (or returned) by Superstruct when its
+ * validation fails. The error represents the first error encountered during
+ * validation. But they also have an `error.failures` property that holds
+ * information for all of the failures encountered.
  */
 
-export const createStruct = (props: {
-  kind: string
+export class StructError extends TypeError {
+  value: any
   type: string
-  defaults: () => any
-  struct: Superstruct
-}): Struct => {
-  const { struct } = props
-  const { Error } = struct
-  const Struct = (value: any): any => Struct.assert(value)
+  path: Array<number | string>
+  branch: Array<any>
+  failures: () => Iterable<StructFailure>;
+  [key: string]: any
 
-  // Set a hidden symbol property so that we can check it later to see if an
-  // object is a struct object.
-  Object.defineProperty(Struct, STRUCT, { value: true })
+  constructor(failure: StructFailure, iterable: Iterable<StructFailure>) {
+    const { path, value, type, branch, ...rest } = failure
+    const message = `Expected a value of type \`${type}\`${
+      path.length ? ` for \`${path.join('.')}\`` : ''
+    } but received \`${JSON.stringify(value)}\`.`
 
-  Struct.kind = props.kind
-  Struct.type = props.type
-
-  Struct.default = () => {
-    return typeof props.defaults === 'function'
-      ? props.defaults()
-      : props.defaults
-  }
-
-  Struct.test = (value: any): boolean => {
-    const [failures] = Struct.check(value, [value], [])
-    return !failures
-  }
-
-  Struct.assert = (value: any): any => {
-    const [failures, result] = Struct.check(value, [value], [])
-
-    if (failures) {
-      throw new Error(failures)
-    } else {
-      return result
+    function* failures(): Iterable<StructFailure> {
+      yield failure
+      yield* iterable
     }
+
+    super(message)
+    this.value = value
+    Object.assign(this, rest)
+    this.type = type
+    this.path = path
+    this.branch = branch
+    this.failures = failures
+    this.stack = new Error().stack
+    ;(this as any).__proto__ = StructError.prototype
   }
-
-  Struct.validate = (value: any): [Error?, any?] => {
-    const [failures, result] = Struct.check(value, [value], [])
-
-    if (failures) {
-      return [new Error(failures)]
-    } else {
-      return [undefined, result]
-    }
-  }
-
-  Struct.check = (
-    value: any = Struct.default(),
-    branch: Branch,
-    path: Path
-  ): [Failure[]?, any?] => {
-    const failures = [Struct.fail({ value, branch, path })]
-    return [failures]
-  }
-
-  Struct.fail = (obj: {
-    value: any
-    branch: Branch
-    path: Path
-    type?: string
-  }): Failure => {
-    return { ...obj, type: 'type' in obj ? obj.type : Struct.type }
-  }
-
-  return Struct
 }
 
 /**
- * `Struct` validators encapsulate the validation logic for a specific type of
- * data (either custom or built-in). They have a set of methods that allow you
- * to validate input in various ways, while producing detailed errors.
- *
- * They are created by the [[Superstruct]] factory functions. You can call them
- * directly for the simple case, or use one of their validation methods.
- *
- * ```js
- * const Struct = struct({
- *   id: 'number',
- *   name: 'string',
- * })
- *
- * const result = Struct(data) // Throws if invalid!
- *
- * const [error, result] = Struct.validate(data)
- *
- * if (Struct.test(data)) {
- *    // ...
- * }
- * ```
+ * A `StructContext` contains information about the current value being
+ * validated as well as helper functions for failures and recursive validating.
  */
 
-export interface Struct {
-  /**
-   * All structs are functions that are shorthand for calling [[Struct.assert]].
-   */
-
-  (value: any): any
-
-  /**
-   * The struct's name.
-   *
-   * ```js
-   * 'object'
-   * 'union'
-   * 'email'
-   * ```
-   */
-
-  kind: string
-
-  /**
-   * A string representing the type of the struct. These strings are purely for
-   * user-facing error messages, and aren't canonical. They are similar to the
-   * syntax that TypeScript uses.
-   *
-   * ```js
-   * '{id,name,email}'
-   * 'string | number'
-   * 'email'
-   * ```
-   */
-
+export type StructContext = {
+  value: any
   type: string
+  branch: Array<any>
+  path: Array<string | number>
+  fail: (props?: Partial<StructFailure>) => StructFailure
+  check: (
+    value: any,
+    struct: Struct<any> | Struct<never>,
+    parent?: any,
+    key?: string | number
+  ) => Iterable<StructFailure>
+}
 
-  /**
-   * Get the default value for a struct.
-   *
-   * ```js
-   * const defaults = Struct.default()
-   * ```
-   */
+/**
+ * A `StructFailure` represents a single specific failure in validation.
+ */
 
-  default(): any
+export type StructFailure = {
+  value: StructContext['value']
+  type: StructContext['type']
+  branch: StructContext['branch']
+  path: StructContext['path']
+  [key: string]: any
+}
 
-  /**
-   * Run the low-level validation function a struct, returning a tuple that
-   * contains either a list of [[Failure]] objects, or a resulting value.
-   *
-   * This method is fairly low-level and not for normal use.
-   *
-   * ```js
-   * const [failures, result] = Struct.check(value, branch, path)
-   * ```
-   */
+/**
+ * A `StructResult` is returned from validation functions.
+ */
 
-  check(value: any, branch: Branch, path: Path): [Failure[]?, any?]
+export type StructResult = boolean | Iterable<StructFailure>
 
-  /**
-   * Validate a `value`, returning the resulting value, and throwing an error if
-   * validation fails.
-   *
-   * ```js
-   * try {
-   *   const result = Struct.assert(value)
-   *   // ...
-   * } catch (e) {
-   *   // ...
-   * }
-   * ```
-   */
+/**
+ * A type utility to extract the type from a `Struct` class.
+ */
 
-  assert(value: any): any
+export type StructType<T extends Struct<any>> = Parameters<T['refiner']>[0]
 
-  /**
-   * Validate a `value`, returning a boolean indicating whether it's valid.
-   *
-   * Note: Using this method does not give you access to the defaults that may
-   * be associated with a struct, so it doesn't guarantee that the value you
-   * have passes, just that the value with defaults passes.
-   *
-   * ```js
-   * if (Struct.test(value)) {
-   *   // ...
-   * }
-   * ```
-   */
+/**
+ * Assert that a value passes a `Struct`, throwing if it doesn't.
+ */
 
-  test(value: any): boolean
+export function assert<T>(
+  value: unknown,
+  struct: Struct<T>
+): asserts value is T {
+  const result = validate(value, struct)
 
-  /**
-   * Validate a `value` returning a tuple containing an error if the validation
-   * fails, or the resulting value if it succeeds.
-   *
-   * ```js
-   * const [error, result] = Struct.validate(value)
-   * ```
-   */
+  if (result[0]) {
+    throw result[0]
+  }
+}
 
-  validate(value: any): [Error?, any?]
+/**
+ * Coerce a value with the coercion logic of `Struct` and validate it.
+ */
 
-  /**
-   * Create a low-level [[Failure]] object for the struct.
-   *
-   * ```js
-   * const failure = Struct.fail({ value, branch, path })
-   * ```
-   */
+export function coerce<T>(value: unknown, struct: Struct<T>): T {
+  const ret = struct.coercer(value)
+  assert(ret, struct)
+  return ret
+}
 
-  fail(obj: { value: any; branch: Branch; path: Path; type?: string }): Failure
+/**
+ * Check if a value passes a `Struct`.
+ */
+
+export function is<T>(value: unknown, struct: Struct<T>): value is T {
+  const result = validate(value, struct)
+  return !!result[0]
+}
+
+/**
+ * Validate a value against a `Struct`, returning an error if invalid.
+ */
+
+export function validate<T>(
+  value: unknown,
+  struct: Struct<T>,
+  coercing: boolean = false
+): [StructError, undefined] | [undefined, T] {
+  if (coercing) {
+    value = struct.coercer(value)
+  }
+
+  const iterable = check(value, struct)
+  const [failure] = iterable
+
+  if (failure) {
+    const error = new StructError(failure, iterable)
+    return [error, undefined]
+  } else {
+    return [undefined, value as T]
+  }
+}
+
+/**
+ * Check a value against a `Struct`, returning an iterable of failures.
+ */
+
+function* check<T>(
+  value: unknown,
+  struct: Struct<T>,
+  path: any[] = [],
+  branch: any[] = [value]
+): Iterable<StructFailure> {
+  const { type } = struct
+  const ctx: StructContext = {
+    value,
+    type,
+    branch,
+    path,
+    fail(props = {}) {
+      return { value, type, path, branch, ...props }
+    },
+    check(v, s, parent, key) {
+      const p = parent !== undefined ? path.concat(key) : path
+      const b = parent !== undefined ? branch.concat(parent) : branch
+      return check(v, s, p, b)
+    },
+  }
+
+  const failures = toFailures(struct.validator(value, ctx), ctx)
+  const [failure] = failures
+
+  if (failure) {
+    yield failure
+    yield* failures
+  } else {
+    yield* toFailures(struct.refiner(value as T, ctx), ctx)
+  }
 }
