@@ -8,6 +8,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: yarn && yarn build:rollup && yarn test && yarn lint
+      - run: yarn && yarn test && yarn lint
         env:
           CI: true
