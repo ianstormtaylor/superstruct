@@ -228,8 +228,12 @@ export function object<V extends StructRecord<any>>(
  */
 
 export function optional<T>(S: Struct<T>): Struct<T | undefined> {
-  return struct(`${S.type}?`, (value, ctx) => {
-    return value === undefined || ctx.check(value, S)
+  return new Struct({
+    type: `${S.type}?`,
+    schema: S.schema,
+    validator: (value, ctx) => {
+      return value === undefined || ctx.check(value, S)
+    },
   })
 }
 
