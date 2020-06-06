@@ -338,10 +338,10 @@ export function string(): Struct<string> {
  */
 
 export function struct<T>(
-  type: string,
+  name: string,
   validator: Struct<T>['validator']
 ): Struct<T, null> {
-  return new Struct({ type, validator, schema: null })
+  return new Struct({ type: name, validator, schema: null })
 }
 
 /**

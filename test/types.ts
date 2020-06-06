@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   array,
   assert,
@@ -16,7 +17,7 @@ import {
   tuple,
   type,
   union,
-} from '../lib'
+} from '..'
 
 {
   const String = string()

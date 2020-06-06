@@ -53,8 +53,8 @@ describe('superstruct', () => {
               )
             }
 
-            const actual = pick(err, 'type', 'path', 'value')
-            assert.deepEqual(actual, error)
+            const actualError = pick(err, 'type', 'path', 'value')
+            assert.deepEqual(actualError, error)
           } else {
             throw new Error(
               `The "${test}" fixture did not define an \`output\` or \`error\` export.`

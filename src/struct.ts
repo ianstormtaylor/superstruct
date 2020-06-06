@@ -157,9 +157,9 @@ export function is<T>(value: unknown, struct: Struct<T>): value is T {
 export function validate<T>(
   value: unknown,
   struct: Struct<T>,
-  coerce: boolean = false
+  coercing: boolean = false
 ): [StructError, undefined] | [undefined, T] {
-  if (coerce) {
+  if (coercing) {
     value = struct.coercer(value)
   }
 

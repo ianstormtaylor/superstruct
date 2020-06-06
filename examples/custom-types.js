@@ -6,7 +6,7 @@ import isUrl from 'is-url'
 // Define custom structs with validation functions.
 const Uuid = struct('Uuid', isUuid.v4)
 
-const Url = struct('Url', value => {
+const Url = struct('Url', (value) => {
   return isUrl(value) && value.length < 2048
 })
 

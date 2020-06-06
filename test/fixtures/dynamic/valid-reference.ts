@@ -19,7 +19,7 @@ const map = {
   PRODUCT: Product,
 }
 
-export const Struct = dynamic(entity => {
+export const Struct = dynamic((entity) => {
   assert(entity, Entity)
   return map[entity.object]
 })
