@@ -28,7 +28,7 @@
     "@babel/register": "^7.6.2",
     "@gnd/typedoc": "^0.15.0-0",
     "@types/lodash": "^4.14.144",
-    "@types/mocha": "^5.2.7",
+    "@types/mocha": "^7.0.2",
     "@types/node": "^14.0.6",
     "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
