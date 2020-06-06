@@ -156,8 +156,13 @@ export function is<T>(value: unknown, struct: Struct<T>): value is T {
 
 export function validate<T>(
   value: unknown,
-  struct: Struct<T>
+  struct: Struct<T>,
+  coerce: boolean = false
 ): [StructError, undefined] | [undefined, T] {
+  if (coerce) {
+    value = struct.coercer(value)
+  }
+
   const iterable = check(value, struct)
   const [failure] = iterable
 

@@ -156,29 +156,27 @@ const User = defaulted(
 )
 ```
 
-To receive the data with the defaults applied, you'll need to call `coerce` on the data before validating it:
+To receive the data with the defaults applied, you'll need to use `coerce` to retrieve the coerced value:
 
 ```ts
 import { coerce } from 'superstruct'
 
-let data = {
+const data = {
   id: 43,
   name: 'Jane Smith',
   email: 'jane@example.com',
 }
 
-data = coerce(data, User)
+const user = coerce(data, User)
 // {
 //   id: '43',
 //   name: 'Jane Smith',
 //   email: 'jane@example.com',
 //   is_admin: false,
 // }
-
-assert(data, User)
 ```
 
-The original `data` did not define an `is_admin` property, but after running the struct's coercion logic the default was applied.
+The original `data` did not define an `is_admin` property, but after running the struct's coercion logic the default was applied. If the value had been invalid, an error would have been thrown.
 
 ## Defining Custom Data Types
 
@@ -367,7 +365,7 @@ Now before using `assert()` or `is()` you can use `coerce()` to apply your custo
 ```ts
 import { coerce } from 'superstruct'
 
-let data = '  a wEird str1ng        '
-data = coerce(data, TrimmedString)
+const data = '  a wEird str1ng        '
+const output = coerce(data, TrimmedString)
 // "a wEird str1ng"
 ```

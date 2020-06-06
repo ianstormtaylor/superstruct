@@ -109,13 +109,16 @@ const User = object({
   name: string(),
 })
 
-let data = {
+const data = {
   name: 'Jane',
 }
 
-// You can apply the defaults to your data before validating.
-data = coerce(data, User)
-assert(data, User)
+// You can apply the defaults to your data while validating.
+const user = coerce(data, User)
+// {
+//   id: 1,
+//   name: 'Jane',
+// }
 ```
 
 And if you use TypeScript, Superstruct automatically ensures that your data has proper typings whenever you validate it:
@@ -263,7 +266,3 @@ Read the getting started guide to familiarize yourself with how Superstruct work
 ### License
 
 This package is [MIT-licensed](./License.md).
-
-```
-
-```

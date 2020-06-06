@@ -22,13 +22,13 @@ const User = object({
 })
 
 // Define data to be validated.
-let data = {
+const data = {
   name: 'Jane Smith',
   email: 'jane@example.com',
 }
 
-// Coerce the data using the struct's default values.
-data = coerce(data, User)
+// Coerce the data during validation, using the struct's default values.
+const user = coerce(data, User)
 // {
 //   id: 1,
 //   name: 'Jane Smith',
@@ -37,7 +37,3 @@ data = coerce(data, User)
 //   is_admin: false,
 //   created_at: Date,
 // }
-
-// Validate the data. In this case the data is valid once it has had the
-// defaults applied, so it won't throw.
-assert(data, User)
