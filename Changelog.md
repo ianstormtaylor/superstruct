@@ -2,7 +2,7 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
-### `0.10.0` — June 5, 2020
+### `0.10.0` — June 6, 2020
 
 The `0.10` version is a complete overhaul with the goal of making Superstruct much simpler and easier to understand, and with complete support for runtime type signatures TypeScript.
 
@@ -89,11 +89,10 @@ const output = User.assert(input)
 Would now be:
 
 ```ts
-input = coerce(input, User)
-assert(input, User)
+const input = coerce(input, User)
 ```
 
-With two clear steps. The `coerce` step is the only time that data will be transformed at all by coercion logic, and the `assert` step no longer needs to return any values. This makes it easy to do things like:
+The `coerce` step is the only time that data will be transformed at all by coercion logic, and the `assert` step no longer needs to return any values. This makes it easy to do things like:
 
 ```ts
 if (is(input, User)) {
@@ -104,8 +103,6 @@ if (is(input, User)) {
 **Validation context is now a dictionary of properties.** Previously when performing complex validation logic that was dependent on other properties on the root object, you could use the second `branch` argument to the validation function. This argument has been changed to be a `context` dictionary with more information. The same branch argument can now be accessed as `context.branch`, along with the new information.
 
 **Unknown properties of objects now have a `'never'` type.** Previously unknown properties would throw errors with `type === null`, however the newly introduced `'never'` type is now used instead.
-
-**The `function` struct was removed.** There's no longer any need for it, because you can define one-off validations directly with the custom `struct` factory.
 
 **Defaults are now defined with a separate coercion helper.** Previously all structs took a second argument that defined the default value to use if an `undefined` value was present. This has been pulled out into a separate helper now to clearly distinguish coercion logic.
 
@@ -149,7 +146,11 @@ Now you'd do:
 const Flag = optional(string())
 ```
 
-- `interface` is now called `type`
+**Several structs have been renamed.** This was necessary because structs are now exposed directly as variables, which runs afoul of reserved words. So the following renames have been applied:
+
+- `interface` -> `type`
+- `enum` -> `enums`
+- `function` -> `func`
 
 ### `0.8.0` — October 8, 2019
 
