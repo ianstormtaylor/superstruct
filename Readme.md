@@ -44,19 +44,18 @@ But Superstruct is designed for validating data at runtime, so it throws (or ret
 
 ### Usage
 
-Superstruct exports a `struct` factory for creating structs that can validate data against a specific schema:
+Superstruct allows you to define the shape of data you want to validate:
 
 ```js
-import { struct } from 'superstruct'
+import { assert, object, number, string, boolean, array } from 'superstruct'
 
-const Article = struct({
-  id: 'number',
-  title: 'string',
-  is_published: 'boolean?',
-  tags: ['string'],
-  author: {
-    id: 'number',
-  },
+const Article = object({
+  id: number(),
+  title: string(),
+  tags: array(string()),
+  author: object({
+    id: number(),
+  }),
 })
 
 const data = {
@@ -68,41 +67,76 @@ const data = {
   },
 }
 
-const article = Article(data)
-
-// This will throw when the data is invalid, and return the data otherwise.
-// If you'd rather not throw, use `Struct.validate()` or `Struct.test()`.
+assert(data, Article)
+// This will throw an error when the data is invalid.
+// If you'd rather not throw, you can use `is()` or `validate()`.
 ```
 
-It recognizes all the native JavaScript types out of the box. But you can also define your own custom data types—specific to your application's requirements—by using the `superstruct` export:
+Superstruct comes with validators for all common JavaScript data types out of the box. And you can also define your own custom validations:
 
 ```js
-import { superstruct } from 'superstruct'
+import { is, struct, object, string } from 'superstruct'
 import isUuid from 'is-uuid'
 import isEmail from 'is-email'
 
-const struct = superstruct({
-  types: {
-    uuid: value => isUuid.v4(value),
-    email: value => isEmail(value) && value.length < 256,
-  },
-})
+const Email = struct('Email', isEmail)
+const Uuid = struct('Uuid', isUuid.v4)
 
-const User = struct({
-  id: 'uuid',
-  email: 'email',
-  is_admin: 'boolean?',
+const User = object({
+  id: Uuid,
+  email: Email,
+  name: string(),
 })
 
 const data = {
   id: 'c8d63140-a1f7-45e0-bfc6-df72973fea86',
   email: 'jane@example.com',
+  name: 'Jane',
 }
 
-const user = User(data)
+if (is(data, User)) {
+  // Your data is guaranteed to be valid in this block.
+}
 ```
 
-Superstruct supports more complex use cases too like defining list or scalar structs, applying default values, composing structs inside each other, returning errors instead of throwing them, etc. For more information read the full [Documentation](#documentation).
+Superstruct can also handle coercion of your data before validating it, for example to mix in default values (or trimming, parsing, sanitizing, etc.):
+
+```ts
+import { assert, coerce, object, number, string, defaulted } from 'superstruct'
+
+const User = object({
+  id: defaulted(number(), () => i++),
+  name: string(),
+})
+
+let data = {
+  name: 'Jane',
+}
+
+// You can apply the defaults to your data before validating.
+data = coerce(data, User)
+assert(data, User)
+```
+
+And if you use TypeScript, Superstruct automatically ensures that your data has proper typings whenever you validate it:
+
+```ts
+import { is, object, number, string } from 'superstruct'
+
+const User = object({
+  id: number(),
+  name: string()
+})
+
+const data: unknown = { ... }
+
+if (is(data, User)) {
+  // TypeScript knows the shape of `data` here, so it is safe to access
+  // properties like `data.id` and `data.name`.
+}
+```
+
+Superstruct supports more complex use cases too like defining arrays or nested objects, composing structs inside each other, returning errors instead of throwing them, and more! For more information read the full [Documentation](#documentation).
 
 <br/>
 
@@ -193,3 +227,7 @@ Read the getting started guide to familiarize yourself with how Superstruct work
 ### License
 
 This package is [MIT-licensed](./License.md).
+
+```
+
+```
