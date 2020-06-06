@@ -25,7 +25,7 @@ import {
 
 {
   const x: unknown = null
-  const Url = struct<string>('Url', value => {
+  const Url = struct<string>('Url', (value) => {
     return typeof value === 'string' && value.startsWith('http')
   })
 
@@ -35,7 +35,7 @@ import {
 
 {
   const x: unknown = null
-  const Email = refinement(string(), 'Email', value => value.includes('@'))
+  const Email = refinement(string(), 'Email', (value) => value.includes('@'))
   assert(x, Email)
   x
 }

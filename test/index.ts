@@ -8,16 +8,16 @@ describe('superstruct', () => {
   const kindsDir = resolve(__dirname, 'fixtures')
   const kinds = fs
     .readdirSync(kindsDir)
-    .filter(t => t[0] !== '.')
-    .map(t => basename(t, extname(t)))
+    .filter((t) => t[0] !== '.')
+    .map((t) => basename(t, extname(t)))
 
   for (const kind of kinds) {
     describe(kind, () => {
       const testsDir = resolve(kindsDir, kind)
       const tests = fs
         .readdirSync(testsDir)
-        .filter(t => t[0] !== '.')
-        .map(t => basename(t, extname(t)))
+        .filter((t) => t[0] !== '.')
+        .map((t) => basename(t, extname(t)))
 
       for (const test of tests) {
         const module = require(resolve(testsDir, test))

@@ -17,10 +17,10 @@ export function array<T>(Element: Struct<T>): Struct<T[], Struct<T>> {
   return new Struct({
     type: `Array<${Element.type}>`,
     schema: Element,
-    coercer: value => {
-      return Array.isArray(value) ? value.map(v => coerce(v, Element)) : value
+    coercer: (value) => {
+      return Array.isArray(value) ? value.map((v) => coerce(v, Element)) : value
     },
-    validator: function*(value, ctx) {
+    *validator(value, ctx) {
       if (!Array.isArray(value)) {
         yield ctx.fail()
         return
@@ -38,7 +38,7 @@ export function array<T>(Element: Struct<T>): Struct<T[], Struct<T>> {
  */
 
 export function boolean(): Struct<boolean> {
-  return struct('boolean', value => {
+  return struct('boolean', (value) => {
     return typeof value === 'boolean'
   })
 }
@@ -51,7 +51,7 @@ export function boolean(): Struct<boolean> {
  */
 
 export function date(): Struct<Date> {
-  return struct('Date', value => {
+  return struct('Date', (value) => {
     return value instanceof Date && !isNaN(value.getTime())
   })
 }
@@ -73,7 +73,7 @@ export function dynamic<T>(
  */
 
 export function enums<T>(values: T[]): Struct<T> {
-  return struct(`Enum<${values.map(toLiteralString)}>`, value => {
+  return struct(`Enum<${values.map(toLiteralString)}>`, (value) => {
     return values.includes(value as any)
   })
 }
@@ -83,7 +83,7 @@ export function enums<T>(values: T[]): Struct<T> {
  */
 
 export function func(): Struct<Function> {
-  return struct('Function', value => {
+  return struct('Function', (value) => {
     return typeof value === 'function'
   })
 }
@@ -95,7 +95,7 @@ export function func(): Struct<Function> {
 export function instance<T extends { new (...args: any): any }>(
   Class: T
 ): Struct<InstanceType<T>> {
-  return struct(`InstanceOf<${Class.name}>`, value => {
+  return struct(`InstanceOf<${Class.name}>`, (value) => {
     return value instanceof Class
   })
 }
@@ -116,7 +116,7 @@ export function intersection<A, B, C, D, E>(
   Structs: StructTuple<[A, B, C, D, E]>
 ): Struct<A & B & C & D & E>
 export function intersection(Structs: Struct<any>[]): any {
-  return struct(Structs.map(s => s.type).join(' & '), function*(value, ctx) {
+  return struct(Structs.map((s) => s.type).join(' & '), function* (value, ctx) {
     for (const S of Structs) {
       yield* ctx.check(value, S)
     }
@@ -146,7 +146,7 @@ export function lazy<T>(fn: () => Struct<T>): Struct<T> {
  */
 
 export function literal<T>(constant: T): Struct<T> {
-  return struct(`Literal<${toLiteralString(constant)}>`, value => {
+  return struct(`Literal<${toLiteralString(constant)}>`, (value) => {
     return value === constant
   })
 }
@@ -156,7 +156,7 @@ export function literal<T>(constant: T): Struct<T> {
  */
 
 export function map<K, V>(Key: Struct<K>, Value: Struct<V>): Struct<Map<K, V>> {
-  return struct(`Map<${Key.type},${Value.type}>`, function*(value, ctx) {
+  return struct(`Map<${Key.type},${Value.type}>`, function* (value, ctx) {
     if (!(value instanceof Map)) {
       yield ctx.fail()
       return
@@ -182,7 +182,7 @@ export function never(): Struct<never> {
  */
 
 export function number(): Struct<number> {
-  return struct(`number`, value => {
+  return struct(`number`, (value) => {
     return typeof value === 'number' && !isNaN(value)
   })
 }
@@ -200,7 +200,7 @@ export function object<V extends StructRecord<any>>(
     type: `Object<{${knowns.join(',')}}>`,
     schema: Structs,
     coercer: createObjectCoercer(Structs),
-    validator: function*(value, ctx) {
+    *validator(value, ctx) {
       if (typeof value !== 'object' || value == null) {
         yield ctx.fail()
         return
@@ -250,7 +250,7 @@ export function partial<T, V extends StructRecord<any>>(
     type: `Partial<{${knowns.join(',')}}>`,
     schema: Structs,
     coercer: createObjectCoercer(Structs),
-    validator: function*(value, ctx) {
+    *validator(value, ctx) {
       if (typeof value !== 'object' || value == null) {
         yield ctx.fail()
         return
@@ -287,7 +287,7 @@ export function record<K extends string | number, V>(
   Key: Struct<K>,
   Value: Struct<V>
 ): Struct<Record<K, V>> {
-  return struct(`Record<${Key.type},${Value.type}>`, function*(value, ctx) {
+  return struct(`Record<${Key.type},${Value.type}>`, function* (value, ctx) {
     if (typeof value !== 'object' || value == null) {
       yield ctx.fail()
       return
@@ -328,7 +328,7 @@ export function set<T>(Element: Struct<T>): Struct<Set<T>> {
  */
 
 export function string(): Struct<string> {
-  return struct('string', value => {
+  return struct('string', (value) => {
     return typeof value === 'string'
   })
 }
@@ -362,7 +362,7 @@ export function tuple<A, B, C, D, E>(
 export function tuple(Elements: Struct<any>[]): any {
   const Never = never()
 
-  return struct(`[${Elements.map(s => s.type).join(',')}]`, function*(
+  return struct(`[${Elements.map((s) => s.type).join(',')}]`, function* (
     value,
     ctx
   ) {
@@ -394,7 +394,7 @@ export function type<V extends StructRecord<any>>(
 ): Struct<{ [K in keyof V]: StructType<V[K]> }> {
   const keys = Object.keys(Structs)
 
-  return struct(`Type<{${keys.join(',')}}>`, function*(value, ctx) {
+  return struct(`Type<{${keys.join(',')}}>`, function* (value, ctx) {
     if (typeof value !== 'object' || value == null) {
       yield ctx.fail()
       return
@@ -424,7 +424,7 @@ export function union<A, B, C, D, E>(
   Structs: StructTuple<[A, B, C, D, E]>
 ): Struct<A | B | C | D | E>
 export function union(Structs: Struct<any>[]): any {
-  return struct(`${Structs.map(s => s.type).join(' | ')}`, function*(
+  return struct(`${Structs.map((s) => s.type).join(' | ')}`, function* (
     value,
     ctx
   ) {
@@ -459,7 +459,7 @@ function createObjectCoercer<V extends StructRecord<any>>(
 ): (value: unknown) => unknown {
   const knowns = Object.keys(Structs)
 
-  return value => {
+  return (value) => {
     if (typeof value !== 'object' || value == null) {
       return value
     }

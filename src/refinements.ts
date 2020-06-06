@@ -11,7 +11,7 @@ export function length<T extends string | any[]>(
   min: number,
   max: number
 ): Struct<T> {
-  return refinement(S, `${S.type} & Length<${min},${max}>`, value => {
+  return refinement(S, `${S.type} & Length<${min},${max}>`, (value) => {
     return min < value.length && value.length < max
   })
 }
@@ -24,7 +24,7 @@ export function pattern<T extends string>(
   S: Struct<T>,
   regexp: RegExp
 ): Struct<T> {
-  return refinement(S, `${S.type} & Pattern<${regexp.source}>`, value => {
+  return refinement(S, `${S.type} & Pattern<${regexp.source}>`, (value) => {
     return regexp.test(value)
   })
 }

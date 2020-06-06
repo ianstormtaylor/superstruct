@@ -11,7 +11,7 @@ export function coercion<T>(
   const fn = struct.coercer
   return new Struct({
     ...struct,
-    coercer: value => {
+    coercer: (value) => {
       return fn(coercer(value))
     },
   })
@@ -29,7 +29,7 @@ export function defaulted<T>(
   fallback: any,
   strict?: true
 ): Struct<T> {
-  return coercion(S, x => {
+  return coercion(S, (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 
     if (x === undefined) {
@@ -64,7 +64,7 @@ export function masked<
   T extends { [key: string]: any },
   V extends Record<string, Struct<any>>
 >(S: Struct<T, V>): Struct<T> {
-  return coercion(S, x => {
+  return coercion(S, (x) => {
     if (!isPlainObject(x)) {
       return x
     }
