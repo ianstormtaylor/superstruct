@@ -40,6 +40,8 @@
     - [`StructError`](#structerror)
     - [Error Properties](#error-properties)
     - [Multiple Errors](#multiple-errors)
+  - [Utilities](#utilities)
+    - [`StructType`](#structtype)
 
 ## Validation
 
@@ -192,7 +194,10 @@ map([string(), number()])
 ```
 
 ```ts
-new Map([['a', 1], ['b', 2]])
+new Map([
+  ['a', 1],
+  ['b', 2],
+])
 ```
 
 `map` structs validate that a value is a `Map` object with specific types for its keys and values.
@@ -458,10 +463,13 @@ defaulted(object({
 ```ts
 import { masked } from 'superstruct'
 ```
+
 ```ts
-masked(object({
-  name: string()
-}))
+masked(
+  object({
+    name: string(),
+  })
+)
 ```
 
 `masked` augments an object struct to strip any unknown properties from the input when coercing it.
@@ -517,3 +525,24 @@ Each error thrown includes the following properties:
 ### Multiple Errors
 
 The error thrown by Superstruct is always the first validation failure that was encountered, because this makes for convenient and simple logic in the majority of cases. However, the `failures` property is available with a list of all of the validation failures that occurred in case you want to add support for multiple error handling.
+
+## Utilities
+
+### `StructType`
+
+When working in TypeScript, you can use the `StructType` utility type to infer the valid value of a struct definition. This allows you to avoid having to duplicate effort when writing typings.
+
+For example:
+
+```ts
+const User = object({
+  id: number(),
+  name: string(),
+})
+
+type User = StructType<typeof User>
+// type User = {
+//   id: number
+//   name: string
+// }
+```
