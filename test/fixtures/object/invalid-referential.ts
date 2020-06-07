@@ -6,7 +6,7 @@ export const Struct = object({
   section: Section,
   subsection: refinement(Section, 'Subsection', (value, ctx) => {
     const { branch } = ctx
-    const parent = branch[branch.length - 2]
+    const parent = branch[0]
     return value.startsWith(`${parent.section}.`)
   }),
 })
@@ -17,7 +17,8 @@ export const data = {
 }
 
 export const error = {
-  path: ['subsection'],
   value: '2.1',
   type: 'Subsection',
+  path: ['subsection'],
+  branch: [data, data.subsection],
 }

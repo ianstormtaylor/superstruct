@@ -10,7 +10,8 @@ export const data = {
 }
 
 export const error = {
-  path: ['age'],
   value: 'invalid',
   type: 'number',
+  path: ['age'],
+  branch: [data, data.age],
 }

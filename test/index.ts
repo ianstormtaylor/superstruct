@@ -53,7 +53,7 @@ describe('superstruct', () => {
               )
             }
 
-            const actualError = pick(err, 'type', 'path', 'value')
+            const actualError = pick(err, 'type', 'path', 'value', 'branch')
             assert.deepEqual(actualError, error)
           } else {
             throw new Error(

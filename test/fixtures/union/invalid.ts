@@ -10,7 +10,8 @@ export const data = {
 }
 
 export const error = {
-  path: [],
   type: 'Type<{a}> | Type<{b}>',
   value: { b: 'invalid' },
+  path: [],
+  branch: [data],
 }

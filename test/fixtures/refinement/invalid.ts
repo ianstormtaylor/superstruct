@@ -6,7 +6,8 @@ export const Struct = refinement(string(), 'Email', isEmail)
 export const data = 'invalid'
 
 export const error = {
-  path: [],
   value: 'invalid',
   type: 'Email',
+  path: [],
+  branch: [data],
 }

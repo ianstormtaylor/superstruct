@@ -13,7 +13,8 @@ export const data = {
 }
 
 export const error = {
-  path: ['person'],
   value: undefined,
   type: 'Type<{name,age}>',
+  path: ['person'],
+  branch: [data, undefined],
 }

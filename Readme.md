@@ -72,7 +72,7 @@ assert(data, Article)
 // If you'd rather not throw, you can use `is()` or `validate()`.
 ```
 
-Superstruct comes with validators for all common JavaScript data types out of the box. And you can also define your own custom validations:
+Superstruct ships with validators for all the common JavaScript data types, and you can define custom ones too:
 
 ```js
 import { is, struct, object, string } from 'superstruct'
@@ -99,7 +99,7 @@ if (is(data, User)) {
 }
 ```
 
-Superstruct can also handle coercion of your data before validating it, for example to mix in default values (or trimming, parsing, sanitizing, etc.):
+Superstruct can also handle coercion of your data before validating it, for example to mix in default values:
 
 ```ts
 import { assert, coerce, object, number, string, defaulted } from 'superstruct'

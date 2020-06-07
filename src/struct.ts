@@ -182,7 +182,7 @@ function* check<T>(
   value: unknown,
   struct: Struct<T>,
   path: any[] = [],
-  branch: any[] = [value]
+  branch: any[] = []
 ): Iterable<StructFailure> {
   const { type } = struct
   const ctx: StructContext = {
@@ -191,11 +191,11 @@ function* check<T>(
     branch,
     path,
     fail(props = {}) {
-      return { value, type, path, branch, ...props }
+      return { value, type, path, branch: [...branch, value], ...props }
     },
     check(v, s, parent, key) {
-      const p = parent !== undefined ? path.concat(key) : path
-      const b = parent !== undefined ? branch.concat(parent) : branch
+      const p = parent !== undefined ? [...path, key] : path
+      const b = parent !== undefined ? [...branch, parent] : branch
       return check(v, s, p, b)
     },
   }

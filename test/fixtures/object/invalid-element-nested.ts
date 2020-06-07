@@ -11,7 +11,8 @@ export const data = {
 }
 
 export const error = {
-  path: ['emails', 1],
   value: false,
   type: 'string',
+  path: ['emails', 1],
+  branch: [data, data.emails, data.emails[1]],
 }

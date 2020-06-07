@@ -30,7 +30,8 @@ export const data = {
 }
 
 export const error = {
-  path: ['price'],
   value: 'Only $19.99!',
   type: 'number',
+  path: ['price'],
+  branch: [data, data.price],
 }

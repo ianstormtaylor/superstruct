@@ -8,6 +8,7 @@ export const error = {
   type: 'Object<{name}>',
   value: false,
   path: [],
+  branch: [data],
 }
 
 export const coerce = true

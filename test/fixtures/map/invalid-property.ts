@@ -8,7 +8,8 @@ export const data = new Map([
 ])
 
 export const error = {
-  path: ['a'],
   value: 'a',
   type: 'number',
+  path: ['a'],
+  branch: [data, 'a'],
 }
