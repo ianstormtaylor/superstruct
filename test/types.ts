@@ -6,6 +6,7 @@ import {
   defaulted,
   intersection,
   is,
+  literal,
   number,
   object,
   optional,
@@ -52,6 +53,13 @@ import {
   const x: unknown = null
   const Number = number()
   assert(x, Number)
+  x
+}
+
+{
+  const x: unknown = null
+  const Literal = literal('hello')
+  assert(x, Literal)
   x
 }
 

@@ -145,6 +145,9 @@ export function lazy<T>(fn: () => Struct<T>): Struct<T> {
  * Validate that a value is a specific constant.
  */
 
+export function literal<T extends boolean>(constant: T): Struct<T>
+export function literal<T extends number>(constant: T): Struct<T>
+export function literal<T extends string>(constant: T): Struct<T>
 export function literal<T>(constant: T): Struct<T> {
   return struct(`Literal<${toLiteralString(constant)}>`, (value) => {
     return value === constant
