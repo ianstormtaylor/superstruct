@@ -2,7 +2,7 @@ import babel from 'rollup-plugin-babel'
 import cjs from 'rollup-plugin-commonjs'
 import replace from 'rollup-plugin-replace'
 import node from 'rollup-plugin-node-resolve'
-import typescript from 'rollup-plugin-typescript2'
+import typescript from 'rollup-plugin-ts'
 import { terser } from 'rollup-plugin-terser'
 import config from './rollup'
 

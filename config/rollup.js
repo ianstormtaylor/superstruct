@@ -1,7 +1,7 @@
 import babel from 'rollup-plugin-babel'
 import cjs from 'rollup-plugin-commonjs'
 import node from 'rollup-plugin-node-resolve'
-import typescript from 'rollup-plugin-typescript2'
+import typescript from 'rollup-plugin-ts'
 
 export default {
   input: './src/index.ts',
