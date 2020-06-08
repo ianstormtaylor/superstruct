@@ -147,7 +147,7 @@ export function coerce<T>(value: unknown, struct: Struct<T>): T {
 
 export function is<T>(value: unknown, struct: Struct<T>): value is T {
   const result = validate(value, struct)
-  return !!result[0]
+  return !result[0]
 }
 
 /**
