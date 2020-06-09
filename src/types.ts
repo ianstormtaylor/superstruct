@@ -200,33 +200,41 @@ export function number(): Struct<number> {
  * Validate that an object with specific entry values.
  */
 
+export function object<V extends StructRecord<any>>(): Struct<{
+  [key: string]: unknown
+}>
 export function object<V extends StructRecord<any>>(
   Structs: V
-): Struct<{ [K in keyof V]: StructType<V[K]> }, V> {
-  const knowns = Object.keys(Structs)
+): Struct<{ [K in keyof V]: StructType<V[K]> }, V>
+export function object<V extends StructRecord<any>>(
+  Structs?: V
+): Struct<any, any> {
+  const knowns = Structs ? Object.keys(Structs) : []
   const Never = never()
   return new Struct({
-    type: `Object<{${knowns.join(',')}}>`,
-    schema: Structs,
-    coercer: createObjectCoercer(Structs),
+    type: Structs ? `Object<{${knowns.join(',')}}>` : 'Object',
+    schema: Structs ? Structs : null,
+    coercer: Structs ? createObjectCoercer(Structs) : (x) => x,
     *validator(value, ctx) {
       if (typeof value !== 'object' || value == null) {
         yield ctx.fail()
         return
       }
 
-      const unknowns = new Set(Object.keys(value))
+      if (Structs) {
+        const unknowns = new Set(Object.keys(value))
 
-      for (const key of knowns) {
-        unknowns.delete(key)
-        const Value = Structs[key]
-        const v = value[key]
-        yield* ctx.check(v, Value, value, key)
-      }
+        for (const key of knowns) {
+          unknowns.delete(key)
+          const Value = Structs[key]
+          const v = value[key]
+          yield* ctx.check(v, Value, value, key)
+        }
 
-      for (const key of unknowns) {
-        const v = value[key]
-        yield* ctx.check(v, Never, value, key)
+        for (const key of unknowns) {
+          const v = value[key]
+          yield* ctx.check(v, Never, value, key)
+        }
       }
     },
   })
