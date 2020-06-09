@@ -78,6 +78,8 @@ export function dynamic<T>(
  * Validate that a value against a set of potential values.
  */
 
+export function enums<T extends number>(values: T[]): Struct<T>
+export function enums<T extends string>(values: T[]): Struct<T>
 export function enums<T>(values: T[]): Struct<T> {
   return struct(`Enum<${values.map(toLiteralString)}>`, (value) => {
     return values.includes(value as any)

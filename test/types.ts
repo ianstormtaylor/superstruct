@@ -18,6 +18,7 @@ import {
   tuple,
   type,
   union,
+  enums,
 } from '..'
 
 {
@@ -132,5 +133,12 @@ import {
   })
 
   assert(x, Article)
+  x
+}
+
+{
+  const x: unknown = null
+  const Enums = enums(['a', 'b', 'c'])
+  assert(x, Enums)
   x
 }
