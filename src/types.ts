@@ -13,7 +13,7 @@ export function any(): Struct<any> {
  * Validate that an array of values of a specific type.
  */
 
-export function array<T>(): Struct<unknown[]>
+export function array(): Struct<unknown[]>
 export function array<T>(Element: Struct<T>): Struct<T[], Struct<T>>
 export function array<T>(Element?: Struct<T>): any {
   return new Struct({
