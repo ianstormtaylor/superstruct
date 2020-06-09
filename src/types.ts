@@ -253,7 +253,9 @@ export function number(): Struct<number> {
  * Validate that an object with specific entry values.
  */
 
-export function object<V extends StructRecord<any>>(): Struct<Object>
+export function object<V extends StructRecord<any>>(): Struct<
+  Record<string, unknown>
+>
 export function object<V extends StructRecord<any>>(
   Structs: V
 ): Struct<{ [K in keyof V]: StructType<V[K]> }, V>
