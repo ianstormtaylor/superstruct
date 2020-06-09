@@ -19,11 +19,11 @@ describe('superstruct', () => {
         .filter((t) => t[0] !== '.')
         .map((t) => basename(t, extname(t)))
 
-      for (const test of tests) {
-        const module = require(resolve(testsDir, test))
+      for (const name of tests) {
+        const module = require(resolve(testsDir, name))
         const { Struct, data, coerce, only, skip, output, error } = module
         const run = only ? it.only : skip ? it.skip : it
-        run(test, () => {
+        run(name, () => {
           let actual
           let err
 
@@ -41,7 +41,7 @@ describe('superstruct', () => {
           if ('output' in module) {
             if (err) {
               throw new Error(
-                `Expected "${test}" fixture not to throw an error but it did:\n\n${err}`
+                `Expected "${name}" fixture not to throw an error but it did:\n\n${err}`
               )
             }
 
@@ -49,7 +49,7 @@ describe('superstruct', () => {
           } else if ('error' in module) {
             if (!err) {
               throw new Error(
-                `Expected "${test}" fixture to throw an error but it did not.`
+                `Expected "${name}" fixture to throw an error but it did not.`
               )
             }
 
@@ -57,7 +57,7 @@ describe('superstruct', () => {
             assert.deepEqual(actualError, error)
           } else {
             throw new Error(
-              `The "${test}" fixture did not define an \`output\` or \`error\` export.`
+              `The "${name}" fixture did not define an \`output\` or \`error\` export.`
             )
           }
         })
