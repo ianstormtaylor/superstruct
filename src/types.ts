@@ -521,52 +521,52 @@ export function type<V extends StructRecord<any>>(
  */
 
 export function union<A>(Structs: StructTuple<[A]>): Struct<A>
-export function union<A, B>(Structs: StructTuple<[A, B]>): Struct<A & B>
+export function union<A, B>(Structs: StructTuple<[A, B]>): Struct<A | B>
 export function union<A, B, C>(
   Structs: StructTuple<[A, B, C]>
-): Struct<A & B & C>
+): Struct<A | B | C>
 export function union<A, B, C, D>(
   Structs: StructTuple<[A, B, C, D]>
-): Struct<A & B & C & D>
+): Struct<A | B | C | D>
 export function union<A, B, C, D, E>(
   Structs: StructTuple<[A, B, C, D, E]>
-): Struct<A & B & C & D & E>
+): Struct<A | B | C | D | E>
 export function union<A, B, C, D, E, F>(
   Structs: StructTuple<[A, B, C, D, E, F]>
-): Struct<A & B & C & D & E & F>
+): Struct<A | B | C | D | E | F>
 export function union<A, B, C, D, E, F, G>(
   Structs: StructTuple<[A, B, C, D, E, F, G]>
-): Struct<A & B & C & D & E & F & G>
+): Struct<A | B | C | D | E | F | G>
 export function union<A, B, C, D, E, F, G, H>(
   Structs: StructTuple<[A, B, C, D, E, F, G, H]>
-): Struct<A & B & C & D & E & F & G & H>
+): Struct<A | B | C | D | E | F | G | H>
 export function union<A, B, C, D, E, F, G, H, I>(
   Structs: StructTuple<[A, B, C, D, E, F, G, H, I]>
-): Struct<A & B & C & D & E & F & G & H & I>
+): Struct<A | B | C | D | E | F | G | H | I>
 export function union<A, B, C, D, E, F, G, H, I, J>(
   Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J]>
-): Struct<A & B & C & D & E & F & G & H & I & J>
+): Struct<A | B | C | D | E | F | G | H | I | J>
 export function union<A, B, C, D, E, F, G, H, I, J, K>(
   Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K>
+): Struct<A | B | C | D | E | F | G | H | I | J | K>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L>(
   Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L>
+): Struct<A | B | C | D | E | F | G | H | I | J | K | L>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L, M>(
   Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M>
+): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
   Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N>
+): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
   Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O>
+): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N | O>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
   Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P>
+): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
   Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q>
+): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q>
 export function union(Structs: Struct<any>[]): any {
   return struct(`${Structs.map((s) => s.type).join(' | ')}`, function* (
     value,
