@@ -187,6 +187,20 @@ export function never(): Struct<never> {
 }
 
 /**
+ * Augment a struct to make it accept `null` values.
+ */
+
+export function nullable<T>(S: Struct<T>): Struct<T | null> {
+  return new Struct({
+    type: `${S.type} | null`,
+    schema: S.schema,
+    validator: (value, ctx) => {
+      return value === null || ctx.check(value, S)
+    },
+  })
+}
+
+/**
  * Validate that a value is a number.
  */
 
@@ -239,7 +253,7 @@ export function object<V extends StructRecord<any>>(
 }
 
 /**
- * Augment a struct to make it accept optionally accept `undefined` values.
+ * Augment a struct to make it optionally accept `undefined` values.
  */
 
 export function optional<T>(S: Struct<T>): Struct<T | undefined> {
