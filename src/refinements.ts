@@ -2,6 +2,16 @@ import { Struct } from './struct'
 import { toFailures } from './utils'
 
 /**
+ * Augment a string or array struct to constrain its length to zero.
+ */
+
+export function empty<T extends string | any[]>(S: Struct<T>): Struct<T> {
+  return refinement(S, `${S.type} & Empty`, (value) => {
+    return value.length === 0
+  })
+}
+
+/**
  * Augment a string or array struct to constrain its length to being between a
  * minimum and maximum size.
  */
