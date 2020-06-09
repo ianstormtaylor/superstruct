@@ -29,6 +29,7 @@
     - [`union`](#union)
     - [Custom Types](#custom-types)
   - [Refinements](#refinements)
+    - [`empty`](#empty)
     - [`length`](#length)
     - [`pattern`](#pattern)
     - [Custom Refinements](#custom-refinements)
@@ -387,6 +388,24 @@ Custom types take validator functions that return either `true/false` or an arra
 ## Refinements
 
 Superstruct allows you to constrain existing structs with further validation. This doesn't change the type of the struct, but simply introduces extra validation logic. This can be useful for example when ensuring that a string matches a specific `RegExp`.
+
+### `empty`
+
+```ts
+import { empty } from 'superstruct'
+```
+
+```ts
+empty(string())
+empty(array())
+```
+
+```ts
+''
+[]
+```
+
+`empty` enforces that a `string` or `array` struct also requires a length of `0`.
 
 ### `length`
 

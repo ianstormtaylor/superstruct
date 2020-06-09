@@ -246,6 +246,7 @@ Read the getting started guide to familiarize yourself with how Superstruct work
     - [`union`](./docs/reference.md#union)
     - [Custom Types](./docs/reference.md#custom-types)
   - [Refinements](./docs/reference.md#refinements)
+    - [`empty`](./docs/reference.md#empty)
     - [`length`](./docs/reference.md#length)
     - [`pattern`](./docs/reference.md#pattern)
     - [Custom Refinements](./docs/reference.md#custom-refinements)
