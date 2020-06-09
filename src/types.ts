@@ -13,12 +13,16 @@ export function any(): Struct<any> {
  * Validate that an array of values of a specific type.
  */
 
-export function array<T>(Element: Struct<T>): Struct<T[], Struct<T>> {
+export function array<T>(): Struct<unknown[]>
+export function array<T>(Element: Struct<T>): Struct<T[], Struct<T>>
+export function array<T>(Element?: Struct<T>): any {
   return new Struct({
-    type: `Array<${Element.type}>`,
+    type: `Array<${Element ? Element.type : 'unknown'}>`,
     schema: Element,
     coercer: (value) => {
-      return Array.isArray(value) ? value.map((v) => coerce(v, Element)) : value
+      return Element && Array.isArray(value)
+        ? value.map((v) => coerce(v, Element))
+        : value
     },
     *validator(value, ctx) {
       if (!Array.isArray(value)) {
@@ -26,8 +30,10 @@ export function array<T>(Element: Struct<T>): Struct<T[], Struct<T>> {
         return
       }
 
-      for (const [i, v] of value.entries()) {
-        yield* ctx.check(v, Element, value, i)
+      if (Element) {
+        for (const [i, v] of value.entries()) {
+          yield* ctx.check(v, Element, value, i)
+        }
       }
     },
   })
