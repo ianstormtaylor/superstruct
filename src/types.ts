@@ -252,7 +252,7 @@ export function partial<T, V extends StructRecord<any>>(
   }
 
   const knowns = Object.keys(Structs)
-  const Never = never()
+  const Any = any()
   return new Struct({
     type: `Partial<{${knowns.join(',')}}>`,
     schema: Structs,
@@ -268,9 +268,9 @@ export function partial<T, V extends StructRecord<any>>(
       for (const key of knowns) {
         unknowns.delete(key)
 
-        if (!(key in value)) {
-          continue
-        }
+        // if (!(key in value)) {
+        //   continue;
+        // }
 
         const Value = Structs[key]
         const v = value[key]
@@ -279,7 +279,7 @@ export function partial<T, V extends StructRecord<any>>(
 
       for (const key of unknowns) {
         const v = value[key]
-        yield* ctx.check(v, Never, value, key)
+        yield* ctx.check(v, Any, value, key)
       }
     },
   })
