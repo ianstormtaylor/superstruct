@@ -587,6 +587,14 @@ export function union(Structs: Struct<any>[]): any {
 }
 
 /**
+ * Validate an unknown value.
+ */
+
+export function unknown(): Struct<unknown> {
+  return struct('unknown', () => true)
+}
+
+/**
  * Convert a value to a literal string.
  */
 
