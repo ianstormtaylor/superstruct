@@ -27,6 +27,36 @@ export function length<T extends string | any[]>(
 }
 
 /**
+ * Augment a number struct match only negative values.
+ */
+
+export function negative<T extends number>(S: Struct<T>): Struct<T> {
+  return refinement(S, S.type, (value) => {
+    return 0 > value
+  })
+}
+
+/**
+ * Augment a number struct match only non-negative values.
+ */
+
+export function nonnegative<T extends number>(S: Struct<T>): Struct<T> {
+  return refinement(S, S.type, (value) => {
+    return 0 <= value
+  })
+}
+
+/**
+ * Augment a number struct match only non-positive values.
+ */
+
+export function nonpositive<T extends number>(S: Struct<T>): Struct<T> {
+  return refinement(S, S.type, (value) => {
+    return 0 >= value
+  })
+}
+
+/**
  * Refine a string struct to match a specific regexp pattern.
  */
 
@@ -36,6 +66,16 @@ export function pattern<T extends string>(
 ): Struct<T> {
   return refinement(S, `${S.type} & Pattern<${regexp.source}>`, (value) => {
     return regexp.test(value)
+  })
+}
+
+/**
+ * Augment a number struct match only positive values.
+ */
+
+export function positive<T extends number>(S: Struct<T>): Struct<T> {
+  return refinement(S, S.type, (value) => {
+    return 0 < value
   })
 }
 
