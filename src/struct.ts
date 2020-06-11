@@ -142,6 +142,27 @@ export function coerce<T>(value: unknown, struct: Struct<T>): T {
 }
 
 /**
+ * Mask a value, returning only the subset of properties defined by a Struct.
+ */
+
+export function mask<
+  T extends Record<string, any>,
+  V extends { [K in keyof T]: StructType<T[K]> }
+>(value: unknown, S: Struct<T, V>): T {
+  const ret: any = {}
+
+  if (typeof value === 'object' && value != null) {
+    for (const key in S.schema) {
+      if (key in value) {
+        ret[key] = (value as T)[key]
+      }
+    }
+  }
+
+  return ret
+}
+
+/**
  * Check if a value passes a `Struct`.
  */
 

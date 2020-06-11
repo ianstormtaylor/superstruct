@@ -1,4 +1,4 @@
-import { Struct } from './struct'
+import { Struct, mask, StructType } from './struct'
 
 /**
  * Augment a `Struct` to add an additional coercion step to its input.
@@ -61,21 +61,11 @@ export function defaulted<T>(
  */
 
 export function masked<
-  T extends { [key: string]: any },
-  V extends Record<string, Struct<any>>
+  T extends Record<string, any>,
+  V extends { [K in keyof T]: StructType<T[K]> }
 >(S: Struct<T, V>): Struct<T> {
   return coercion(S, (x) => {
-    if (!isPlainObject(x)) {
-      return x
-    }
-
-    const ret: any = {}
-
-    for (const key in S.schema) {
-      ret[key] = x[key]
-    }
-
-    return ret
+    return typeof x !== 'object' || x == null ? x : mask(x, S)
   })
 }
 
