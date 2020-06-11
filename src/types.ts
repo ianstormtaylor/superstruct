@@ -304,6 +304,25 @@ export function object<V extends StructRecord<any>>(
 }
 
 /**
+ * Validates that a value is an object without a subset of properties.
+ */
+
+export function omit<
+  V extends StructRecord<any>,
+  K extends keyof V,
+  T extends { [P in K]: StructType<V[P]> }
+>(S: Struct<T, V>, keys: K[]): Struct<Omit<T, K>, Omit<V, K>> {
+  const { schema } = S
+  const subschema: any = { ...schema }
+
+  for (const key of keys) {
+    delete subschema[key]
+  }
+
+  return object(subschema)
+}
+
+/**
  * Augment a struct to make it optionally accept `undefined` values.
  */
 
