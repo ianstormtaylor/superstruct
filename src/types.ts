@@ -363,6 +363,25 @@ export function partial<T, V extends StructRecord<any>>(
 }
 
 /**
+ * Validates that a value is an object with a subset of properties.
+ */
+
+export function pick<
+  V extends StructRecord<any>,
+  K extends keyof V,
+  T extends { [P in K]: StructType<V[P]> }
+>(S: Struct<T, V>, keys: K[]): Struct<Pick<T, K>, Pick<V, K>> {
+  const { schema } = S
+  const subschema: any = {}
+
+  for (const key of keys) {
+    subschema[key] = schema[key]
+  }
+
+  return object(subschema)
+}
+
+/**
  * Validate that a value is a record with specific key and
  * value entries.
  */
