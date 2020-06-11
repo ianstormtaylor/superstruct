@@ -109,6 +109,16 @@ export function instance<T extends { new (...args: any): any }>(
 }
 
 /**
+ * Validate that a value is an integer.
+ */
+
+export function integer(): Struct<number> {
+  return struct(`integer`, (value) => {
+    return typeof value === 'number' && !isNaN(value) && Number.isInteger(value)
+  })
+}
+
+/**
  * Validate that a value matches all of a set of structs.
  */
 
