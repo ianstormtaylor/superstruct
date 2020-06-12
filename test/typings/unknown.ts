@@ -1,4 +1,4 @@
-import { assert, unknown } from '../../lib'
+import { assert, unknown } from '../..'
 import { test } from '..'
 
 test<unknown>((x) => {

@@ -1,4 +1,4 @@
-import { assert, coercion, string } from '../../lib'
+import { assert, coercion, string } from '../..'
 import { test } from '..'
 
 test<string>((x) => {

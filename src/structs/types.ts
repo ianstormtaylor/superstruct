@@ -207,21 +207,28 @@ export function literal<T>(constant: T): any {
  * specific types.
  */
 
+export function map(): Struct<Map<unknown, unknown>, null>
 export function map<K, V>(
   Key: Struct<K>,
   Value: Struct<V>
-): Struct<Map<K, V>, null> {
-  return struct(`Map<${Key.type},${Value.type}>`, function* (value, ctx) {
-    if (!(value instanceof Map)) {
-      yield ctx.fail()
-      return
-    }
+): Struct<Map<K, V>, null>
+export function map<K, V>(Key?: Struct<K>, Value?: Struct<V>): any {
+  return struct(
+    Key && Value ? `Map<${Key.type},${Value.type}>` : `Map`,
+    function* (value, ctx) {
+      if (!(value instanceof Map)) {
+        yield ctx.fail()
+        return
+      }
 
-    for (const [k, v] of value.entries()) {
-      yield* ctx.check(k, Key, value, k)
-      yield* ctx.check(v, Value, value, k)
+      if (Key && Value) {
+        for (const [k, v] of value.entries()) {
+          yield* ctx.check(k, Key, value, k)
+          yield* ctx.check(v, Value, value, k)
+        }
+      }
     }
-  })
+  )
 }
 
 /**
@@ -363,17 +370,21 @@ export function record<K extends string, V>(
  * specific type.
  */
 
-export function set<T>(Element: Struct<T>): Struct<Set<T>, null> {
-  return struct(`Set<${Element.type}>`, (value, ctx) => {
+export function set(): Struct<Set<unknown>, null>
+export function set<T>(Element: Struct<T>): Struct<Set<T>, null>
+export function set<T>(Element?: Struct<T>): any {
+  return struct(Element ? `Set<${Element.type}>` : `Set`, (value, ctx) => {
     if (!(value instanceof Set)) {
       return false
     }
 
-    for (const val of value) {
-      const [failure] = ctx.check(val, Element)
+    if (Element) {
+      for (const val of value) {
+        const [failure] = ctx.check(val, Element)
 
-      if (failure) {
-        return false
+        if (failure) {
+          return false
+        }
       }
     }
 

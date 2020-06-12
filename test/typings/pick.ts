@@ -1,4 +1,4 @@
-import { assert, pick, object, number, string } from '../../lib'
+import { assert, pick, object, number, string } from '../..'
 import { test } from '..'
 
 test<{
