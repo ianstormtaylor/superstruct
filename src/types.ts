@@ -67,11 +67,25 @@ export function date(): Struct<Date> {
  * Validate that a value against a set of potential values.
  */
 
-export function enums<T extends number>(values: T[]): Struct<T>
-export function enums<T extends string>(values: T[]): Struct<T>
-export function enums<T>(values: T[]): Struct<T> {
-  return struct(`Enum<${values.map(toLiteralString)}>`, (value) => {
-    return values.includes(value as any)
+export function enums<T extends number>(
+  values: T[]
+): Struct<T, { [K in T[][number]]: K }>
+export function enums<T extends string>(
+  values: T[]
+): Struct<T, { [K in T[][number]]: K }>
+export function enums<T>(values: T[]): any {
+  const schema: any = {}
+
+  for (const key of values) {
+    schema[key] = key
+  }
+
+  return new Struct({
+    type: `Enum<${values.map(toLiteralString)}>`,
+    schema,
+    validator: (value) => {
+      return values.includes(value as any)
+    },
   })
 }
 
