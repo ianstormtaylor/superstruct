@@ -1,6 +1,7 @@
-import { Struct, StructType, StructContext } from './struct'
-import { ObjectSchema, InferObjectStruct, Assign } from './xtras'
+import { Struct } from '../struct'
 import { object, optional } from './types'
+import { Context } from '../typings'
+import { ObjectSchema, Assign, ObjectType, PartialObjectSchema } from '../utils'
 
 /**
  * Create a new struct that combines the properties properties from multiple
@@ -10,15 +11,19 @@ import { object, optional } from './types'
  */
 
 export function assign<A extends ObjectSchema, B extends ObjectSchema>(
-  Structs: [InferObjectStruct<A>, InferObjectStruct<B>]
-): InferObjectStruct<Assign<A, B>>
+  Structs: [Struct<ObjectType<A>, A>, Struct<ObjectType<B>, B>]
+): Struct<ObjectType<Assign<A, B>>, Assign<A, B>>
 export function assign<
   A extends ObjectSchema,
   B extends ObjectSchema,
   C extends ObjectSchema
 >(
-  Structs: [InferObjectStruct<A>, InferObjectStruct<B>, InferObjectStruct<C>]
-): InferObjectStruct<Assign<Assign<A, B>, C>>
+  Structs: [
+    Struct<ObjectType<A>, A>,
+    Struct<ObjectType<B>, B>,
+    Struct<ObjectType<C>, C>
+  ]
+): Struct<ObjectType<Assign<Assign<A, B>, C>>, Assign<Assign<A, B>, C>>
 export function assign<
   A extends ObjectSchema,
   B extends ObjectSchema,
@@ -26,12 +31,15 @@ export function assign<
   D extends ObjectSchema
 >(
   Structs: [
-    InferObjectStruct<A>,
-    InferObjectStruct<B>,
-    InferObjectStruct<C>,
-    InferObjectStruct<D>
+    Struct<ObjectType<A>, A>,
+    Struct<ObjectType<B>, B>,
+    Struct<ObjectType<C>, C>,
+    Struct<ObjectType<D>, D>
   ]
-): InferObjectStruct<Assign<Assign<Assign<A, B>, C>, D>>
+): Struct<
+  ObjectType<Assign<Assign<Assign<A, B>, C>, D>>,
+  Assign<Assign<Assign<A, B>, C>, D>
+>
 export function assign<
   A extends ObjectSchema,
   B extends ObjectSchema,
@@ -40,13 +48,16 @@ export function assign<
   E extends ObjectSchema
 >(
   Structs: [
-    InferObjectStruct<A>,
-    InferObjectStruct<B>,
-    InferObjectStruct<C>,
-    InferObjectStruct<D>,
-    InferObjectStruct<E>
+    Struct<ObjectType<A>, A>,
+    Struct<ObjectType<B>, B>,
+    Struct<ObjectType<C>, C>,
+    Struct<ObjectType<D>, D>,
+    Struct<ObjectType<E>, E>
   ]
-): InferObjectStruct<Assign<Assign<Assign<Assign<A, B>, C>, D>, E>>
+): Struct<
+  ObjectType<Assign<Assign<Assign<Assign<A, B>, C>, D>, E>>,
+  Assign<Assign<Assign<Assign<A, B>, C>, D>, E>
+>
 export function assign(Structs: Struct<any>[]): any {
   const schemas = Structs.map((s) => s.schema)
   const schema = Object.assign({}, ...schemas)
@@ -62,7 +73,7 @@ export function assign(Structs: Struct<any>[]): any {
  */
 
 export function dynamic<T>(
-  fn: (value: unknown, ctx: StructContext) => Struct<T>
+  fn: (value: unknown, ctx: Context) => Struct<T>
 ): Struct<T> {
   return struct('Dynamic<...>', (value, ctx) => {
     return ctx.check(value, fn(value, ctx))
@@ -98,9 +109,9 @@ export function lazy<T>(fn: () => Struct<T>): Struct<T> {
  */
 
 export function omit<S extends ObjectSchema, K extends keyof S>(
-  struct: InferObjectStruct<S>,
+  struct: Struct<ObjectType<S>, S>,
   keys: K[]
-): InferObjectStruct<Omit<S, K>> {
+): Struct<ObjectType<Omit<S, K>>, Omit<S, K>> {
   const { schema } = struct
   const subschema: any = { ...schema }
 
@@ -119,8 +130,8 @@ export function omit<S extends ObjectSchema, K extends keyof S>(
  */
 
 export function partial<S extends ObjectSchema>(
-  struct: InferObjectStruct<S> | S
-): InferObjectStruct<{ [K in keyof S]: Struct<StructType<S[K]> | undefined> }> {
+  struct: Struct<ObjectType<S>, S> | S
+): Struct<ObjectType<PartialObjectSchema<S>>, PartialObjectSchema<S>> {
   const schema: any =
     struct instanceof Struct ? { ...struct.schema } : { ...struct }
 
@@ -139,9 +150,9 @@ export function partial<S extends ObjectSchema>(
  */
 
 export function pick<S extends ObjectSchema, K extends keyof S>(
-  struct: InferObjectStruct<S>,
+  struct: Struct<ObjectType<S>, S>,
   keys: K[]
-): InferObjectStruct<Pick<S, K>> {
+): Struct<ObjectType<Pick<S, K>>, Pick<S, K>> {
   const { schema } = struct
   const subschema: any = {}
 
@@ -160,5 +171,9 @@ export function struct<T>(
   name: string,
   validator: Struct<T>['validator']
 ): Struct<T, null> {
-  return new Struct({ type: name, validator, schema: null })
+  return new Struct({
+    type: name,
+    schema: null,
+    validator,
+  })
 }

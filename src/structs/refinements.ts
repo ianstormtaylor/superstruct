@@ -1,5 +1,5 @@
-import { Struct } from './struct'
-import { toFailures } from './xtras'
+import { Struct } from '../struct'
+import { toFailures } from '../utils'
 
 /**
  * Ensure that a string or array has a length of zero.

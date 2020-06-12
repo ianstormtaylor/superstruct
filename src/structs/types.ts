@@ -1,12 +1,13 @@
-import { Struct, StructType, coerce } from './struct'
-import { TupleSchema, ObjectSchema, InferObjectStruct } from './xtras'
+import { Struct, coerce } from '../struct'
 import { struct } from './utilities'
+import { Infer } from '../typings'
+import { TupleSchema, ObjectSchema, ObjectType } from '../utils'
 
 /**
  * Ensure that any value passes validation.
  */
 
-export function any(): Struct<any> {
+export function any(): Struct<any, null> {
   return struct('any', () => true)
 }
 
@@ -18,9 +19,9 @@ export function any(): Struct<any> {
  * and it is preferred to using `array(any())`.
  */
 
-export function array(): Struct<unknown[]>
-export function array<T>(Element: Struct<T>): Struct<T[], Struct<T>>
-export function array<T>(Element?: Struct<T>): any {
+export function array<T extends Struct<any>>(Element: T): Struct<Infer<T>[], T>
+export function array(): Struct<unknown[], undefined>
+export function array<T extends Struct<any>>(Element?: T): any {
   return new Struct({
     type: `Array<${Element ? Element.type : 'unknown'}>`,
     schema: Element,
@@ -48,7 +49,7 @@ export function array<T>(Element?: Struct<T>): any {
  * Ensure that a value is a boolean.
  */
 
-export function boolean(): Struct<boolean> {
+export function boolean(): Struct<boolean, null> {
   return struct('boolean', (value) => {
     return typeof value === 'boolean'
   })
@@ -61,7 +62,7 @@ export function boolean(): Struct<boolean> {
  * which can occur when parsing a date fails but still returns a `Date`.
  */
 
-export function date(): Struct<Date> {
+export function date(): Struct<Date, null> {
   return struct('Date', (value) => {
     return value instanceof Date && !isNaN(value.getTime())
   })
@@ -80,7 +81,7 @@ export function enums<T extends number>(
 export function enums<T extends string>(
   values: T[]
 ): Struct<T, { [K in T[][number]]: K }>
-export function enums<T>(values: T[]): any {
+export function enums<T extends number | string>(values: T[]): any {
   const schema: any = {}
 
   for (const key of values) {
@@ -100,7 +101,7 @@ export function enums<T>(values: T[]): any {
  * Ensure that a value is a function.
  */
 
-export function func(): Struct<Function> {
+export function func(): Struct<Function, null> {
   return struct('Function', (value) => {
     return typeof value === 'function'
   })
@@ -112,7 +113,7 @@ export function func(): Struct<Function> {
 
 export function instance<T extends { new (...args: any): any }>(
   Class: T
-): Struct<InstanceType<T>> {
+): Struct<InstanceType<T>, null> {
   return struct(`InstanceOf<${Class.name}>`, (value) => {
     return value instanceof Class
   })
@@ -122,7 +123,7 @@ export function instance<T extends { new (...args: any): any }>(
  * Ensure that a value is an integer.
  */
 
-export function integer(): Struct<number> {
+export function integer(): Struct<number, null> {
   return struct(`integer`, (value) => {
     return typeof value === 'number' && !isNaN(value) && Number.isInteger(value)
   })
@@ -179,7 +180,7 @@ export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
 ): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q>
-export function intersection(Structs: Struct<any>[]): any {
+export function intersection(Structs: Array<Struct<any, any>>): any {
   return struct(Structs.map((s) => s.type).join(' & '), function* (value, ctx) {
     for (const S of Structs) {
       yield* ctx.check(value, S)
@@ -191,11 +192,11 @@ export function intersection(Structs: Struct<any>[]): any {
  * Ensure that a value is an exact value, using `===` for comparison.
  */
 
-export function literal<T extends boolean>(constant: T): Struct<T>
-export function literal<T extends number>(constant: T): Struct<T>
-export function literal<T extends string>(constant: T): Struct<T>
-export function literal<T>(constant: T): Struct<T>
-export function literal<T>(constant: T): Struct<T> {
+export function literal<T extends boolean>(constant: T): Struct<T, null>
+export function literal<T extends number>(constant: T): Struct<T, null>
+export function literal<T extends string>(constant: T): Struct<T, null>
+export function literal<T>(constant: T): Struct<T, null>
+export function literal<T>(constant: T): any {
   return struct(`Literal<${toLiteralString(constant)}>`, (value) => {
     return value === constant
   })
@@ -206,7 +207,10 @@ export function literal<T>(constant: T): Struct<T> {
  * specific types.
  */
 
-export function map<K, V>(Key: Struct<K>, Value: Struct<V>): Struct<Map<K, V>> {
+export function map<K, V>(
+  Key: Struct<K>,
+  Value: Struct<V>
+): Struct<Map<K, V>, null> {
   return struct(`Map<${Key.type},${Value.type}>`, function* (value, ctx) {
     if (!(value instanceof Map)) {
       yield ctx.fail()
@@ -224,7 +228,7 @@ export function map<K, V>(Key: Struct<K>, Value: Struct<V>): Struct<Map<K, V>> {
  * Ensure that no value ever passes validation.
  */
 
-export function never(): Struct<never> {
+export function never(): Struct<never, null> {
   return struct('never', () => false)
 }
 
@@ -232,7 +236,7 @@ export function never(): Struct<never> {
  * Augment an existing struct to allow `null` values.
  */
 
-export function nullable<T>(S: Struct<T>): Struct<T | null> {
+export function nullable<T, S>(S: Struct<T, S>): Struct<T | null, S> {
   return new Struct({
     type: `${S.type} | null`,
     schema: S.schema,
@@ -246,7 +250,7 @@ export function nullable<T>(S: Struct<T>): Struct<T | null> {
  * Ensure that a value is a number.
  */
 
-export function number(): Struct<number> {
+export function number(): Struct<number, null> {
   return struct(`number`, (value) => {
     return typeof value === 'number' && !isNaN(value)
   })
@@ -259,8 +263,10 @@ export function number(): Struct<number> {
  * Note: Unrecognized properties will fail validation.
  */
 
-export function object(): Struct<Record<string, unknown>>
-export function object<S extends ObjectSchema>(schema: S): InferObjectStruct<S>
+export function object(): Struct<Record<string, unknown>, null>
+export function object<S extends ObjectSchema>(
+  schema: S
+): Struct<ObjectType<S>, S>
 export function object<S extends ObjectSchema>(schema?: S): any {
   const knowns = schema ? Object.keys(schema) : []
   const Never = never()
@@ -337,7 +343,7 @@ export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
 export function record<K extends string, V>(
   Key: Struct<K>,
   Value: Struct<V>
-): Struct<Record<K, V>> {
+): Struct<Record<K, V>, null> {
   return struct(`Record<${Key.type},${Value.type}>`, function* (value, ctx) {
     if (typeof value !== 'object' || value == null) {
       yield ctx.fail()
@@ -357,7 +363,7 @@ export function record<K extends string, V>(
  * specific type.
  */
 
-export function set<T>(Element: Struct<T>): Struct<Set<T>> {
+export function set<T>(Element: Struct<T>): Struct<Set<T>, null> {
   return struct(`Set<${Element.type}>`, (value, ctx) => {
     if (!(value instanceof Set)) {
       return false
@@ -379,7 +385,7 @@ export function set<T>(Element: Struct<T>): Struct<Set<T>> {
  * Ensure that a value is a string.
  */
 
-export function string(): Struct<string> {
+export function string(): Struct<string, null> {
   return struct('string', (value) => {
     return typeof value === 'string'
   })
@@ -469,22 +475,25 @@ export function tuple(Elements: Struct<any>[]): any {
  * how TypeScript's structural typing works.
  */
 
-export function type<V extends ObjectSchema>(
-  Structs: V
-): Struct<{ [K in keyof V]: StructType<V[K]> }> {
-  const keys = Object.keys(Structs)
+export function type<S extends ObjectSchema>(
+  schema: S
+): Struct<ObjectType<S>, S> {
+  const keys = Object.keys(schema)
+  return new Struct({
+    type: `Type<{${keys.join(',')}}>`,
+    schema,
+    validator: function* (value, ctx) {
+      if (typeof value !== 'object' || value == null) {
+        yield ctx.fail()
+        return
+      }
 
-  return struct(`Type<{${keys.join(',')}}>`, function* (value, ctx) {
-    if (typeof value !== 'object' || value == null) {
-      yield ctx.fail()
-      return
-    }
-
-    for (const key of keys) {
-      const Value = Structs[key]
-      const v = (value as any)[key]
-      yield* ctx.check(v, Value, value, key)
-    }
+      for (const key of keys) {
+        const Value = schema[key]
+        const v = (value as any)[key]
+        yield* ctx.check(v, Value, value, key)
+      }
+    },
   })
 }
 
@@ -560,7 +569,7 @@ export function union(Structs: Struct<any>[]): any {
  * Ensure that any value passes validation, without widening its type to `any`.
  */
 
-export function unknown(): Struct<unknown> {
+export function unknown(): Struct<unknown, null> {
   return struct('unknown', () => true)
 }
 

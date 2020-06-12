@@ -1,5 +1,5 @@
-import { Struct, mask } from './struct'
-import { ObjectSchema, InferObjectStruct } from './xtras'
+import { Struct, mask } from '../struct'
+import { ObjectSchema, ObjectType } from '../utils'
 
 /**
  * Augment a `Struct` to add an additional coercion step to its input.
@@ -12,10 +12,10 @@ import { ObjectSchema, InferObjectStruct } from './xtras'
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function coercion<T>(
-  struct: Struct<T>,
-  coercer: Struct<T>['coercer']
-): Struct<T> {
+export function coercion<T, S>(
+  struct: Struct<T, S>,
+  coercer: Struct<T, S>['coercer']
+): Struct<T, S> {
   const fn = struct.coercer
   return new Struct({
     ...struct,
@@ -72,8 +72,8 @@ export function defaulted<T, S>(
  */
 
 export function masked<S extends ObjectSchema>(
-  struct: InferObjectStruct<S>
-): InferObjectStruct<S> {
+  struct: Struct<ObjectType<S>, S>
+): Struct<ObjectType<S>, S> {
   return coercion(struct, (x) => {
     return typeof x !== 'object' || x == null ? x : mask(x, struct)
   })

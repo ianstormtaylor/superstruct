@@ -1,9 +1,5 @@
-import {
-  toFailures,
-  ObjectSchema,
-  InferObjectStruct,
-  InferObjectType,
-} from './xtras'
+import { Context, Failure, Result } from './typings'
+import { toFailures, ObjectSchema, ObjectType } from './utils'
 
 /**
  * `Struct` objects encapsulate the validation logic for a specific type of
@@ -11,12 +7,13 @@ import {
  * validate unknown input data against the struct.
  */
 
-export class Struct<T, S = any> {
+export class Struct<T = unknown, S = unknown> {
+  readonly TYPE!: T
   type: string
   schema: S
   coercer: (value: unknown) => unknown
-  validator: (value: unknown, context: StructContext) => StructResult
-  refiner: (value: T, context: StructContext) => StructResult
+  validator: (value: unknown, context: Context) => Result
+  refiner: (value: T, context: Context) => Result
 
   constructor(props: {
     type: Struct<T>['type']
@@ -94,10 +91,10 @@ export class StructError extends TypeError {
   type: string
   path: Array<number | string>
   branch: Array<any>
-  failures: () => IterableIterator<StructFailure>;
+  failures: () => IterableIterator<Failure>;
   [key: string]: any
 
-  constructor(failure: StructFailure, iterable: Iterable<StructFailure>) {
+  constructor(failure: Failure, iterable: Iterable<Failure>) {
     const { path, value, type, branch, ...rest } = failure
     const message = `Expected a value of type \`${type}\`${
       path.length ? ` for \`${path.join('.')}\`` : ''
@@ -119,49 +116,6 @@ export class StructError extends TypeError {
     ;(this as any).__proto__ = StructError.prototype
   }
 }
-
-/**
- * A `StructContext` contains information about the current value being
- * validated as well as helper functions for failures and recursive validating.
- */
-
-export type StructContext = {
-  value: any
-  type: string
-  branch: Array<any>
-  path: Array<string | number>
-  fail: (props?: Partial<StructFailure>) => StructFailure
-  check: <T, S>(
-    value: any,
-    struct: Struct<T, S>,
-    parent?: any,
-    key?: string | number
-  ) => Iterable<StructFailure>
-}
-
-/**
- * A `StructFailure` represents a single specific failure in validation.
- */
-
-export type StructFailure = {
-  value: StructContext['value']
-  type: StructContext['type']
-  branch: StructContext['branch']
-  path: StructContext['path']
-  [key: string]: any
-}
-
-/**
- * A `StructResult` is returned from validation functions.
- */
-
-export type StructResult = boolean | Iterable<StructFailure>
-
-/**
- * A type utility to extract the type from a `Struct` class.
- */
-
-export type StructType<T extends Struct<any>> = Parameters<T['refiner']>[0]
 
 /**
  * Assert that a value passes a `Struct`, throwing if it doesn't.
@@ -194,9 +148,9 @@ export function coerce<T>(value: unknown, struct: Struct<T>): T {
 
 export function mask<S extends ObjectSchema>(
   value: unknown,
-  struct: InferObjectStruct<S>,
+  struct: Struct<ObjectType<S>, S>,
   withCoercion: boolean = false
-): InferObjectType<S> {
+): ObjectType<S> {
   const ret: any = {}
 
   if (withCoercion) {
@@ -257,9 +211,9 @@ function* check<T>(
   struct: Struct<T>,
   path: any[] = [],
   branch: any[] = []
-): Iterable<StructFailure> {
+): Iterable<Failure> {
   const { type } = struct
-  const ctx: StructContext = {
+  const ctx: Context = {
     value,
     type,
     branch,
