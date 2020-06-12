@@ -87,3 +87,9 @@ type PickBy<T, V> = Pick<
 type Simplify<T> = T extends any[] | Date
   ? T
   : { [Key in keyof T]: T[Key] } & {}
+
+/**
+ * Assign properties from one type to another, overwriting existing.
+ */
+
+export type Assign<T, U> = Simplify<U & Omit<T, keyof U>>

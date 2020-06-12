@@ -1,5 +1,5 @@
 import { Struct } from './struct'
-import { toFailures } from './utils'
+import { toFailures } from './xtras'
 
 /**
  * Augment a string or array struct to constrain its length to zero.

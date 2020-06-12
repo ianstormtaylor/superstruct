@@ -1,5 +1,5 @@
-import { Struct, mask, StructType } from './struct'
-import { ObjectSchema, InferObjectStruct } from './utils'
+import { Struct, mask } from './struct'
+import { ObjectSchema, InferObjectStruct } from './xtras'
 
 /**
  * Augment a `Struct` to add an additional coercion step to its input.

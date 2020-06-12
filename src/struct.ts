@@ -3,7 +3,7 @@ import {
   ObjectSchema,
   InferObjectStruct,
   InferObjectType,
-} from './utils'
+} from './xtras'
 
 /**
  * `Struct` objects encapsulate the schema for a specific data type (with
