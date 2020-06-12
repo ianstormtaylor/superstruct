@@ -16,11 +16,11 @@ export class Struct<T = unknown, S = unknown> {
   refiner: (value: T, context: Context) => Result
 
   constructor(props: {
-    type: Struct<T>['type']
-    schema: S
-    coercer?: Struct<T>['coercer']
-    validator?: Struct<T>['validator']
-    refiner?: Struct<T>['refiner']
+    type: Struct<T, S>['type']
+    schema: Struct<T, S>['schema']
+    coercer?: Struct<T, S>['coercer']
+    validator?: Struct<T, S>['validator']
+    refiner?: Struct<T, S>['refiner']
   }) {
     const {
       type,
