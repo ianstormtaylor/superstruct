@@ -1,5 +1,5 @@
 import { Struct, StructType, coerce, StructContext } from './struct'
-import { StructRecord, StructTuple } from './utils'
+import { TupleSchema, ObjectSchema, InferObjectStruct } from './utils'
 
 /**
  * Validate any value.
@@ -122,52 +122,52 @@ export function integer(): Struct<number> {
  * Validate that a value matches all of a set of structs.
  */
 
-export function intersection<A>(Structs: StructTuple<[A]>): Struct<A>
-export function intersection<A, B>(Structs: StructTuple<[A, B]>): Struct<A & B>
+export function intersection<A>(Structs: TupleSchema<[A]>): Struct<A>
+export function intersection<A, B>(Structs: TupleSchema<[A, B]>): Struct<A & B>
 export function intersection<A, B, C>(
-  Structs: StructTuple<[A, B, C]>
+  Structs: TupleSchema<[A, B, C]>
 ): Struct<A & B & C>
 export function intersection<A, B, C, D>(
-  Structs: StructTuple<[A, B, C, D]>
+  Structs: TupleSchema<[A, B, C, D]>
 ): Struct<A & B & C & D>
 export function intersection<A, B, C, D, E>(
-  Structs: StructTuple<[A, B, C, D, E]>
+  Structs: TupleSchema<[A, B, C, D, E]>
 ): Struct<A & B & C & D & E>
 export function intersection<A, B, C, D, E, F>(
-  Structs: StructTuple<[A, B, C, D, E, F]>
+  Structs: TupleSchema<[A, B, C, D, E, F]>
 ): Struct<A & B & C & D & E & F>
 export function intersection<A, B, C, D, E, F, G>(
-  Structs: StructTuple<[A, B, C, D, E, F, G]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G]>
 ): Struct<A & B & C & D & E & F & G>
 export function intersection<A, B, C, D, E, F, G, H>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H]>
 ): Struct<A & B & C & D & E & F & G & H>
 export function intersection<A, B, C, D, E, F, G, H, I>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I]>
 ): Struct<A & B & C & D & E & F & G & H & I>
 export function intersection<A, B, C, D, E, F, G, H, I, J>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J]>
 ): Struct<A & B & C & D & E & F & G & H & I & J>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K]>
 ): Struct<A & B & C & D & E & F & G & H & I & J & K>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L]>
 ): Struct<A & B & C & D & E & F & G & H & I & J & K & L>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
 ): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
 ): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
 ): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
 ): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
 ): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q>
 export function intersection(Structs: Struct<any>[]): any {
   return struct(Structs.map((s) => s.type).join(' & '), function* (value, ctx) {
@@ -263,33 +263,27 @@ export function number(): Struct<number> {
  * Validate that an object with specific entry values.
  */
 
-export function object<V extends StructRecord<any>>(): Struct<
-  Record<string, unknown>
->
-export function object<V extends StructRecord<any>>(
-  Structs: V
-): Struct<{ [K in keyof V]: StructType<V[K]> }, V>
-export function object<V extends StructRecord<any>>(
-  Structs?: V
-): Struct<any, any> {
-  const knowns = Structs ? Object.keys(Structs) : []
+export function object(): Struct<Record<string, unknown>>
+export function object<S extends ObjectSchema>(schema: S): InferObjectStruct<S>
+export function object<S extends ObjectSchema>(schema?: S): any {
+  const knowns = schema ? Object.keys(schema) : []
   const Never = never()
   return new Struct({
-    type: Structs ? `Object<{${knowns.join(',')}}>` : 'Object',
-    schema: Structs ? Structs : null,
-    coercer: Structs ? createObjectCoercer(Structs) : (x) => x,
+    type: schema ? `Object<{${knowns.join(',')}}>` : 'Object',
+    schema: schema ? schema : null,
+    coercer: schema ? createObjectCoercer(schema) : (x) => x,
     *validator(value, ctx) {
       if (typeof value !== 'object' || value == null) {
         yield ctx.fail()
         return
       }
 
-      if (Structs) {
+      if (schema) {
         const unknowns = new Set(Object.keys(value))
 
         for (const key of knowns) {
           unknowns.delete(key)
-          const Value = Structs[key]
+          const Value = schema[key]
           const v = value[key]
           yield* ctx.check(v, Value, value, key)
         }
@@ -307,31 +301,30 @@ export function object<V extends StructRecord<any>>(
  * Validates that a value is an object without a subset of properties.
  */
 
-export function omit<
-  V extends StructRecord<any>,
-  K extends keyof V,
-  T extends { [P in K]: StructType<V[P]> }
->(S: Struct<T, V>, keys: K[]): Struct<Omit<T, K>, Omit<V, K>> {
-  const { schema } = S
+export function omit<S extends ObjectSchema, K extends keyof S>(
+  struct: InferObjectStruct<S>,
+  keys: K[]
+): InferObjectStruct<Omit<S, K>> {
+  const { schema } = struct
   const subschema: any = { ...schema }
 
   for (const key of keys) {
     delete subschema[key]
   }
 
-  return object(subschema)
+  return object(subschema as Omit<S, K>)
 }
 
 /**
  * Augment a struct to make it optionally accept `undefined` values.
  */
 
-export function optional<T>(S: Struct<T>): Struct<T | undefined> {
+export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
   return new Struct({
-    type: `${S.type}?`,
-    schema: S.schema,
+    type: `${struct.type}?`,
+    schema: struct.schema,
     validator: (value, ctx) => {
-      return value === undefined || ctx.check(value, S)
+      return value === undefined || ctx.check(value, struct)
     },
   })
 }
@@ -340,72 +333,42 @@ export function optional<T>(S: Struct<T>): Struct<T | undefined> {
  * Validate that a partial object with specific entry values.
  */
 
-export function partial<T, V extends StructRecord<any>>(
-  Structs: V | Struct<T, V>
-): Struct<{ [K in keyof V]?: StructType<V[K]> }> {
-  if (Structs instanceof Struct) {
-    Structs = Structs.schema
+export function partial<S extends ObjectSchema>(
+  struct: InferObjectStruct<S> | S
+): InferObjectStruct<{ [K in keyof S]: Struct<StructType<S[K]> | undefined> }> {
+  const schema: any =
+    struct instanceof Struct ? { ...struct.schema } : { ...struct }
+
+  for (const key in schema) {
+    schema[key] = optional(schema[key])
   }
 
-  const knowns = Object.keys(Structs)
-  const Never = never()
-  return new Struct({
-    type: `Partial<{${knowns.join(',')}}>`,
-    schema: Structs,
-    coercer: createObjectCoercer(Structs),
-    *validator(value, ctx) {
-      if (typeof value !== 'object' || value == null) {
-        yield ctx.fail()
-        return
-      }
-
-      const unknowns = new Set(Object.keys(value))
-
-      for (const key of knowns) {
-        unknowns.delete(key)
-
-        if (!(key in value)) {
-          continue
-        }
-
-        const Value = Structs[key]
-        const v = value[key]
-        yield* ctx.check(v, Value, value, key)
-      }
-
-      for (const key of unknowns) {
-        const v = value[key]
-        yield* ctx.check(v, Never, value, key)
-      }
-    },
-  })
+  return object(schema) as any
 }
 
 /**
  * Validates that a value is an object with a subset of properties.
  */
 
-export function pick<
-  V extends StructRecord<any>,
-  K extends keyof V,
-  T extends { [P in K]: StructType<V[P]> }
->(S: Struct<T, V>, keys: K[]): Struct<Pick<T, K>, Pick<V, K>> {
-  const { schema } = S
+export function pick<S extends ObjectSchema, K extends keyof S>(
+  struct: InferObjectStruct<S>,
+  keys: K[]
+): InferObjectStruct<Pick<S, K>> {
+  const { schema } = struct
   const subschema: any = {}
 
   for (const key of keys) {
     subschema[key] = schema[key]
   }
 
-  return object(subschema)
+  return object(subschema as Pick<S, K>)
 }
 
 /**
- * Validate that a value is a record with specific key and
- * value entries.
+ * Validate that a value is a record with specific key and value entries.
  */
 
-export function record<K extends string | number, V>(
+export function record<K extends string, V>(
   Key: Struct<K>,
   Value: Struct<V>
 ): Struct<Record<K, V>> {
@@ -470,52 +433,52 @@ export function struct<T>(
  * Validate that a value is a tuple with entries of specific types.
  */
 
-export function tuple<A>(Structs: StructTuple<[A]>): Struct<A>
-export function tuple<A, B>(Structs: StructTuple<[A, B]>): Struct<[A, B]>
+export function tuple<A>(Structs: TupleSchema<[A]>): Struct<A>
+export function tuple<A, B>(Structs: TupleSchema<[A, B]>): Struct<[A, B]>
 export function tuple<A, B, C>(
-  Structs: StructTuple<[A, B, C]>
+  Structs: TupleSchema<[A, B, C]>
 ): Struct<[A, B, C]>
 export function tuple<A, B, C, D>(
-  Structs: StructTuple<[A, B, C, D]>
+  Structs: TupleSchema<[A, B, C, D]>
 ): Struct<[A, B, C, D]>
 export function tuple<A, B, C, D, E>(
-  Structs: StructTuple<[A, B, C, D, E]>
+  Structs: TupleSchema<[A, B, C, D, E]>
 ): Struct<[A, B, C, D, E]>
 export function tuple<A, B, C, D, E, F>(
-  Structs: StructTuple<[A, B, C, D, E, F]>
+  Structs: TupleSchema<[A, B, C, D, E, F]>
 ): Struct<[A, B, C, D, E, F]>
 export function tuple<A, B, C, D, E, F, G>(
-  Structs: StructTuple<[A, B, C, D, E, F, G]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G]>
 ): Struct<[A, B, C, D, E, F, G]>
 export function tuple<A, B, C, D, E, F, G, H>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H]>
 ): Struct<[A, B, C, D, E, F, G, H]>
 export function tuple<A, B, C, D, E, F, G, H, I>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I]>
 ): Struct<[A, B, C, D, E, F, G, H, I]>
 export function tuple<A, B, C, D, E, F, G, H, I, J>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J]>
 ): Struct<[A, B, C, D, E, F, G, H, I, J]>
 export function tuple<A, B, C, D, E, F, G, H, I, J, K>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K]>
 ): Struct<[A, B, C, D, E, F, G, H, I, J, K]>
 export function tuple<A, B, C, D, E, F, G, H, I, J, K, L>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L]>
 ): Struct<[A, B, C, D, E, F, G, H, I, J, K, L]>
 export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
 ): Struct<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
 export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
 ): Struct<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
 export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
 ): Struct<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
 export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
 ): Struct<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
 export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
 ): Struct<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
 export function tuple(Elements: Struct<any>[]): any {
   const Never = never()
@@ -547,7 +510,7 @@ export function tuple(Elements: Struct<any>[]): any {
  * structural typing that TypeScript uses.
  */
 
-export function type<V extends StructRecord<any>>(
+export function type<V extends ObjectSchema>(
   Structs: V
 ): Struct<{ [K in keyof V]: StructType<V[K]> }> {
   const keys = Object.keys(Structs)
@@ -570,52 +533,52 @@ export function type<V extends StructRecord<any>>(
  * Validate that a value is one of a set of types.
  */
 
-export function union<A>(Structs: StructTuple<[A]>): Struct<A>
-export function union<A, B>(Structs: StructTuple<[A, B]>): Struct<A | B>
+export function union<A>(Structs: TupleSchema<[A]>): Struct<A>
+export function union<A, B>(Structs: TupleSchema<[A, B]>): Struct<A | B>
 export function union<A, B, C>(
-  Structs: StructTuple<[A, B, C]>
+  Structs: TupleSchema<[A, B, C]>
 ): Struct<A | B | C>
 export function union<A, B, C, D>(
-  Structs: StructTuple<[A, B, C, D]>
+  Structs: TupleSchema<[A, B, C, D]>
 ): Struct<A | B | C | D>
 export function union<A, B, C, D, E>(
-  Structs: StructTuple<[A, B, C, D, E]>
+  Structs: TupleSchema<[A, B, C, D, E]>
 ): Struct<A | B | C | D | E>
 export function union<A, B, C, D, E, F>(
-  Structs: StructTuple<[A, B, C, D, E, F]>
+  Structs: TupleSchema<[A, B, C, D, E, F]>
 ): Struct<A | B | C | D | E | F>
 export function union<A, B, C, D, E, F, G>(
-  Structs: StructTuple<[A, B, C, D, E, F, G]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G]>
 ): Struct<A | B | C | D | E | F | G>
 export function union<A, B, C, D, E, F, G, H>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H]>
 ): Struct<A | B | C | D | E | F | G | H>
 export function union<A, B, C, D, E, F, G, H, I>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I]>
 ): Struct<A | B | C | D | E | F | G | H | I>
 export function union<A, B, C, D, E, F, G, H, I, J>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J]>
 ): Struct<A | B | C | D | E | F | G | H | I | J>
 export function union<A, B, C, D, E, F, G, H, I, J, K>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K]>
 ): Struct<A | B | C | D | E | F | G | H | I | J | K>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L]>
 ): Struct<A | B | C | D | E | F | G | H | I | J | K | L>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L, M>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
 ): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
 ): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
 ): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N | O>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
 ): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P>
 export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
-  Structs: StructTuple<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
 ): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q>
 export function union(Structs: Struct<any>[]): any {
   return struct(`${Structs.map((s) => s.type).join(' | ')}`, function* (
@@ -656,7 +619,7 @@ function toLiteralString(value: any): string {
  * Coerce the values of an object-like struct.
  */
 
-function createObjectCoercer<V extends StructRecord<any>>(
+function createObjectCoercer<V extends ObjectSchema>(
   Structs: V
 ): (value: unknown) => unknown {
   const knowns = Object.keys(Structs)

@@ -1,4 +1,5 @@
 import { Struct, mask, StructType } from './struct'
+import { ObjectSchema, InferObjectStruct } from './utils'
 
 /**
  * Augment a `Struct` to add an additional coercion step to its input.
@@ -24,11 +25,11 @@ export function coercion<T>(
  * to have the value defaulted!
  */
 
-export function defaulted<T>(
-  S: Struct<T>,
+export function defaulted<T, S>(
+  S: Struct<T, S>,
   fallback: any,
   strict?: true
-): Struct<T> {
+): Struct<T, S> {
   return coercion(S, (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 
@@ -60,12 +61,11 @@ export function defaulted<T>(
  * Coerce a value to mask its properties to only that defined in the struct.
  */
 
-export function masked<
-  T extends Record<string, any>,
-  V extends { [K in keyof T]: StructType<T[K]> }
->(S: Struct<T, V>): Struct<T> {
-  return coercion(S, (x) => {
-    return typeof x !== 'object' || x == null ? x : mask(x, S)
+export function masked<S extends ObjectSchema>(
+  struct: InferObjectStruct<S>
+): InferObjectStruct<S> {
+  return coercion(struct, (x) => {
+    return typeof x !== 'object' || x == null ? x : mask(x, struct)
   })
 }
 

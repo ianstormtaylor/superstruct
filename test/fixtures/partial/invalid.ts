@@ -9,7 +9,7 @@ export const data = 'invalid'
 
 export const error = {
   value: 'invalid',
-  type: 'Partial<{name,age}>',
+  type: 'Object<{name,age}>',
   path: [],
   branch: [data],
 }

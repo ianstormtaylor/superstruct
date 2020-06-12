@@ -1,4 +1,4 @@
-import { assert, object, number } from '../..'
+import { assert, object, number, string, optional } from '../..'
 import { test } from '..'
 
 test<Record<string, unknown>>((x) => {
@@ -6,7 +6,10 @@ test<Record<string, unknown>>((x) => {
   return x
 })
 
-test<{ a: number }>((x) => {
-  assert(x, object({ a: number() }))
+test<{
+  a: number
+  b: string
+}>((x) => {
+  assert(x, object({ a: number(), b: string() }))
   return x
 })
