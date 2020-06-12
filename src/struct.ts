@@ -38,6 +38,38 @@ export class Struct<T, S = any> {
     this.validator = validator
     this.refiner = refiner
   }
+
+  /**
+   * Assert that a value passes a `Struct`, throwing if it doesn't.
+   */
+
+  assert(value: unknown): asserts value is T {
+    return assert(value, this)
+  }
+
+  /**
+   * Coerce a value with the coercion logic of `Struct` and validate it.
+   */
+
+  coerce(value: unknown): T {
+    return coerce(value, this)
+  }
+
+  /**
+   * Check if a value passes a `Struct`.
+   */
+
+  is(value: unknown): value is T {
+    return is(value, this)
+  }
+
+  /**
+   * Validate a value against a `Struct`, returning an error if invalid.
+   */
+
+  validate(value: unknown): [StructError, undefined] | [undefined, T] {
+    return validate(value, this)
+  }
 }
 
 /**
@@ -89,9 +121,9 @@ export type StructContext = {
   branch: Array<any>
   path: Array<string | number>
   fail: (props?: Partial<StructFailure>) => StructFailure
-  check: (
+  check: <T, S>(
     value: any,
-    struct: Struct<any> | Struct<never>,
+    struct: Struct<T, S>,
     parent?: any,
     key?: string | number
   ) => Iterable<StructFailure>
@@ -152,18 +184,24 @@ export function coerce<T>(value: unknown, struct: Struct<T>): T {
 
 export function mask<S extends ObjectSchema>(
   value: unknown,
-  S: InferObjectStruct<S>
+  struct: InferObjectStruct<S>,
+  withCoercion: boolean = false
 ): InferObjectType<S> {
   const ret: any = {}
 
+  if (withCoercion) {
+    value = struct.coercer(value)
+  }
+
   if (typeof value === 'object' && value != null) {
-    for (const key in S.schema) {
+    for (const key in struct.schema) {
       if (key in value) {
         ret[key] = (value as any)[key]
       }
     }
   }
 
+  assert(ret, struct)
   return ret
 }
 
@@ -183,9 +221,9 @@ export function is<T>(value: unknown, struct: Struct<T>): value is T {
 export function validate<T>(
   value: unknown,
   struct: Struct<T>,
-  coercing: boolean = false
+  withCoercion: boolean = false
 ): [StructError, undefined] | [undefined, T] {
-  if (coercing) {
+  if (withCoercion) {
     value = struct.coercer(value)
   }
 
