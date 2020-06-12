@@ -1,5 +1,5 @@
 import { deepEqual, equal } from 'assert'
-import { validate, string, StructError } from '../..'
+import { validate, string, StructError, struct, object } from '../..'
 
 describe('validate', () => {
   it('valid as helper', () => {
@@ -40,5 +40,25 @@ describe('validate', () => {
         branch: [42],
       },
     ])
+  })
+
+  it('early exit', () => {
+    let ranA = false
+    let ranB = false
+
+    const A = struct('A', (x) => {
+      ranA = true
+      return typeof x === 'string'
+    })
+
+    const B = struct('B', (x) => {
+      ranA = true
+      return typeof x === 'string'
+    })
+
+    const S = object({ a: A, b: B })
+    S.validate({ a: null, b: null })
+    equal(ranA, true)
+    equal(ranB, false)
   })
 })

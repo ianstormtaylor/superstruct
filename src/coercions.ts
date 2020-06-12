@@ -3,6 +3,13 @@ import { ObjectSchema, InferObjectStruct } from './xtras'
 
 /**
  * Augment a `Struct` to add an additional coercion step to its input.
+ *
+ * This allows you to transform input data before validating it, to increase the
+ * likelihood that it passes validation—for example for default values, parsing
+ * different formats, etc.
+ *
+ * Note: You must use `coerce(value, Struct)` on the value to have the coercion
+ * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
 export function coercion<T>(
@@ -19,10 +26,10 @@ export function coercion<T>(
 }
 
 /**
- * Augment a struct to coerce a default value for missing values.
+ * Augment a struct to replace `undefined` values with a default.
  *
- * Note: You must use `coerce(value, Struct)` on the value before validating it
- * to have the value defaulted!
+ * Note: You must use `coerce(value, Struct)` on the value to have the coercion
+ * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
 export function defaulted<T, S>(
@@ -58,7 +65,10 @@ export function defaulted<T, S>(
 }
 
 /**
- * Coerce a value to mask its properties to only that defined in the struct.
+ * Augment a struct to mask its input to only properties defined in the struct.
+ *
+ * Note: You must use `coerce(value, Struct)` on the value to have the coercion
+ * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
 export function masked<S extends ObjectSchema>(

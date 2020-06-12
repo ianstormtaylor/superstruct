@@ -3,12 +3,50 @@ import { ObjectSchema, InferObjectStruct, Assign } from './xtras'
 import { object, optional } from './types'
 
 /**
- * Combine properties from multiple object structs, like `Object.assign`.
+ * Create a new struct that combines the properties properties from multiple
+ * object structs.
+ *
+ * Like JavaScript's `Object.assign` utility.
  */
 
 export function assign<A extends ObjectSchema, B extends ObjectSchema>(
   Structs: [InferObjectStruct<A>, InferObjectStruct<B>]
 ): InferObjectStruct<Assign<A, B>>
+export function assign<
+  A extends ObjectSchema,
+  B extends ObjectSchema,
+  C extends ObjectSchema
+>(
+  Structs: [InferObjectStruct<A>, InferObjectStruct<B>, InferObjectStruct<C>]
+): InferObjectStruct<Assign<Assign<A, B>, C>>
+export function assign<
+  A extends ObjectSchema,
+  B extends ObjectSchema,
+  C extends ObjectSchema,
+  D extends ObjectSchema
+>(
+  Structs: [
+    InferObjectStruct<A>,
+    InferObjectStruct<B>,
+    InferObjectStruct<C>,
+    InferObjectStruct<D>
+  ]
+): InferObjectStruct<Assign<Assign<Assign<A, B>, C>, D>>
+export function assign<
+  A extends ObjectSchema,
+  B extends ObjectSchema,
+  C extends ObjectSchema,
+  D extends ObjectSchema,
+  E extends ObjectSchema
+>(
+  Structs: [
+    InferObjectStruct<A>,
+    InferObjectStruct<B>,
+    InferObjectStruct<C>,
+    InferObjectStruct<D>,
+    InferObjectStruct<E>
+  ]
+): InferObjectStruct<Assign<Assign<Assign<Assign<A, B>, C>, D>, E>>
 export function assign(Structs: Struct<any>[]): any {
   const schemas = Structs.map((s) => s.schema)
   const schema = Object.assign({}, ...schemas)
@@ -16,7 +54,11 @@ export function assign(Structs: Struct<any>[]): any {
 }
 
 /**
- * Validate that a value dynamically, determing which struct to use at runtime.
+ * Create a struct with dynamic, runtime validation.
+ *
+ * The callback will receive the value currently being validated, and must
+ * return a struct object to validate it with. This can be useful to model
+ * validation logic that changes based on its input.
  */
 
 export function dynamic<T>(
@@ -28,9 +70,12 @@ export function dynamic<T>(
 }
 
 /**
- * Validate a value lazily, by constructing the struct right before the first
- * validation. This is useful for cases where you want to have self-referential
- * structs for nested data structures.
+ * Create a struct with lazily evaluated validation.
+ *
+ * The first time validation is run with the struct, the callback will be called
+ * and must return a struct object to use. This is useful for cases where you
+ * want to have self-referential structs for nested data structures to avoid a
+ * circular definition problem.
  */
 
 export function lazy<T>(fn: () => Struct<T>): Struct<T> {
@@ -46,7 +91,10 @@ export function lazy<T>(fn: () => Struct<T>): Struct<T> {
 }
 
 /**
- * Validates that a value is an object without a subset of properties.
+ * Create a new struct based on an existing object struct, but excluding
+ * specific properties.
+ *
+ * Like TypeScript's `Omit` utility.
  */
 
 export function omit<S extends ObjectSchema, K extends keyof S>(
@@ -64,7 +112,10 @@ export function omit<S extends ObjectSchema, K extends keyof S>(
 }
 
 /**
- * Validate that a partial object with specific entry values.
+ * Create a new struct based on an existing object struct, but with all of its
+ * properties allowed to be `undefined`.
+ *
+ * Like TypeScript's `Partial` utility.
  */
 
 export function partial<S extends ObjectSchema>(
@@ -81,7 +132,10 @@ export function partial<S extends ObjectSchema>(
 }
 
 /**
- * Validates that a value is an object with a subset of properties.
+ * Create a new struct based on an existing object struct, but only including
+ * specific properties.
+ *
+ * Like TypeScript's `Pick` utility.
  */
 
 export function pick<S extends ObjectSchema, K extends keyof S>(
@@ -99,7 +153,7 @@ export function pick<S extends ObjectSchema, K extends keyof S>(
 }
 
 /**
- * Define a `Struct` instance with a type and validation function.
+ * Create a new struct with a custom validation function.
  */
 
 export function struct<T>(

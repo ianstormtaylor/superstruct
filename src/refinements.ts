@@ -2,7 +2,7 @@ import { Struct } from './struct'
 import { toFailures } from './xtras'
 
 /**
- * Augment a string or array struct to constrain its length to zero.
+ * Ensure that a string or array has a length of zero.
  */
 
 export function empty<T extends string | any[]>(S: Struct<T>): Struct<T> {
@@ -12,8 +12,7 @@ export function empty<T extends string | any[]>(S: Struct<T>): Struct<T> {
 }
 
 /**
- * Augment a string or array struct to constrain its length to being between a
- * minimum and maximum size.
+ * Ensure that a string or array has a length between `min` and `max`.
  */
 
 export function length<T extends string | any[]>(
@@ -27,7 +26,7 @@ export function length<T extends string | any[]>(
 }
 
 /**
- * Augment a number struct match only negative values.
+ * Ensure that a number is negative (not zero).
  */
 
 export function negative<T extends number>(S: Struct<T>): Struct<T> {
@@ -37,7 +36,7 @@ export function negative<T extends number>(S: Struct<T>): Struct<T> {
 }
 
 /**
- * Augment a number struct match only non-negative values.
+ * Ensure that a number is non-negative (includes zero).
  */
 
 export function nonnegative<T extends number>(S: Struct<T>): Struct<T> {
@@ -47,7 +46,7 @@ export function nonnegative<T extends number>(S: Struct<T>): Struct<T> {
 }
 
 /**
- * Augment a number struct match only non-positive values.
+ * Ensure that a number is non-positive (includes zero).
  */
 
 export function nonpositive<T extends number>(S: Struct<T>): Struct<T> {
@@ -57,7 +56,7 @@ export function nonpositive<T extends number>(S: Struct<T>): Struct<T> {
 }
 
 /**
- * Refine a string struct to match a specific regexp pattern.
+ * Ensure that a string matches a regular expression.
  */
 
 export function pattern<T extends string>(
@@ -70,7 +69,7 @@ export function pattern<T extends string>(
 }
 
 /**
- * Augment a number struct match only positive values.
+ * Ensure that a number is positive (not zero).
  */
 
 export function positive<T extends number>(S: Struct<T>): Struct<T> {
@@ -81,6 +80,10 @@ export function positive<T extends number>(S: Struct<T>): Struct<T> {
 
 /**
  * Augment a `Struct` to add an additional refinement to the validation.
+ *
+ * The refiner function is guaranteed to receive a value of the struct's type,
+ * because the struct's existing validation will already have passed. This
+ * allows you to layer additional validation on top of existing structs.
  */
 
 export function refinement<T>(

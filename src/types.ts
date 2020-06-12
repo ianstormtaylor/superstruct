@@ -3,7 +3,7 @@ import { TupleSchema, ObjectSchema, InferObjectStruct } from './xtras'
 import { struct } from './utilities'
 
 /**
- * Validate any value.
+ * Ensure that any value passes validation.
  */
 
 export function any(): Struct<any> {
@@ -11,7 +11,11 @@ export function any(): Struct<any> {
 }
 
 /**
- * Validate that an array of values of a specific type.
+ * Ensure that a value is an array and that its elements are of a specific type.
+ *
+ * Note: If you omit the element struct, the arrays elements will not be
+ * iterated at all. This can be helpful for cases where performance is critical,
+ * and it is preferred to using `array(any())`.
  */
 
 export function array(): Struct<unknown[]>
@@ -41,7 +45,7 @@ export function array<T>(Element?: Struct<T>): any {
 }
 
 /**
- * Validate that boolean values.
+ * Ensure that a value is a boolean.
  */
 
 export function boolean(): Struct<boolean> {
@@ -51,7 +55,7 @@ export function boolean(): Struct<boolean> {
 }
 
 /**
- * Validate that `Date` values.
+ * Ensure that a value is a valid `Date`.
  *
  * Note: this also ensures that the value is *not* an invalid `Date` object,
  * which can occur when parsing a date fails but still returns a `Date`.
@@ -64,7 +68,10 @@ export function date(): Struct<Date> {
 }
 
 /**
- * Validate that a value against a set of potential values.
+ * Ensure that a value is one of a set of potential values.
+ *
+ * Note: after creating the struct, you can access the definition of the
+ * potential values as `struct.schema`.
  */
 
 export function enums<T extends number>(
@@ -90,7 +97,7 @@ export function enums<T>(values: T[]): any {
 }
 
 /**
- * Validate that a value is a function.
+ * Ensure that a value is a function.
  */
 
 export function func(): Struct<Function> {
@@ -100,7 +107,7 @@ export function func(): Struct<Function> {
 }
 
 /**
- * Validate that a value is an instance of a class.
+ * Ensure that a value is an instance of a specific class.
  */
 
 export function instance<T extends { new (...args: any): any }>(
@@ -112,7 +119,7 @@ export function instance<T extends { new (...args: any): any }>(
 }
 
 /**
- * Validate that a value is an integer.
+ * Ensure that a value is an integer.
  */
 
 export function integer(): Struct<number> {
@@ -122,7 +129,7 @@ export function integer(): Struct<number> {
 }
 
 /**
- * Validate that a value matches all of a set of structs.
+ * Ensure that a value matches all of a set of types.
  */
 
 export function intersection<A>(Structs: TupleSchema<[A]>): Struct<A>
@@ -181,7 +188,7 @@ export function intersection(Structs: Struct<any>[]): any {
 }
 
 /**
- * Validate that a value is a specific constant.
+ * Ensure that a value is an exact value, using `===` for comparison.
  */
 
 export function literal<T extends boolean>(constant: T): Struct<T>
@@ -195,7 +202,8 @@ export function literal<T>(constant: T): Struct<T> {
 }
 
 /**
- * Validate that a value is a map with specific key and value entries.
+ * Ensure that a value is a `Map` object, and that its keys and values are of
+ * specific types.
  */
 
 export function map<K, V>(Key: Struct<K>, Value: Struct<V>): Struct<Map<K, V>> {
@@ -213,7 +221,7 @@ export function map<K, V>(Key: Struct<K>, Value: Struct<V>): Struct<Map<K, V>> {
 }
 
 /**
- * Validate that a value always fails.
+ * Ensure that no value ever passes validation.
  */
 
 export function never(): Struct<never> {
@@ -221,7 +229,7 @@ export function never(): Struct<never> {
 }
 
 /**
- * Augment a struct to make it accept `null` values.
+ * Augment an existing struct to allow `null` values.
  */
 
 export function nullable<T>(S: Struct<T>): Struct<T | null> {
@@ -235,7 +243,7 @@ export function nullable<T>(S: Struct<T>): Struct<T | null> {
 }
 
 /**
- * Validate that a value is a number.
+ * Ensure that a value is a number.
  */
 
 export function number(): Struct<number> {
@@ -245,7 +253,10 @@ export function number(): Struct<number> {
 }
 
 /**
- * Validate that an object with specific entry values.
+ * Ensure that a value is an object, that is has a known set of properties,
+ * and that its properties are of specific types.
+ *
+ * Note: Unrecognized properties will fail validation.
  */
 
 export function object(): Struct<Record<string, unknown>>
@@ -256,7 +267,6 @@ export function object<S extends ObjectSchema>(schema?: S): any {
   return new Struct({
     type: schema ? `Object<{${knowns.join(',')}}>` : 'Object',
     schema: schema ? schema : null,
-    coercer: schema ? createObjectCoercer(schema) : (x) => x,
     *validator(value, ctx) {
       if (typeof value !== 'object' || value == null) {
         yield ctx.fail()
@@ -279,11 +289,32 @@ export function object<S extends ObjectSchema>(schema?: S): any {
         }
       }
     },
+    coercer: (value: unknown) => {
+      if (!schema || typeof value !== 'object' || value == null) {
+        return value
+      }
+
+      const ret = {}
+      const unknowns = new Set(Object.keys(value))
+
+      for (const key of knowns) {
+        unknowns.delete(key)
+        const Value = schema[key]
+        const v = value[key]
+        ret[key] = coerce(v, Value)
+      }
+
+      for (const key of unknowns) {
+        ret[key] = value[key]
+      }
+
+      return ret
+    },
   })
 }
 
 /**
- * Augment a struct to make it optionally accept `undefined` values.
+ * Augment a struct to allow `undefined` values.
  */
 
 export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
@@ -297,7 +328,10 @@ export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
 }
 
 /**
- * Validate that a value is a record with specific key and value entries.
+ * Ensure that a value is an object with keys and values of specific types, but
+ * without ensuring any specific shape of properties.
+ *
+ * Like TypeScript's `Record` utility.
  */
 
 export function record<K extends string, V>(
@@ -319,7 +353,8 @@ export function record<K extends string, V>(
 }
 
 /**
- * Validate that a set of values matches a specific type.
+ * Ensure that a value is a `Set` object, and that its elements are of a
+ * specific type.
  */
 
 export function set<T>(Element: Struct<T>): Struct<Set<T>> {
@@ -341,7 +376,7 @@ export function set<T>(Element: Struct<T>): Struct<Set<T>> {
 }
 
 /**
- * Validate that a value is a string.
+ * Ensure that a value is a string.
  */
 
 export function string(): Struct<string> {
@@ -351,7 +386,8 @@ export function string(): Struct<string> {
 }
 
 /**
- * Validate that a value is a tuple with entries of specific types.
+ * Ensure that a value is a tuple of a specific length, and that each of its
+ * elements is of a specific type.
  */
 
 export function tuple<A>(Structs: TupleSchema<[A]>): Struct<A>
@@ -427,8 +463,10 @@ export function tuple(Elements: Struct<any>[]): any {
 }
 
 /**
- * Validate that a value matches a specific strutural interface, like the
- * structural typing that TypeScript uses.
+ * Ensure that a value has a set of known properties of specific types.
+ *
+ * Note: Unrecognized properties are allowed and untouched. This is similar to
+ * how TypeScript's structural typing works.
  */
 
 export function type<V extends ObjectSchema>(
@@ -451,7 +489,7 @@ export function type<V extends ObjectSchema>(
 }
 
 /**
- * Validate that a value is one of a set of types.
+ * Ensure that a value matches one of a set of types.
  */
 
 export function union<A>(Structs: TupleSchema<[A]>): Struct<A>
@@ -519,7 +557,7 @@ export function union(Structs: Struct<any>[]): any {
 }
 
 /**
- * Validate an unknown value.
+ * Ensure that any value passes validation, without widening its type to `any`.
  */
 
 export function unknown(): Struct<unknown> {
@@ -527,43 +565,11 @@ export function unknown(): Struct<unknown> {
 }
 
 /**
- * Convert a value to a literal string.
+ * Internal utility to convert a value to a literal string.
  */
 
 function toLiteralString(value: any): string {
   return typeof value === 'string'
     ? `"${value.replace(/"/g, '"')}"`
     : `${value}`
-}
-
-/**
- * Coerce the values of an object-like struct.
- */
-
-function createObjectCoercer<V extends ObjectSchema>(
-  Structs: V
-): (value: unknown) => unknown {
-  const knowns = Object.keys(Structs)
-
-  return (value) => {
-    if (typeof value !== 'object' || value == null) {
-      return value
-    }
-
-    const ret = {}
-    const unknowns = new Set(Object.keys(value))
-
-    for (const key of knowns) {
-      unknowns.delete(key)
-      const Value = Structs[key]
-      const v = value[key]
-      ret[key] = coerce(v, Value)
-    }
-
-    for (const key of unknowns) {
-      ret[key] = value[key]
-    }
-
-    return ret
-  }
 }

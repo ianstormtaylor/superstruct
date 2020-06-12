@@ -6,9 +6,9 @@ import {
 } from './xtras'
 
 /**
- * `Struct` objects encapsulate the schema for a specific data type (with
- * optional coercion). You can then use the `assert`, `is` or `validate` helpers
- * to validate unknown data against a struct.
+ * `Struct` objects encapsulate the validation logic for a specific type of
+ * values. Once constructed, you use the `assert`, `is` or `validate` helpers to
+ * validate unknown input data against the struct.
  */
 
 export class Struct<T, S = any> {
@@ -40,7 +40,7 @@ export class Struct<T, S = any> {
   }
 
   /**
-   * Assert that a value passes a `Struct`, throwing if it doesn't.
+   * Assert that a value passes the struct's validation, throwing if it doesn't.
    */
 
   assert(value: unknown): asserts value is T {
@@ -48,7 +48,7 @@ export class Struct<T, S = any> {
   }
 
   /**
-   * Coerce a value with the coercion logic of `Struct` and validate it.
+   * Coerce a value with the struct's coercion logic, then validate it.
    */
 
   coerce(value: unknown): T {
@@ -56,7 +56,7 @@ export class Struct<T, S = any> {
   }
 
   /**
-   * Check if a value passes a `Struct`.
+   * Check if a value passes the struct's validation.
    */
 
   is(value: unknown): value is T {
@@ -64,19 +64,29 @@ export class Struct<T, S = any> {
   }
 
   /**
-   * Validate a value against a `Struct`, returning an error if invalid.
+   * Validate a value with the struct's validation logic, returning a tuple
+   * representing the result.
+   *
+   * You may optionally pass `true` for the `withCoercion` argument to coerce
+   * the value before attempting to validate it. If you do, the result will
+   * contain the coerced result when successful.
    */
 
-  validate(value: unknown): [StructError, undefined] | [undefined, T] {
-    return validate(value, this)
+  validate(
+    value: unknown,
+    withCoercion?: true
+  ): [StructError, undefined] | [undefined, T] {
+    return validate(value, this, withCoercion)
   }
 }
 
 /**
- * `StructError` objects are thrown (or returned) by Superstruct when its
- * validation fails. The error represents the first error encountered during
- * validation. But they also have an `error.failures` property that holds
- * information for all of the failures encountered.
+ * `StructError` objects are thrown (or returned) when validation fails.
+ *
+ * Validation logic is design to exit early for maximum performance. The error
+ * represents the first error encountered during validation. For more detail,
+ * the `error.failures` property is a generator function that can be run to
+ * continue validation and receive all the failures in the data.
  */
 
 export class StructError extends TypeError {
@@ -84,7 +94,7 @@ export class StructError extends TypeError {
   type: string
   path: Array<number | string>
   branch: Array<any>
-  failures: () => Iterable<StructFailure>;
+  failures: () => IterableIterator<StructFailure>;
   [key: string]: any
 
   constructor(failure: StructFailure, iterable: Iterable<StructFailure>) {
@@ -93,7 +103,7 @@ export class StructError extends TypeError {
       path.length ? ` for \`${path.join('.')}\`` : ''
     } but received \`${JSON.stringify(value)}\`.`
 
-    function* failures(): Iterable<StructFailure> {
+    function* failures() {
       yield failure
       yield* iterable
     }
