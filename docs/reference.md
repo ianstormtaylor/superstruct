@@ -12,36 +12,50 @@
     - [`boolean`](#boolean)
     - [`date`](#date)
     - [`enums`](#enums)
+    - [`func`](#func)
     - [`instance`](#instance)
+    - [`integer`](#integer)
     - [`intersection`](#intersection)
     - [`literal`](#literal)
     - [`map`](#map)
     - [`never`](#never)
     - [`number`](#number)
+    - [`nullable`](#nullable)
     - [`object`](#object)
     - [`optional`](#optional)
-    - [`partial`](#partial)
     - [`record`](#record)
     - [`set`](#set)
     - [`string`](#string)
     - [`tuple`](#tuple)
     - [`type`](#type)
     - [`union`](#union)
+    - [`unknown`](#unknown)
     - [Custom Types](#custom-types)
   - [Refinements](#refinements)
     - [`empty`](#empty)
     - [`length`](#length)
+    - [`negative`](#negative)
+    - [`nonnegative`](#nonnegative)
+    - [`nonpositive`](#nonpositive)
     - [`pattern`](#pattern)
+    - [`positive`](#positive)
     - [Custom Refinements](#custom-refinements)
   - [Coercions](#coercions)
     - [`defaulted`](#defaulted)
     - [`masked`](#masked)
     - [Custom Coercions](#custom-coercions)
+  - [Utilities](#utilities)
+    - [`assign`](#assign)
+    - [`dynamic`](#dynamic)
+    - [`lazy`](#lazy)
+    - [`omit`](#omit)
+    - [`partial`](#partial)
+    - [`pick`](#pick)
   - [Errors](#errors)
     - [`StructError`](#structerror)
     - [Error Properties](#error-properties)
     - [Multiple Errors](#multiple-errors)
-  - [Utilities](#utilities)
+  - [Utilities](#utilities-1)
     - [`StructType`](#structtype)
 
 ## Validation
@@ -49,6 +63,10 @@
 ### `assert`
 
 `assert<T>(value: unknown, struct: Struct<T>) => asserts value is T`
+
+```ts
+assert(value, User)
+```
 
 Assert that `value` is valid according to a `struct`. If the value is invalid a [`StructError`](#structerror) will be thrown.
 
@@ -58,6 +76,10 @@ Assert that `value` is valid according to a `struct`. If the value is invalid a 
 
 `coerce<T>(value: unknown, struct: Struct<T>) => unknown`
 
+```ts
+const user = assert(value, User)
+```
+
 Coerce a `value` using the coercion logic that is built-in to the struct, returning the newly coerced value.
 
 > 🤖 If you want coercion logic like defaulted values, you **must** call this helper before running validation.
@@ -66,6 +88,12 @@ Coerce a `value` using the coercion logic that is built-in to the struct, return
 
 `is<T>(value: unknown, struct: Struct<T>) => value is T`
 
+```ts
+if (is(value, User)) {
+  // ...
+}
+```
+
 Test that `value` is valid, returning a boolean representing whether it is valid or not.
 
 > 🤖 When using TypeScript `is` acts as a type guard, so you can use it in an `if` statement to ensure that inside the statement the `value` matches the shape of the struct.
@@ -73,6 +101,10 @@ Test that `value` is valid, returning a boolean representing whether it is valid
 ### `validate`
 
 `validate<T>(value: unknown, struct: Struct<T>) => [StructError, T]`
+
+```ts
+const [err, user] = validate(value, User)
+```
 
 Validate `value`, returning a result tuple. If the value is invalid the first element will be a [`StructError`](#structerror). Otherwise, the first element will be `undefined` and the second element will be a value that is guaranteed to match the struct.
 
@@ -85,19 +117,18 @@ Superstruct exposes factory functions for a variety of common JavaScript (and Ty
 ```ts
 any()
 ```
-
 ```ts
 'valid'
 42
 true
 undefined
 null
-{
-  also: 'valid'
-}
+{ also: 'valid' }
 ```
 
 `any` structs accept any value as valid.
+
+> 🤖 Note that if you're using TypeScript, the `any` struct will loosen the type to `any`, and you might want to use [`unknown`](#unknown) instead.
 
 ### `array`
 
@@ -105,7 +136,6 @@ null
 array(number())
 array(object({ id: string() }))
 ```
-
 ```ts
 ;[1, 2, 3][{ id: '1' }]
 ```
@@ -117,7 +147,6 @@ array(object({ id: string() }))
 ```ts
 boolean()
 ```
-
 ```ts
 true
 false
@@ -130,7 +159,6 @@ false
 ```ts
 date()
 ```
-
 ```ts
 new Date()
 ```
@@ -144,7 +172,6 @@ new Date()
 ```ts
 enums(['Jane', 'John', 'Jack', 'Jill'])
 ```
-
 ```ts
 'Jane'
 'John'
@@ -152,24 +179,47 @@ enums(['Jane', 'John', 'Jack', 'Jill'])
 
 `enums` structs validate that a value is one of a specific set of literals values.
 
+### `func`
+
+```ts
+func()
+```
+```ts
+function () {}
+```
+
+`func` structs validate that a value is a function.
+
+
 ### `instance`
 
 ```ts
 instance(MyClass)
 ```
-
 ```ts
 new MyClass()
 ```
 
 `instance` structs validate that a value is an instance of a particular class, using JavaScript's built-in `instanceof` operator.
 
+### `integer`
+
+```ts
+integer()
+```
+```ts
+-7
+0
+42
+```
+
+`integer` structs validate that a value is an integer.
+
 ### `intersection`
 
 ```ts
 intersection([string(), Email])
 ```
-
 ```ts
 'jane@example.com'
 ```
@@ -181,7 +231,6 @@ intersection([string(), Email])
 ```ts
 literal(42)
 ```
-
 ```ts
 42
 ```
@@ -193,7 +242,6 @@ literal(42)
 ```ts
 map([string(), number()])
 ```
-
 ```ts
 new Map([
   ['a', 1],
@@ -208,7 +256,6 @@ new Map([
 ```ts
 never()
 ```
-
 ```ts
 ```
 
@@ -219,7 +266,6 @@ never()
 ```ts
 number()
 ```
-
 ```ts
 0
 3.14
@@ -229,6 +275,18 @@ Infinity
 
 `number` structs validate that a value is a number.
 
+### `nullable`
+
+```ts
+nullable(string())
+```
+```ts
+'a string of text'
+null
+```
+
+`nullable` structs validate that a value matches a specific struct, or that it is `null`.
+
 ### `object`
 
 ```ts
@@ -237,7 +295,6 @@ struct({
   name: string(),
 })
 ```
-
 ```ts
 {
   id: 1,
@@ -252,7 +309,6 @@ struct({
 ```ts
 optional(string())
 ```
-
 ```ts
 'a string of text'
 undefined
@@ -260,31 +316,11 @@ undefined
 
 `optional` structs validate that a value matches a specific struct, or that it is `undefined`.
 
-### `partial`
-
-```ts
-partial({
-  a: number(),
-  b: number(),
-})
-```
-
-```ts
-{
-  a: 1,
-  b: 2,
-  c: 3,
-}
-```
-
-`partial` structs are similar to `object` structs, but they only require that the specified properties exist, and they don't care about other properties on the object.
-
 ### `record`
 
 ```ts
 record([string(), number()])
 ```
-
 ```ts
 {
   a: 1,
@@ -299,7 +335,6 @@ record([string(), number()])
 ```ts
 set(string())
 ```
-
 ```ts
 new Set(['a', 'b', 'c'])
 ```
@@ -311,7 +346,6 @@ new Set(['a', 'b', 'c'])
 ```ts
 string()
 ```
-
 ```ts
 'a string of text'
 ```
@@ -323,7 +357,6 @@ string()
 ```ts
 tuple([string(), number(), boolean()])
 ```
-
 ```ts
 ;['a', 1, true]
 ```
@@ -338,7 +371,6 @@ type({
   walk: func(),
 })
 ```
-
 ```ts
 {
   name: 'Jill',
@@ -355,13 +387,28 @@ type({
 ```ts
 union([string(), number()])
 ```
-
 ```ts
 'a string'
 42
 ```
 
 `union` structs validate that a value matches at least one of many types.
+
+### `unknown`
+
+```ts
+unknown()
+```
+```ts
+'valid'
+42
+true
+undefined
+null
+{ also: 'valid' }
+```
+
+`unknown` structs accept unknown value as valid without loosening its type to `any`.
 
 ### Custom Types
 
@@ -392,14 +439,9 @@ Superstruct allows you to constrain existing structs with further validation. Th
 ### `empty`
 
 ```ts
-import { empty } from 'superstruct'
-```
-
-```ts
 empty(string())
 empty(array())
 ```
-
 ```ts
 ''
 []
@@ -410,44 +452,82 @@ empty(array())
 ### `length`
 
 ```ts
-import { length } from 'superstruct'
-```
-
-```ts
 length(string(), 1, 100)
 
 length(array(number), 0, Infinity)
 ```
-
 ```ts
 'a string of text'[(1, 2, 3)]
 ```
 
 `length` enforces that a `string` or `array` struct also is within a certain `min` and `max` length.
 
-### `pattern`
+### `negative`
 
 ```ts
-import { pattern } from 'superstruct'
+negative(number())
 ```
+```ts
+-42
+-3.14
+```
+
+`negative` enforces that a `number` struct is also a negative number (not zero).
+
+### `nonnegative`
+
+```ts
+nonnegative(number())
+```
+```ts
+0
+42
+3.14
+```
+
+`nonnegative` enforces that a `number` struct is also a nonnegative number (including zero).
+
+### `nonpositive`
+
+```ts
+nonpositive(number())
+```
+```ts
+0
+-42
+-3.14
+```
+
+`nonpositive` enforces that a `number` struct is also a nonpositive number (including zero).
+
+### `pattern`
 
 ```ts
 pattern(string(), /\d+/)
 ```
-
 ```ts
 '123'
 ```
 
 `pattern` enforces that a `string` struct also matches a supplied `RegExp`.
 
+### `positive`
+
+```ts
+positive(number())
+```
+```ts
+42
+3.14
+```
+
+`positive` enforces that a `number` struct is also a positive number (not zero).
+
 ### Custom Refinements
 
 You can also define your own custom refinments that are specific to your application's requirements, like so:
 
 ```ts
-import { refinement } from 'superstruct'
-
 const PositiveInteger = refinement(number(), 'PositiveInteger', value => {
   return Number.isInteger(value) && value >= 0
 })
@@ -462,10 +542,6 @@ Superstruct allows structs to be augmented with coercion logic, allowing you to 
 ### `defaulted`
 
 ```ts
-import { defaulted } from 'superstruct'
-```
-
-```ts
 defaulted(string(), 'Untitled')
 
 defaulted(object({
@@ -478,10 +554,6 @@ defaulted(object({
 `defaulted` augments a struct to add coercion logic for default values, which are applied when the input is `undefined`.
 
 ### `masked`
-
-```ts
-import { masked } from 'superstruct'
-```
 
 ```ts
 masked(
@@ -500,8 +572,6 @@ masked(
 You can also define your own custom coercions that are specific to your application's requirements, like so:
 
 ```ts
-import { coercion } from 'superstruct'
-
 const PositiveInteger = coercion(string(), value => {
   return typeof value === 'string' ? value.trim() : value
 })
@@ -510,6 +580,92 @@ const PositiveInteger = coercion(string(), value => {
 This allows you to customize how lenient you want to be in accepting data with your structs.
 
 > 🤖 Note that the `value` argument passed to coercion handlers is of type `unknown`! This is because it has yet to be validated, so it could still be anything. Make sure your coercion functions guard against unknown types.
+
+## Utilities
+
+Superstruct also ships with a handful of utility type factories, which allow you to easily manipulate and transforms existing structs.
+
+### `assign`
+
+```ts
+assign([
+  object({ id: string() }),
+  object({ id: number(), name: string() })
+])
+```
+```ts
+{
+  id: 1,
+  name: 'Jane',
+}
+```
+
+`assign` creates a new struct by mixing the properties of existing object structs, similar to JavaScript's native [`Object.assign`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign).
+
+### `dynamic`
+
+```ts
+const User = object({ ... })
+const Bot = object({ ... })
+
+dynamic((value) => {
+  value.kind === 'user' ? User : Bot
+})
+```
+
+`dynamic` allows you to create a struct with validation logic that can change at runtime. The callback will be called with `(value, context)` and must return the struct to continue validation with.
+
+### `lazy`
+
+```ts
+const Node = object({
+  id: number(),
+  children: lazy(() => array(Node)),
+})
+```
+
+`lazy` allows you to create a self-referential struct, useful for defining recursive data structures.
+
+> 🤖 Note that TypeScript can't automatically infer the type from this kind of recursive structure, so you'll need to pass in the type manually.
+
+### `omit`
+
+```ts
+omit(object({
+  id: number(),
+  name: string(),
+}), ['name'])
+```
+
+`omit` allows you to create a new struct based on an existing object struct, but excluding specific properties.
+
+### `partial`
+
+```ts
+partial(object({
+  id: number(),
+  name: string(),
+}))
+```
+```ts
+{ id: 1, name: 'Jane' }
+{ id: 1 }
+{ name: 'Jane' }
+```
+
+`partial` allows you to create a new struct based on an existing object struct, but with all of its properties being optional.
+
+
+### `pick`
+
+```ts
+pick(object({
+  id: number(),
+  name: string(),
+}), ['id'])
+```
+
+`pick` allows you to create a new struct based on an existing object struct, but only including specific properties.
 
 ## Errors
 
