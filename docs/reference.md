@@ -24,6 +24,7 @@
     - [`object`](#object)
     - [`optional`](#optional)
     - [`record`](#record)
+    - [`regexp`](#regexp)
     - [`set`](#set)
     - [`string`](#string)
     - [`tuple`](#tuple)
@@ -329,6 +330,20 @@ record([string(), number()])
 ```
 
 `record` structs validate an object with specific types for its keys and values. But, unlike `object` structs, they do not enforce a specific set of keys.
+
+### `regexp`
+
+```ts
+regexp()
+```
+```ts
+/\d+/
+new RegExp()
+```
+
+`regexp` structs validate that a value is a `RegExp` object.
+
+> 🤖 This does not test the value against the regular expression! For that you want the [`pattern`](#pattern) refinement.
 
 ### `set`
 

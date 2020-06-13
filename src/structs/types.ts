@@ -404,6 +404,19 @@ export function record<K extends string, V>(
 }
 
 /**
+ * Ensure that a value is a `RegExp`.
+ *
+ * Note: this does not test the value against the regular expression! For that
+ * you need to use the `pattern()` refinement.
+ */
+
+export function regexp(): Struct<RegExp, null> {
+  return struct('regexp', (value) => {
+    return value instanceof RegExp
+  })
+}
+
+/**
  * Ensure that a value is a `Set` object, and that its elements are of a
  * specific type.
  */

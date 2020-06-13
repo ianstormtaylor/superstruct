@@ -20,7 +20,10 @@ describe('validate', () => {
     deepEqual(Array.from((err as StructError).failures()), [
       {
         value: 42,
+        key: undefined,
         type: 'string',
+        refinement: undefined,
+        message: 'Expected a string, but received: 42',
         path: [],
         branch: [42],
       },
@@ -35,7 +38,10 @@ describe('validate', () => {
     deepEqual(Array.from((err as StructError).failures()), [
       {
         value: 42,
+        key: undefined,
         type: 'string',
+        refinement: undefined,
+        message: 'Expected a string, but received: 42',
         path: [],
         branch: [42],
       },
