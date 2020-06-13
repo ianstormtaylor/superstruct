@@ -7,7 +7,7 @@ export type Failure = {
   key: string | number | undefined
   type: string
   refinement: string | undefined
-  message: string | undefined
+  message: string
   branch: Array<any>
   path: Array<string | number>
 }
@@ -32,19 +32,27 @@ export class StructError extends TypeError {
   [key: string]: any
 
   constructor(failure: Failure, iterable: Iterable<Failure>) {
-    const { path, value, key, type, refinement, branch, ...rest } = failure
-    const message = `Expected a value of type \`${type}\`${
-      path.length ? ` for \`${path.join('.')}\`` : ''
-    } but received \`${JSON.stringify(value)}\`.`
+    const {
+      path,
+      value,
+      key,
+      type,
+      message,
+      refinement,
+      branch,
+      ...rest
+    } = failure
 
     function* failures() {
       yield failure
       yield* iterable
     }
 
-    super(message)
-    this.value = value
+    const msg =
+      path.length === 0 ? message : `At path: ${path.join('.')} -- ${message}`
+    super(msg)
     Object.assign(this, rest)
+    this.value = value
     this.key = key
     this.type = type
     this.refinement = refinement

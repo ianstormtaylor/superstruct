@@ -1,5 +1,5 @@
 import { deepEqual, equal } from 'assert'
-import { validate, string, StructError, struct, object } from '../..'
+import { validate, string, StructError, struct, object, array } from '../..'
 
 describe('validate', () => {
   it('valid as helper', () => {
@@ -46,6 +46,15 @@ describe('validate', () => {
         branch: [42],
       },
     ])
+  })
+
+  it('error message path', () => {
+    const S = array(string())
+    const [err] = S.validate(['a', 42])
+    equal(
+      (err as StructError).message,
+      'At path: 1 -- Expected a string, but received: 42'
+    )
   })
 
   it('early exit', () => {

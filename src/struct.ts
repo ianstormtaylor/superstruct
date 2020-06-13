@@ -1,4 +1,4 @@
-import { toFailures, ObjectSchema, ObjectType } from './utils'
+import { toFailures, ObjectSchema, ObjectType, print } from './utils'
 import { StructError, Failure } from './error'
 
 /**
@@ -218,22 +218,27 @@ function* check<T, S>(
         props = { message: props }
       }
 
-      const f: Failure = {
-        refinement: undefined,
-        message: undefined,
+      const { type } = struct
+      let { message, refinement } = props
+
+      if (!message) {
+        message = `Expected a value of type \`${type}\`${
+          refinement ? ` with refinement \`${refinement}\`` : ''
+        }${
+          path.length ? ` for \`${path.join('.')}\`` : ''
+        }, but received: \`${print(value)}\``
+      }
+
+      return {
         ...props,
         value,
-        type: struct.type,
+        type,
+        refinement,
+        message,
         key: path[path.length - 1],
         path,
         branch: [...branch, value],
       }
-
-      if (!props.message) {
-        f.message = toMessage(f)
-      }
-
-      return f
     },
     check(v, s, parent, key) {
       const p = parent !== undefined ? [...path, key] : path
@@ -251,16 +256,4 @@ function* check<T, S>(
   } else {
     yield* toFailures(struct.refiner(value as T, ctx), ctx)
   }
-}
-
-function toMessage(failure: Failure): string {
-  const { path, value, type, refinement, message } = failure
-  const string = message
-    ? message
-    : `Expected a value of type \`${type}\`${
-        refinement ? ` with refinement \`${refinement}\`` : ''
-      }${
-        path.length ? ` for \`${path.join('.')}\`` : ''
-      } but received \`${JSON.stringify(value)}\`.`
-  return string
 }

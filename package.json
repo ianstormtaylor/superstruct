@@ -9,6 +9,7 @@
   "types": "./lib/index.d.ts",
   "main": "./lib/index.cjs",
   "module": "./lib/index.es.js",
+  "sideEffects": false,
   "files": [
     "umd",
     "lib"

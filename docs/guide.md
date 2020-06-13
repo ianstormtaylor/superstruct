@@ -190,10 +190,10 @@ To define custom data types, we can use the [`struct`](https://superstructjs.org
 import { struct } from 'superstruct'
 import isEmail from 'is-email'
 
-const Email = struct('Email', value => isEmail(value))
+const email = () => struct('email', value => isEmail(value))
 ```
 
-Now we can define structs know about the `'email'` type:
+Now we can define structs know about the `email` type:
 
 ```ts
 const User = object({
@@ -218,8 +218,7 @@ assert(data, User)
 //   type: 'email',
 //   value: 'jane',
 //   path: ['email'],
-//   branch: [{...}, 'jane'],
-//   failures: [...]
+//   branch: [{...}, 'jane']
 // }
 ```
 
@@ -242,8 +241,7 @@ router.post('/users', ({ request, response }) => {
   try {
     assert(data, User)
   } catch (e) {
-    const { path, value, type } = e
-    const key = path[0]
+    const { key, value, type } = e
 
     if (value === undefined) {
       const error = new Error(`user_${key}_required`)
@@ -316,12 +314,12 @@ All of this can be achieved using the helpers that ship with Superstruct by defa
 Sometimes you want to break validations down into components, and compose them together to validate more complex objects. Superstruct makes this easy by allowing an existing struct to be passed in as a schema. For example:
 
 ```ts
-const User = struct({
+const User = object({
   id: number(),
   name: string(),
 })
 
-const Article = struct({
+const Article = object({
   id: number(),
   title: string(),
   author: User,
@@ -339,7 +337,7 @@ For example, for a specific kind of string:
 ```ts
 import { refinement } from 'superstruct'
 
-const MyString = refinement(string(), value => {
+const MyString = refinement('MyString', string(), value => {
   return value.startsWith('The') && value.length > 20)
 })
 ```
@@ -355,12 +353,12 @@ For example, maybe you want to ensure that any string is trimmed before passing 
 ```ts
 import { coercion } from 'superstruct'
 
-const TrimmedString = coercion(string, value => {
+const TrimmedString = coercion(string(), value => {
   return typeof value === 'string' ? value.trim() : value
 })
 ```
 
-Now before using `assert()` or `is()` you can use `coerce()` to apply your custom coercion logic:
+Now instead of using `assert()` or `is()` you can use `coerce()` to apply your custom coercion logic:
 
 ```ts
 import { coerce } from 'superstruct'
@@ -369,3 +367,5 @@ const data = '  a wEird str1ng        '
 const output = coerce(data, TrimmedString)
 // "a wEird str1ng"
 ```
+
+If the input data had been invalid or unable to be coerced an error would have been thrown.
