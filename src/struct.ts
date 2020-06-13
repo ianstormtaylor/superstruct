@@ -107,9 +107,22 @@ export type Infer<T extends Struct<any, any>> = T['TYPE']
 
 export type Result = boolean | string | Iterable<Failure>
 
+/**
+ * A `Coercer` takes an unknown value and optionally coerces it.
+ */
+
 export type Coercer = (value: unknown) => unknown
 
+/**
+ * A `Validate` takes an unknown value and validates it.
+ */
+
 export type Validator<T, S> = (value: unknown, context: Context<T, S>) => Result
+
+/**
+ * A `Refiner` takes a value of a known type and validates it against a further
+ * constraint.
+ */
 
 export type Refiner<T, S> = (value: T, context: Context<T, S>) => Result
 
@@ -213,6 +226,11 @@ function* check<T, S>(
     struct,
     branch,
     path,
+    check(v, s, parent, key) {
+      const p = parent !== undefined ? [...path, key] : path
+      const b = parent !== undefined ? [...branch, parent] : branch
+      return check(v, s, p, b)
+    },
     fail(props = {}) {
       if (typeof props === 'string') {
         props = { message: props }
@@ -239,11 +257,6 @@ function* check<T, S>(
         path,
         branch: [...branch, value],
       }
-    },
-    check(v, s, parent, key) {
-      const p = parent !== undefined ? [...path, key] : path
-      const b = parent !== undefined ? [...branch, parent] : branch
-      return check(v, s, p, b)
     },
   }
 
