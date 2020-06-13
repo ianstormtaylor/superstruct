@@ -49,11 +49,11 @@ describe('validate', () => {
   })
 
   it('error message path', () => {
-    const S = array(string())
-    const [err] = S.validate(['a', 42])
+    const S = object({ author: object({ name: string() }) })
+    const [err] = S.validate({ author: { name: 42 } })
     equal(
       (err as StructError).message,
-      'At path: 1 -- Expected a string, but received: 42'
+      'At path: author.name -- Expected a string, but received: 42'
     )
   })
 
