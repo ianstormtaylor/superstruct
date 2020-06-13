@@ -1,7 +1,7 @@
-import { type, intersection, string, number } from '../../..'
+import { shape, intersection, string, number } from '../../..'
 
-const A = type({ a: string() })
-const B = type({ b: number() })
+const A = shape({ a: string() })
+const B = shape({ b: number() })
 
 export const Struct = intersection([A, B])
 
@@ -13,6 +13,7 @@ export const data = {
 export const error = {
   type: 'number',
   value: 'invalid',
+  refinement: undefined,
   path: ['b'],
   branch: [data, data.b],
 }

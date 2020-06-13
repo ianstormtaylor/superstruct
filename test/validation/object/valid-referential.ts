@@ -4,7 +4,7 @@ const Section = pattern(string(), /^\d+(\.\d+)*$/)
 
 export const Struct = object({
   section: Section,
-  subsection: refinement(Section, 'Subsection', (value, ctx) => {
+  subsection: refinement('Subsection', Section, (value, ctx) => {
     const { branch } = ctx
     const parent = branch[0]
     return value.startsWith(`${parent.section}.`)

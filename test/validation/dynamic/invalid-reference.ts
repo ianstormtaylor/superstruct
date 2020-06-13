@@ -1,15 +1,15 @@
-import { assert, type, dynamic, literal, number, string } from '../../..'
+import { assert, shape, dynamic, literal, number, string } from '../../..'
 
-const Entity = type({
+const Entity = shape({
   object: string(),
 })
 
-const User = type({
+const User = shape({
   object: literal('USER'),
   username: string(),
 })
 
-const Product = type({
+const Product = shape({
   object: literal('PRODUCT'),
   price: number(),
 })
@@ -32,6 +32,7 @@ export const data = {
 export const error = {
   value: 'Only $19.99!',
   type: 'number',
+  refinement: undefined,
   path: ['price'],
   branch: [data, data.price],
 }

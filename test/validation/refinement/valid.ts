@@ -1,7 +1,7 @@
 import isEmail from 'is-email'
 import { string, refinement } from '../../..'
 
-export const Struct = refinement(string(), 'Email', isEmail)
+export const Struct = refinement('email', string(), isEmail)
 
 export const data = 'name@example.com'
 

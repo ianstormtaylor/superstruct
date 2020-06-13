@@ -1,4 +1,4 @@
-import { assert, nullable, string, object } from '../..'
+import { assert, nullable, string, object, enums } from '../..'
 import { test } from '..'
 
 test<string | null>((x) => {
@@ -9,4 +9,11 @@ test<string | null>((x) => {
 test<{ a: string | null }>((x) => {
   assert(x, object({ a: nullable(string()) }))
   return x
+})
+
+test<{
+  a: 'a'
+  b: 'b'
+}>(() => {
+  return nullable(enums(['a', 'b'])).schema
 })

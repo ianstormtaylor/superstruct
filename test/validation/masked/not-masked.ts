@@ -5,7 +5,8 @@ export const Struct = masked(object({ name: string() }))
 export const data = false
 
 export const error = {
-  type: 'Object<{name}>',
+  type: 'object',
+  refinement: undefined,
   value: false,
   path: [],
   branch: [data],

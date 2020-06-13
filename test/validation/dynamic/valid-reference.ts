@@ -1,15 +1,15 @@
-import { assert, type, dynamic, literal, string, number } from '../../..'
+import { assert, shape, dynamic, literal, string, number } from '../../..'
 
-const Entity = type({
+const Entity = shape({
   object: string(),
 })
 
-const User = type({
+const User = shape({
   object: literal('USER'),
   username: string(),
 })
 
-const Product = type({
+const Product = shape({
   object: literal('PRODUCT'),
   price: number(),
 })

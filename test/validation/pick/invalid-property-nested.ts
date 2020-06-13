@@ -21,6 +21,7 @@ export const data = {
 export const error = {
   value: 123,
   type: 'string',
+  refinement: undefined,
   path: ['address', 'street'],
   branch: [data, data.address, data.address.street],
 }

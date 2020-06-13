@@ -2,7 +2,7 @@ import assert from 'assert'
 import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
-import { assert as assertValue, coerce as coerceValue } from '..'
+import { assert as assertValue, coerce as coerceValue, StructError } from '..'
 
 describe('superstruct', () => {
   describe('api', () => {
@@ -44,6 +44,10 @@ describe('superstruct', () => {
                 actual = data
               }
             } catch (e) {
+              if (!(e instanceof StructError)) {
+                throw e
+              }
+
               err = e
             }
 
@@ -62,7 +66,14 @@ describe('superstruct', () => {
                 )
               }
 
-              const actualError = pick(err, 'type', 'path', 'value', 'branch')
+              const actualError = pick(
+                err,
+                'type',
+                'refinement',
+                'value',
+                'path',
+                'branch'
+              )
               assert.deepEqual(actualError, error)
             } else {
               throw new Error(

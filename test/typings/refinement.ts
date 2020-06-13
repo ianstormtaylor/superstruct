@@ -4,7 +4,7 @@ import { test } from '..'
 test<string>((x) => {
   assert(
     x,
-    refinement(string(), 'word', () => true)
+    refinement('word', string(), () => true)
   )
   return x
 })

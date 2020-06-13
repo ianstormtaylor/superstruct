@@ -7,6 +7,7 @@ export const data = [1, 'invalid', 3]
 export const error = {
   value: 'invalid',
   type: 'number',
+  refinement: undefined,
   path: [1],
   branch: [data, data[1]],
 }

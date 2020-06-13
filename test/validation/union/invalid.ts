@@ -1,7 +1,7 @@
-import { type, union, string, number } from '../../..'
+import { shape, union, string, number } from '../../..'
 
-const A = type({ a: string() })
-const B = type({ b: number() })
+const A = shape({ a: string() })
+const B = shape({ b: number() })
 
 export const Struct = union([A, B])
 
@@ -10,8 +10,9 @@ export const data = {
 }
 
 export const error = {
-  type: 'Type<{a}> | Type<{b}>',
   value: { b: 'invalid' },
+  type: 'union',
+  refinement: undefined,
   path: [],
   branch: [data],
 }

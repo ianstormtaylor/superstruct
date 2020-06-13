@@ -6,7 +6,8 @@ export const data = false
 
 export const error = {
   value: false,
-  type: 'InstanceOf<Array>',
+  type: 'instance',
+  refinement: undefined,
   path: [],
   branch: [data],
 }

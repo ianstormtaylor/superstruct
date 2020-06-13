@@ -1,6 +1,5 @@
-import { Struct } from '../struct'
+import { Struct, Context, Validator } from '../struct'
 import { object, optional } from './types'
-import { Context } from '../typings'
 import { ObjectSchema, Assign, ObjectType, PartialObjectSchema } from '../utils'
 
 /**
@@ -73,9 +72,9 @@ export function assign(Structs: Struct<any>[]): any {
  */
 
 export function dynamic<T>(
-  fn: (value: unknown, ctx: Context) => Struct<T>
-): Struct<T> {
-  return struct('Dynamic<...>', (value, ctx) => {
+  fn: (value: unknown, ctx: Context<T, null>) => Struct<T, any>
+): Struct<T, null> {
+  return struct('dynamic', (value, ctx) => {
     return ctx.check(value, fn(value, ctx))
   })
 }
@@ -89,15 +88,15 @@ export function dynamic<T>(
  * circular definition problem.
  */
 
-export function lazy<T>(fn: () => Struct<T>): Struct<T> {
-  let S: Struct<T> | undefined
+export function lazy<T>(fn: () => Struct<T, any>): Struct<T, null> {
+  let s: Struct<T, any> | undefined
 
-  return struct('Lazy<...>', (value, ctx) => {
-    if (!S) {
-      S = fn()
+  return struct('lazy', (value, ctx) => {
+    if (!s) {
+      s = fn()
     }
 
-    return ctx.check(value, S)
+    return ctx.check(value, s)
   })
 }
 
@@ -169,11 +168,7 @@ export function pick<S extends ObjectSchema, K extends keyof S>(
 
 export function struct<T>(
   name: string,
-  validator: Struct<T>['validator']
+  validator: Validator<T, null>
 ): Struct<T, null> {
-  return new Struct({
-    type: name,
-    schema: null,
-    validator,
-  })
+  return new Struct({ type: name, schema: null, validator })
 }

@@ -15,6 +15,7 @@ export const data = {
 export const error = {
   value: 'invalid',
   type: 'number',
+  refinement: undefined,
   path: ['age'],
   branch: [data, data.age],
 }

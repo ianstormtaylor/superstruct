@@ -13,6 +13,7 @@ export const data = {
 export const error = {
   value: true,
   type: 'never',
+  refinement: undefined,
   path: ['unknown'],
   branch: [data, data.unknown],
 }

@@ -6,7 +6,8 @@ export const data = []
 
 export const error = {
   value: [],
-  type: 'Array<number> & Length<1,5>',
+  type: 'array',
+  refinement: 'length',
   path: [],
   branch: [data],
 }

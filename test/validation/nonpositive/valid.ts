@@ -1,6 +1,6 @@
-import { number, negative } from '../../..'
+import { number, nonpositive } from '../../..'
 
-export const Struct = negative(number())
+export const Struct = nonpositive(number())
 
 export const data = -1
 

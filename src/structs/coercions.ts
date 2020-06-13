@@ -1,5 +1,5 @@
 import { Struct, mask } from '../struct'
-import { ObjectSchema, ObjectType } from '../utils'
+import { ObjectSchema, ObjectType, isPlainObject } from '../utils'
 
 /**
  * Augment a `Struct` to add an additional coercion step to its input.
@@ -77,17 +77,4 @@ export function masked<S extends ObjectSchema>(
   return coercion(struct, (x) => {
     return typeof x !== 'object' || x == null ? x : mask(x, struct)
   })
-}
-
-/**
- * Check if a value is a plain object.
- */
-
-function isPlainObject(value: unknown): value is { [key: string]: any } {
-  if (Object.prototype.toString.call(value) !== '[object Object]') {
-    return false
-  }
-
-  const prototype = Object.getPrototypeOf(value)
-  return prototype === null || prototype === Object.prototype
 }

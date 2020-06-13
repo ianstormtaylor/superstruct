@@ -1,4 +1,4 @@
-import { assert, optional, string, number, object } from '../..'
+import { assert, optional, string, number, object, enums } from '../..'
 import { test } from '..'
 
 test<string | undefined>((x) => {
@@ -18,4 +18,11 @@ test<{
     })
   )
   return x
+})
+
+test<{
+  a: 'a'
+  b: 'b'
+}>(() => {
+  return optional(enums(['a', 'b'])).schema
 })

@@ -6,7 +6,8 @@ export const data = 'invalid'
 
 export const error = {
   value: 'invalid',
-  type: 'Record<string,number>',
+  type: 'record',
+  refinement: undefined,
   path: [],
   branch: [data],
 }

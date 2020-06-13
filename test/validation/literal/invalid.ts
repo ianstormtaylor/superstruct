@@ -6,7 +6,8 @@ export const data = false
 
 export const error = {
   value: false,
-  type: 'Literal<42>',
+  type: 'literal',
+  refinement: undefined,
   path: [],
   branch: [data],
 }

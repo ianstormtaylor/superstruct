@@ -7,6 +7,7 @@ export const data = ['A']
 export const error = {
   value: undefined,
   type: 'number',
+  refinement: undefined,
   path: [1],
   branch: [data, data[1]],
 }

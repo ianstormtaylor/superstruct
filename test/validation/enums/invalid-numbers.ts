@@ -6,7 +6,8 @@ export const data = 'invalid'
 
 export const error = {
   value: 'invalid',
-  type: 'Enum<1,2>',
+  type: 'enums',
+  refinement: undefined,
   path: [],
   branch: [data],
 }

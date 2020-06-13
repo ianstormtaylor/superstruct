@@ -16,6 +16,7 @@ export const data = {
 export const error = {
   value: 42,
   type: 'never',
+  refinement: undefined,
   path: ['age'],
   branch: [data, data.age],
 }

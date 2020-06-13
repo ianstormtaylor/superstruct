@@ -1,15 +1,39 @@
-import { Infer, Result, Failure, Context } from './typings'
-import { Struct } from './struct'
+import { Struct, Infer, Result, Context } from './struct'
+import { Failure } from './error'
+
+/**
+ * Check if a value is a plain object.
+ */
+
+export function isPlainObject(value: unknown): value is { [key: string]: any } {
+  if (Object.prototype.toString.call(value) !== '[object Object]') {
+    return false
+  }
+
+  const prototype = Object.getPrototypeOf(value)
+  return prototype === null || prototype === Object.prototype
+}
+
+/**
+ * Return a value as a printable string.
+ */
+
+export function print(value: any, ticks?: string): string {
+  const string = typeof value === 'string' ? JSON.stringify(value) : `${value}`
+  return ticks ? `${ticks}${string}${ticks}` : string
+}
 
 /**
  * Convert a validation result to an iterable of failures.
  */
 
-export function toFailures(
+export function toFailures<T, S>(
   result: Result,
-  context: Context
+  context: Context<T, S>
 ): Iterable<Failure> {
-  if (result === true) {
+  if (typeof result === 'string') {
+    return [context.fail({ message: result })]
+  } else if (result === true) {
     return []
   } else if (result === false) {
     return [context.fail()]

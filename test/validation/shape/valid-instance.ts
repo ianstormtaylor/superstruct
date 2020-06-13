@@ -1,4 +1,4 @@
-import { type, string } from '../../..'
+import { shape, string } from '../../..'
 
 class Person {
   name: string
@@ -8,7 +8,7 @@ class Person {
   }
 }
 
-export const Struct = type({
+export const Struct = shape({
   name: string(),
 })
 

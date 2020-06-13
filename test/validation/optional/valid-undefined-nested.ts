@@ -1,6 +1,6 @@
-import { type, string, number, optional } from '../../..'
+import { shape, string, number, optional } from '../../..'
 
-export const Struct = type({
+export const Struct = shape({
   name: optional(string()),
   age: number(),
 })
