@@ -1,4 +1,4 @@
-# Leveraging TypeScript
+# Using TypeScript
 
 Superstruct is built with TypeScript, and is designed to integrate seamlessly with its guards and assertions. Which means that if you're using TypeScript too you'll get compile-time typings for your data.
 

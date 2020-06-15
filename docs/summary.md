@@ -7,7 +7,7 @@
 - [Coercing Data](./guides/03-coercing-data.md)
 - [Refining Types](./guides/04-refining-types.md)
 - [Customizing Errors](./guides/05-customizing-errors.md)
-- [Leveraging TypeScript](./guides/06-leveraging-typescript.md)
+- [Using TypeScript](./guides/06-using-typescript.md)
 
 ## Resources
 
