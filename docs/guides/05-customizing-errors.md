@@ -4,6 +4,8 @@ By default Superstruct throws errors that are easy to understand for developers.
 
 But there are cases where you want more control over the errors, especially when displaying error messages to end users. For example, if you're building a REST or GraphQL API, you probably want to customize your errors to be specific to your application, and to follow a spec.
 
+# Custom Errors
+
 To make this possible, Superstruct's errors also encode a lot of information about exactly what caused the failure. And you can use that information to build up your own custom error codes or messages.
 
 For example, consider a simple `User` struct:
@@ -60,3 +62,23 @@ user_name_required
 Although this example is simplified, the struct errors expose all of the possible information about why the validation failed, so you can use them to construct extremely detailed errors for your end users.
 
 > To see all of the information embedded in `StructError` objects, check out the [`StructError` reference](../reference.md#structerror).
+
+# Multiple Failures
+
+By default Superstruct throws an error for the very first failure encountered during validation. This greatly simplifies logic for most cases, and results in the best performance.
+
+However, there are situations where you need to check for all of the potential errors in a single piece of data. To do that, you can use the `error.failures` generator, like so:
+
+```ts
+try {
+  assert(data, Struct)
+} catch (error) {
+  for (const failure of error.failures()) {
+    // ...
+  }
+}
+```
+
+Each `failure` object will give you information about a specific failure of the data.
+
+> 🤖 Note: Superstruct actually doesn't know what the failures are beyond the first one _until_ you iterate through them. This happens "on-demand", which can signficantly improve performance in failure cases.
