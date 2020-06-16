@@ -9,8 +9,11 @@
 - [Customizing Errors](./guides/05-customizing-errors.md)
 - [Using TypeScript](./guides/06-using-typescript.md)
 
-## Resources
+## API Reference
 
-- [API Reference](./reference.md)
-- [Changelog](../Changelog.md)
-- [Links](./links.md)
+- [Core](./reference/core.md)
+- [Types](./reference/types.md)
+- [Refinements](./reference/refinements.md)
+- [Coercions](./reference/coercions.md)
+- [Utilities](./reference/utilities.md)
+- [Errors](./reference/errors.md)
