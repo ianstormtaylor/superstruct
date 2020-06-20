@@ -33,11 +33,11 @@ import { assert } from 'superstruct'
 Superstruct has many importable methods. To reduce the friction of importing many methods you can use a wildcard. The methods are then accessed from one object.
 
 ```ts
-import * as be from 'superstruct'
+import * as s from 'superstruct'
 
-const User = be.object({
-  id: be.number(),
-  name: be.string(),
+const User = s.object({
+  id: s.number(),
+  name: s.string(),
 })
 ```
 
