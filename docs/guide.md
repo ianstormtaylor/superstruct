@@ -11,6 +11,7 @@
   - [Composing Structs](#composing-structs)
   - [Refining Types](#refining-types)
   - [Coercing Values](#coercing-values)
+  - [Using TypeScript](#using-typescript)
 
 ## Installing Superstruct
 
@@ -190,7 +191,7 @@ To define custom data types, we can use the [`struct`](https://superstructjs.org
 import { struct } from 'superstruct'
 import isEmail from 'is-email'
 
-const Email = struct('Email', value => isEmail(value))
+const Email = struct('Email', (value) => isEmail(value))
 ```
 
 Now we can define structs know about the `'email'` type:
@@ -355,7 +356,7 @@ For example, maybe you want to ensure that any string is trimmed before passing 
 ```ts
 import { coercion } from 'superstruct'
 
-const TrimmedString = coercion(string, value => {
+const TrimmedString = coercion(string, (value) => {
   return typeof value === 'string' ? value.trim() : value
 })
 ```
@@ -368,4 +369,38 @@ import { coerce } from 'superstruct'
 const data = '  a wEird str1ng        '
 const output = coerce(data, TrimmedString)
 // "a wEird str1ng"
+```
+
+## Using TypeScript
+
+Most of the time, TypeScript "just works" but knowing a little more will help you get the most out of TypeScript.
+
+## Custom Data Types
+
+When you define a custom type, it is returned as `unknown` by default. In order to get better typing, you can use a generic to specify the type.
+
+The following defines a custom email type and adds a generic to declare the value is of type `string`.
+
+```ts
+import { struct } from 'superstruct'
+import isEmail from 'is-email'
+
+const Email = struct<string>('Email', (value) => isEmail(value))
+```
+
+## Extracting a Type
+
+If you have a struct definition, you can extract its type using the `StructType` utility.
+
+```ts
+const User = object({
+  id: number(),
+  name: string(),
+})
+
+type User = StructType<typeof User>
+// type User = {
+//   id: number
+//   name: string
+// }
 ```
