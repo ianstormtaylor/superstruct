@@ -250,6 +250,37 @@ export function number(): Struct<number> {
 }
 
 /**
+ * Type helper to Flatten the Union of optional and required properties.
+ */
+
+type Flatten<T> = T extends infer U ? { [K in keyof U]: U[K] } : never
+
+/**
+ * Type helper to extract the optional keys of an object
+ */
+
+type OptionalKeys<T> = {
+  [K in keyof T]: undefined extends T[K] ? K : never
+}[keyof T]
+
+/**
+ * Type helper to extract the required keys of an object
+ */
+
+type RequiredKeys<T> = {
+  [K in keyof T]: undefined extends T[K] ? never : K
+}[keyof T]
+
+/**
+ * Type helper to create optional properties when the property value can be
+ * undefined (ie. when `optional()` is used to define a type)
+ */
+
+type OptionalizeObject<T> = Flatten<
+  { [K in RequiredKeys<T>]: T[K] } & { [K in OptionalKeys<T>]?: T[K] }
+>
+
+/**
  * Validate that an object with specific entry values.
  */
 
@@ -258,7 +289,7 @@ export function object<V extends StructRecord<any>>(): Struct<
 >
 export function object<V extends StructRecord<any>>(
   Structs: V
-): Struct<{ [K in keyof V]: StructType<V[K]> }, V>
+): Struct<OptionalizeObject<{ [K in keyof V]: StructType<V[K]> }>, V>
 export function object<V extends StructRecord<any>>(
   Structs?: V
 ): Struct<any, any> {

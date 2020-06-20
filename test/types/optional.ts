@@ -6,7 +6,7 @@ test<string | undefined>((x) => {
   return x
 })
 
-test<{ a: string | undefined }>((x) => {
+test<{ a?: string | undefined }>((x) => {
   assert(x, object({ a: optional(string()) }))
   return x
 })
