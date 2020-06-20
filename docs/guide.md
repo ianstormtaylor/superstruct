@@ -30,6 +30,17 @@ And then you can import it into your code base:
 import { assert } from 'superstruct'
 ```
 
+Superstruct has many importable methods. To reduce the friction of importing many methods you can use a wildcard. The methods are then accessed from one object.
+
+```ts
+import * as s from 'superstruct'
+
+const User = s.object({
+  id: s.number(),
+  name: s.string(),
+})
+```
+
 If you would rather import Superstruct with a `<script>` tag, you can use the bundled build:
 
 ```html
@@ -190,7 +201,7 @@ To define custom data types, we can use the [`struct`](https://superstructjs.org
 import { struct } from 'superstruct'
 import isEmail from 'is-email'
 
-const Email = struct('Email', value => isEmail(value))
+const Email = struct('Email', (value) => isEmail(value))
 ```
 
 Now we can define structs know about the `'email'` type:
@@ -355,7 +366,7 @@ For example, maybe you want to ensure that any string is trimmed before passing 
 ```ts
 import { coercion } from 'superstruct'
 
-const TrimmedString = coercion(string, value => {
+const TrimmedString = coercion(string, (value) => {
   return typeof value === 'string' ? value.trim() : value
 })
 ```
