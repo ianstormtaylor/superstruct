@@ -20,6 +20,7 @@
     - [`number`](#number)
     - [`object`](#object)
     - [`optional`](#optional)
+    - [`nullable`](#nullable)
     - [`partial`](#partial)
     - [`record`](#record)
     - [`set`](#set)
@@ -260,6 +261,19 @@ undefined
 
 `optional` structs validate that a value matches a specific struct, or that it is `undefined`.
 
+### `nullable`
+
+```ts
+nullable(string())
+```
+
+```ts
+'a string of text'
+nullable
+```
+
+`nullable` structs validate that a value matches a specific struct, or that it is `null`.
+
 ### `partial`
 
 ```ts
@@ -373,7 +387,7 @@ import isEmail from 'is-email'
 import isUuid from 'is-uuid'
 
 const Email = struct('Email', isEmail)
-const Uuid = struct('Uuid', value => isUuid.v4(value))
+const Uuid = struct('Uuid', (value) => isUuid.v4(value))
 
 const User = object({
   id: Uuid,
@@ -448,7 +462,7 @@ You can also define your own custom refinments that are specific to your applica
 ```ts
 import { refinement } from 'superstruct'
 
-const PositiveInteger = refinement(number(), 'PositiveInteger', value => {
+const PositiveInteger = refinement(number(), 'PositiveInteger', (value) => {
   return Number.isInteger(value) && value >= 0
 })
 ```
@@ -502,7 +516,7 @@ You can also define your own custom coercions that are specific to your applicat
 ```ts
 import { coercion } from 'superstruct'
 
-const PositiveInteger = coercion(string(), value => {
+const PositiveInteger = coercion(string(), (value) => {
   return typeof value === 'string' ? value.trim() : value
 })
 ```
