@@ -1019,10 +1019,10 @@
   resolved "https://registry.yarnpkg.com/@wessberg/stringutil/-/stringutil-1.0.19.tgz#baadcb6f4471fe2d46462a7d7a8294e4b45b29ad"
   integrity sha512-9AZHVXWlpN8Cn9k5BC/O0Dzb9E9xfEMXzYrNunwvkUTvuK7xgQPVRZpLo+jWCOZ5r8oBa8NIrHuPEu1hzbb6bg==
 
-"@wessberg/ts-clone-node@^0.3.8":
-  version "0.3.8"
-  resolved "https://registry.yarnpkg.com/@wessberg/ts-clone-node/-/ts-clone-node-0.3.8.tgz#25bf1e0625a4b4b836324427894ab138ebd7fb00"
-  integrity sha512-m/+1ox7e2K/KwWFe1K7OpiqTHZnraCG6urhCt4Y5Dxw8dr1NMcV52Q8qvJd0lGfhGhZiVD/SWbUj9i2wKzdK6w==
+"@wessberg/ts-clone-node@^0.3.9":
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/@wessberg/ts-clone-node/-/ts-clone-node-0.3.9.tgz#1489406c5ceaa91b5207be6bd788dc457ab8ecc8"
+  integrity sha512-GmYNuF93CASWeSBQW2/yeB7gGY6lVCcmW0xYBvDs9kjYeLYleAfIZjAw3zqWIhhXSpmtuWCg3HCGMCS9XJSDxg==
 
 abbrev@1:
   version "1.1.1"
@@ -1283,7 +1283,7 @@ browserslist@4.12.0:
     node-releases "^1.1.53"
     pkg-up "^2.0.0"
 
-browserslist@^4.12.0, browserslist@^4.12.2, browserslist@^4.8.3:
+browserslist@^4.12.0, browserslist@^4.13.0, browserslist@^4.8.3:
   version "4.13.0"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.13.0.tgz#42556cba011e1b0a2775b611cba6a8eca18e940d"
   integrity sha512-MINatJ5ZNrLnQ6blGvePd/QOz9Xtu+Ne+x29iQSCHfkU5BugKVJwZKn/iiL8UbpIpa3JhviKjz+XxMo0m2caFQ==
@@ -3577,9 +3577,9 @@ rollup-plugin-terser@^6.1.0:
     terser "^4.7.0"
 
 rollup-plugin-ts@^1.2.24:
-  version "1.2.27"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-ts/-/rollup-plugin-ts-1.2.27.tgz#394a2ba7552d8403dc06cd4079e6677b8dc2f484"
-  integrity sha512-fXS7kMxOvNYsNtERVN6w6ahF4Yq+41M7XUb2HWqbhgrEb24d/3Im8MASkwwWWbopioriaRgu3bC1mhWf8IQ/dg==
+  version "1.2.28"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-ts/-/rollup-plugin-ts-1.2.28.tgz#67cd2828040a0d819b2328c1f1cf3828b28b5095"
+  integrity sha512-zRdxksdGsH2hrKHrhtKAo79HiHZwSolE2SmcRzccrIM1hgFwoPIXsCw11q0QcAER+z4AJedK8F8lFouY1S1O0A==
   dependencies:
     "@babel/core" "^7.10.4"
     "@babel/plugin-proposal-async-generator-functions" "^7.10.4"
@@ -3595,8 +3595,8 @@ rollup-plugin-ts@^1.2.24:
     "@types/babel__core" "^7.1.9"
     "@wessberg/browserslist-generator" "^1.0.37"
     "@wessberg/stringutil" "^1.0.19"
-    "@wessberg/ts-clone-node" "^0.3.8"
-    browserslist "^4.12.2"
+    "@wessberg/ts-clone-node" "^0.3.9"
+    browserslist "^4.13.0"
     chalk "^4.1.0"
     magic-string "^0.25.7"
     slash "^3.0.0"
