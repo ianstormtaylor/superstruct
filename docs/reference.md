@@ -296,7 +296,7 @@ partial({
 ### `record`
 
 ```ts
-record([string(), number()])
+record(string(), number())
 ```
 
 ```ts
