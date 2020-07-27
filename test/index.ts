@@ -56,7 +56,7 @@ describe('superstruct', () => {
               )
             }
 
-            const actualFailures = Array.from(err.failures()).map((failure) =>
+            const actualFailures = (err.failures() as object[]).map((failure) =>
               pick(failure, 'type', 'path', 'value', 'branch')
             )
             assert.deepEqual(actualFailures, failures)

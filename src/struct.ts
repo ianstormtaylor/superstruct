@@ -47,7 +47,7 @@ export class StructError extends TypeError {
   type: string
   path: Array<number | string>
   branch: Array<any>
-  failures: () => Iterable<StructFailure>;
+  failures: () => Array<StructFailure>;
   [key: string]: any
 
   constructor(
@@ -60,7 +60,7 @@ export class StructError extends TypeError {
     } but received \`${JSON.stringify(value)}\`.`
 
     let failuresResult: Array<StructFailure> | undefined
-    function failures(): Iterable<StructFailure> {
+    function failures(): Array<StructFailure> {
       if (!failuresResult) {
         failuresResult = [failure, ...moreFailures]
       }
@@ -95,7 +95,7 @@ export type StructContext = {
     struct: Struct<any> | Struct<never>,
     parent?: any,
     key?: string | number
-  ) => Iterable<StructFailure>
+  ) => IterableIterator<StructFailure>
 }
 
 /**
