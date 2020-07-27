@@ -7,9 +7,17 @@ export const data = {
   b: 'b',
 }
 
-export const error = {
-  value: 'a',
-  type: 'number',
-  path: ['a'],
-  branch: [data, data.a],
-}
+export const failures = [
+  {
+    value: 'a',
+    type: 'number',
+    path: ['a'],
+    branch: [data, data.a],
+  },
+  {
+    value: 'b',
+    type: 'number',
+    path: ['b'],
+    branch: [data, data.b],
+  },
+]
