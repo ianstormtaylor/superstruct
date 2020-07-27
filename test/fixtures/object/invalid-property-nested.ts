@@ -16,9 +16,11 @@ export const data = {
   },
 }
 
-export const error = {
-  value: 123,
-  type: 'string',
-  path: ['address', 'street'],
-  branch: [data, data.address, data.address.street],
-}
+export const failures = [
+  {
+    value: 123,
+    type: 'string',
+    path: ['address', 'street'],
+    branch: [data, data.address, data.address.street],
+  },
+]

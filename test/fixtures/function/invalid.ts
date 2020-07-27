@@ -4,9 +4,11 @@ export const Struct = func()
 
 export const data = false
 
-export const error = {
-  value: false,
-  type: 'Function',
-  path: [],
-  branch: [data],
-}
+export const failures = [
+  {
+    value: false,
+    type: 'Function',
+    path: [],
+    branch: [data],
+  },
+]

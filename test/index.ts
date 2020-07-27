@@ -21,9 +21,6 @@ describe('superstruct', () => {
 
       for (const name of tests) {
         const module = require(resolve(testsDir, name))
-        if ('error' in module) {
-          module.failures = [module.error]
-        }
         const { Struct, data, coerce, only, skip, output, failures } = module
         const run = only ? it.only : skip ? it.skip : it
         run(name, () => {
@@ -66,7 +63,7 @@ describe('superstruct', () => {
             )
           } else {
             throw new Error(
-              `The "${name}" fixture did not define an \`output\` or \`error\` or \`failures\` export.`
+              `The "${name}" fixture did not define an \`output\` or \`failures\` export.`
             )
           }
         })
