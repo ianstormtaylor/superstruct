@@ -2,7 +2,7 @@ import assert from 'assert'
 import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
-import { assert as assertValue, coerce as coerceValue } from '..'
+import { assert as assertValue, coerce as coerceValue, deprecated, object } from '..'
 
 describe('superstruct', () => {
   const kindsDir = resolve(__dirname, 'fixtures')
@@ -64,6 +64,18 @@ describe('superstruct', () => {
       }
     })
   }
+
+  describe('deprecated', () => {
+    it('logs depreciation message', () => {
+      const tracker = new assert.CallTracker()
+      const fakeLog = (_message: string) => {}
+      const logSpy = tracker.calls(fakeLog, 1)
+
+      assertValue({ a: undefined }, object({ a: deprecated(logSpy) }))
+
+      tracker.verify()
+    })
+  })
 })
 
 /**

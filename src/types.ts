@@ -339,6 +339,20 @@ export function optional<T>(S: Struct<T>): Struct<T | undefined> {
 }
 
 /**
+ * Augment a struct to allow everything and log message.
+ */
+
+type LogDeprecation = (message: string) => void
+
+export function deprecated(log: LogDeprecation): Struct<unknown> {
+  return struct('deprecated', (_value, context) => {
+    const path = context.path.join('.')
+    log(`${path} is deprecated and will be removed in the future.`)
+    return true
+  })
+}
+
+/**
  * Validate that a partial object with specific entry values.
  */
 
