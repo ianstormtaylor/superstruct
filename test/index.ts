@@ -2,7 +2,12 @@ import assert from 'assert'
 import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
-import { assert as assertValue, coerce as coerceValue, deprecated, object } from '..'
+import {
+  assert as assertValue,
+  coerce as coerceValue,
+  deprecated,
+  object,
+} from '..'
 
 describe('superstruct', () => {
   const kindsDir = resolve(__dirname, 'fixtures')
