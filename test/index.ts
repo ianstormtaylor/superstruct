@@ -66,7 +66,7 @@ describe('superstruct', () => {
   }
 
   describe('deprecated', () => {
-    it('logs depreciation message', () => {
+    it('logs deprecated type as message to passed function', () => {
       const tracker = new assert.CallTracker()
       const fakeLog = (_message: string) => {}
       const logSpy = tracker.calls(fakeLog, 1)
