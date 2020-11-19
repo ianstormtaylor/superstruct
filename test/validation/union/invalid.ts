@@ -17,4 +17,18 @@ export const failures = [
     path: [],
     branch: [data],
   },
+  {
+    value: undefined,
+    type: 'string',
+    refinement: undefined,
+    path: ['a'],
+    branch: [data, undefined],
+  },
+  {
+    value: 'invalid',
+    type: 'number',
+    refinement: undefined,
+    path: ['b'],
+    branch: [data, data.b],
+  },
 ]

@@ -15,6 +15,16 @@ export function isPlainObject(value: unknown): value is { [key: string]: any } {
 }
 
 /**
+ * Shifts (removes and returns) the first value from the `input` iterator.
+ * Like `Array.prototype.shift()` but for an `Iterator`.
+ */
+
+export function iteratorShift<T>(input: Iterator<T>): T | undefined {
+  const { done, value } = input.next()
+  return done ? undefined : value
+}
+
+/**
  * Return a value as a printable string.
  */
 
@@ -32,9 +42,9 @@ export function* toFailures<T, S>(
   context: Context<T, S>
 ): IterableIterator<Failure> {
   if (typeof result === 'string') {
-    return [context.fail({ message: result })]
+    yield context.fail({ message: result })
   } else if (result === true) {
-    return []
+    return
   } else if (result === false) {
     yield context.fail()
   } else {
@@ -108,13 +118,3 @@ export type PartialObjectSchema<S extends ObjectSchema> = {
  */
 
 export type TupleSchema<T> = { [K in keyof T]: Struct<T[K]> }
-
-/**
- * Shifts (removes and returns) the first value from the `input` iterator.
- * Like `Array.prototype.shift()` but for an `Iterator`.
- */
-
-export function iteratorShift<T>(input: Iterator<T>): T | undefined {
-  const { done, value } = input.next()
-  return done ? undefined : value
-}

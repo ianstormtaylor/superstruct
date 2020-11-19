@@ -10,10 +10,12 @@ export const Struct = omit(
 
 export const data = 'invalid'
 
-export const error = {
-  value: 'invalid',
-  type: 'object',
-  refinement: undefined,
-  path: [],
-  branch: [data],
-}
+export const failures = [
+  {
+    value: 'invalid',
+    type: 'object',
+    refinement: undefined,
+    path: [],
+    branch: [data],
+  },
+]

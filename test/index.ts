@@ -58,7 +58,7 @@ describe('superstruct', () => {
                 )
               }
 
-              assert.deepEqual(actual, output)
+              assert.deepStrictEqual(actual, output)
             } else if ('failures' in module) {
               if (!err) {
                 throw new Error(
@@ -66,15 +66,13 @@ describe('superstruct', () => {
                 )
               }
 
-              const actualFailures = (err.failures() as object[]).map(
-                (failure) =>
-                  pick(failure, 'type', 'path', 'refinement', 'value', 'branch')
-              )
-              assert.deepEqual(actualFailures, failures)
-              assert.deepEqual(
-                pick(err, 'type', 'path', 'value', 'branch'),
-                failures[0]
-              )
+              const props = ['type', 'path', 'refinement', 'value', 'branch']
+              const actualFailures = err
+                .failures()
+                .map((failure) => pick(failure, ...props))
+
+              assert.deepStrictEqual(actualFailures, failures)
+              assert.deepStrictEqual(pick(err, ...props), failures[0])
             } else {
               throw new Error(
                 `The "${name}" fixture did not define an \`output\` or \`failures\` export.`
