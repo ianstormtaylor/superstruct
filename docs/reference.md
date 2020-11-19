@@ -104,11 +104,12 @@ null
 
 ```ts
 array(number())
-array(object({ id: string() }))
+array(object({ id: number() }))
 ```
 
 ```ts
-;[1, 2, 3][{ id: '1' }]
+[1, 2, 3]
+[{ id: 1 }]
 ```
 
 `array` structs accept a list of values of a specific type.
