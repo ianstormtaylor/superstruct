@@ -104,11 +104,12 @@ null
 
 ```ts
 array(number())
-array(object({ id: string() }))
+array(object({ id: number() }))
 ```
 
 ```ts
-;[1, 2, 3][{ id: '1' }]
+[1, 2, 3]
+[{ id: 1 }]
 ```
 
 `array` structs accept a list of values of a specific type.
@@ -286,17 +287,15 @@ partial({
 ```ts
 {
   a: 1,
-  b: 2,
-  c: 3,
 }
 ```
 
-`partial` structs are similar to `object` structs, but they only require that the specified properties exist, and they don't care about other properties on the object.
+`partial` structs are similar to `object` structs, but all specified properties are optional.
 
 ### `record`
 
 ```ts
-record([string(), number()])
+record(string(), number())
 ```
 
 ```ts
@@ -550,7 +549,7 @@ Each error thrown includes the following properties:
 | **Property** | **Type**                     | **Example**             | **Description**                                                                                                                                                                                                        |
 | ------------ | ---------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `branch`     | `Array<any>`                 | `[{...}, false]`        | An array of the values being validated at every layer. The first element in the array is the root value, and the last element is the current value that failed. This allows you to inspect the entire validation tree. |
-| `path`       | `Array<string | number>`     | `['address', 'street']` | The path to the invalid value relative to the root value.                                                                                                                                                              |
+| `path`       | `Array<string \| number>`    | `['address', 'street']` | The path to the invalid value relative to the root value.                                                                                                                                                              |
 | `value`      | `any`                        | `false`                 | The invalid value.                                                                                                                                                                                                     |
 | `type`       | `string`                     | `'string'`              | The expected type of the invalid value.                                                                                                                                                                                |
 | `failures`   | `() => Array<StructFailure>` |                         | A function that returns all the validation failures that were encountered. The error object always represents the first failure, but you can write more complex logic involving other failures if you need to.         |
