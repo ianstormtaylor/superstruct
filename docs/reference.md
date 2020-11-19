@@ -286,12 +286,10 @@ partial({
 ```ts
 {
   a: 1,
-  b: 2,
-  c: 3,
 }
 ```
 
-`partial` structs are similar to `object` structs, but they only require that the specified properties exist, and they don't care about other properties on the object.
+`partial` structs are similar to `object` structs, but all specified properties are optional.
 
 ### `record`
 
