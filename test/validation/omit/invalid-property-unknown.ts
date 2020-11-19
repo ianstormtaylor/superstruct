@@ -13,10 +13,12 @@ export const data = {
   age: 42,
 }
 
-export const error = {
-  value: 42,
-  type: 'never',
-  refinement: undefined,
-  path: ['age'],
-  branch: [data, data.age],
-}
+export const failures = [
+  {
+    value: 42,
+    type: 'never',
+    refinement: undefined,
+    path: ['age'],
+    branch: [data, data.age],
+  },
+]

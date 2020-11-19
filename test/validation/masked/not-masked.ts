@@ -4,12 +4,14 @@ export const Struct = masked(object({ name: string() }))
 
 export const data = false
 
-export const error = {
-  type: 'object',
-  refinement: undefined,
-  value: false,
-  path: [],
-  branch: [data],
-}
+export const failures = [
+  {
+    value: false,
+    type: 'object',
+    refinement: undefined,
+    path: [],
+    branch: [data],
+  },
+]
 
 export const coerce = true

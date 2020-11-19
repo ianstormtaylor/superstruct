@@ -1,4 +1,10 @@
-import { toFailures, ObjectSchema, ObjectType, print } from './utils'
+import {
+  toFailures,
+  iteratorShift,
+  ObjectSchema,
+  ObjectType,
+  print,
+} from './utils'
 import { StructError, Failure } from './error'
 
 /**
@@ -92,7 +98,7 @@ export type Context<T, S> = {
     struct: Struct<Y, Z>,
     parent?: any,
     key?: string | number
-  ) => Iterable<Failure>
+  ) => IterableIterator<Failure>
 }
 
 /**
@@ -200,11 +206,11 @@ export function validate<T, S>(
     value = struct.coercer(value)
   }
 
-  const iterable = check(value, struct)
-  const [failure] = iterable
+  const failures = check(value, struct)
+  const failure = iteratorShift(failures)
 
   if (failure) {
-    const error = new StructError(failure, iterable)
+    const error = new StructError(failure, failures)
     return [error, undefined]
   } else {
     return [undefined, value as T]
@@ -220,7 +226,7 @@ function* check<T, S>(
   struct: Struct<T, S>,
   path: any[] = [],
   branch: any[] = []
-): Iterable<Failure> {
+): IterableIterator<Failure> {
   const ctx: Context<T, S> = {
     value,
     struct,
@@ -261,7 +267,7 @@ function* check<T, S>(
   }
 
   const failures = toFailures(struct.validator(value, ctx), ctx)
-  const [failure] = failures
+  const failure = iteratorShift(failures)
 
   if (failure) {
     yield failure

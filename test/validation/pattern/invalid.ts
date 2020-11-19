@@ -4,10 +4,12 @@ export const Struct = pattern(string(), /\d+/)
 
 export const data = 'invalid'
 
-export const error = {
-  value: 'invalid',
-  type: 'string',
-  refinement: 'pattern',
-  path: [],
-  branch: [data],
-}
+export const failures = [
+  {
+    value: 'invalid',
+    type: 'string',
+    refinement: 'pattern',
+    path: [],
+    branch: [data],
+  },
+]

@@ -12,10 +12,12 @@ export const data = {
   id: 1,
 }
 
-export const error = {
-  value: undefined,
-  type: 'shape',
-  refinement: undefined,
-  path: ['person'],
-  branch: [data, undefined],
-}
+export const failures = [
+  {
+    value: undefined,
+    type: 'shape',
+    refinement: undefined,
+    path: ['person'],
+    branch: [data, undefined],
+  },
+]

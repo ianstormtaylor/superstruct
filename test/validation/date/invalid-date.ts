@@ -4,10 +4,12 @@ export const Struct = date()
 
 export const data = new Date('invalid')
 
-export const error = {
-  value: data,
-  type: 'date',
-  refinement: undefined,
-  path: [],
-  branch: [data],
-}
+export const failures = [
+  {
+    value: data,
+    type: 'date',
+    refinement: undefined,
+    path: [],
+    branch: [data],
+  },
+]

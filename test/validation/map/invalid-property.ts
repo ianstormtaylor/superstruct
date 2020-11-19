@@ -7,10 +7,19 @@ export const data = new Map([
   ['b', 'b'],
 ])
 
-export const error = {
-  value: 'a',
-  type: 'number',
-  refinement: undefined,
-  path: ['a'],
-  branch: [data, 'a'],
-}
+export const failures = [
+  {
+    value: 'a',
+    type: 'number',
+    refinement: undefined,
+    path: ['a'],
+    branch: [data, 'a'],
+  },
+  {
+    value: 'b',
+    type: 'number',
+    refinement: undefined,
+    path: ['b'],
+    branch: [data, 'b'],
+  },
+]

@@ -16,10 +16,12 @@ export const data = {
   subsection: '2.1',
 }
 
-export const error = {
-  value: '2.1',
-  type: 'string',
-  refinement: 'Subsection',
-  path: ['subsection'],
-  branch: [data, data.subsection],
-}
+export const failures = [
+  {
+    value: '2.1',
+    type: 'string',
+    refinement: 'Subsection',
+    path: ['subsection'],
+    branch: [data, data.subsection],
+  },
+]

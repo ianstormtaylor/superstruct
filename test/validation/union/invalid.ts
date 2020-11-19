@@ -9,10 +9,12 @@ export const data = {
   b: 'invalid',
 }
 
-export const error = {
-  value: { b: 'invalid' },
-  type: 'union',
-  refinement: undefined,
-  path: [],
-  branch: [data],
-}
+export const failures = [
+  {
+    value: { b: 'invalid' },
+    type: 'union',
+    refinement: undefined,
+    path: [],
+    branch: [data],
+  },
+]

@@ -27,18 +27,18 @@ export function print(value: any, ticks?: string): string {
  * Convert a validation result to an iterable of failures.
  */
 
-export function toFailures<T, S>(
+export function* toFailures<T, S>(
   result: Result,
   context: Context<T, S>
-): Iterable<Failure> {
+): IterableIterator<Failure> {
   if (typeof result === 'string') {
     return [context.fail({ message: result })]
   } else if (result === true) {
     return []
   } else if (result === false) {
-    return [context.fail()]
+    yield context.fail()
   } else {
-    return result
+    yield* result
   }
 }
 
@@ -108,3 +108,13 @@ export type PartialObjectSchema<S extends ObjectSchema> = {
  */
 
 export type TupleSchema<T> = { [K in keyof T]: Struct<T[K]> }
+
+/**
+ * Shifts (removes and returns) the first value from the `input` iterator.
+ * Like `Array.prototype.shift()` but for an `Iterator`.
+ */
+
+export function iteratorShift<T>(input: Iterator<T>): T | undefined {
+  const { done, value } = input.next()
+  return done ? undefined : value
+}

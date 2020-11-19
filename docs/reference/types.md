@@ -27,11 +27,12 @@ null
 
 ```ts
 array(number())
-array(object({ id: string() }))
+array(object({ id: number() }))
 ```
 
-```ts
-;[1, 2, 3][{ id: '1' }]
+```txt
+[1, 2, 3]
+[{ id: 1 }]
 ```
 
 `array` structs accept a list of values of a specific type.
@@ -160,6 +161,7 @@ never()
 ```
 
 ```ts
+
 ```
 
 `never` structs will fail validation for **every** value.
@@ -226,7 +228,7 @@ undefined
 ### `record`
 
 ```ts
-record([string(), number()])
+record(string(), number())
 ```
 
 ```ts

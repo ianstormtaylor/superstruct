@@ -1,13 +1,15 @@
-import { tuple, string, number } from '../../..'
+import { tuple, string, number, refinement } from '../../..'
 
 export const Struct = tuple([string(), number()])
 
 export const data = ['A']
 
-export const error = {
-  value: undefined,
-  type: 'number',
-  refinement: undefined,
-  path: [1],
-  branch: [data, data[1]],
-}
+export const failures = [
+  {
+    value: undefined,
+    type: 'number',
+    refinement: undefined,
+    path: [1],
+    branch: [data, data[1]],
+  },
+]

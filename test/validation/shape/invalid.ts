@@ -7,10 +7,12 @@ export const Struct = shape({
 
 export const data = 'invalid'
 
-export const error = {
-  value: 'invalid',
-  type: 'shape',
-  refinement: undefined,
-  path: [],
-  branch: [data],
-}
+export const failures = [
+  {
+    value: 'invalid',
+    type: 'shape',
+    refinement: undefined,
+    path: [],
+    branch: [data],
+  },
+]

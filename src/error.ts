@@ -28,10 +28,10 @@ export class StructError extends TypeError {
   refinement: string | undefined
   path: Array<number | string>
   branch: Array<any>
-  failures: () => IterableIterator<Failure>;
+  failures: () => Array<Failure>;
   [key: string]: any
 
-  constructor(failure: Failure, iterable: Iterable<Failure>) {
+  constructor(failure: Failure, moreFailures: IterableIterator<Failure>) {
     const {
       path,
       value,
@@ -43,9 +43,14 @@ export class StructError extends TypeError {
       ...rest
     } = failure
 
-    function* failures() {
-      yield failure
-      yield* iterable
+    let failuresResult: Array<Failure> | undefined
+
+    function failures(): Array<Failure> {
+      if (!failuresResult) {
+        failuresResult = [failure, ...moreFailures]
+      }
+
+      return failuresResult
     }
 
     const msg =

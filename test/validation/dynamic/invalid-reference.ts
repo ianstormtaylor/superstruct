@@ -29,10 +29,12 @@ export const data = {
   price: 'Only $19.99!',
 }
 
-export const error = {
-  value: 'Only $19.99!',
-  type: 'number',
-  refinement: undefined,
-  path: ['price'],
-  branch: [data, data.price],
-}
+export const failures = [
+  {
+    value: 'Only $19.99!',
+    type: 'number',
+    refinement: undefined,
+    path: ['price'],
+    branch: [data, data.price],
+  },
+]

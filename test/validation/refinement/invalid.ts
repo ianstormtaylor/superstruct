@@ -5,10 +5,12 @@ export const Struct = refinement('email', string(), isEmail)
 
 export const data = 'invalid'
 
-export const error = {
-  value: 'invalid',
-  type: 'string',
-  refinement: 'email',
-  path: [],
-  branch: [data],
-}
+export const failures = [
+  {
+    value: 'invalid',
+    type: 'string',
+    refinement: 'email',
+    path: [],
+    branch: [data],
+  },
+]

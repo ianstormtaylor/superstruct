@@ -18,6 +18,17 @@ And then you can import it:
 import { assert } from 'superstruct'
 ```
 
+Superstruct has many importable methods. To reduce the friction of importing many methods you can use a wildcard. The methods are then accessed from one object.
+
+```ts
+import * as s from 'superstruct'
+
+const User = s.object({
+  id: s.number(),
+  name: s.string(),
+})
+```
+
 If you'd rather use a `<script>` tag, you can use the UMD build:
 
 ```html
