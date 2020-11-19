@@ -23,7 +23,7 @@
     "@babel/preset-typescript": "^7.6.0",
     "@babel/register": "^7.6.2",
     "@types/lodash": "^4.14.144",
-    "@types/mocha": "^7.0.2",
+    "@types/mocha": "^8.0.3",
     "@types/node": "^14.0.6",
     "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
