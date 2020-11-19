@@ -11,9 +11,11 @@ export const data = {
   unknown: true,
 }
 
-export const error = {
-  value: true,
-  type: 'never',
-  path: ['unknown'],
-  branch: [data, data.unknown],
-}
+export const failures = [
+  {
+    value: true,
+    type: 'never',
+    path: ['unknown'],
+    branch: [data, data.unknown],
+  },
+]

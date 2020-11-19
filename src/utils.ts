@@ -7,15 +7,25 @@ export type StructTuple<T> = { [K in keyof T]: Struct<T[K]> }
  * Convert a validation result to an iterable of failures.
  */
 
-export function toFailures(
+export function* toFailures(
   result: StructResult,
   context: StructContext
-): Iterable<StructFailure> {
+): IterableIterator<StructFailure> {
   if (result === true) {
-    return []
+    // yield nothing
   } else if (result === false) {
-    return [context.fail()]
+    yield context.fail()
   } else {
-    return result
+    yield* result
   }
+}
+
+/**
+ * Shifts (removes and returns) the first value from the `input` iterator.
+ * Like `Array.prototype.shift()` but for an `Iterator`.
+ */
+
+export function iteratorShift<T>(input: Iterator<T>): T | undefined {
+  const { done, value } = input.next()
+  return done ? undefined : value
 }

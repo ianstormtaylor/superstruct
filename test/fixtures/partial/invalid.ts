@@ -7,9 +7,11 @@ export const Struct = partial({
 
 export const data = 'invalid'
 
-export const error = {
-  value: 'invalid',
-  type: 'Partial<{name,age}>',
-  path: [],
-  branch: [data],
-}
+export const failures = [
+  {
+    value: 'invalid',
+    type: 'Partial<{name,age}>',
+    path: [],
+    branch: [data],
+  },
+]

@@ -1,4 +1,4 @@
-import { toFailures } from './utils'
+import { toFailures, iteratorShift } from './utils'
 
 /**
  * `Struct` objects encapsulate the schema for a specific data type (with
@@ -47,18 +47,24 @@ export class StructError extends TypeError {
   type: string
   path: Array<number | string>
   branch: Array<any>
-  failures: () => Iterable<StructFailure>;
+  failures: () => Array<StructFailure>;
   [key: string]: any
 
-  constructor(failure: StructFailure, iterable: Iterable<StructFailure>) {
+  constructor(
+    failure: StructFailure,
+    moreFailures: IterableIterator<StructFailure>
+  ) {
     const { path, value, type, branch, ...rest } = failure
     const message = `Expected a value of type \`${type}\`${
       path.length ? ` for \`${path.join('.')}\`` : ''
     } but received \`${JSON.stringify(value)}\`.`
 
-    function* failures(): Iterable<StructFailure> {
-      yield failure
-      yield* iterable
+    let failuresResult: Array<StructFailure> | undefined
+    function failures(): Array<StructFailure> {
+      if (!failuresResult) {
+        failuresResult = [failure, ...moreFailures]
+      }
+      return failuresResult
     }
 
     super(message)
@@ -89,7 +95,7 @@ export type StructContext = {
     struct: Struct<any> | Struct<never>,
     parent?: any,
     key?: string | number
-  ) => Iterable<StructFailure>
+  ) => IterableIterator<StructFailure>
 }
 
 /**
@@ -163,11 +169,11 @@ export function validate<T>(
     value = struct.coercer(value)
   }
 
-  const iterable = check(value, struct)
-  const [failure] = iterable
+  const failures = check(value, struct)
+  const failure = iteratorShift(failures)
 
   if (failure) {
-    const error = new StructError(failure, iterable)
+    const error = new StructError(failure, failures)
     return [error, undefined]
   } else {
     return [undefined, value as T]
@@ -183,7 +189,7 @@ function* check<T>(
   struct: Struct<T>,
   path: any[] = [],
   branch: any[] = []
-): Iterable<StructFailure> {
+): IterableIterator<StructFailure> {
   const { type } = struct
   const ctx: StructContext = {
     value,
@@ -201,7 +207,7 @@ function* check<T>(
   }
 
   const failures = toFailures(struct.validator(value, ctx), ctx)
-  const [failure] = failures
+  const failure = iteratorShift(failures)
 
   if (failure) {
     yield failure

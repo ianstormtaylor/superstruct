@@ -9,9 +9,11 @@ export const data = {
   age: 'invalid',
 }
 
-export const error = {
-  value: 'invalid',
-  type: 'number',
-  path: ['age'],
-  branch: [data, data.age],
-}
+export const failures = [
+  {
+    value: 'invalid',
+    type: 'number',
+    path: ['age'],
+    branch: [data, data.age],
+  },
+]
