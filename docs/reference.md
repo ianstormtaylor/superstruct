@@ -104,7 +104,7 @@ null
 
 ```ts
 array(number())
-array(object({ name: number() }))
+array(object({ id: number() }))
 ```
 
 ```ts
