@@ -7,7 +7,7 @@ Superstruct allows structs to be augmented with coercion logic, allowing you to 
 ```ts
 defaulted(string(), 'Untitled')
 
-defaulted(object({
+object({
   id: defaulted(number(), () => i++),
   name: string(),
   role: defaulted(enums(['admin', 'member', 'guest']), 'guest'),
@@ -15,6 +15,8 @@ defaulted(object({
 ```
 
 `defaulted` augments a struct to add coercion logic for default values, which are applied when the input is `undefined`.
+
+> 🤖 If you add `defaulted` to an `object` struct with a dictionary of values, those values will be mixed in one-by-one, so the input doesn't need to be `undefined`, but certain properties can be `undefined`.
 
 ### `masked`
 
@@ -27,8 +29,6 @@ masked(
 ```
 
 `masked` augments an object struct to strip any unknown properties from the input when coercing it.
-
-> 🤖 If you add `defaulted` to an `object` struct with a dictionary of values, those values will be mixed in one-by-one, so the input doesn't need to be `undefined`, but certain properties can be `undefined`.
 
 ### Custom Coercions
 

@@ -1,4 +1,4 @@
-- [Introduction](./Introduction.md)
+- [Introduction](./readme.md)
 
 ## Guides
 
@@ -17,3 +17,9 @@
 - [Coercions](./reference/coercions.md)
 - [Utilities](./reference/utilities.md)
 - [Errors](./reference/errors.md)
+- [TypeScript](./reference/typescript.md)
+
+## Resources
+
+- [FAQ](./resources/faq.md)
+- [Links](./resources/links.md)

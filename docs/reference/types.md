@@ -107,8 +107,8 @@ new MyClass()
 integer()
 ```
 
-```ts
-;-7
+```txt
+-7
 0
 42
 ```
@@ -142,7 +142,7 @@ literal(42)
 ### `map`
 
 ```ts
-map([string(), number()])
+map(string(), number())
 ```
 
 ```ts
@@ -285,8 +285,8 @@ string()
 tuple([string(), number(), boolean()])
 ```
 
-```ts
-;['a', 1, true]
+```txt
+['a', 1, true]
 ```
 
 `tuple` structs validate that a value is an array of a specific length with values each of a specific type.

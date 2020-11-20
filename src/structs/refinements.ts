@@ -2,64 +2,33 @@ import { Struct, Refiner } from '../struct'
 import { toFailures } from '../utils'
 
 /**
- * Ensure that a string or array has a length of zero.
+ * Ensure that a number is above a threshold.
  */
 
-export function empty<T extends string | any[]>(struct: Struct<T>): Struct<T> {
-  return refinement('empty', struct, (value) => {
-    return (
-      value.length === 0 || `Expected an empty value but received \`${value}\``
-    )
-  })
-}
-
-/**
- * Ensure that a string or array has a length between `min` and `max`.
- */
-
-export function length<T extends string | any[]>(
+export function above<T extends number>(
   struct: Struct<T>,
-  min: number,
-  max: number
+  n: number
 ): Struct<T> {
-  return refinement('length', struct, (value) => {
+  return refinement('above', struct, (value) => {
     return (
-      (min < value.length && value.length < max) ||
-      `Expected a value with a length between \`${min}\` and \`${max}\` but received a length of \`${value.length}\``
+      value > n ||
+      `Expected a ${struct.type} above ${n} but received \`${value}\``
     )
   })
 }
 
 /**
- * Ensure that a number is negative (not zero).
+ * Ensure that a number is below a threshold.
  */
 
-export function negative<T extends number>(struct: Struct<T>): Struct<T> {
-  return refinement('negative', struct, (value) => {
-    return value < 0 || `Expected a negative number but received \`${value}\``
-  })
-}
-
-/**
- * Ensure that a number is non-negative (includes zero).
- */
-
-export function nonnegative<T extends number>(struct: Struct<T>): Struct<T> {
-  return refinement('nonnegative', struct, (value) => {
+export function below<T extends number>(
+  struct: Struct<T>,
+  n: number
+): Struct<T> {
+  return refinement('below', struct, (value) => {
     return (
-      0 <= value || `Expected a non-negative number but received \`${value}\``
-    )
-  })
-}
-
-/**
- * Ensure that a number is non-positive (includes zero).
- */
-
-export function nonpositive<T extends number>(struct: Struct<T>): Struct<T> {
-  return refinement('nonpositive', struct, (value) => {
-    return (
-      0 >= value || `Expected a non-positive number but received \`${value}\``
+      value < n ||
+      `Expected a ${struct.type} below ${n} but received \`${value}\``
     )
   })
 }
@@ -75,18 +44,40 @@ export function pattern<T extends string>(
   return refinement('pattern', struct, (value) => {
     return (
       regexp.test(value) ||
-      `Expected a string matching \`/${regexp.source}/\` but received "${value}"`
+      `Expected a ${struct.type} matching \`/${regexp.source}/\` but received "${value}"`
     )
   })
 }
 
 /**
- * Ensure that a number is positive (not zero).
+ * Ensure that a string, array, number, map, or set has a size (or length) between `min` and `max`.
  */
 
-export function positive<T extends number>(struct: Struct<T>): Struct<T> {
-  return refinement('positive', struct, (value) => {
-    return 0 < value || `Expected a positive number but received \`${value}\``
+export function size<
+  T extends string | number | any[] | Map<any, any> | Set<any>
+>(struct: Struct<T>, min: number, max: number = min): Struct<T> {
+  const expected = `Expected a ${struct.type}`
+  const of = min === max ? `of \`${min}\`` : `between \`${min}\` and \`${max}\``
+
+  return refinement('size', struct, (value) => {
+    if (typeof value === 'number') {
+      return (
+        (min <= value && value <= max) ||
+        `${expected} ${of} but received \`${value}\``
+      )
+    } else if (value instanceof Map || value instanceof Set) {
+      const { size } = value
+      return (
+        (min <= size && size <= max) ||
+        `${expected} with a size ${of} but received one with a size of \`${size}\``
+      )
+    } else {
+      const { length } = value as string | any[]
+      return (
+        (min <= length && length <= max) ||
+        `${expected} with a length ${of} but received one with a length of \`${length}\``
+      )
+    }
   })
 }
 

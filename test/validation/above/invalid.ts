@@ -1,6 +1,6 @@
-import { number, positive } from '../../..'
+import { number, above } from '../../..'
 
-export const Struct = positive(number())
+export const Struct = above(number(), 0)
 
 export const data = -1
 
@@ -8,7 +8,7 @@ export const failures = [
   {
     value: -1,
     type: 'number',
-    refinement: 'positive',
+    refinement: 'above',
     path: [],
     branch: [data],
   },

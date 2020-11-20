@@ -18,15 +18,16 @@ assert('2.1', Section) // passes
 assert('string', Section) // throws!
 ```
 
-Another common use case is validating positive integers using the built-in `positive` helper:
+Another common use case is validating positive integers using the built-in `above` helper:
 
 ```ts
-import { positive, integer } from 'superstruct'
+import { above, integer } from 'superstruct'
 
-const Count = positive(integer())
+const Count = above(integer(), 0)
 
 assert(42, Count) // passes
 assert(3.14, Count) // throws!
+assert(-1, Count) // throws!
 assert(0, Count) // throws!
 ```
 

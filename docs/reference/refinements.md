@@ -2,71 +2,29 @@
 
 Superstruct allows you to constrain existing structs with further validation. This doesn't change the type of the struct, but simply introduces extra validation logic. This can be useful for example when ensuring that a string matches a specific `RegExp`.
 
-### `empty`
+### `above`
 
 ```ts
-empty(string())
-empty(array())
+above(number(), 9000)
 ```
 
 ```ts
-''
-[]
+9001
 ```
 
-`empty` enforces that a `string` or `array` struct also requires a length of `0`.
+`above` enforces that a `number` struct is above (greater than) a threshold.
 
-### `length`
+### `below`
 
 ```ts
-length(string(), 1, 100)
-
-length(array(number), 0, Infinity)
+below(number(), 0)
 ```
 
-```ts
-'a string of text'[(1, 2, 3)]
+```txt
+-1
 ```
 
-`length` enforces that a `string` or `array` struct also is within a certain `min` and `max` length.
-
-### `negative`
-
-```ts
-negative(number())
-```
-
-```ts
-;-42 - 3.14
-```
-
-`negative` enforces that a `number` struct is also a negative number (not zero).
-
-### `nonnegative`
-
-```ts
-nonnegative(number())
-```
-
-```ts
-0
-42
-3.14
-```
-
-`nonnegative` enforces that a `number` struct is also a nonnegative number (including zero).
-
-### `nonpositive`
-
-```ts
-nonpositive(number())
-```
-
-```ts
-0 - 42 - 3.14
-```
-
-`nonpositive` enforces that a `number` struct is also a nonpositive number (including zero).
+`below` enforces that a `number` struct is below (less than) a threshold.
 
 ### `pattern`
 
@@ -80,18 +38,23 @@ pattern(string(), /\d+/)
 
 `pattern` enforces that a `string` struct also matches a supplied `RegExp`.
 
-### `positive`
+### `size`
 
 ```ts
-positive(number())
+size(string(), 1, 100)
+size(array(number), 0)
+size(number(), 93, Infinity)
 ```
 
-```ts
-42
-3.14
+```txt
+'a string of text'
+[1, 2, 3]
+Infinity
 ```
 
-`positive` enforces that a `number` struct is also a positive number (not zero).
+`size` enforces that a `number`, `string`, `array`, `map`, or `set` struct also is within a certain `min` and `max` size (or length).
+
+> 🤖 The `max` argument is optional and defaults to whatever you pass for `min`, which makes specifying exact sizes easy (just omit the max).
 
 ### Custom Refinements
 

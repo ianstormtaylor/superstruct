@@ -1,6 +1,6 @@
-import { array, length, number } from '../../..'
+import { array, size, number } from '../../..'
 
-export const Struct = length(array(number()), 1, 5)
+export const Struct = size(array(number()), 1, 5)
 
 export const data = []
 
@@ -8,7 +8,7 @@ export const failures = [
   {
     value: [],
     type: 'array',
-    refinement: 'length',
+    refinement: 'size',
     path: [],
     branch: [data],
   },
