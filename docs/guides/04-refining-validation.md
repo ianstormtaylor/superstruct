@@ -1,4 +1,4 @@
-# Refining Types
+# Refining Validation
 
 There are some cases where you want to create a validation that is more fine-grained than a "type". For example, you might want not just a `string`, but a specific format of string. Or not just a `User`, but a user that is also an administrator.
 
@@ -6,7 +6,7 @@ For these situations, you can use "refinements". Refinments allow you to create 
 
 ## Built-in Refinements
 
-Superstruct has several built-in refinement helpers for common use cases. For example, a common one is ensuring that a string matches a specific regular expression pattern:
+Superstruct has several [built-in refinements](../reference/refinements.md) for common use cases. For example, a common one is ensuring that a string matches a specific regular expression pattern:
 
 ```ts
 import { pattern } from 'superstruct'

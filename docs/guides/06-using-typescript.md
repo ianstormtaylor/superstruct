@@ -2,6 +2,8 @@
 
 Superstruct is built with TypeScript, and is designed to integrate seamlessly with its guards and assertions. Which means that if you're using TypeScript too you'll get compile-time typings for your data.
 
+> 🤖 Warning: If you are not using TypeScript's [`strictNullChecks`](https://www.typescriptlang.org/tsconfig#strictNullChecks) option, Superstruct will be unable to infer your "optional" types correctly and will mark all types as optional.
+
 ## Narrowing Types
 
 Whenever you use the `is` or `assert` helpers in Superstruct, TypeScript will infer information about your data and give you type safety. For example:
@@ -37,13 +39,13 @@ You can also do the reverse and infer a TypeScript type using an existing Supers
 ```ts
 import { Infer } from 'superstruct'
 
-const UserStruct = object({
+const User = object({
   id: number(),
   email: email(),
   name: string(),
 })
 
-type User = Infer<typeof UserStruct>
+type User = Infer<typeof User>
 ```
 
 The `User` type above is the same as if you'd defined it by hand:
@@ -58,21 +60,7 @@ type User = {
 
 This save you from having to duplicate definitions.
 
-> 🤖 If you are not using TypeScript's [`strictNullChecks`](https://www.typescriptlang.org/tsconfig#strictNullChecks) option, Superstruct will be unable to infer your "optional" types correctly and will mark all types as optional.
-
-Since types and values are allowed to shadow each other in TypeScript, a common way to write the above is to have both the struct and the type named `User`, like so:
-
-```ts
-export const User = object({
-  id: number(),
-  email: email(),
-  name: string(),
-})
-
-export type User = Infer<typeof User>
-```
-
-That way, your calling code can import both at once:
+Since types and values are allowed to shadow each other in TypeScript, a common way to write the above is to have both the struct and the type use the same name. That way, your calling code can import both at once:
 
 ```ts
 import { User } from './user'

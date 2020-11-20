@@ -20,7 +20,7 @@ Assert that `value` is valid according to a `struct`. If the value is invalid a 
 const user = create(value, User)
 ```
 
-Create a `value` using the coercion logic that is built-in to the struct, returning the newly coerced value.
+Create a `value` using the coercion logic that is built-in to the struct, returning the newly coerced value. If the value is invalid a [`StructError`](./errors.md#structerror) will be thrown.
 
 > 🤖 If you want coercion logic like defaulted values, you **must** call this helper before running validation.
 
@@ -40,10 +40,12 @@ Test that `value` is valid, returning a boolean representing whether it is valid
 
 ### `validate`
 
-`validate<T>(value: unknown, struct: Struct<T>) => [StructError, T]`
+`validate<T>(value: unknown, struct: Struct<T>, withCoercion: boolean) => [StructError, T]`
 
 ```ts
 const [err, user] = validate(value, User)
 ```
 
 Validate `value`, returning a result tuple. If the value is invalid the first element will be a [`StructError`](./errors.md#structerror). Otherwise, the first element will be `undefined` and the second element will be a value that is guaranteed to match the struct.
+
+The third argument is a boolean flag that enables coercion of the input value when set to `true`.

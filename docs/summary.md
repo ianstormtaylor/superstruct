@@ -5,7 +5,7 @@
 - [Getting Started](./guides/01-getting-started.md)
 - [Validating Data](./guides/02-validating-data.md)
 - [Coercing Data](./guides/03-coercing-data.md)
-- [Refining Types](./guides/04-refining-types.md)
+- [Refining Validation](./guides/04-refining-validation.md)
 - [Customizing Errors](./guides/05-customizing-errors.md)
 - [Using TypeScript](./guides/06-using-typescript.md)
 
