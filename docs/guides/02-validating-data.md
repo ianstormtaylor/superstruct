@@ -32,7 +32,7 @@ assert('a string', Struct) // throws!
 
 Here we're ensuring that `data` is a valid `Date` object.
 
-> 🤖 Check out the [Types reference](../reference.md#types) for all of the possible struct types.
+> 🤖 Check out the [Types reference](../reference/types.md) for all of the possible struct types.
 
 ## Composed Values
 
@@ -107,7 +107,7 @@ const Team = object({
 })
 ```
 
-> 🤖 For modelling recursive structures you can use the [`lazy`](../reference/#lazy) utility to prevent circular errors.
+> 🤖 For modelling recursive structures you can use the [`lazy`](../reference/types.md#lazy) utility to prevent circular errors.
 
 ## Optional Values
 
@@ -150,7 +150,7 @@ const Article = object({
 })
 ```
 
-> 🤖 Check out the [Types reference](../reference.md#types) for all of the possible struct types.
+> 🤖 Check out the [Types reference](../reference/types.md) for all of the possible struct types.
 
 ## Custom Values
 
@@ -190,4 +190,4 @@ assert(data, User) // throws! (invalid email)
 
 And there you have it!
 
-> 🤖 Check out the [Types reference](../reference.md#types) for all of the possible struct types.
+> 🤖 Check out the [Types reference](../reference/types.md) for all of the possible struct types.

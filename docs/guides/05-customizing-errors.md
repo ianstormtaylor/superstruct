@@ -61,7 +61,7 @@ user_name_required
 
 Although this example is simplified, the struct errors expose all of the possible information about why the validation failed, so you can use them to construct extremely detailed errors for your end users.
 
-> To see all of the information embedded in `StructError` objects, check out the [`StructError` reference](../reference.md#structerror).
+> To see all of the information embedded in `StructError` objects, check out the [`StructError` reference](../reference/errors.md).
 
 # Multiple Failures
 

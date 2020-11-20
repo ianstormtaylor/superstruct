@@ -1,6 +1,6 @@
-import { shape, string, number } from '../../..'
+import { type, string, number } from '../../..'
 
-export const Struct = shape({
+export const Struct = type({
   name: string(),
   age: number(),
 })
@@ -10,7 +10,7 @@ export const data = 'invalid'
 export const failures = [
   {
     value: 'invalid',
-    type: 'shape',
+    type: 'type',
     refinement: undefined,
     path: [],
     branch: [data],

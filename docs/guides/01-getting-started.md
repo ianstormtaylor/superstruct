@@ -63,7 +63,7 @@ const User = object({
 
 This `User` struct will expect an object with an `id` property that is a number, and `name` and `email` properties that are strings.
 
-Now we can use our `User` struct to validate the data. The easiest way to do this is to use the [`assert`](../reference.md#assert) helper, like so:
+Now we can use our `User` struct to validate the data. The easiest way to do this is to use the [`assert`](../reference/core.md#assert) helper, like so:
 
 ```ts
 import { assert } from 'superstruct'
@@ -92,6 +92,4 @@ assert(data, User)
 // }
 ```
 
-If you'd rather have the error returned instead of thrown, you can use the [`validate`](../reference.md#validate) helper. Or, if you'd just like receive a boolean of whether the data is valid or not, use the [`is`](../reference.md#is) helper.
-
-> 🤖 Check out the [Validation reference](https://superstructjs.org/interfaces/struct) for more information.
+If you'd rather have the error returned instead of thrown, you can use the [`validate`](../reference/core.md#validate) helper. Or, if you'd just like receive a boolean of whether the data is valid or not, use the [`is`](../reference/core.md#is) helper.

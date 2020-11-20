@@ -1,7 +1,7 @@
-import { shape, union, string, number } from '../../..'
+import { type, union, string, number } from '../../..'
 
-const A = shape({ a: string() })
-const B = shape({ b: number() })
+const A = type({ a: string() })
+const B = type({ b: number() })
 
 export const Struct = union([A, B])
 

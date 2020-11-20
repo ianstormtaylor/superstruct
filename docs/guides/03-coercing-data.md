@@ -29,7 +29,7 @@ const user = coerce(data, User)
 
 Here the `user` object didn't default an `id` property. That's because any `undefined` values will be replaced with their default values instead.
 
-Notice that we used [`coerce`](../reference.md#coerce) and not [`assert`](../reference.md#assert)! This is an important distinction because we want to receive the return value of the newly coerced data.
+Notice that we used [`coerce`](../reference/core.md#coerce) and not [`assert`](../reference/core.md#assert)! This is an important distinction because we want to receive the return value of the newly coerced data.
 
 The `defaults` helper also works with objects:
 

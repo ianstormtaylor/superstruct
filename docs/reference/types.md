@@ -154,6 +154,8 @@ new Map([
 
 `map` structs validate that a value is a `Map` object with specific types for its keys and values.
 
+> 🤖 When defining a key/value schemas with `map` it will traverse all the properties to ensure they are valid! If you don't care about validating the properties of the map, you can write `map()` instead.
+
 ### `never`
 
 ```ts
@@ -212,6 +214,8 @@ struct({
 
 `object` structs validate that a value is an object and that each of its properties match a specific type as well.
 
+> 🤖 Note that `object` structs throw errors if they encounter extra properites on an object! If you want to be less strict and ignore any extra properties, use [`type`](#type) instead. For other more complex object use cases, check out the [coercions](./coercions.md) and [utilities](./utilities.md) too.
+
 ### `optional`
 
 ```ts
@@ -253,7 +257,7 @@ new RegExp()
 
 `regexp` structs validate that a value is a `RegExp` object.
 
-> 🤖 This does not test the value against the regular expression! For that you want the [`pattern`](#pattern) refinement.
+> 🤖 This does not test the value against the regular expression! For that you want the [`pattern`](./refinements.md#pattern) refinement.
 
 ### `set`
 
@@ -266,6 +270,8 @@ new Set(['a', 'b', 'c'])
 ```
 
 `set` structs validate that a value is a `Set` instance with elements of a specific type.
+
+> 🤖 When defining a child schema with `set` it will traverse all the children to ensure they are valid! If you don't care about validating the elements of the set, you can write `set()` instead.
 
 ### `string`
 
@@ -310,6 +316,8 @@ type({
 ```
 
 `type` structs validate that a value has a set of properties on it, but it does not assert anything about unspecified properties. This allows you to assert that a particular set of functionality exists without a strict equality check for properties.
+
+> 🤖 If you want to throw errors when encountering unknown properties, use [`object`](#object) instead.
 
 ### `union`
 

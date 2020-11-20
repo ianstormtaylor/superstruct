@@ -8,7 +8,7 @@
 assert(value, User)
 ```
 
-Assert that `value` is valid according to a `struct`. If the value is invalid a [`StructError`](#structerror) will be thrown.
+Assert that `value` is valid according to a `struct`. If the value is invalid a [`StructError`](./errors.md#structerror) will be thrown.
 
 > 🤖 When using TypeScript `is` acts as an assertion guard, so you can ensure that after calling it the `value` matches the shape of the struct.
 
@@ -46,4 +46,4 @@ Test that `value` is valid, returning a boolean representing whether it is valid
 const [err, user] = validate(value, User)
 ```
 
-Validate `value`, returning a result tuple. If the value is invalid the first element will be a [`StructError`](#structerror). Otherwise, the first element will be `undefined` and the second element will be a value that is guaranteed to match the struct.
+Validate `value`, returning a result tuple. If the value is invalid the first element will be a [`StructError`](./errors.md#structerror). Otherwise, the first element will be `undefined` and the second element will be a value that is guaranteed to match the struct.

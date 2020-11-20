@@ -436,34 +436,6 @@ export function set<T>(Element?: Struct<T>): any {
 }
 
 /**
- * Ensure that a value has a set of known properties of specific types.
- *
- * Note: Unrecognized properties are allowed and untouched. This is similar to
- * how TypeScript's structural typing works.
- */
-
-export function shape<S extends ObjectSchema>(
-  schema: S
-): Struct<ObjectType<S>, S> {
-  const keys = Object.keys(schema)
-  return new Struct({
-    type: 'shape',
-    schema,
-    validator: function* (value, ctx) {
-      if (typeof value !== 'object' || value == null) {
-        yield ctx.fail(`Expected an object, but received: ${print(value)}`)
-      } else {
-        for (const key of keys) {
-          const Value = schema[key]
-          const v = (value as any)[key]
-          yield* ctx.check(v, Value, value, key)
-        }
-      }
-    },
-  })
-}
-
-/**
  * Ensure that a value is a string.
  */
 
@@ -546,6 +518,34 @@ export function tuple(Elements: Struct<any>[]): any {
         yield* ctx.check(v, Never, value, index)
       }
     }
+  })
+}
+
+/**
+ * Ensure that a value has a set of known properties of specific types.
+ *
+ * Note: Unrecognized properties are allowed and untouched. This is similar to
+ * how TypeScript's structural typing works.
+ */
+
+export function type<S extends ObjectSchema>(
+  schema: S
+): Struct<ObjectType<S>, S> {
+  const keys = Object.keys(schema)
+  return new Struct({
+    type: 'type',
+    schema,
+    validator: function* (value, ctx) {
+      if (typeof value !== 'object' || value == null) {
+        yield ctx.fail(`Expected an object, but received: ${print(value)}`)
+      } else {
+        for (const key of keys) {
+          const Value = schema[key]
+          const v = (value as any)[key]
+          yield* ctx.check(v, Value, value, key)
+        }
+      }
+    },
   })
 }
 
