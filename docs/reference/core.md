@@ -10,7 +10,7 @@ assert(value, User)
 
 Assert that `value` is valid according to a `struct`. If the value is invalid a [`StructError`](./errors.md#structerror) will be thrown.
 
-> 🤖 When using TypeScript `is` acts as an assertion guard, so you can ensure that after calling it the `value` matches the shape of the struct.
+> 🤖 When using TypeScript `assert` acts as an [assertion function](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions), so you can ensure that after calling it the type of the `value` matches the shape of the struct.
 
 ### `create`
 

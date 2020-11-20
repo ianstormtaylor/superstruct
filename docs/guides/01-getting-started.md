@@ -2,23 +2,25 @@
 
 ## Installing Superstruct
 
-To install Superstruct with Yarn or Npm, simply:
+To install Superstruct with Yarn or Npm, either:
 
 ```bash
 yarn add superstruct
-```
-
-```bash
 npm install --save superstruct
 ```
 
 And then you can import it:
 
 ```ts
-import { assert } from 'superstruct'
+import { object, string, number } from 'superstruct'
+
+const User = object({
+  id: number(),
+  name: string(),
+})
 ```
 
-Superstruct has many importable methods. To reduce the friction of importing many methods you can use a wildcard. The methods are then accessed from one object.
+If you'd like, you can use a wildcard import:
 
 ```ts
 import * as s from 'superstruct'
