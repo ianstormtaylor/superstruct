@@ -2,12 +2,12 @@ import assert from 'assert'
 import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
-import { assert as assertValue, coerce as coerceValue, StructError } from '..'
+import { assert as assertValue, create as createValue, StructError } from '..'
 
 describe('superstruct', () => {
   describe('api', () => {
     require('./api/assert')
-    require('./api/coerce')
+    require('./api/create')
     require('./api/is')
     require('./api/mask')
     require('./api/validate')
@@ -30,15 +30,15 @@ describe('superstruct', () => {
 
         for (const name of tests) {
           const module = require(resolve(testsDir, name))
-          const { Struct, data, coerce, only, skip, output, failures } = module
+          const { Struct, data, create, only, skip, output, failures } = module
           const run = only ? it.only : skip ? it.skip : it
           run(name, () => {
             let actual
             let err
 
             try {
-              if (coerce) {
-                actual = coerceValue(data, Struct)
+              if (create) {
+                actual = createValue(data, Struct)
               } else {
                 assertValue(data, Struct)
                 actual = data

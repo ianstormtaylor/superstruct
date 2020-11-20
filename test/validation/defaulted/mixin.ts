@@ -19,4 +19,4 @@ export const output = {
   version: 0,
 }
 
-export const coerce = true
+export const create = true

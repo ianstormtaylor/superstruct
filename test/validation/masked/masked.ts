@@ -11,4 +11,4 @@ export const output = {
   name: 'Jane',
 }
 
-export const coerce = true
+export const create = true

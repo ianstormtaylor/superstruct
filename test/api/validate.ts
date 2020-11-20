@@ -1,23 +1,23 @@
-import { deepEqual, equal } from 'assert'
-import { validate, string, StructError, struct, object, array } from '../..'
+import { deepStrictEqual, strictEqual } from 'assert'
+import { validate, string, StructError, define, object } from '../..'
 
 describe('validate', () => {
   it('valid as helper', () => {
     const S = string()
-    deepEqual(validate('valid', S), [undefined, 'valid'])
+    deepStrictEqual(validate('valid', S), [undefined, 'valid'])
   })
 
   it('valid as method', () => {
     const S = string()
-    deepEqual(S.validate('valid'), [undefined, 'valid'])
+    deepStrictEqual(S.validate('valid'), [undefined, 'valid'])
   })
 
   it('invalid as helper', () => {
     const S = string()
     const [err, value] = validate(42, S)
-    equal(value, undefined)
-    equal(err instanceof StructError, true)
-    deepEqual(Array.from((err as StructError).failures()), [
+    strictEqual(value, undefined)
+    strictEqual(err instanceof StructError, true)
+    deepStrictEqual(Array.from((err as StructError).failures()), [
       {
         value: 42,
         key: undefined,
@@ -33,9 +33,9 @@ describe('validate', () => {
   it('invalid as method', () => {
     const S = string()
     const [err, value] = S.validate(42)
-    equal(value, undefined)
-    equal(err instanceof StructError, true)
-    deepEqual(Array.from((err as StructError).failures()), [
+    strictEqual(value, undefined)
+    strictEqual(err instanceof StructError, true)
+    deepStrictEqual(Array.from((err as StructError).failures()), [
       {
         value: 42,
         key: undefined,
@@ -51,7 +51,7 @@ describe('validate', () => {
   it('error message path', () => {
     const S = object({ author: object({ name: string() }) })
     const [err] = S.validate({ author: { name: 42 } })
-    equal(
+    strictEqual(
       (err as StructError).message,
       'At path: author.name -- Expected a string, but received: 42'
     )
@@ -61,19 +61,19 @@ describe('validate', () => {
     let ranA = false
     let ranB = false
 
-    const A = struct('A', (x) => {
+    const A = define('A', (x) => {
       ranA = true
       return typeof x === 'string'
     })
 
-    const B = struct('B', (x) => {
+    const B = define('B', (x) => {
       ranA = true
       return typeof x === 'string'
     })
 
     const S = object({ a: A, b: B })
     S.validate({ a: null, b: null })
-    equal(ranA, true)
-    equal(ranB, false)
+    strictEqual(ranA, true)
+    strictEqual(ranB, false)
   })
 })

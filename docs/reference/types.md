@@ -356,12 +356,12 @@ null
 You can also define your own custom structs that are specific to your application's requirements, like so:
 
 ```ts
-import { struct } from 'superstruct'
+import { define } from 'superstruct'
 import isEmail from 'is-email'
 import isUuid from 'is-uuid'
 
-const Email = struct('Email', isEmail)
-const Uuid = struct('Uuid', (value) => isUuid.v4(value))
+const Email = define('Email', isEmail)
+const Uuid = define('Uuid', (value) => isUuid.v4(value))
 
 const User = object({
   id: Uuid,

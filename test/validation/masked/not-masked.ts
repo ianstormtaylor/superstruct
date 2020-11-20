@@ -14,4 +14,4 @@ export const failures = [
   },
 ]
 
-export const coerce = true
+export const create = true

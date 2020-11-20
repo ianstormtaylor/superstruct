@@ -1,5 +1,5 @@
 import { Infer, Struct } from '../struct'
-import { struct } from './utilities'
+import { define } from './utilities'
 import {
   TupleSchema,
   ObjectSchema,
@@ -13,7 +13,7 @@ import {
  */
 
 export function any(): Struct<any, null> {
-  return struct('any', () => true)
+  return define('any', () => true)
 }
 
 /**
@@ -52,7 +52,7 @@ export function array<T extends Struct<any>>(Element?: T): any {
  */
 
 export function boolean(): Struct<boolean, null> {
-  return struct('boolean', (value) => {
+  return define('boolean', (value) => {
     return typeof value === 'boolean'
   })
 }
@@ -65,7 +65,7 @@ export function boolean(): Struct<boolean, null> {
  */
 
 export function date(): Struct<Date, null> {
-  return struct('date', (value) => {
+  return define('date', (value) => {
     return (
       (value instanceof Date && !isNaN(value.getTime())) ||
       `Expected a valid \`Date\` object, but received: ${print(value)}`
@@ -111,7 +111,7 @@ export function enums<T extends number | string>(values: T[]): any {
  */
 
 export function func(): Struct<Function, null> {
-  return struct('func', (value) => {
+  return define('func', (value) => {
     return (
       typeof value === 'function' ||
       `Expected a function, but received: ${print(value)}`
@@ -126,7 +126,7 @@ export function func(): Struct<Function, null> {
 export function instance<T extends { new (...args: any): any }>(
   Class: T
 ): Struct<InstanceType<T>, null> {
-  return struct('instance', (value) => {
+  return define('instance', (value) => {
     return (
       value instanceof Class ||
       `Expected a \`${Class.name}\` instance, but received: ${print(value)}`
@@ -139,7 +139,7 @@ export function instance<T extends { new (...args: any): any }>(
  */
 
 export function integer(): Struct<number, null> {
-  return struct('integer', (value) => {
+  return define('integer', (value) => {
     return (
       (typeof value === 'number' && !isNaN(value) && Number.isInteger(value)) ||
       `Expected an integer, but received: ${print(value)}`
@@ -204,7 +204,7 @@ export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
   null
 >
 export function intersection(Structs: Array<Struct<any, any>>): any {
-  return struct('intersection', function* (value, ctx) {
+  return define('intersection', function* (value, ctx) {
     for (const S of Structs) {
       yield* ctx.check(value, S)
     }
@@ -221,7 +221,7 @@ export function literal<T extends string>(constant: T): Struct<T, null>
 export function literal<T>(constant: T): Struct<T, null>
 export function literal<T>(constant: T): any {
   const description = print(constant)
-  return struct('literal', (value) => {
+  return define('literal', (value) => {
     return (
       value === constant ||
       `Expected the literal \`${description}\`, but received: ${print(value)}`
@@ -240,22 +240,16 @@ export function map<K, V>(
   Value: Struct<V>
 ): Struct<Map<K, V>, null>
 export function map<K, V>(Key?: Struct<K>, Value?: Struct<V>): any {
-  return struct(
-    'map',
-
-    function* (value, ctx) {
-      if (!(value instanceof Map)) {
-        yield ctx.fail(
-          `Expected a \`Map\` object, but received: ${print(value)}`
-        )
-      } else if (Key && Value) {
-        for (const [k, v] of value.entries()) {
-          yield* ctx.check(k, Key, value, k)
-          yield* ctx.check(v, Value, value, k)
-        }
+  return define('map', function* (value, ctx) {
+    if (!(value instanceof Map)) {
+      yield ctx.fail(`Expected a \`Map\` object, but received: ${print(value)}`)
+    } else if (Key && Value) {
+      for (const [k, v] of value.entries()) {
+        yield* ctx.check(k, Key, value, k)
+        yield* ctx.check(v, Value, value, k)
       }
     }
-  )
+  })
 }
 
 /**
@@ -263,7 +257,7 @@ export function map<K, V>(Key?: Struct<K>, Value?: Struct<V>): any {
  */
 
 export function never(): Struct<never, null> {
-  return struct('never', () => false)
+  return define('never', () => false)
 }
 
 /**
@@ -291,7 +285,7 @@ export function nullable<T, S>(struct: Struct<T, S>): Struct<T | null, S> {
  */
 
 export function number(): Struct<number, null> {
-  return struct('number', (value) => {
+  return define('number', (value) => {
     return (
       (typeof value === 'number' && !isNaN(value)) ||
       `Expected a number, but received: ${print(value)}`
@@ -390,7 +384,7 @@ export function record<K extends string, V>(
   Key: Struct<K>,
   Value: Struct<V>
 ): Struct<Record<K, V>, null> {
-  return struct('record', function* (value, ctx) {
+  return define('record', function* (value, ctx) {
     if (typeof value !== 'object' || value == null) {
       yield ctx.fail(`Expected an object, but received: ${print(value)}`)
     } else {
@@ -411,7 +405,7 @@ export function record<K extends string, V>(
  */
 
 export function regexp(): Struct<RegExp, null> {
-  return struct('regexp', (value) => {
+  return define('regexp', (value) => {
     return value instanceof RegExp
   })
 }
@@ -424,7 +418,7 @@ export function regexp(): Struct<RegExp, null> {
 export function set(): Struct<Set<unknown>, null>
 export function set<T>(Element: Struct<T>): Struct<Set<T>, null>
 export function set<T>(Element?: Struct<T>): any {
-  return struct('set', function* (value, ctx) {
+  return define('set', function* (value, ctx) {
     if (!(value instanceof Set)) {
       yield ctx.fail(`Expected a \`Set\` object, but received: ${print(value)}`)
     } else if (Element) {
@@ -440,7 +434,7 @@ export function set<T>(Element?: Struct<T>): any {
  */
 
 export function string(): Struct<string, null> {
-  return struct('string', (value) => {
+  return define('string', (value) => {
     return (
       typeof value === 'string' ||
       `Expected a string, but received: ${print(value)}`
@@ -503,7 +497,7 @@ export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
 export function tuple(Elements: Struct<any>[]): any {
   const Never = never()
 
-  return struct('tuple', function* (value, ctx) {
+  return define('tuple', function* (value, ctx) {
     if (!Array.isArray(value)) {
       yield ctx.fail(`Expected an array, but received: ${print(value)}`)
     } else {
@@ -605,7 +599,7 @@ export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
 >
 export function union(Structs: Struct<any>[]): any {
   const description = Structs.map((s) => s.type).join(' | ')
-  return struct('union', function* (value, ctx) {
+  return define('union', function* (value, ctx) {
     const failures = []
 
     for (const S of Structs) {
@@ -633,5 +627,5 @@ export function union(Structs: Struct<any>[]): any {
  */
 
 export function unknown(): Struct<unknown, null> {
-  return struct('unknown', () => true)
+  return define('unknown', () => true)
 }

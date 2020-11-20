@@ -8,11 +8,11 @@ import { ObjectSchema, ObjectType, isPlainObject } from '../utils'
  * likelihood that it passes validation—for example for default values, parsing
  * different formats, etc.
  *
- * Note: You must use `coerce(value, Struct)` on the value to have the coercion
+ * Note: You must use `create(value, Struct)` on the value to have the coercion
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function coercion<T, S>(
+export function coerce<T, S>(
   struct: Struct<T, S>,
   coercer: Struct<T, S>['coercer']
 ): Struct<T, S> {
@@ -37,7 +37,7 @@ export function defaulted<T, S>(
   fallback: any,
   strict?: true
 ): Struct<T, S> {
-  return coercion(S, (x) => {
+  return coerce(S, (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 
     if (x === undefined) {
@@ -74,7 +74,7 @@ export function defaulted<T, S>(
 export function masked<S extends ObjectSchema>(
   struct: Struct<ObjectType<S>, S>
 ): Struct<ObjectType<S>, S> {
-  return coercion(struct, (x) => {
+  return coerce(struct, (x) => {
     return typeof x !== 'object' || x == null ? x : mask(x, struct)
   })
 }

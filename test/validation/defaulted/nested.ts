@@ -10,4 +10,4 @@ export const output = {
   title: 'Untitled',
 }
 
-export const coerce = true
+export const create = true

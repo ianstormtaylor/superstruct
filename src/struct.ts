@@ -51,11 +51,11 @@ export class Struct<T = unknown, S = unknown> {
   }
 
   /**
-   * Coerce a value with the struct's coercion logic, then validate it.
+   * Create a value with the struct's coercion logic, then validate it.
    */
 
-  coerce(value: unknown): T {
-    return coerce(value, this)
+  create(value: unknown): T {
+    return create(value, this)
   }
 
   /**
@@ -82,6 +82,7 @@ export class Struct<T = unknown, S = unknown> {
     return validate(value, this, withCoercion)
   }
 }
+
 /**
  * A `StructContext` contains information about the current value being
  * validated as well as helper functions for failures and recursive validating.
@@ -148,10 +149,10 @@ export function assert<T, S>(
 }
 
 /**
- * Coerce a value with the coercion logic of `Struct` and validate it.
+ * Create a value with the coercion logic of `Struct` and validate it.
  */
 
-export function coerce<T, S>(value: unknown, struct: Struct<T, S>): T {
+export function create<T, S>(value: unknown, struct: Struct<T, S>): T {
   const ret = struct.coercer(value)
   assert(ret, struct)
   return ret

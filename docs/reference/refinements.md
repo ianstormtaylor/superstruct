@@ -61,7 +61,9 @@ Infinity
 You can also define your own custom refinments that are specific to your application's requirements, like so:
 
 ```ts
-const PositiveInteger = refinement(number(), 'PositiveInteger', (value) => {
+import { number, refine } from 'superstruct'
+
+const PositiveInteger = refine(number(), 'PositiveInteger', (value) => {
   return Number.isInteger(value) && value >= 0
 })
 ```

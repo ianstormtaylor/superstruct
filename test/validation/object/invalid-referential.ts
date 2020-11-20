@@ -1,10 +1,10 @@
-import { object, string, pattern, refinement } from '../../..'
+import { object, string, pattern, refine } from '../../..'
 
 const Section = pattern(string(), /^\d+(\.\d+)*$/)
 
 export const Struct = object({
   section: Section,
-  subsection: refinement('Subsection', Section, (value, ctx) => {
+  subsection: refine('Subsection', Section, (value, ctx) => {
     const { branch } = ctx
     const parent = branch[0]
     return value.startsWith(`${parent.section}.`)

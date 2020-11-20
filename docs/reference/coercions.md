@@ -35,7 +35,9 @@ masked(
 You can also define your own custom coercions that are specific to your application's requirements, like so:
 
 ```ts
-const PositiveInteger = coercion(string(), (value) => {
+import { coerce, string } from 'superstruct'
+
+const PositiveInteger = coerce(string(), (value) => {
   return typeof value === 'string' ? value.trim() : value
 })
 ```

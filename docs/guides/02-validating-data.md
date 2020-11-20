@@ -159,10 +159,10 @@ Next up, you might have been wondering about the `email` property. So far we've 
 But we'd really like to validate that the email is a valid email address. You can do this by defining a custom validation struct:
 
 ```ts
-import { struct } from 'superstruct'
+import { define } from 'superstruct'
 import isEmail from 'is-email'
 
-const email = () => struct('email', (value) => isEmail(value))
+const email = () => define('email', (value) => isEmail(value))
 ```
 
 Now we can define structs know about the `email` type:

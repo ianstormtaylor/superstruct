@@ -1,4 +1,4 @@
-import { tuple, string, number, refinement } from '../../..'
+import { tuple, string, number } from '../../..'
 
 export const Struct = tuple([string(), number()])
 

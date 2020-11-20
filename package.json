@@ -50,7 +50,7 @@
     "typescript": "^3.9.3"
   },
   "scripts": {
-    "build": "yarn build:es && yarn build:cjs && yarn build:max && yarn build:min && yarn build:types",
+    "build": "yarn build:types && yarn build:es && yarn build:cjs && yarn build:max && yarn build:min",
     "build:cjs": "rollup --config ./config/rollup-cjs.js",
     "build:es": "rollup --config ./config/rollup.js",
     "build:max": "rollup --config ./config/rollup-umd.js",

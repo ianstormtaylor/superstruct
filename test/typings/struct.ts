@@ -1,10 +1,10 @@
-import { assert, struct } from '../..'
+import { assert, define } from '../..'
 import { test } from '..'
 
 test<string>((x) => {
   assert(
     x,
-    struct<string>('custom', () => true)
+    define<string>('custom', () => true)
   )
   return x
 })

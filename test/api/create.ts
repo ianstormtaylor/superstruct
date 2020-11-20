@@ -1,24 +1,24 @@
-import { equal } from 'assert'
-import { coerce, string, defaulted } from '../..'
+import { strictEqual } from 'assert'
+import { create, string, defaulted } from '../..'
 
-describe('coerce', () => {
+describe('create', () => {
   it('missing as helper', () => {
     const S = defaulted(string(), 'default')
-    equal(coerce(undefined, S), 'default')
+    strictEqual(create(undefined, S), 'default')
   })
 
   it('missing as method', () => {
     const S = defaulted(string(), 'default')
-    equal(S.coerce(undefined), 'default')
+    strictEqual(S.create(undefined), 'default')
   })
 
   it('not missing as helper', () => {
     const S = defaulted(string(), 'default')
-    equal(coerce('string', S), 'string')
+    strictEqual(create('string', S), 'string')
   })
 
   it('not missing as method', () => {
     const S = defaulted(string(), 'default')
-    equal(S.coerce('string'), 'string')
+    strictEqual(S.create('string'), 'string')
   })
 })

@@ -38,9 +38,9 @@ These refinements don't change the inferred type of the data, but they do ensure
 You can also write your own custom refinements for more domain-specific use cases. For example, for a specific kind of string:
 
 ```ts
-import { refinement } from 'superstruct'
+import { refine } from 'superstruct'
 
-const MyString = refinement('MyString', string(), value => {
+const MyString = refine('MyString', string(), value => {
   return value.startsWith('The') && value.length > 20)
 })
 ```

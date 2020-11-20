@@ -9,7 +9,7 @@ To allow for these use cases, Superstruct has a concept called "coercion", which
 Since defaults are such a common case, Superstruct comes with a `defaulted` helper that makes defining default values easy:
 
 ```ts
-import { defaulted, coerce } from 'superstruct'
+import { defaulted, create } from 'superstruct'
 
 let i = 0
 
@@ -24,12 +24,12 @@ const data = {
   email: 'jane@example.com',
 }
 
-const user = coerce(data, User)
+const user = create(data, User)
 ```
 
 Here the `user` object didn't default an `id` property. That's because any `undefined` values will be replaced with their default values instead.
 
-Notice that we used [`coerce`](../reference/core.md#coerce) and not [`assert`](../reference/core.md#assert)! This is an important distinction because we want to receive the return value of the newly coerced data.
+Notice that we used [`create`](../reference/core.md#create) and not [`assert`](../reference/core.md#assert)! This is an important distinction because we want to receive the return value of the newly coerced data.
 
 The `defaults` helper also works with objects:
 
@@ -53,20 +53,20 @@ We've already covered default values, but sometimes you'll need to create coerci
 For example, maybe you want to ensure that any string is trimmed before passing it into the validator. To do that you can define a custom coercion:
 
 ```ts
-import { coercion } from 'superstruct'
+import { coerce } from 'superstruct'
 
-const TrimmedString = coercion(string(), (value) => {
+const TrimmedString = coerce(string(), (value) => {
   return typeof value === 'string' ? value.trim() : value
 })
 ```
 
-Now instead of using `assert()` or `is()` you can use `coerce()` to apply your custom coercion logic:
+Now instead of using `assert()` or `is()` you can use `create()` to apply your custom coercion logic:
 
 ```ts
-import { coerce } from 'superstruct'
+import { create } from 'superstruct'
 
 const data = '  a wEird str1ng        '
-const output = coerce(data, TrimmedString)
+const output = create(data, TrimmedString)
 // "a wEird str1ng"
 ```
 

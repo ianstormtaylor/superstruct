@@ -6,4 +6,4 @@ export const data = undefined
 
 export const output = 42
 
-export const coerce = true
+export const create = true

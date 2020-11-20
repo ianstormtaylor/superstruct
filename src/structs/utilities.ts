@@ -64,6 +64,17 @@ export function assign(Structs: Struct<any>[]): any {
 }
 
 /**
+ * Define a new struct with a custom validation function.
+ */
+
+export function define<T>(
+  name: string,
+  validator: Validator<T, null>
+): Struct<T, null> {
+  return new Struct({ type: name, schema: null, validator })
+}
+
+/**
  * Create a struct with dynamic, runtime validation.
  *
  * The callback will receive the value currently being validated, and must
@@ -74,7 +85,7 @@ export function assign(Structs: Struct<any>[]): any {
 export function dynamic<T>(
   fn: (value: unknown, ctx: Context<T, null>) => Struct<T, any>
 ): Struct<T, null> {
-  return struct('dynamic', (value, ctx) => {
+  return define('dynamic', (value, ctx) => {
     return ctx.check(value, fn(value, ctx))
   })
 }
@@ -91,7 +102,7 @@ export function dynamic<T>(
 export function lazy<T>(fn: () => Struct<T, any>): Struct<T, null> {
   let s: Struct<T, any> | undefined
 
-  return struct('lazy', (value, ctx) => {
+  return define('lazy', (value, ctx) => {
     if (!s) {
       s = fn()
     }
@@ -160,15 +171,4 @@ export function pick<S extends ObjectSchema, K extends keyof S>(
   }
 
   return object(subschema as Pick<S, K>)
-}
-
-/**
- * Create a new struct with a custom validation function.
- */
-
-export function struct<T>(
-  name: string,
-  validator: Validator<T, null>
-): Struct<T, null> {
-  return new Struct({ type: name, schema: null, validator })
 }

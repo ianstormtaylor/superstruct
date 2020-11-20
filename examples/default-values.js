@@ -1,7 +1,6 @@
 import {
-  assert,
   boolean,
-  coerce,
+  create,
   date,
   defaulted,
   number,
@@ -28,7 +27,7 @@ const data = {
 }
 
 // Coerce the data during validation, using the struct's default values.
-const user = coerce(data, User)
+const user = create(data, User)
 // {
 //   id: 1,
 //   name: 'Jane Smith',

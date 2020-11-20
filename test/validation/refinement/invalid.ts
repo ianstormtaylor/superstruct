@@ -1,7 +1,7 @@
 import isEmail from 'is-email'
-import { string, refinement } from '../../..'
+import { string, refine } from '../../..'
 
-export const Struct = refinement('email', string(), isEmail)
+export const Struct = refine('email', string(), isEmail)
 
 export const data = 'invalid'
 

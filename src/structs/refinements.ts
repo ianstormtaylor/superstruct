@@ -9,7 +9,7 @@ export function above<T extends number>(
   struct: Struct<T>,
   n: number
 ): Struct<T> {
-  return refinement('above', struct, (value) => {
+  return refine('above', struct, (value) => {
     return (
       value > n ||
       `Expected a ${struct.type} above ${n} but received \`${value}\``
@@ -25,7 +25,7 @@ export function below<T extends number>(
   struct: Struct<T>,
   n: number
 ): Struct<T> {
-  return refinement('below', struct, (value) => {
+  return refine('below', struct, (value) => {
     return (
       value < n ||
       `Expected a ${struct.type} below ${n} but received \`${value}\``
@@ -41,7 +41,7 @@ export function pattern<T extends string>(
   struct: Struct<T>,
   regexp: RegExp
 ): Struct<T> {
-  return refinement('pattern', struct, (value) => {
+  return refine('pattern', struct, (value) => {
     return (
       regexp.test(value) ||
       `Expected a ${struct.type} matching \`/${regexp.source}/\` but received "${value}"`
@@ -59,7 +59,7 @@ export function size<
   const expected = `Expected a ${struct.type}`
   const of = min === max ? `of \`${min}\`` : `between \`${min}\` and \`${max}\``
 
-  return refinement('size', struct, (value) => {
+  return refine('size', struct, (value) => {
     if (typeof value === 'number') {
       return (
         (min <= value && value <= max) ||
@@ -89,7 +89,7 @@ export function size<
  * allows you to layer additional validation on top of existing structs.
  */
 
-export function refinement<T, S>(
+export function refine<T, S>(
   name: string,
   struct: Struct<T, S>,
   refiner: Refiner<T, S>

@@ -12,15 +12,15 @@ Assert that `value` is valid according to a `struct`. If the value is invalid a 
 
 > 🤖 When using TypeScript `is` acts as an assertion guard, so you can ensure that after calling it the `value` matches the shape of the struct.
 
-### `coerce`
+### `create`
 
-`coerce<T>(value: unknown, struct: Struct<T>) => unknown`
+`create<T>(value: unknown, struct: Struct<T>) => unknown`
 
 ```ts
-const user = assert(value, User)
+const user = create(value, User)
 ```
 
-Coerce a `value` using the coercion logic that is built-in to the struct, returning the newly coerced value.
+Create a `value` using the coercion logic that is built-in to the struct, returning the newly coerced value.
 
 > 🤖 If you want coercion logic like defaulted values, you **must** call this helper before running validation.
 

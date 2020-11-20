@@ -1,6 +1,6 @@
-import { number, refinement } from '../../..'
+import { number, refine } from '../../..'
 
-export const Struct = refinement(
+export const Struct = refine(
   'positive',
   number(),
   (v) => v > 0 || 'Number was not positive!'
