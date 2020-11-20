@@ -2,37 +2,67 @@ import { Struct, Refiner } from '../struct'
 import { toFailures } from '../utils'
 
 /**
- * Ensure that a number is above a threshold.
+ * Ensure that a string, array, map, or set is empty.
  */
 
-export function above<T extends number>(
-  struct: Struct<T>,
-  n: number
+export function empty<T extends string | any[] | Map<any, any> | Set<any>>(
+  struct: Struct<T>
 ): Struct<T> {
-  return refine('above', struct, (value) => {
-    return (
-      value > n ||
-      `Expected a ${struct.type} above ${n} but received \`${value}\``
-    )
+  const expected = `Expected an empty ${struct.type}`
+
+  return refine(struct, 'empty', (value) => {
+    if (value instanceof Map || value instanceof Set) {
+      const { size } = value
+      return (
+        size === 0 || `${expected} but received one with a size of \`${size}\``
+      )
+    } else {
+      const { length } = value as string | any[]
+      return (
+        length === 0 ||
+        `${expected} but received one with a length of \`${length}\``
+      )
+    }
   })
 }
 
 /**
- * Ensure that a number is below a threshold.
+ * Ensure that a number or date is below a threshold.
  */
 
-export function below<T extends number>(
+export function max<T extends number | Date>(
   struct: Struct<T>,
-  n: number
+  threshold: T,
+  isExclusive = false
 ): Struct<T> {
-  return refine('below', struct, (value) => {
-    return (
-      value < n ||
-      `Expected a ${struct.type} below ${n} but received \`${value}\``
-    )
+  return refine(struct, 'max', (value) => {
+    return isExclusive
+      ? value < threshold
+      : value <= threshold ||
+          `Expected a ${struct.type} greater than ${
+            isExclusive ? '' : 'or equal to '
+          }${threshold} but received \`${value}\``
   })
 }
 
+/**
+ * Ensure that a number or date is above a threshold.
+ */
+
+export function min<T extends number | Date>(
+  struct: Struct<T>,
+  threshold: T,
+  isExclusive = false
+): Struct<T> {
+  return refine(struct, 'min', (value) => {
+    return isExclusive
+      ? value > threshold
+      : value >= threshold ||
+          `Expected a ${struct.type} greater than ${
+            isExclusive ? '' : 'or equal to '
+          }${threshold} but received \`${value}\``
+  })
+}
 /**
  * Ensure that a string matches a regular expression.
  */
@@ -41,7 +71,7 @@ export function pattern<T extends string>(
   struct: Struct<T>,
   regexp: RegExp
 ): Struct<T> {
-  return refine('pattern', struct, (value) => {
+  return refine(struct, 'pattern', (value) => {
     return (
       regexp.test(value) ||
       `Expected a ${struct.type} matching \`/${regexp.source}/\` but received "${value}"`
@@ -50,17 +80,17 @@ export function pattern<T extends string>(
 }
 
 /**
- * Ensure that a string, array, number, map, or set has a size (or length) between `min` and `max`.
+ * Ensure that a string, array, number, date, map, or set has a size (or length, or time) between `min` and `max`.
  */
 
 export function size<
-  T extends string | number | any[] | Map<any, any> | Set<any>
+  T extends string | number | Date | any[] | Map<any, any> | Set<any>
 >(struct: Struct<T>, min: number, max: number = min): Struct<T> {
   const expected = `Expected a ${struct.type}`
   const of = min === max ? `of \`${min}\`` : `between \`${min}\` and \`${max}\``
 
-  return refine('size', struct, (value) => {
-    if (typeof value === 'number') {
+  return refine(struct, 'size', (value) => {
+    if (typeof value === 'number' || value instanceof Date) {
       return (
         (min <= value && value <= max) ||
         `${expected} ${of} but received \`${value}\``
@@ -90,8 +120,8 @@ export function size<
  */
 
 export function refine<T, S>(
-  name: string,
   struct: Struct<T, S>,
+  name: string,
   refiner: Refiner<T, S>
 ): Struct<T, S> {
   const fn = struct.refiner

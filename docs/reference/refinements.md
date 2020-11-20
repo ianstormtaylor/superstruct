@@ -2,29 +2,49 @@
 
 Superstruct allows you to constrain existing structs with further validation. This doesn't change the type of the struct, but simply introduces extra validation logic. This can be useful for example when ensuring that a string matches a specific `RegExp`.
 
-### `above`
+### `empty`
 
 ```ts
-above(number(), 9000)
+empty(string())
+empty(array())
+```
+
+```ts
+''
+[]
+```
+
+`empty` enforces that a `string`, `array`, `map`, or `set` is empty.
+
+> 🤖 Technically this is the same as using [`size`](#size) of zero, but "empty" feels slightly nicer and will give a slightly easier to read error.
+
+### `min`
+
+```ts
+min(number(), 9000)
 ```
 
 ```ts
 9001
 ```
 
-`above` enforces that a `number` struct is above (greater than) a threshold.
+`min` enforces that a `number` struct is greater than a threshold.
+
+> 🤖 If you need an exclusive minimum you can pass `true` as the third argument, like `min(number(), 0, true)` for negative numbers.
 
 ### `below`
 
 ```ts
-below(number(), 0)
+max(number(), 0)
 ```
 
 ```txt
 -1
 ```
 
-`below` enforces that a `number` struct is below (less than) a threshold.
+`max` enforces that a `number` struct is less than a threshold.
+
+> 🤖 If you need an exclusive maxmimum you can pass `true` as the third argument, like `max(number(), 0, true)` for positive numbers.
 
 ### `pattern`
 

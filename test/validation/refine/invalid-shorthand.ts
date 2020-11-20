@@ -1,8 +1,8 @@
 import { number, refine } from '../../..'
 
 export const Struct = refine(
-  'positive',
   number(),
+  'positive',
   (v) => v > 0 || 'Number was not positive!'
 )
 

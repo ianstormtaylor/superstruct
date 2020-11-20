@@ -1,6 +1,6 @@
-import { number, below } from '../../..'
+import { number, max } from '../../..'
 
-export const Struct = below(number(), 0)
+export const Struct = max(number(), 0)
 
 export const data = 1
 
@@ -8,7 +8,7 @@ export const failures = [
   {
     value: 1,
     type: 'number',
-    refinement: 'below',
+    refinement: 'max',
     path: [],
     branch: [data],
   },

@@ -6,7 +6,7 @@ For these situations, you can use "refinements". Refinments allow you to create 
 
 ## Built-in Refinements
 
-Superstruct has several built-in refinement helpers for common use cases. For example, one of the most common is ensuring that a string matches a specific regular expression pattern:
+Superstruct has several built-in refinement helpers for common use cases. For example, a common one is ensuring that a string matches a specific regular expression pattern:
 
 ```ts
 import { pattern } from 'superstruct'
@@ -18,20 +18,31 @@ assert('2.1', Section) // passes
 assert('string', Section) // throws!
 ```
 
-Another common use case is validating positive integers using the built-in `above` helper:
+Or maybe that a string (or array, number, etc.) has a specific size:
 
 ```ts
-import { above, integer } from 'superstruct'
+import { size } from 'superstruct'
 
-const Count = above(integer(), 0)
+const Name = size(string(), 1, 100)
 
-assert(42, Count) // passes
-assert(3.14, Count) // throws!
-assert(-1, Count) // throws!
-assert(0, Count) // throws!
+assert('Alex', Name) // passes
+assert('', Name) // throws!
 ```
 
-These refinements don't change the inferred type of the data, but they do ensure that a slightly stricter validation is enforced.
+Another common use case is validating nonnegative integers (like indexes in an array) using the built-in `min` helper:
+
+```ts
+import { min, integer } from 'superstruct'
+
+const Index = min(integer(), 0)
+
+assert(42, Index) // passes
+assert(0, Index) // passes
+assert(3.14, Index) // throws!
+assert(-1, Index) // throws!
+```
+
+These refinements don't change the inferred type of the data, but they do ensure that a slightly stricter validation is enforced at runtime.
 
 ## Custom Refinments
 
@@ -40,7 +51,7 @@ You can also write your own custom refinements for more domain-specific use case
 ```ts
 import { refine } from 'superstruct'
 
-const MyString = refine('MyString', string(), value => {
+const MyString = refine(string(), 'MyString', value => {
   return value.startsWith('The') && value.length > 20)
 })
 ```
