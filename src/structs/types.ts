@@ -1,4 +1,4 @@
-import { Infer, Struct, coerce } from '../struct'
+import { Infer, Struct } from '../struct'
 import { struct } from './utilities'
 import {
   TupleSchema,
@@ -32,7 +32,7 @@ export function array<T extends Struct<any>>(Element?: T): any {
     schema: Element,
     coercer: (value) => {
       return Element && Array.isArray(value)
-        ? value.map((v) => coerce(v, Element))
+        ? value.map((v) => Element.coercer(v))
         : value
     },
     *validator(value, ctx) {
@@ -347,7 +347,7 @@ export function object<S extends ObjectSchema>(schema?: S): any {
         unknowns.delete(key)
         const Value = schema[key]
         const v = value[key]
-        ret[key] = coerce(v, Value)
+        ret[key] = Value.coercer(v)
       }
 
       for (const key of unknowns) {

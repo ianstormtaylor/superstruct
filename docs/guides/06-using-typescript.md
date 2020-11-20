@@ -58,6 +58,8 @@ type User = {
 
 This save you from having to duplicate definitions.
 
+> 🤖 If you are not using TypeScript's [`strictNullChecks`](https://www.typescriptlang.org/tsconfig#strictNullChecks) option, Superstruct will be unable to infer your "optional" types correctly and will mark all types as optional.
+
 Since types and values are allowed to shadow each other in TypeScript, a common way to write the above is to have both the struct and the type named `User`, like so:
 
 ```ts

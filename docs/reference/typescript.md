@@ -22,3 +22,5 @@ type User = Infer<typeof User>
 //   name: string
 // }
 ```
+
+> 🤖 If you are not using TypeScript's [`strictNullChecks`](https://www.typescriptlang.org/tsconfig#strictNullChecks) option, Superstruct will be unable to infer your "optional" types correctly and will mark all types as optional.

@@ -42,29 +42,24 @@ export class StructError extends TypeError {
       branch,
       ...rest
     } = failure
-
-    let failuresResult: Array<Failure> | undefined
-
-    function failures(): Array<Failure> {
-      if (!failuresResult) {
-        failuresResult = [failure, ...moreFailures]
-      }
-
-      return failuresResult
-    }
-
+    let failures: Array<Failure> | undefined
     const msg =
       path.length === 0 ? message : `At path: ${path.join('.')} -- ${message}`
     super(msg)
     Object.assign(this, rest)
+    this.name = this.constructor.name
     this.value = value
     this.key = key
     this.type = type
     this.refinement = refinement
     this.path = path
     this.branch = branch
-    this.failures = failures
-    this.stack = new Error().stack
-    ;(this as any).__proto__ = StructError.prototype
+    this.failures = (): Array<Failure> => {
+      if (!failures) {
+        failures = [failure, ...moreFailures]
+      }
+
+      return failures
+    }
   }
 }
