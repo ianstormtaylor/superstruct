@@ -4,7 +4,7 @@
 
 <p align="center">
   A simple and composable way  <br/>
-  to validate data in JavaScript.
+  to validate data in JavaScript (and TypeScript).
 </p>
 <br/>
 <br/>
@@ -19,17 +19,11 @@
 </p>
 
 <p align="center">
-  <a href="https://travis-ci.org/ianstormtaylor/superstruct">
-    <img src="https://travis-ci.org/ianstormtaylor/superstruct.svg?branch=master">
-  </a>
   <a href="https://unpkg.com/superstruct/umd/superstruct.min.js">
-    <img src="http://img.badgesize.io/https://unpkg.com/superstruct/umd/superstruct.min.js?compression=gzip&amp;label=size&amp;maxAge=300">
+    <img src="https://badgen.net/bundlephobia/minzip/superstruct?color=green&label=size">
   </a>
   <a href="./package.json">
-    <img src="https://img.shields.io/npm/v/superstruct.svg?maxAge=300&label=version&colorB=007ec6&maxAge=300">
-  </a>
-  <a href="./License.md">
-    <img src="https://img.shields.io/npm/l/slate.svg?maxAge=300">
+    <img src="https://badgen.net/npm/v/superstruct?color=blue&label=version">
   </a>
 </p>
 

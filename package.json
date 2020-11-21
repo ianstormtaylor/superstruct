@@ -1,7 +1,7 @@
 {
   "name": "superstruct",
   "type": "module",
-  "description": "A simple, expressive way to validate data in JavaScript.",
+  "description": "A simple and composable way to validate data in JavaScript (and TypeScript).",
   "version": "0.10.13",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
@@ -9,6 +9,7 @@
   "types": "./lib/index.d.ts",
   "main": "./lib/index.cjs",
   "module": "./lib/index.es.js",
+  "sideEffects": false,
   "files": [
     "umd",
     "lib"
@@ -49,7 +50,7 @@
     "typescript": "^3.9.3"
   },
   "scripts": {
-    "build": "yarn build:es && yarn build:cjs && yarn build:max && yarn build:min && yarn build:types",
+    "build": "yarn build:types && yarn build:es && yarn build:cjs && yarn build:max && yarn build:min",
     "build:cjs": "rollup --config ./config/rollup-cjs.js",
     "build:es": "rollup --config ./config/rollup.js",
     "build:max": "rollup --config ./config/rollup-umd.js",

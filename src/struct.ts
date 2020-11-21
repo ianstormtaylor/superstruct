@@ -1,24 +1,27 @@
-import { toFailures, iteratorShift } from './utils'
+import { toFailures, shiftIterator, print } from './utils'
+import { StructError, Failure } from './error'
+import { masked } from './structs/coercions'
 
 /**
- * `Struct` objects encapsulate the schema for a specific data type (with
- * optional coercion). You can then use the `assert`, `is` or `validate` helpers
- * to validate unknown data against a struct.
+ * `Struct` objects encapsulate the validation logic for a specific type of
+ * values. Once constructed, you use the `assert`, `is` or `validate` helpers to
+ * validate unknown input data against the struct.
  */
 
-export class Struct<T, S = any> {
+export class Struct<T = unknown, S = unknown> {
+  readonly TYPE!: T
   type: string
   schema: S
-  coercer: (value: unknown) => unknown
-  validator: (value: unknown, context: StructContext) => StructResult
-  refiner: (value: T, context: StructContext) => StructResult
+  coercer: Coercer
+  validator: Validator<T, S>
+  refiner: Refiner<T, S>
 
   constructor(props: {
-    type: Struct<T>['type']
-    schema: S
-    coercer?: Struct<T>['coercer']
-    validator?: Struct<T>['validator']
-    refiner?: Struct<T>['refiner']
+    type: Struct<T, S>['type']
+    schema: Struct<T, S>['schema']
+    coercer?: Struct<T, S>['coercer']
+    validator?: Struct<T, S>['validator']
+    refiner?: Struct<T, S>['refiner']
   }) {
     const {
       type,
@@ -33,49 +36,56 @@ export class Struct<T, S = any> {
     this.validator = validator
     this.refiner = refiner
   }
-}
 
-/**
- * `StructError` objects are thrown (or returned) by Superstruct when its
- * validation fails. The error represents the first error encountered during
- * validation. But they also have an `error.failures` property that holds
- * information for all of the failures encountered.
- */
+  /**
+   * Assert that a value passes the struct's validation, throwing if it doesn't.
+   */
 
-export class StructError extends TypeError {
-  value: any
-  type: string
-  path: Array<number | string>
-  branch: Array<any>
-  failures: () => Array<StructFailure>;
-  [key: string]: any
+  assert(value: unknown): asserts value is T {
+    return assert(value, this)
+  }
 
-  constructor(
-    failure: StructFailure,
-    moreFailures: IterableIterator<StructFailure>
-  ) {
-    const { path, value, type, branch, ...rest } = failure
-    const message = `Expected a value of type \`${type}\`${
-      path.length ? ` for \`${path.join('.')}\`` : ''
-    } but received \`${JSON.stringify(value)}\`.`
+  /**
+   * Create a value with the struct's coercion logic, then validate it.
+   */
 
-    let failuresResult: Array<StructFailure> | undefined
-    function failures(): Array<StructFailure> {
-      if (!failuresResult) {
-        failuresResult = [failure, ...moreFailures]
-      }
-      return failuresResult
-    }
+  create(value: unknown): T {
+    return create(value, this)
+  }
 
-    super(message)
-    this.value = value
-    Object.assign(this, rest)
-    this.type = type
-    this.path = path
-    this.branch = branch
-    this.failures = failures
-    this.stack = new Error().stack
-    ;(this as any).__proto__ = StructError.prototype
+  /**
+   * Check if a value passes the struct's validation.
+   */
+
+  is(value: unknown): value is T {
+    return is(value, this)
+  }
+
+  /**
+   * Mask a value, coercing and validating it, but returning only the subset of
+   * properties defined by the struct's schema.
+   */
+
+  mask(value: unknown): T {
+    return mask(value, this)
+  }
+
+  /**
+   * Validate a value with the struct's validation logic, returning a tuple
+   * representing the result.
+   *
+   * You may optionally pass `true` for the `withCoercion` argument to coerce
+   * the value before attempting to validate it. If you do, the result will
+   * contain the coerced result when successful.
+   */
+
+  validate(
+    value: unknown,
+    options: {
+      coerce?: boolean
+    } = {}
+  ): [StructError, undefined] | [undefined, T] {
+    return validate(value, this, options)
   }
 }
 
@@ -84,51 +94,58 @@ export class StructError extends TypeError {
  * validated as well as helper functions for failures and recursive validating.
  */
 
-export type StructContext = {
+export type Context<T, S> = {
   value: any
-  type: string
+  struct: Struct<T, S>
   branch: Array<any>
   path: Array<string | number>
-  fail: (props?: Partial<StructFailure>) => StructFailure
-  check: (
+  fail: (props?: string | Partial<Failure>) => Failure
+  check: <Y, Z>(
     value: any,
-    struct: Struct<any> | Struct<never>,
+    struct: Struct<Y, Z>,
     parent?: any,
     key?: string | number
-  ) => IterableIterator<StructFailure>
+  ) => IterableIterator<Failure>
 }
-
-/**
- * A `StructFailure` represents a single specific failure in validation.
- */
-
-export type StructFailure = {
-  value: StructContext['value']
-  type: StructContext['type']
-  branch: StructContext['branch']
-  path: StructContext['path']
-  [key: string]: any
-}
-
-/**
- * A `StructResult` is returned from validation functions.
- */
-
-export type StructResult = boolean | Iterable<StructFailure>
 
 /**
  * A type utility to extract the type from a `Struct` class.
  */
 
-export type StructType<T extends Struct<any>> = Parameters<T['refiner']>[0]
+export type Infer<T extends Struct<any, any>> = T['TYPE']
+
+/**
+ * A `Result` is returned from validation functions.
+ */
+
+export type Result = boolean | string | Iterable<Failure>
+
+/**
+ * A `Coercer` takes an unknown value and optionally coerces it.
+ */
+
+export type Coercer = (value: unknown) => unknown
+
+/**
+ * A `Validate` takes an unknown value and validates it.
+ */
+
+export type Validator<T, S> = (value: unknown, context: Context<T, S>) => Result
+
+/**
+ * A `Refiner` takes a value of a known type and validates it against a further
+ * constraint.
+ */
+
+export type Refiner<T, S> = (value: T, context: Context<T, S>) => Result
 
 /**
  * Assert that a value passes a `Struct`, throwing if it doesn't.
  */
 
-export function assert<T>(
+export function assert<T, S>(
   value: unknown,
-  struct: Struct<T>
+  struct: Struct<T, S>
 ): asserts value is T {
   const result = validate(value, struct)
 
@@ -138,12 +155,22 @@ export function assert<T>(
 }
 
 /**
- * Coerce a value with the coercion logic of `Struct` and validate it.
+ * Create a value with the coercion logic of `Struct` and validate it.
  */
 
-export function coerce<T>(value: unknown, struct: Struct<T>): T {
+export function create<T, S>(value: unknown, struct: Struct<T, S>): T {
   const ret = struct.coercer(value)
   assert(ret, struct)
+  return ret
+}
+
+/**
+ * Mask a value, returning only the subset of properties defined by a Struct.
+ */
+
+export function mask<T, S>(value: unknown, struct: Struct<T, S>): T {
+  const M = masked(struct)
+  const ret = create(value, M)
   return ret
 }
 
@@ -151,7 +178,7 @@ export function coerce<T>(value: unknown, struct: Struct<T>): T {
  * Check if a value passes a `Struct`.
  */
 
-export function is<T>(value: unknown, struct: Struct<T>): value is T {
+export function is<T, S>(value: unknown, struct: Struct<T, S>): value is T {
   const result = validate(value, struct)
   return !result[0]
 }
@@ -160,17 +187,19 @@ export function is<T>(value: unknown, struct: Struct<T>): value is T {
  * Validate a value against a `Struct`, returning an error if invalid.
  */
 
-export function validate<T>(
+export function validate<T, S>(
   value: unknown,
-  struct: Struct<T>,
-  coercing: boolean = false
+  struct: Struct<T, S>,
+  options: {
+    coerce?: boolean
+  } = {}
 ): [StructError, undefined] | [undefined, T] {
-  if (coercing) {
+  if (options.coerce) {
     value = struct.coercer(value)
   }
 
   const failures = check(value, struct)
-  const failure = iteratorShift(failures)
+  const failure = shiftIterator(failures)
 
   if (failure) {
     const error = new StructError(failure, failures)
@@ -184,30 +213,53 @@ export function validate<T>(
  * Check a value against a `Struct`, returning an iterable of failures.
  */
 
-function* check<T>(
+function* check<T, S>(
   value: unknown,
-  struct: Struct<T>,
+  struct: Struct<T, S>,
   path: any[] = [],
   branch: any[] = []
-): IterableIterator<StructFailure> {
-  const { type } = struct
-  const ctx: StructContext = {
+): IterableIterator<Failure> {
+  const ctx: Context<T, S> = {
     value,
-    type,
+    struct,
     branch,
     path,
-    fail(props = {}) {
-      return { value, type, path, branch: [...branch, value], ...props }
-    },
     check(v, s, parent, key) {
       const p = parent !== undefined ? [...path, key] : path
       const b = parent !== undefined ? [...branch, parent] : branch
       return check(v, s, p, b)
     },
+    fail(props = {}) {
+      if (typeof props === 'string') {
+        props = { message: props }
+      }
+
+      const { type } = struct
+      let { message, refinement } = props
+
+      if (!message) {
+        message = `Expected a value of type \`${type}\`${
+          refinement ? ` with refinement \`${refinement}\`` : ''
+        }${
+          path.length ? ` for \`${path.join('.')}\`` : ''
+        }, but received: \`${print(value)}\``
+      }
+
+      return {
+        ...props,
+        value,
+        type,
+        refinement,
+        message,
+        key: path[path.length - 1],
+        path,
+        branch: [...branch, value],
+      }
+    },
   }
 
   const failures = toFailures(struct.validator(value, ctx), ctx)
-  const failure = iteratorShift(failures)
+  const failure = shiftIterator(failures)
 
   if (failure) {
     yield failure
