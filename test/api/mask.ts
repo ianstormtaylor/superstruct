@@ -19,6 +19,6 @@ describe('mask', () => {
   it('coercing', () => {
     const S = defaulted(object({ id: string() }), { id: '0' })
     const value = { unknown: true }
-    deepStrictEqual(mask(value, S, true), { id: '0' })
+    deepStrictEqual(mask(value, S), { id: '0' })
   })
 })

@@ -15,22 +15,22 @@ export function isPlainObject(value: unknown): value is { [key: string]: any } {
 }
 
 /**
- * Shifts (removes and returns) the first value from the `input` iterator.
- * Like `Array.prototype.shift()` but for an `Iterator`.
- */
-
-export function iteratorShift<T>(input: Iterator<T>): T | undefined {
-  const { done, value } = input.next()
-  return done ? undefined : value
-}
-
-/**
  * Return a value as a printable string.
  */
 
 export function print(value: any, ticks?: string): string {
   const string = typeof value === 'string' ? JSON.stringify(value) : `${value}`
   return ticks ? `${ticks}${string}${ticks}` : string
+}
+
+/**
+ * Shifts (removes and returns) the first value from the `input` iterator.
+ * Like `Array.prototype.shift()` but for an `Iterator`.
+ */
+
+export function shiftIterator<T>(input: Iterator<T>): T | undefined {
+  const { done, value } = input.next()
+  return done ? undefined : value
 }
 
 /**

@@ -1,6 +1,6 @@
 import { number, max } from '../../..'
 
-export const Struct = max(number(), 0, true)
+export const Struct = max(number(), 0, { exclusive: true })
 
 export const data = 0
 

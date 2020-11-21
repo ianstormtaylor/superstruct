@@ -40,7 +40,7 @@ Test that `value` is valid, returning a boolean representing whether it is valid
 
 ### `validate`
 
-`validate<T>(value: unknown, struct: Struct<T>, withCoercion: boolean) => [StructError, T]`
+`validate<T>(value: unknown, struct: Struct<T>, options: Object) => [StructError, T]`
 
 ```ts
 const [err, user] = validate(value, User)
@@ -48,4 +48,4 @@ const [err, user] = validate(value, User)
 
 Validate `value`, returning a result tuple. If the value is invalid the first element will be a [`StructError`](./errors.md#structerror). Otherwise, the first element will be `undefined` and the second element will be a value that is guaranteed to match the struct.
 
-The third argument is a boolean flag that enables coercion of the input value when set to `true`.
+You can pass `{ coerce: true }` as the third argument to enable coercion of the input value.

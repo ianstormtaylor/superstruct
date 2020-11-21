@@ -35,8 +35,11 @@ export function coerce<T, S>(
 export function defaulted<T, S>(
   S: Struct<T, S>,
   fallback: any,
-  strict?: true
+  options: {
+    strict?: boolean
+  } = {}
 ): Struct<T, S> {
+  const { strict } = options
   return coerce(S, (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 
@@ -44,7 +47,7 @@ export function defaulted<T, S>(
       return f
     }
 
-    if (strict !== true && isPlainObject(x) && isPlainObject(f)) {
+    if (!strict && isPlainObject(x) && isPlainObject(f)) {
       const ret = { ...x }
       let changed = false
 
@@ -67,14 +70,29 @@ export function defaulted<T, S>(
 /**
  * Augment a struct to mask its input to only properties defined in the struct.
  *
- * Note: You must use `coerce(value, Struct)` on the value to have the coercion
+ * Note: You must use `create(value, Struct)` on the value to have the coercion
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function masked<S extends ObjectSchema>(
-  struct: Struct<ObjectType<S>, S>
-): Struct<ObjectType<S>, S> {
+export function masked<T, S>(struct: Struct<T, S>): Struct<T, S> {
   return coerce(struct, (x) => {
-    return typeof x !== 'object' || x == null ? x : mask(x, struct)
+    if (
+      typeof struct.schema !== 'object' ||
+      struct.schema == null ||
+      typeof x !== 'object' ||
+      x == null
+    ) {
+      return x
+    } else {
+      const ret: any = {}
+
+      for (const key in struct.schema) {
+        if (key in x) {
+          ret[key] = (x as any)[key]
+        }
+      }
+
+      return ret
+    }
   })
 }

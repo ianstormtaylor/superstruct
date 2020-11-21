@@ -33,14 +33,17 @@ export function empty<T extends string | any[] | Map<any, any> | Set<any>>(
 export function max<T extends number | Date>(
   struct: Struct<T>,
   threshold: T,
-  isExclusive = false
+  options: {
+    exclusive?: boolean
+  } = {}
 ): Struct<T> {
+  const { exclusive } = options
   return refine(struct, 'max', (value) => {
-    return isExclusive
+    return exclusive
       ? value < threshold
       : value <= threshold ||
           `Expected a ${struct.type} greater than ${
-            isExclusive ? '' : 'or equal to '
+            exclusive ? '' : 'or equal to '
           }${threshold} but received \`${value}\``
   })
 }
@@ -52,14 +55,17 @@ export function max<T extends number | Date>(
 export function min<T extends number | Date>(
   struct: Struct<T>,
   threshold: T,
-  isExclusive = false
+  options: {
+    exclusive?: boolean
+  } = {}
 ): Struct<T> {
+  const { exclusive } = options
   return refine(struct, 'min', (value) => {
-    return isExclusive
+    return exclusive
       ? value > threshold
       : value >= threshold ||
           `Expected a ${struct.type} greater than ${
-            isExclusive ? '' : 'or equal to '
+            exclusive ? '' : 'or equal to '
           }${threshold} but received \`${value}\``
   })
 }

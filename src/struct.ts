@@ -1,11 +1,6 @@
-import {
-  toFailures,
-  iteratorShift,
-  ObjectSchema,
-  ObjectType,
-  print,
-} from './utils'
+import { toFailures, shiftIterator, print } from './utils'
 import { StructError, Failure } from './error'
+import { masked } from './structs/coercions'
 
 /**
  * `Struct` objects encapsulate the validation logic for a specific type of
@@ -67,6 +62,15 @@ export class Struct<T = unknown, S = unknown> {
   }
 
   /**
+   * Mask a value, coercing and validating it, but returning only the subset of
+   * properties defined by the struct's schema.
+   */
+
+  mask(value: unknown): T {
+    return mask(value, this)
+  }
+
+  /**
    * Validate a value with the struct's validation logic, returning a tuple
    * representing the result.
    *
@@ -77,9 +81,11 @@ export class Struct<T = unknown, S = unknown> {
 
   validate(
     value: unknown,
-    withCoercion?: true
+    options: {
+      coerce?: boolean
+    } = {}
   ): [StructError, undefined] | [undefined, T] {
-    return validate(value, this, withCoercion)
+    return validate(value, this, options)
   }
 }
 
@@ -162,26 +168,9 @@ export function create<T, S>(value: unknown, struct: Struct<T, S>): T {
  * Mask a value, returning only the subset of properties defined by a Struct.
  */
 
-export function mask<S extends ObjectSchema>(
-  value: unknown,
-  struct: Struct<ObjectType<S>, S>,
-  withCoercion: boolean = false
-): ObjectType<S> {
-  const ret: any = {}
-
-  if (withCoercion) {
-    value = struct.coercer(value)
-  }
-
-  if (typeof value === 'object' && value != null) {
-    for (const key in struct.schema) {
-      if (key in value) {
-        ret[key] = (value as any)[key]
-      }
-    }
-  }
-
-  assert(ret, struct)
+export function mask<T, S>(value: unknown, struct: Struct<T, S>): T {
+  const M = masked(struct)
+  const ret = create(value, M)
   return ret
 }
 
@@ -201,14 +190,16 @@ export function is<T, S>(value: unknown, struct: Struct<T, S>): value is T {
 export function validate<T, S>(
   value: unknown,
   struct: Struct<T, S>,
-  withCoercion: boolean = false
+  options: {
+    coerce?: boolean
+  } = {}
 ): [StructError, undefined] | [undefined, T] {
-  if (withCoercion) {
+  if (options.coerce) {
     value = struct.coercer(value)
   }
 
   const failures = check(value, struct)
-  const failure = iteratorShift(failures)
+  const failure = shiftIterator(failures)
 
   if (failure) {
     const error = new StructError(failure, failures)
@@ -268,7 +259,7 @@ function* check<T, S>(
   }
 
   const failures = toFailures(struct.validator(value, ctx), ctx)
-  const failure = iteratorShift(failures)
+  const failure = shiftIterator(failures)
 
   if (failure) {
     yield failure
