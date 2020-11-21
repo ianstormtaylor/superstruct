@@ -177,9 +177,9 @@ Which brings me to how Superstruct solves these issues...
 
 ### Demo
 
-Try out the [live demo on JSFiddle](https://jsfiddle.net/yjugaeg8/2/) to get an idea for how the API works, or to quickly verify your use case:
+Try out the [live demo on JSFiddle](https://jsfiddle.net/85nse1mk/) to get an idea for how the API works, or to quickly verify your use case:
 
-[![Demo screenshot.](./docs/images/demo-screenshot.png)](https://jsfiddle.net/yjugaeg8/2/)
+[![Demo screenshot.](./docs/images/demo-screenshot.png)](https://jsfiddle.net/85nse1mk/)
 
 <br/>
 
@@ -203,58 +203,23 @@ Superstruct's API is very flexible, allowing it to be used for a variety of use 
 
 Read the getting started guide to familiarize yourself with how Superstruct works. After that, check out the full API reference for more detailed information about structs, types and errors...
 
-- [**Guide**](./docs/guide.md)
-  - [Installing Superstruct](./docs/guide.md#installing-superstruct)
-  - [Creating Structs](./docs/guide.md#creating-structs)
-  - [Defining Custom Data Types](./docs/guide.md#defining-custom-data-types)
-  - [Setting Default Values](./docs/guide.md#setting-default-values)
-  - [Throwing Customized Errors](./docs/guide.md#throwing-customized-errors)
-  - [Validating Complex Shapes](./docs/guide.md#validating-complex-shapes)
-  - [Composing Structs](./docs/guide.md#composing-structs)
+- [**Guide**](<[./docs/guide.md](https://docs.superstructjs.org/guides/01-getting-started)>)
+  - [Getting Started](https://docs.superstructjs.org/guides/01-getting-started.md)
+  - [Validating Data](https://docs.superstructjs.org/guides/02-validating-data.md)
+  - [Coercing Data](https://docs.superstructjs.org/guides/03-coercing-data.md)
+  - [Refining Validation](https://docs.superstructjs.org/guides/04-refining-validation.md)
+  - [Customizing Errors](https://docs.superstructjs.org/guides/05-customizing-errors.md)
+  - [Using TypeScript](https://docs.superstructjs.org/guides/06-using-typescript.md)
 - [**Reference**](./docs/reference.md)
-  - [Validation](./docs/reference.md#validation)
-    - [`assert`](./docs/reference.md#assert)
-    - [`coerce`](./docs/reference.md#coerce)
-    - [`is`](./docs/reference.md#is)
-    - [`validate`](./docs/reference.md#validate)
-  - [Types](./docs/reference.md#types)
-    - [`any`](./docs/reference.md#any)
-    - [`array`](./docs/reference.md#array)
-    - [`boolean`](./docs/reference.md#boolean)
-    - [`date`](./docs/reference.md#date)
-    - [`enums`](./docs/reference.md#enums)
-    - [`instance`](./docs/reference.md#instance)
-    - [`intersection`](./docs/reference.md#intersection)
-    - [`literal`](./docs/reference.md#literal)
-    - [`map`](./docs/reference.md#map)
-    - [`never`](./docs/reference.md#never)
-    - [`number`](./docs/reference.md#number)
-    - [`object`](./docs/reference.md#object)
-    - [`optional`](./docs/reference.md#optional)
-    - [`partial`](./docs/reference.md#partial)
-    - [`record`](./docs/reference.md#record)
-    - [`set`](./docs/reference.md#set)
-    - [`string`](./docs/reference.md#string)
-    - [`tuple`](./docs/reference.md#tuple)
-    - [`type`](./docs/reference.md#type)
-    - [`union`](./docs/reference.md#union)
-    - [Custom Types](./docs/reference.md#custom-types)
-  - [Refinements](./docs/reference.md#refinements)
-    - [`empty`](./docs/reference.md#empty)
-    - [`length`](./docs/reference.md#length)
-    - [`pattern`](./docs/reference.md#pattern)
-    - [Custom Refinements](./docs/reference.md#custom-refinements)
-  - [Coercions](./docs/reference.md#coercions)
-    - [`defaulted`](./docs/reference.md#defaulted)
-    - [`masked`](./docs/reference.md#masked)
-    - [Custom Coercions](./docs/reference.md#custom-coercions)
-  - [Errors](./docs/reference.md#errors)
-    - [`StructError`](./docs/reference.md#structerror)
-    - [Error Properties](./docs/reference.md#error-properties)
-    - [Multiple Errors](./docs/reference.md#multiple-errors)
-  - [Utilities](./docs/reference.md#utilities)
-    - [`StructType`](./docs/reference.md#structtype)
-- [**Resources**](/docs/resources.md)
+  - [Core](https://docs.superstructjs.org/api-reference/core.md)
+  - [Types](https://docs.superstructjs.org/api-reference/types.md)
+  - [Refinements](https://docs.superstructjs.org/api-reference/refinements.md)
+  - [Coercions](https://docs.superstructjs.org/api-reference/coercions.md)
+  - [Utilities](https://docs.superstructjs.org/api-reference/utilities.md)
+  - [Errors](https://docs.superstructjs.org/api-reference/errors.md)
+  - [TypeScript](https://docs.superstructjs.org/api-reference/typescript.md)
+- [**FAQ**](https://docs.superstructjs.org/resources/faq.md)
+- [**Resources**](https://docs.superstructjs.org/resources/links.md)
 
 <br/>
 
