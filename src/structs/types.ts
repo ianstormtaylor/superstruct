@@ -81,12 +81,12 @@ export function date(): Struct<Date, null> {
  */
 
 export function enums<T extends number>(
-  values: T[]
+  values: readonly T[]
 ): Struct<T, { [K in T[][number]]: K }>
 export function enums<T extends string>(
-  values: T[]
+  values: readonly T[]
 ): Struct<T, { [K in T[][number]]: K }>
-export function enums<T extends number | string>(values: T[]): any {
+export function enums<T extends number | string>(values: readonly T[]): any {
   const schema: any = {}
   const description = values.map((v) => print(v)).join()
 
