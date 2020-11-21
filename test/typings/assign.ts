@@ -5,6 +5,6 @@ test<{
   a: number
   b: string
 }>((x) => {
-  assert(x, assign([object({ a: number() }), object({ b: string() })]))
+  assert(x, assign(object({ a: number() }), object({ b: string() })))
   return x
 })

@@ -10,18 +10,17 @@ import { ObjectSchema, Assign, ObjectType, PartialObjectSchema } from '../utils'
  */
 
 export function assign<A extends ObjectSchema, B extends ObjectSchema>(
-  Structs: [Struct<ObjectType<A>, A>, Struct<ObjectType<B>, B>]
+  A: Struct<ObjectType<A>, A>,
+  B: Struct<ObjectType<B>, B>
 ): Struct<ObjectType<Assign<A, B>>, Assign<A, B>>
 export function assign<
   A extends ObjectSchema,
   B extends ObjectSchema,
   C extends ObjectSchema
 >(
-  Structs: [
-    Struct<ObjectType<A>, A>,
-    Struct<ObjectType<B>, B>,
-    Struct<ObjectType<C>, C>
-  ]
+  A: Struct<ObjectType<A>, A>,
+  B: Struct<ObjectType<B>, B>,
+  C: Struct<ObjectType<C>, C>
 ): Struct<ObjectType<Assign<Assign<A, B>, C>>, Assign<Assign<A, B>, C>>
 export function assign<
   A extends ObjectSchema,
@@ -29,12 +28,10 @@ export function assign<
   C extends ObjectSchema,
   D extends ObjectSchema
 >(
-  Structs: [
-    Struct<ObjectType<A>, A>,
-    Struct<ObjectType<B>, B>,
-    Struct<ObjectType<C>, C>,
-    Struct<ObjectType<D>, D>
-  ]
+  A: Struct<ObjectType<A>, A>,
+  B: Struct<ObjectType<B>, B>,
+  C: Struct<ObjectType<C>, C>,
+  D: Struct<ObjectType<D>, D>
 ): Struct<
   ObjectType<Assign<Assign<Assign<A, B>, C>, D>>,
   Assign<Assign<Assign<A, B>, C>, D>
@@ -46,18 +43,16 @@ export function assign<
   D extends ObjectSchema,
   E extends ObjectSchema
 >(
-  Structs: [
-    Struct<ObjectType<A>, A>,
-    Struct<ObjectType<B>, B>,
-    Struct<ObjectType<C>, C>,
-    Struct<ObjectType<D>, D>,
-    Struct<ObjectType<E>, E>
-  ]
+  A: Struct<ObjectType<A>, A>,
+  B: Struct<ObjectType<B>, B>,
+  C: Struct<ObjectType<C>, C>,
+  D: Struct<ObjectType<D>, D>,
+  E: Struct<ObjectType<E>, E>
 ): Struct<
   ObjectType<Assign<Assign<Assign<Assign<A, B>, C>, D>, E>>,
   Assign<Assign<Assign<Assign<A, B>, C>, D>, E>
 >
-export function assign(Structs: Struct<any>[]): any {
+export function assign(...Structs: Struct<any>[]): any {
   const schemas = Structs.map((s) => s.schema)
   const schema = Object.assign({}, ...schemas)
   return object(schema)

@@ -2,6 +2,121 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
+### `0.11.0` — November 20, 2020
+
+###### NEW
+
+**New `assign`, `pick`, and `omit` object utilities.** These utilities make composing object structs together possible, which should make re-using structs in your codebase easier.
+
+```ts
+// Combine two structs with `assign`:
+const a = object({ id: number() })
+const b = object({ name: string() })
+const c = assign([a, b])
+
+// Pick out specific properties with `pick`:
+const a2 = pick(c, ['id'])
+
+// Omit specific properties with `omit`:
+const a3 = omit(c, ['name'])
+```
+
+**New `unknown` struct.** This is the same as the existing `any` struct, but it will ensure that in TypeScript the value is of the more restrictive `unknown` type so it encourages better type safety.
+
+```ts
+const Shape = type({
+  id: number(),
+  name: string(),
+  other: unknown(),
+})
+```
+
+**New `integer`, `regexp`, and `func` structs.** These are just simple additions for common use cases of ensuring a value is an integer, a regular expression object (not a string!), or a function.
+
+```ts
+const Shape = type({
+  id: integer(),
+  matches: regexp(),
+  send: func(),
+})
+```
+
+**New `max/min` refinements.** For refining `number` (or `integer`) or `date` structs to ensure they are greater than or less than a specific threshold. The third argument can indicate whether to make the threshold exclusive (instead of the default inclusive).
+
+```ts
+const Index = min(number(), 0)
+const PastOrPresent = max(date(), new Date())
+const Past = max(date(), new Date(), { exclusive: true })
+```
+
+**Even more information on errors.** Errors now expose the `error.refinement` property when the failure originated in a refinement validation. And they also now have an `error.key` property which is the key for the failure in the case of complex values like arrays/objects. (Previously the key was retrievable by checking `error.path`, but this will make the 90% case easier.)
+
+###### BREAKING
+
+**The `coerce` helper has been renamed to `create`.** This will hopefully make it more clear that it's fully coercing and validating a value against a struct, throwing errors if the value was invalid. This has caused confusion for people who though it would just coerce the value and return the unvalidated-but-coerced version.
+
+```ts
+// Previously
+const user = coerce(data, User)
+
+// Now
+const user = create(data, User)
+```
+
+**The `struct`, `refinement` and `coercion` factories have been renamed.** This renaming is purely for keeping things slightly cleaner and easier to understand. The new names are `define`, `refine`, and `coerce`. Separating them slightly from the noun-based names used for the types themselves.
+
+```ts
+// Previously
+const Email = struct('email', isEmail)
+const Positive = refinement('positive', number(), n => n > 0)
+const Trimmed = coercion(string(), s => s.trim()
+
+// Now
+const Email = define('email', isEmail)
+const Positive = refine(number(), 'positive', n => n > 0)
+const Trimmed = coerce(string(), s => s.trim())
+```
+
+_Note that the order of `refine` arguments has changed to be slightly more natural, and encourage scoped refinement names._
+
+**The `length` refinement has been renamed to `size`.** This is to match with the expansion of it's abilities from purely strings and arrays to also now include numbers, maps, and sets. In addition you can also omit the `max` argument to specify an exact size:
+
+```ts
+// Previously
+const Name = length(string(), 1, 100)
+const MyArray = length(array(string()), 3, 3)
+
+// Now
+const Name = size(string(), 1, 100)
+const MyArray = size(array(string()), 3)
+const Id = size(integer(), 1, Infinity)
+const MySet = size(set(), 1, 9)
+```
+
+**The `StructType` inferring helper has been renamed to `Infer`.** This just makes it slightly easier to read what's going on when you're inferring a type.
+
+```ts
+// Previously
+type User = StructType<typeof User>
+
+// Now
+type User = Infer<typeof User>
+```
+
+**The `error.type` property has been standardized.** Previously it was a human-readable description that sort of incorporated the schema. Now it is simple the plain lowercase name of the struct in question, making it something you can use programmatically when formatting errors.
+
+```ts
+// Previously
+'Array<string>'
+'[string,number]'
+'Map<string,number>'
+
+// Now
+'array'
+'tuple'
+'map'
+```
+
 ### `0.10.0` — June 6, 2020
 
 The `0.10` version is a complete overhaul with the goal of making Superstruct much simpler and easier to understand, and with complete support for runtime type signatures TypeScript.
