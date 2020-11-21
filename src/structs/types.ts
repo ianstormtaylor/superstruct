@@ -629,3 +629,14 @@ export function union(Structs: Struct<any>[]): any {
 export function unknown(): Struct<unknown, null> {
   return define('unknown', () => true)
 }
+
+/**
+ * Define a `Struct` instance with a type and validation function.
+ */
+
+export function struct<T>(
+  name: string,
+  validator: Struct<T>['validator']
+): Struct<T, null> {
+  return define(name, validator)
+}
