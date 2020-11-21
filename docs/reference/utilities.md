@@ -5,7 +5,7 @@ Superstruct also ships with a handful of utility type factories, which allow you
 ### `assign`
 
 ```ts
-assign([object({ id: string() }), object({ id: number(), name: string() })])
+assign(object({ id: string() }), object({ name: string() }))
 ```
 
 ```ts
