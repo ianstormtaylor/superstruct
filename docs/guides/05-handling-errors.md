@@ -43,7 +43,7 @@ You can use those properties to perform whatever logic is necessary to recover f
 
 > To see all of the information embedded in `StructError` objects, check out the [`StructError` reference](../reference/errors.md).
 
-# Customizing Errors
+## Customizing Errors
 
 But there are cases where you want more control over the errors, especially when displaying error messages to end users. For example, if you're building a REST or GraphQL API, you probably want to customize your errors to be specific to your application, and to follow a spec.
 
@@ -92,7 +92,7 @@ user_name_required
 
 Although this example is simplified, the struct errors expose all of the possible information about why the validation failed, so you can use them to construct extremely detailed errors for your end users.
 
-# Multiple Failures
+## Multiple Failures
 
 By default Superstruct throws an error for the very first failure encountered during validation. This greatly simplifies logic for most cases, and results in the best performance.
 
