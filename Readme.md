@@ -208,7 +208,7 @@ Read the getting started guide to familiarize yourself with how Superstruct work
   - [Validating Data](https://docs.superstructjs.org/guides/02-validating-data.md)
   - [Coercing Data](https://docs.superstructjs.org/guides/03-coercing-data.md)
   - [Refining Validation](https://docs.superstructjs.org/guides/04-refining-validation.md)
-  - [Customizing Errors](https://docs.superstructjs.org/guides/05-customizing-errors.md)
+  - [Handling Errors](https://docs.superstructjs.org/guides/05-handling-errors.md)
   - [Using TypeScript](https://docs.superstructjs.org/guides/06-using-typescript.md)
 - [**Reference**](./docs/reference.md)
   - [Core](https://docs.superstructjs.org/api-reference/core.md)
