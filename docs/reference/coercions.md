@@ -30,6 +30,14 @@ masked(
 
 `masked` augments an object struct to strip any unknown properties from the input when coercing it.
 
+### `trimmed`
+
+```ts
+trimmed(string())
+```
+
+`trimmed` arguments a struct to ensure that any string input values are trimmed.
+
 ### Custom Coercions
 
 You can also define your own custom coercions that are specific to your application's requirements, like so:
