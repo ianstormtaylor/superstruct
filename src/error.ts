@@ -29,7 +29,7 @@ export class StructError extends TypeError {
   path: Array<number | string>
   branch: Array<any>
   failures: () => Array<Failure>;
-  [key: string]: any
+  [x: string]: any
 
   constructor(failure: Failure, moreFailures: IterableIterator<Failure>) {
     const {

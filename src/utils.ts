@@ -56,15 +56,15 @@ export function* toFailures<T, S>(
  * Check if a type is a tuple.
  */
 
-export type IsTuple<T> = T extends [infer A]
+export type IsTuple<T> = T extends [any]
   ? T
-  : T extends [infer A, infer B]
+  : T extends [any, any]
   ? T
-  : T extends [infer A, infer B, infer C]
+  : T extends [any, any, any]
   ? T
-  : T extends [infer A, infer B, infer C, infer D]
+  : T extends [any, any, any, any]
   ? T
-  : T extends [infer A, infer B, infer C, infer D, infer E]
+  : T extends [any, any, any, any, any]
   ? T
   : never
 
@@ -169,19 +169,19 @@ export type StructSchema<T> = [T] extends [string]
       | Error
       | RegExp
   ? null
-  : T extends Map<infer K, infer V>
+  : T extends Map<any, any>
   ? null
-  : T extends WeakMap<infer K, infer V>
+  : T extends WeakMap<any, any>
   ? null
-  : T extends Set<infer E>
+  : T extends Set<any>
   ? null
-  : T extends WeakSet<infer E>
+  : T extends WeakSet<any>
   ? null
   : T extends Array<infer E>
   ? T extends IsTuple<T>
     ? null
     : Struct<E>
-  : T extends Promise<infer V>
+  : T extends Promise<any>
   ? null
   : T extends object
   ? T extends IsRecord<T>
