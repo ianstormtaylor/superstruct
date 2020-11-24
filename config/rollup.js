@@ -23,19 +23,12 @@ export default {
         [
           '@babel/preset-env',
           {
-            targets: {
-              // browsers: ['last 2 versions'],
-              node: true,
-            },
+            targets: { browsers: 'defaults, not ie 11', node: true },
             modules: false,
             useBuiltIns: false,
             loose: true,
           },
         ],
-      ],
-      plugins: [
-        '@babel/plugin-proposal-object-rest-spread',
-        '@babel/plugin-proposal-class-properties',
       ],
     }),
 

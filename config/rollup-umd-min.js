@@ -25,19 +25,12 @@ config.plugins = [
       [
         '@babel/preset-env',
         {
-          targets: {
-            browsers: ['last 2 versions'],
-          },
+          targets: { browsers: 'defaults, not ie 11' },
           modules: false,
           useBuiltIns: false,
           loose: true,
         },
       ],
-    ],
-    plugins: [
-      'babel-plugin-dev-expression',
-      '@babel/plugin-proposal-object-rest-spread',
-      '@babel/plugin-proposal-class-properties',
     ],
   }),
 

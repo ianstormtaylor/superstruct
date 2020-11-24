@@ -18,9 +18,8 @@ export function isPlainObject(value: unknown): value is { [key: string]: any } {
  * Return a value as a printable string.
  */
 
-export function print(value: any, ticks?: string): string {
-  const string = typeof value === 'string' ? JSON.stringify(value) : `${value}`
-  return ticks ? `${ticks}${string}${ticks}` : string
+export function print(value: any): string {
+  return typeof value === 'string' ? JSON.stringify(value) : `${value}`
 }
 
 /**

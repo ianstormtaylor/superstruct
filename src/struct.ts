@@ -23,18 +23,11 @@ export class Struct<T = unknown, S = unknown> {
     validator?: Struct<T, S>['validator']
     refiner?: Struct<T, S>['refiner']
   }) {
-    const {
-      type,
-      schema,
-      coercer = (value: unknown) => value,
-      validator = () => [],
-      refiner = () => [],
-    } = props
-    this.type = type
-    this.schema = schema
-    this.coercer = coercer
-    this.validator = validator
-    this.refiner = refiner
+    this.type = props.type
+    this.schema = props.schema
+    this.coercer = props.coercer || ((value: unknown) => value)
+    this.validator = props.validator || (() => [])
+    this.refiner = props.refiner || (() => [])
   }
 
   /**

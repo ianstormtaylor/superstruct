@@ -23,37 +23,23 @@ export type Failure = {
 
 export class StructError extends TypeError {
   value: any
-  key: string | number | undefined
-  type: string
-  refinement: string | undefined
-  path: Array<number | string>
-  branch: Array<any>
+  key!: string | number | undefined
+  type!: string
+  refinement!: string | undefined
+  path!: Array<number | string>
+  branch!: Array<any>
   failures: () => Array<Failure>;
   [x: string]: any
 
   constructor(failure: Failure, moreFailures: IterableIterator<Failure>) {
-    const {
-      path,
-      value,
-      key,
-      type,
-      message,
-      refinement,
-      branch,
-      ...rest
-    } = failure
+    const { message, ...rest } = failure
+    const { path } = failure
     let failures: Array<Failure> | undefined
     const msg =
       path.length === 0 ? message : `At path: ${path.join('.')} -- ${message}`
     super(msg)
     Object.assign(this, rest)
     this.name = this.constructor.name
-    this.value = value
-    this.key = key
-    this.type = type
-    this.refinement = refinement
-    this.path = path
-    this.branch = branch
     this.failures = (): Array<Failure> => {
       if (!failures) {
         failures = [failure, ...moreFailures]
