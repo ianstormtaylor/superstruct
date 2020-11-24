@@ -32,9 +32,27 @@ assert(data, User)
 
 This makes it a lot easier to deal with inputs because you don't need to manually guard and refine their types.
 
+## Describing Types
+
+You can ensure that you're properly describing your existing TypeScript types with Superstruct by using the `Describe` utility. For example:
+
+```ts
+type User = {
+  id: number
+  name: string
+}
+
+const User: Describe<User> = object({
+  id: string(), // This mistake will fail to pass type checking!
+  name: string(),
+})
+```
+
+In this case, the incorrectly defined `id` property will cause TypeScript's compilation checks to throw an error. This way your compile-time and run-time validations are never out of sync.
+
 ## Inferring Types
 
-You can also do the reverse and infer a TypeScript type using an existing Superstruct struct. For example:
+You can also do the reverse and infer a TypeScript type using an existing Superstruct struct with the `Infer` utility. For example:
 
 ```ts
 import { Infer } from 'superstruct'
@@ -58,20 +76,6 @@ type User = {
 }
 ```
 
-This save you from having to duplicate definitions.
+This saves you from having to duplicate definitions.
 
-Since types and values are allowed to shadow each other in TypeScript, a common way to write the above is to have both the struct and the type use the same name. That way, your calling code can import both at once:
-
-```ts
-import { User } from './user'
-
-function save(user: User) {
-  // Some saving logic here!
-}
-
-router.post('/users', ({ request, response }) => {
-  const data = request.body
-  assert(data, User)
-  save(user)
-})
-```
+> 🤖 Notice that in each of the cases above, the `User` type and the `User` struct have the same name! This is handy for importing them elsewhere in the codebase at the same time.

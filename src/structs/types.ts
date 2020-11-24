@@ -447,7 +447,7 @@ export function string(): Struct<string, null> {
  * elements is of a specific type.
  */
 
-export function tuple<A>(Structs: TupleSchema<[A]>): Struct<A, null>
+export function tuple<A>(Structs: TupleSchema<[A]>): Struct<[A], null>
 export function tuple<A, B>(Structs: TupleSchema<[A, B]>): Struct<[A, B], null>
 export function tuple<A, B, C>(
   Structs: TupleSchema<[A, B, C]>

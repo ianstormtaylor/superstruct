@@ -1,4 +1,4 @@
-import { Struct, Infer, Result, Context } from './struct'
+import { Struct, Infer, Result, Context, Describe } from './struct'
 import { Failure } from './error'
 
 /**
@@ -53,6 +53,42 @@ export function* toFailures<T, S>(
 }
 
 /**
+ * Check if a type is a tuple.
+ */
+
+export type IsTuple<T> = T extends [infer A]
+  ? T
+  : T extends [infer A, infer B]
+  ? T
+  : T extends [infer A, infer B, infer C]
+  ? T
+  : T extends [infer A, infer B, infer C, infer D]
+  ? T
+  : T extends [infer A, infer B, infer C, infer D, infer E]
+  ? T
+  : never
+
+/**
+ * Check if a type is a record type.
+ */
+
+export type IsRecord<T> = T extends object
+  ? string extends keyof T
+    ? T
+    : never
+  : never
+
+/**
+ * Check if a type is a generic string type.
+ */
+
+export type IsGenericString<T> = T extends string
+  ? string extends T
+    ? T
+    : never
+  : never
+
+/**
  * Normalize properties of a type that allow `undefined` to make them optional.
  */
 
@@ -83,7 +119,7 @@ export type PickBy<T, V> = Pick<
 
 export type Simplify<T> = T extends any[] | Date
   ? T
-  : { [Key in keyof T]: T[Key] } & {}
+  : { [K in keyof T]: T[K] } & {}
 
 /**
  * Assign properties from one type to another, overwriting existing.
@@ -112,6 +148,52 @@ export type ObjectType<S extends ObjectSchema> = Simplify<
 export type PartialObjectSchema<S extends ObjectSchema> = {
   [K in keyof S]: Struct<Infer<S[K]> | undefined>
 }
+
+/**
+ * A schema for any type of struct.
+ */
+
+export type StructSchema<T> = [T] extends [string]
+  ? [T] extends [IsGenericString<T>]
+    ? null
+    : EnumSchema<T>
+  : T extends
+      | number
+      | boolean
+      | bigint
+      | symbol
+      | undefined
+      | null
+      | Function
+      | Date
+      | Error
+      | RegExp
+  ? null
+  : T extends Map<infer K, infer V>
+  ? null
+  : T extends WeakMap<infer K, infer V>
+  ? null
+  : T extends Set<infer E>
+  ? null
+  : T extends WeakSet<infer E>
+  ? null
+  : T extends Array<infer E>
+  ? T extends IsTuple<T>
+    ? null
+    : Struct<E>
+  : T extends Promise<infer V>
+  ? null
+  : T extends object
+  ? T extends IsRecord<T>
+    ? null
+    : { [K in keyof T]: Describe<T[K]> }
+  : null
+
+/**
+ * A schema for enum structs.
+ */
+
+export type EnumSchema<T extends string> = { [K in T]: K }
 
 /**
  * A schema for tuple structs.

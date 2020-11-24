@@ -1,4 +1,4 @@
-import { toFailures, shiftIterator, print } from './utils'
+import { toFailures, shiftIterator, print, StructSchema } from './utils'
 import { StructError, Failure } from './error'
 import { masked } from './structs/coercions'
 
@@ -113,6 +113,12 @@ export type Context<T, S> = {
  */
 
 export type Infer<T extends Struct<any, any>> = T['TYPE']
+
+/**
+ * A type utility to describe that a struct represents a TypeScript type.
+ */
+
+export type Describe<T> = Struct<T, StructSchema<T>>
 
 /**
  * A `Result` is returned from validation functions.
