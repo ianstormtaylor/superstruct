@@ -1,5 +1,6 @@
-import { Struct, mask } from '../struct'
-import { ObjectSchema, ObjectType, isPlainObject } from '../utils'
+import { Struct, is } from '../struct'
+import { isPlainObject } from '../utils'
+import { string, unknown } from './types'
 
 /**
  * Augment a `Struct` to add an additional coercion step to its input.
@@ -12,15 +13,20 @@ import { ObjectSchema, ObjectType, isPlainObject } from '../utils'
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function coerce<T, S>(
+export function coerce<T, S, C>(
   struct: Struct<T, S>,
-  coercer: Struct<T, S>['coercer']
+  condition: Struct<C, any>,
+  coercer: (value: C) => any
 ): Struct<T, S> {
   const fn = struct.coercer
   return new Struct({
     ...struct,
     coercer: (value) => {
-      return fn(coercer(value))
+      if (is(value, condition)) {
+        return fn(coercer(value))
+      } else {
+        return fn(value)
+      }
     },
   })
 }
@@ -28,7 +34,7 @@ export function coerce<T, S>(
 /**
  * Augment a struct to replace `undefined` values with a default.
  *
- * Note: You must use `coerce(value, Struct)` on the value to have the coercion
+ * Note: You must use `create(value, Struct)` on the value to have the coercion
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
@@ -40,7 +46,7 @@ export function defaulted<T, S>(
   } = {}
 ): Struct<T, S> {
   const { strict } = options
-  return coerce(S, (x) => {
+  return coerce(S, unknown(), (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 
     if (x === undefined) {
@@ -75,7 +81,7 @@ export function defaulted<T, S>(
  */
 
 export function masked<T, S>(struct: Struct<T, S>): Struct<T, S> {
-  return coerce(struct, (x) => {
+  return coerce(struct, unknown(), (x) => {
     if (
       typeof struct.schema !== 'object' ||
       struct.schema == null ||
@@ -95,4 +101,15 @@ export function masked<T, S>(struct: Struct<T, S>): Struct<T, S> {
       return ret
     }
   })
+}
+
+/**
+ * Augment a struct to trim string inputs.
+ *
+ * Note: You must use `create(value, Struct)` on the value to have the coercion
+ * take effect! Using simply `assert()` or `is()` will not use coercion.
+ */
+
+export function trimmed<T, S>(struct: Struct<T, S>): Struct<T, S> {
+  return coerce(struct, string(), (x) => x.trim())
 }

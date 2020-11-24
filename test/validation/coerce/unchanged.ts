@@ -1,6 +1,8 @@
-import { string, coerce } from '../../..'
+import { string, unknown, coerce } from '../../..'
 
-export const Struct = coerce(string(), (x) => (x == null ? 'unknown' : x))
+export const Struct = coerce(string(), unknown(), (x) =>
+  x == null ? 'unknown' : x
+)
 
 export const data = 'known'
 

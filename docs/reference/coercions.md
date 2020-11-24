@@ -30,18 +30,28 @@ masked(
 
 `masked` augments an object struct to strip any unknown properties from the input when coercing it.
 
+### `trimmed`
+
+```ts
+trimmed(string())
+```
+
+`trimmed` arguments a struct to ensure that any string input values are trimmed.
+
 ### Custom Coercions
 
 You can also define your own custom coercions that are specific to your application's requirements, like so:
 
 ```ts
-import { coerce, string } from 'superstruct'
+import { coerce, number, string, create } from 'superstruct'
 
-const PositiveInteger = coerce(string(), (value) => {
-  return typeof value === 'string' ? value.trim() : value
-})
+const MyNumber = coerce(number(), string(), (value) => parseFloat(value))
+
+const a = create(42, MyNumber) // 42
+const b = create('42', MyNumber) // 42
+const c = create(false, MyNumber) // error thrown!
 ```
 
-This allows you to customize how lenient you want to be in accepting data with your structs.
+The second argument to `coerce` is a struct narrowing the types of input values you want to try coercion. In the example above, the coercion functionn will only ever be called when the input is a string—booleans would ignore coercion and fail normally.
 
-> 🤖 Note that the `value` argument passed to coercion handlers is of type `unknown`! This is because it has yet to be validated, so it could still be anything. Make sure your coercion functions guard against unknown types.
+> 🤖 If you want to run coercion for any type of input, use the `unknown()` struct to run it in all cases.
