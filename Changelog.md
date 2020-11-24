@@ -2,6 +2,40 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
+### `0.12.0` — November 24, 2020
+
+###### NEW
+
+**New `Describe` utility type.** This new utility lets you define a struct from an existing TypeScript type and ensure that the struct's validation matches it, otherwise TypeScript's compiler will error. For example:
+
+```ts
+type User = {
+  id: number
+  name: string
+}
+
+const User: Describe<User> = object({
+  id: string(), // This mistake will fail to pass type checking!
+  name: string(),
+})
+```
+
+###### BREAKING
+
+**The `coerce` helper has changed to be more type-safe!** Previously `coerce` functions were called with `value: unknown` because they ran before all validation. However, now they take a new second argument that is another struct to narrow the cases where coercions occurs. This means the `value` for coercion will now be type-safe.
+
+```ts
+// Previously
+const MyNumber = coerce(number(), (value) => {
+  return typeof value === 'string' ? parseFloat(value) : value
+})
+
+// Now
+const MyNumber = coerce(number(), string(), (value) => {
+  return parseFloat(value)
+})
+```
+
 ### `0.11.0` — November 20, 2020
 
 ###### NEW
