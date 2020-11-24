@@ -1,10 +1,10 @@
-import { assert, coerce, string } from '../..'
+import { assert, coerce, string, number } from '../..'
 import { test } from '..'
 
-test<string>((x) => {
+test<number>((x) => {
   assert(
     x,
-    coerce(string(), (x) => x)
+    coerce(number(), string(), (x) => parseFloat(x))
   )
   return x
 })

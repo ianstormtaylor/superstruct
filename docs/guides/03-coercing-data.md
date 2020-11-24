@@ -50,14 +50,12 @@ const User = defaulted(
 
 We've already covered default values, but sometimes you'll need to create coercions that aren't just defaulted `undefined` values, but instead transforming the input data from one format to another.
 
-For example, maybe you want to ensure that any string is trimmed before passing it into the validator. To do that you can define a custom coercion:
+For example, maybe you want to ensure that a number is parsed from a string before passing it into the validator. To do that you can define a custom coercion:
 
 ```ts
-import { coerce } from 'superstruct'
+import { coerce, number, string, create } from 'superstruct'
 
-const TrimmedString = coerce(string(), (value) => {
-  return typeof value === 'string' ? value.trim() : value
-})
+const MyNumber = coerce(number(), string(), (value) => parseFloat(value))
 ```
 
 Now instead of using `assert()` or `is()` you can use `create()` to apply your custom coercion logic:
@@ -65,9 +63,9 @@ Now instead of using `assert()` or `is()` you can use `create()` to apply your c
 ```ts
 import { create } from 'superstruct'
 
-const data = '  a wEird str1ng        '
-const output = create(data, TrimmedString)
-// "a wEird str1ng"
+const data = '3.14'
+const output = create(data, MyNumber)
+// 3.14
 ```
 
 If the input data had been invalid or unable to be coerced an error would have been thrown instead.
