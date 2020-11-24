@@ -64,7 +64,7 @@ if (is(data, User)) {
 Superstruct can also handle coercion of your data before validating it, for example to mix in default values:
 
 ```ts
-import { coerce, object, number, string, defaulted } from 'superstruct'
+import { create, object, number, string, defaulted } from 'superstruct'
 
 const User = object({
   id: defaulted(number(), () => i++),
@@ -76,7 +76,7 @@ const data = {
 }
 
 // You can apply the defaults to your data while validating.
-const user = coerce(data, User)
+const user = create(data, User)
 // {
 //   id: 1,
 //   name: 'Jane',
