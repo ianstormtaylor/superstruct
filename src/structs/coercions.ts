@@ -1,6 +1,6 @@
 import { Struct, is } from '../struct'
 import { isPlainObject } from '../utils'
-import { unknown } from './types'
+import { string, unknown } from './types'
 
 /**
  * Augment a `Struct` to add an additional coercion step to its input.
@@ -101,4 +101,15 @@ export function masked<T, S>(struct: Struct<T, S>): Struct<T, S> {
       return ret
     }
   })
+}
+
+/**
+ * Augment a struct to trim string inputs.
+ *
+ * Note: You must use `create(value, Struct)` on the value to have the coercion
+ * take effect! Using simply `assert()` or `is()` will not use coercion.
+ */
+
+export function trimmed<T, S>(struct: Struct<T, S>): Struct<T, S> {
+  return coerce(struct, string(), (x) => x.trim())
 }
