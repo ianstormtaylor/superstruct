@@ -128,17 +128,21 @@ export function size<
 export function refine<T, S>(
   struct: Struct<T, S>,
   name: string,
-  refiner: Refiner<T, S>
+  refiner: Refiner<T>
 ): Struct<T, S> {
-  const fn = struct.refiner
-  return new Struct({
+  const S: Struct<T, S> = new Struct({
     ...struct,
     *refiner(value, ctx) {
-      yield* toFailures(fn(value, ctx), ctx)
+      yield* struct.refiner(value, ctx)
 
-      for (const failure of toFailures(refiner(value, ctx), ctx)) {
+      const result = refiner(value, ctx)
+      const failures = toFailures(result, ctx, struct, value)
+
+      for (const failure of failures) {
         yield { ...failure, refinement: name }
       }
     },
   })
+
+  return S
 }

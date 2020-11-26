@@ -1,4 +1,4 @@
-import { Struct, is } from '../struct'
+import { Struct, is, Coercer } from '../struct'
 import { isPlainObject } from '../utils'
 import { string, unknown } from './types'
 
@@ -16,17 +16,15 @@ import { string, unknown } from './types'
 export function coerce<T, S, C>(
   struct: Struct<T, S>,
   condition: Struct<C, any>,
-  coercer: (value: C) => any
+  coercer: Coercer<C>
 ): Struct<T, S> {
   const fn = struct.coercer
   return new Struct({
     ...struct,
-    coercer: (value) => {
-      if (is(value, condition)) {
-        return fn(coercer(value))
-      } else {
-        return fn(value)
-      }
+    coercer: (value, ctx) => {
+      return is(value, condition)
+        ? fn(coercer(value, ctx), ctx)
+        : fn(value, ctx)
     },
   })
 }
@@ -39,14 +37,14 @@ export function coerce<T, S, C>(
  */
 
 export function defaulted<T, S>(
-  S: Struct<T, S>,
+  struct: Struct<T, S>,
   fallback: any,
   options: {
     strict?: boolean
   } = {}
 ): Struct<T, S> {
   const { strict } = options
-  return coerce(S, unknown(), (x) => {
+  return coerce(struct, unknown(), (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 
     if (x === undefined) {
