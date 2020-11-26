@@ -187,8 +187,8 @@ export function validate<T, S>(
 
     return [error, undefined]
   } else {
-    const value = tuple[1]
-    return [undefined, value]
+    const v = tuple[1]
+    return [undefined, v]
   }
 }
 
