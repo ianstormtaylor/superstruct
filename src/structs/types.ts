@@ -1,10 +1,11 @@
-import { Infer, Struct, run } from '../struct'
+import { Infer, Struct } from '../struct'
 import { define } from './utilities'
 import {
   TupleSchema,
   ObjectSchema,
   ObjectType,
   print,
+  run,
   isObject,
 } from '../utils'
 
