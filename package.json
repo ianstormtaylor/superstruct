@@ -9,6 +9,10 @@
   "types": "./lib/index.d.ts",
   "main": "./lib/index.cjs",
   "module": "./lib/index.es.js",
+  "exports": {
+    "import": "./lib/index.es.js",
+    "require": "./lib/index.cjs"
+  },
   "sideEffects": false,
   "files": [
     "umd",
