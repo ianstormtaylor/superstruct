@@ -288,13 +288,10 @@ export function never(): Struct<never, null> {
  */
 
 export function nullable<T, S>(struct: Struct<T, S>): Struct<T | null, S> {
-  const { validator, refiner } = struct
   return new Struct({
-    type: struct.type,
-    schema: struct.schema,
-    entries: struct.entries,
-    validator: (value, ctx) => value === null || validator(value, ctx),
-    refiner: (value, ctx) => value === null || refiner(value, ctx),
+    ...struct,
+    validator: (value, ctx) => value === null || struct.validator(value, ctx),
+    refiner: (value, ctx) => value === null || struct.refiner(value, ctx),
   })
 }
 
@@ -329,7 +326,7 @@ export function object<S extends ObjectSchema>(schema?: S): any {
     type: 'object',
     schema: schema ? schema : null,
     *entries(value) {
-      if (schema && typeof value === 'object' && value != null) {
+      if (schema && isObject(value)) {
         const unknowns = new Set(Object.keys(value))
 
         for (const key of knowns) {
@@ -344,12 +341,11 @@ export function object<S extends ObjectSchema>(schema?: S): any {
     },
     validator(value) {
       return (
-        (typeof value === 'object' && value != null) ||
-        `Expected an object, but received: ${print(value)}`
+        isObject(value) || `Expected an object, but received: ${print(value)}`
       )
     },
     coercer(value) {
-      return typeof value === 'object' && value != null ? { ...value } : value
+      return isObject(value) ? { ...value } : value
     },
   })
 }
@@ -359,13 +355,11 @@ export function object<S extends ObjectSchema>(schema?: S): any {
  */
 
 export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
-  const { validator, refiner } = struct
   return new Struct({
-    type: struct.type,
-    schema: struct.schema,
-    entries: struct.entries,
-    validator: (value, ctx) => value === undefined || validator(value, ctx),
-    refiner: (value, ctx) => value === undefined || refiner(value, ctx),
+    ...struct,
+    validator: (value, ctx) =>
+      value === undefined || struct.validator(value, ctx),
+    refiner: (value, ctx) => value === undefined || struct.refiner(value, ctx),
   })
 }
 
@@ -384,7 +378,7 @@ export function record<K extends string, V>(
     type: 'record',
     schema: null,
     *entries(value) {
-      if (typeof value === 'object' && value != null) {
+      if (isObject(value)) {
         for (const k in value) {
           const v = value[k]
           yield [k, k, Key]
@@ -394,8 +388,7 @@ export function record<K extends string, V>(
     },
     validator(value) {
       return (
-        (typeof value === 'object' && value != null) ||
-        `Expected an object, but received: ${print(value)}`
+        isObject(value) || `Expected an object, but received: ${print(value)}`
       )
     },
   })

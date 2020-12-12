@@ -130,11 +130,10 @@ export function refine<T, S>(
   name: string,
   refiner: Refiner<T>
 ): Struct<T, S> {
-  const S: Struct<T, S> = new Struct({
+  return new Struct({
     ...struct,
     *refiner(value, ctx) {
       yield* struct.refiner(value, ctx)
-
       const result = refiner(value, ctx)
       const failures = toFailures(result, ctx, struct, value)
 
@@ -143,6 +142,4 @@ export function refine<T, S>(
       }
     },
   })
-
-  return S
 }

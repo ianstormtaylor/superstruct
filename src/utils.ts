@@ -2,6 +2,14 @@ import { Struct, Infer, Result, Context, Describe } from './struct'
 import { Failure } from './error'
 
 /**
+ * Check if a value is an iterator.
+ */
+
+function isIterable<T>(x: unknown): x is Iterable<T> {
+  return isObject(x) && typeof x[Symbol.iterator] === 'function'
+}
+
+/**
  * Check if a value is a plain object.
  */
 
@@ -41,16 +49,8 @@ export function shiftIterator<T>(input: Iterator<T>): T | undefined {
 }
 
 /**
- * Convert a validation result to an iterable of failures.
+ * Convert a single validation result to a failure.
  */
-
-function isIterable<T>(x: unknown): x is Iterable<T> {
-  return (
-    typeof x === 'object' &&
-    x != null &&
-    typeof x[Symbol.iterator] === 'function'
-  )
-}
 
 export function toFailure<T, S>(
   result: string | boolean | Partial<Failure>,
@@ -86,6 +86,10 @@ export function toFailure<T, S>(
     message,
   }
 }
+
+/**
+ * Convert a validation result to an iterable of failures.
+ */
 
 export function* toFailures<T, S>(
   result: Result,

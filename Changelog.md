@@ -2,6 +2,22 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
+### `0.13.0` — December 11, 2020
+
+###### NEW
+
+**Structs can now define an `entries` iterator for nested values.**
+
+###### IMPROVEMENTS
+
+**Iteration logic has gotten simpler, and more performant.**
+
+**Coercion works on all nested values now.**
+
+###### BREAKING
+
+**The `context` object has changed.**
+
 ### `0.12.0` — November 24, 2020
 
 ###### NEW

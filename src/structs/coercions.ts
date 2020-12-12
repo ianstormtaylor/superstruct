@@ -18,13 +18,12 @@ export function coerce<T, S, C>(
   condition: Struct<C, any>,
   coercer: Coercer<C>
 ): Struct<T, S> {
-  const fn = struct.coercer
   return new Struct({
     ...struct,
     coercer: (value, ctx) => {
       return is(value, condition)
-        ? fn(coercer(value, ctx), ctx)
-        : fn(value, ctx)
+        ? struct.coercer(coercer(value, ctx), ctx)
+        : struct.coercer(value, ctx)
     },
   })
 }
@@ -43,7 +42,6 @@ export function defaulted<T, S>(
     strict?: boolean
   } = {}
 ): Struct<T, S> {
-  const { strict } = options
   return coerce(struct, unknown(), (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 
@@ -51,7 +49,7 @@ export function defaulted<T, S>(
       return f
     }
 
-    if (!strict && isPlainObject(x) && isPlainObject(f)) {
+    if (!options.strict && isPlainObject(x) && isPlainObject(f)) {
       const ret = { ...x }
       let changed = false
 

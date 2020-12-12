@@ -88,6 +88,10 @@ export function dynamic<T>(
       const struct = fn(value, ctx)
       return struct.validator(value, ctx)
     },
+    coercer(value, ctx) {
+      const struct = fn(value, ctx)
+      return struct.coercer(value, ctx)
+    },
   })
 }
 
@@ -112,6 +116,10 @@ export function lazy<T>(fn: () => Struct<T, any>): Struct<T, null> {
     validator(value, ctx) {
       struct ??= fn()
       return struct.validator(value, ctx)
+    },
+    coercer(value, ctx) {
+      struct ??= fn()
+      return struct.coercer(value, ctx)
     },
   })
 }
