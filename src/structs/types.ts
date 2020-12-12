@@ -4,8 +4,9 @@ import {
   TupleSchema,
   ObjectSchema,
   ObjectType,
-  toFailures,
   print,
+  run,
+  isObject,
 } from '../utils'
 
 /**
@@ -30,19 +31,21 @@ export function array<T extends Struct<any>>(Element?: T): any {
   return new Struct({
     type: 'array',
     schema: Element,
-    coercer: (value) => {
-      return Element && Array.isArray(value)
-        ? value.map((v) => Element.coercer(v))
-        : value
-    },
-    *validator(value, ctx) {
-      if (!Array.isArray(value)) {
-        yield ctx.fail(`Expected an array value, but received: ${print(value)}`)
-      } else if (Element) {
+    *entries(value) {
+      if (Element && Array.isArray(value)) {
         for (const [i, v] of value.entries()) {
-          yield* ctx.check(v, Element, value, i)
+          yield [i, v, Element]
         }
       }
+    },
+    coercer(value) {
+      return Array.isArray(value) ? value.slice() : value
+    },
+    validator(value) {
+      return (
+        Array.isArray(value) ||
+        `Expected an array value, but received: ${print(value)}`
+      )
     },
   })
 }
@@ -97,7 +100,7 @@ export function enums<T extends number | string>(values: readonly T[]): any {
   return new Struct({
     type: 'enums',
     schema,
-    validator: (value) => {
+    validator(value) {
       return (
         values.includes(value as any) ||
         `Expected one of \`${description}\`, but received: ${print(value)}`
@@ -204,10 +207,19 @@ export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
   null
 >
 export function intersection(Structs: Array<Struct<any, any>>): any {
-  return define('intersection', function* (value, ctx) {
-    for (const S of Structs) {
-      yield* ctx.check(value, S)
-    }
+  return new Struct({
+    type: 'intersection',
+    schema: null,
+    *entries(value, ctx) {
+      for (const S of Structs) {
+        yield* S.entries(value, ctx)
+      }
+    },
+    *validator(value, ctx) {
+      for (const S of Structs) {
+        yield* S.validator(value, ctx)
+      }
+    },
   })
 }
 
@@ -240,15 +252,26 @@ export function map<K, V>(
   Value: Struct<V>
 ): Struct<Map<K, V>, null>
 export function map<K, V>(Key?: Struct<K>, Value?: Struct<V>): any {
-  return define('map', function* (value, ctx) {
-    if (!(value instanceof Map)) {
-      yield ctx.fail(`Expected a \`Map\` object, but received: ${print(value)}`)
-    } else if (Key && Value) {
-      for (const [k, v] of value.entries()) {
-        yield* ctx.check(k, Key, value, k)
-        yield* ctx.check(v, Value, value, k)
+  return new Struct({
+    type: 'map',
+    schema: null,
+    *entries(value) {
+      if (Key && Value && value instanceof Map) {
+        for (const [k, v] of value.entries()) {
+          yield [k as string, k, Key]
+          yield [k as string, v, Value]
+        }
       }
-    }
+    },
+    coercer(value) {
+      return value instanceof Map ? new Map(value) : value
+    },
+    validator(value) {
+      return (
+        value instanceof Map ||
+        `Expected a \`Map\` object, but received: ${print(value)}`
+      )
+    },
   })
 }
 
@@ -265,18 +288,10 @@ export function never(): Struct<never, null> {
  */
 
 export function nullable<T, S>(struct: Struct<T, S>): Struct<T | null, S> {
-  const { refiner } = struct
   return new Struct({
     ...struct,
-    validator: (value, ctx) => {
-      return value === null || ctx.check(value, struct)
-    },
-    refiner: function* (value, ctx) {
-      if (value != null) {
-        const c = { ...ctx, struct }
-        yield* toFailures(refiner(value, c), c)
-      }
-    },
+    validator: (value, ctx) => value === null || struct.validator(value, ctx),
+    refiner: (value, ctx) => value === null || struct.refiner(value, ctx),
   })
 }
 
@@ -310,45 +325,27 @@ export function object<S extends ObjectSchema>(schema?: S): any {
   return new Struct({
     type: 'object',
     schema: schema ? schema : null,
-    *validator(value, ctx) {
-      if (typeof value !== 'object' || value == null) {
-        yield ctx.fail(`Expected an object, but received: ${print(value)}`)
-      } else if (schema) {
+    *entries(value) {
+      if (schema && isObject(value)) {
         const unknowns = new Set(Object.keys(value))
 
         for (const key of knowns) {
           unknowns.delete(key)
-          const Value = schema[key]
-          const v = value[key]
-          yield* ctx.check(v, Value, value, key)
+          yield [key, value[key], schema[key]]
         }
 
         for (const key of unknowns) {
-          const v = value[key]
-          yield* ctx.check(v, Never, value, key)
+          yield [key, value[key], Never]
         }
       }
     },
-    coercer: (value: unknown) => {
-      if (!schema || typeof value !== 'object' || value == null) {
-        return value
-      }
-
-      const ret = {}
-      const unknowns = new Set(Object.keys(value))
-
-      for (const key of knowns) {
-        unknowns.delete(key)
-        const Value = schema[key]
-        const v = value[key]
-        ret[key] = Value.coercer(v)
-      }
-
-      for (const key of unknowns) {
-        ret[key] = value[key]
-      }
-
-      return ret
+    validator(value) {
+      return (
+        isObject(value) || `Expected an object, but received: ${print(value)}`
+      )
+    },
+    coercer(value) {
+      return isObject(value) ? { ...value } : value
     },
   })
 }
@@ -358,18 +355,11 @@ export function object<S extends ObjectSchema>(schema?: S): any {
  */
 
 export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
-  const { refiner } = struct
   return new Struct({
     ...struct,
-    validator: (value, ctx) => {
-      return value === undefined || ctx.check(value, struct)
-    },
-    refiner: function* (value, ctx) {
-      if (value != null) {
-        const c = { ...ctx, struct }
-        yield* toFailures(refiner(value, c), c)
-      }
-    },
+    validator: (value, ctx) =>
+      value === undefined || struct.validator(value, ctx),
+    refiner: (value, ctx) => value === undefined || struct.refiner(value, ctx),
   })
 }
 
@@ -384,16 +374,23 @@ export function record<K extends string, V>(
   Key: Struct<K>,
   Value: Struct<V>
 ): Struct<Record<K, V>, null> {
-  return define('record', function* (value, ctx) {
-    if (typeof value !== 'object' || value == null) {
-      yield ctx.fail(`Expected an object, but received: ${print(value)}`)
-    } else {
-      for (const k in value) {
-        const v = value[k]
-        yield* ctx.check(k, Key, value, k)
-        yield* ctx.check(v, Value, value, k)
+  return new Struct({
+    type: 'record',
+    schema: null,
+    *entries(value) {
+      if (isObject(value)) {
+        for (const k in value) {
+          const v = value[k]
+          yield [k, k, Key]
+          yield [k, v, Value]
+        }
       }
-    }
+    },
+    validator(value) {
+      return (
+        isObject(value) || `Expected an object, but received: ${print(value)}`
+      )
+    },
   })
 }
 
@@ -418,14 +415,25 @@ export function regexp(): Struct<RegExp, null> {
 export function set(): Struct<Set<unknown>, null>
 export function set<T>(Element: Struct<T>): Struct<Set<T>, null>
 export function set<T>(Element?: Struct<T>): any {
-  return define('set', function* (value, ctx) {
-    if (!(value instanceof Set)) {
-      yield ctx.fail(`Expected a \`Set\` object, but received: ${print(value)}`)
-    } else if (Element) {
-      for (const val of value) {
-        yield* ctx.check(val, Element, value, val)
+  return new Struct({
+    type: 'set',
+    schema: null,
+    *entries(value) {
+      if (Element && value instanceof Set) {
+        for (const v of value) {
+          yield [v as string, v, Element]
+        }
       }
-    }
+    },
+    coercer(value) {
+      return value instanceof Set ? new Set(value) : value
+    },
+    validator(value) {
+      return (
+        value instanceof Set ||
+        `Expected a \`Set\` object, but received: ${print(value)}`
+      )
+    },
   })
 }
 
@@ -497,21 +505,24 @@ export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
 export function tuple(Elements: Struct<any>[]): any {
   const Never = never()
 
-  return define('tuple', function* (value, ctx) {
-    if (!Array.isArray(value)) {
-      yield ctx.fail(`Expected an array, but received: ${print(value)}`)
-    } else {
-      for (const [index, Element] of Elements.entries()) {
-        const v = value[index]
-        yield* ctx.check(v, Element, value, index)
-      }
+  return new Struct({
+    type: 'tuple',
+    schema: null,
+    *entries(value) {
+      if (Array.isArray(value)) {
+        const length = Math.max(Elements.length, value.length)
 
-      if (value.length > Elements.length) {
-        const index = Elements.length
-        const v = value[index]
-        yield* ctx.check(v, Never, value, index)
+        for (let i = 0; i < length; i++) {
+          yield [i, value[i], Elements[i] || Never]
+        }
       }
-    }
+    },
+    validator(value) {
+      return (
+        Array.isArray(value) ||
+        `Expected an array, but received: ${print(value)}`
+      )
+    },
   })
 }
 
@@ -529,16 +540,17 @@ export function type<S extends ObjectSchema>(
   return new Struct({
     type: 'type',
     schema,
-    validator: function* (value, ctx) {
-      if (typeof value !== 'object' || value == null) {
-        yield ctx.fail(`Expected an object, but received: ${print(value)}`)
-      } else {
-        for (const key of keys) {
-          const Value = schema[key]
-          const v = (value as any)[key]
-          yield* ctx.check(v, Value, value, key)
+    *entries(value) {
+      if (isObject(value)) {
+        for (const k of keys) {
+          yield [k, value[k], schema[k]]
         }
       }
+    },
+    validator(value) {
+      return (
+        isObject(value) || `Expected an object, but received: ${print(value)}`
+      )
     },
   })
 }
@@ -599,26 +611,34 @@ export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
 >
 export function union(Structs: Struct<any>[]): any {
   const description = Structs.map((s) => s.type).join(' | ')
-  return define('union', function* (value, ctx) {
-    const failures = []
+  return new Struct({
+    type: 'union',
+    schema: null,
+    validator(value, ctx) {
+      const failures = []
 
-    for (const S of Structs) {
-      const [...array] = ctx.check(value, S)
+      for (const S of Structs) {
+        const [...tuples] = run(value, S, ctx)
+        const [first] = tuples
 
-      if (array.length === 0) {
-        return
-      } else {
-        failures.push(...array)
+        if (!first[0]) {
+          return []
+        } else {
+          for (const [failure] of tuples) {
+            if (failure) {
+              failures.push(failure)
+            }
+          }
+        }
       }
-    }
 
-    yield ctx.fail(
-      `Expected the value to satisfy a union of \`${description}\`, but received: ${print(
-        value
-      )}`
-    )
-
-    yield* failures
+      return [
+        `Expected the value to satisfy a union of \`${description}\`, but received: ${print(
+          value
+        )}`,
+        ...failures,
+      ]
+    },
   })
 }
 

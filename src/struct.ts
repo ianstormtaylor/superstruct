@@ -1,4 +1,4 @@
-import { toFailures, shiftIterator, print, StructSchema } from './utils'
+import { toFailures, shiftIterator, StructSchema, run } from './utils'
 import { StructError, Failure } from './error'
 import { masked } from './structs/coercions'
 
@@ -12,22 +12,53 @@ export class Struct<T = unknown, S = unknown> {
   readonly TYPE!: T
   type: string
   schema: S
-  coercer: Coercer
-  validator: Validator<T, S>
-  refiner: Refiner<T, S>
+  coercer: (value: unknown, context: Context) => unknown
+  validator: (value: unknown, context: Context) => Iterable<Failure>
+  refiner: (value: T, context: Context) => Iterable<Failure>
+  entries: (
+    value: unknown,
+    context: Context
+  ) => Iterable<[string | number, unknown, Struct<any> | Struct<never>]>
 
   constructor(props: {
-    type: Struct<T, S>['type']
-    schema: Struct<T, S>['schema']
-    coercer?: Struct<T, S>['coercer']
-    validator?: Struct<T, S>['validator']
-    refiner?: Struct<T, S>['refiner']
+    type: string
+    schema: S
+    coercer?: Coercer
+    validator?: Validator
+    refiner?: Refiner<T>
+    entries?: Struct<T, S>['entries']
   }) {
-    this.type = props.type
-    this.schema = props.schema
-    this.coercer = props.coercer || ((value: unknown) => value)
-    this.validator = props.validator || (() => [])
-    this.refiner = props.refiner || (() => [])
+    const {
+      type,
+      schema,
+      validator,
+      refiner,
+      coercer = (value: unknown) => value,
+      entries = function* () {},
+    } = props
+
+    this.type = type
+    this.schema = schema
+    this.entries = entries
+    this.coercer = coercer
+
+    if (validator) {
+      this.validator = (value, context) => {
+        const result = validator(value, context)
+        return toFailures(result, context, this, value)
+      }
+    } else {
+      this.validator = () => []
+    }
+
+    if (refiner) {
+      this.refiner = (value, context) => {
+        const result = refiner(value, context)
+        return toFailures(result, context, this, value)
+      }
+    } else {
+      this.refiner = () => []
+    }
   }
 
   /**
@@ -83,22 +114,92 @@ export class Struct<T = unknown, S = unknown> {
 }
 
 /**
- * A `StructContext` contains information about the current value being
- * validated as well as helper functions for failures and recursive validating.
+ * Assert that a value passes a struct, throwing if it doesn't.
  */
 
-export type Context<T, S> = {
-  value: any
+export function assert<T, S>(
+  value: unknown,
   struct: Struct<T, S>
+): asserts value is T {
+  const result = validate(value, struct)
+
+  if (result[0]) {
+    throw result[0]
+  }
+}
+
+/**
+ * Create a value with the coercion logic of struct and validate it.
+ */
+
+export function create<T, S>(value: unknown, struct: Struct<T, S>): T {
+  const result = validate(value, struct, { coerce: true })
+
+  if (result[0]) {
+    throw result[0]
+  } else {
+    return result[1]
+  }
+}
+
+/**
+ * Mask a value, returning only the subset of properties defined by a struct.
+ */
+
+export function mask<T, S>(value: unknown, struct: Struct<T, S>): T {
+  const M = masked(struct)
+  const ret = create(value, M)
+  return ret
+}
+
+/**
+ * Check if a value passes a struct.
+ */
+
+export function is<T, S>(value: unknown, struct: Struct<T, S>): value is T {
+  const result = validate(value, struct)
+  return !result[0]
+}
+
+/**
+ * Validate a value against a struct, returning an error if invalid, or the
+ * value (with potential coercion) if valid.
+ */
+
+export function validate<T, S>(
+  value: unknown,
+  struct: Struct<T, S>,
+  options: {
+    coerce?: boolean
+  } = {}
+): [StructError, undefined] | [undefined, T] {
+  const tuples = run(value, struct, options)
+  const tuple = shiftIterator(tuples)!
+
+  if (tuple[0]) {
+    const error = new StructError(tuple[0], function* () {
+      for (const t of tuples) {
+        if (t[0]) {
+          yield t[0]
+        }
+      }
+    })
+
+    return [error, undefined]
+  } else {
+    const v = tuple[1]
+    return [undefined, v]
+  }
+}
+
+/**
+ * A `Context` contains information about the current location of the
+ * validation inside the initial input value.
+ */
+
+export type Context = {
   branch: Array<any>
-  path: Array<string | number>
-  fail: (props?: string | Partial<Failure>) => Failure
-  check: <Y, Z>(
-    value: any,
-    struct: Struct<Y, Z>,
-    parent?: any,
-    key?: string | number
-  ) => IterableIterator<Failure>
+  path: Array<any>
 }
 
 /**
@@ -117,153 +218,27 @@ export type Describe<T> = Struct<T, StructSchema<T>>
  * A `Result` is returned from validation functions.
  */
 
-export type Result = boolean | string | Iterable<Failure>
+export type Result =
+  | boolean
+  | string
+  | Partial<Failure>
+  | Iterable<boolean | string | Partial<Failure>>
 
 /**
  * A `Coercer` takes an unknown value and optionally coerces it.
  */
 
-export type Coercer = (value: unknown) => unknown
+export type Coercer<T = unknown> = (value: T, context: Context) => unknown
 
 /**
- * A `Validate` takes an unknown value and validates it.
+ * A `Validator` takes an unknown value and validates it.
  */
 
-export type Validator<T, S> = (value: unknown, context: Context<T, S>) => Result
+export type Validator = (value: unknown, context: Context) => Result
 
 /**
  * A `Refiner` takes a value of a known type and validates it against a further
  * constraint.
  */
 
-export type Refiner<T, S> = (value: T, context: Context<T, S>) => Result
-
-/**
- * Assert that a value passes a `Struct`, throwing if it doesn't.
- */
-
-export function assert<T, S>(
-  value: unknown,
-  struct: Struct<T, S>
-): asserts value is T {
-  const result = validate(value, struct)
-
-  if (result[0]) {
-    throw result[0]
-  }
-}
-
-/**
- * Create a value with the coercion logic of `Struct` and validate it.
- */
-
-export function create<T, S>(value: unknown, struct: Struct<T, S>): T {
-  const ret = struct.coercer(value)
-  assert(ret, struct)
-  return ret
-}
-
-/**
- * Mask a value, returning only the subset of properties defined by a Struct.
- */
-
-export function mask<T, S>(value: unknown, struct: Struct<T, S>): T {
-  const M = masked(struct)
-  const ret = create(value, M)
-  return ret
-}
-
-/**
- * Check if a value passes a `Struct`.
- */
-
-export function is<T, S>(value: unknown, struct: Struct<T, S>): value is T {
-  const result = validate(value, struct)
-  return !result[0]
-}
-
-/**
- * Validate a value against a `Struct`, returning an error if invalid.
- */
-
-export function validate<T, S>(
-  value: unknown,
-  struct: Struct<T, S>,
-  options: {
-    coerce?: boolean
-  } = {}
-): [StructError, undefined] | [undefined, T] {
-  if (options.coerce) {
-    value = struct.coercer(value)
-  }
-
-  const failures = check(value, struct)
-  const failure = shiftIterator(failures)
-
-  if (failure) {
-    const error = new StructError(failure, failures)
-    return [error, undefined]
-  } else {
-    return [undefined, value as T]
-  }
-}
-
-/**
- * Check a value against a `Struct`, returning an iterable of failures.
- */
-
-function* check<T, S>(
-  value: unknown,
-  struct: Struct<T, S>,
-  path: any[] = [],
-  branch: any[] = []
-): IterableIterator<Failure> {
-  const ctx: Context<T, S> = {
-    value,
-    struct,
-    branch,
-    path,
-    check(v, s, parent, key) {
-      const p = parent !== undefined ? [...path, key] : path
-      const b = parent !== undefined ? [...branch, parent] : branch
-      return check(v, s, p, b)
-    },
-    fail(props = {}) {
-      if (typeof props === 'string') {
-        props = { message: props }
-      }
-
-      const { type } = struct
-      let { message, refinement } = props
-
-      if (!message) {
-        message = `Expected a value of type \`${type}\`${
-          refinement ? ` with refinement \`${refinement}\`` : ''
-        }${
-          path.length ? ` for \`${path.join('.')}\`` : ''
-        }, but received: \`${print(value)}\``
-      }
-
-      return {
-        ...props,
-        value,
-        type,
-        refinement,
-        message,
-        key: path[path.length - 1],
-        path,
-        branch: [...branch, value],
-      }
-    },
-  }
-
-  const failures = toFailures(struct.validator(value, ctx), ctx)
-  const failure = shiftIterator(failures)
-
-  if (failure) {
-    yield failure
-    yield* failures
-  } else {
-    yield* toFailures(struct.refiner(value as T, ctx), ctx)
-  }
-}
+export type Refiner<T> = (value: T, context: Context) => Result

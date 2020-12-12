@@ -2,6 +2,24 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
+### `0.13.0` — December 11, 2020
+
+###### NEW
+
+**Structs can now define an `entries` iterator for nested values.** Previously iterating through nested values was defined in a one-off manner inside certain structs, but this led to non-uniform support. Now, any struct can define an `entries` iterator that will cause nested values to be automatically coerced and validated.
+
+**Coercion receives `context` objects and supports nested values.** Previously context objects were only passed to the validations and refinements. But now the same context is passed to coercions too so you can implement more complex logic. And coercions are automatically applied to nested values thanks to the addition of `entries`.
+
+**Iteration logic has gotten simpler, and more performant.** The addition of the `entries` logic has enabled us to only ever iterate through a tree of values one time for coercion and validation, instead of once each. This should speed up most standard use cases.
+
+###### BREAKING
+
+**The `ctx.fail()` function has been removed.** Previously you'd use it to return more information about a failure inside a struct. Now you can simply return a partial failure object.
+
+**The `ctx.check()` function has been removed.** Previously you'd use it to validate nested objects in more complex struct shapes. Now you can use the new `entries` property for this instead.
+
+**The `context.struct` and `context.value` properties have been removed.** These properties were previously available, but unnecessary since anywhere you have the context object you will also know the `value` and the specific struct that is being validated. Keeping them around required extra unnecessary plumbing in the library that made composing structs much more difficult so they were removed.
+
 ### `0.12.0` — November 24, 2020
 
 ###### NEW

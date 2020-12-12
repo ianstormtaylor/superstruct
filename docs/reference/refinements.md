@@ -83,9 +83,7 @@ You can also define your own custom refinments that are specific to your applica
 ```ts
 import { number, refine } from 'superstruct'
 
-const PositiveInteger = refine(number(), 'PositiveInteger', (value) => {
-  return Number.isInteger(value) && value >= 0
-})
+const Positive = refine(number(), 'positive', (value) => value >= 0)
 ```
 
 This allows you to define more fine-grained runtime validation, while still preserving the `number` type at compile time.

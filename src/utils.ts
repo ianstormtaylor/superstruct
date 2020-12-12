@@ -2,15 +2,31 @@ import { Struct, Infer, Result, Context, Describe } from './struct'
 import { Failure } from './error'
 
 /**
+ * Check if a value is an iterator.
+ */
+
+function isIterable<T>(x: unknown): x is Iterable<T> {
+  return isObject(x) && typeof x[Symbol.iterator] === 'function'
+}
+
+/**
  * Check if a value is a plain object.
  */
 
-export function isPlainObject(value: unknown): value is { [key: string]: any } {
-  if (Object.prototype.toString.call(value) !== '[object Object]') {
+export function isObject(x: unknown): x is object {
+  return typeof x === 'object' && x != null
+}
+
+/**
+ * Check if a value is a plain object.
+ */
+
+export function isPlainObject(x: unknown): x is { [key: string]: any } {
+  if (Object.prototype.toString.call(x) !== '[object Object]') {
     return false
   }
 
-  const prototype = Object.getPrototypeOf(value)
+  const prototype = Object.getPrototypeOf(x)
   return prototype === null || prototype === Object.prototype
 }
 
@@ -33,21 +49,131 @@ export function shiftIterator<T>(input: Iterator<T>): T | undefined {
 }
 
 /**
+ * Convert a single validation result to a failure.
+ */
+
+export function toFailure<T, S>(
+  result: string | boolean | Partial<Failure>,
+  context: Context,
+  struct: Struct<T, S>,
+  value: any
+): Failure | undefined {
+  if (result === true) {
+    return
+  } else if (result === false) {
+    result = {}
+  } else if (typeof result === 'string') {
+    result = { message: result }
+  }
+
+  const { path, branch } = context
+  const { type } = struct
+  const {
+    refinement,
+    message = `Expected a value of type \`${type}\`${
+      refinement ? ` with refinement \`${refinement}\`` : ''
+    }, but received: \`${print(value)}\``,
+  } = result
+
+  return {
+    value,
+    type,
+    refinement,
+    key: path[path.length - 1],
+    path,
+    branch,
+    ...result,
+    message,
+  }
+}
+
+/**
  * Convert a validation result to an iterable of failures.
  */
 
 export function* toFailures<T, S>(
   result: Result,
-  context: Context<T, S>
+  context: Context,
+  struct: Struct<T, S>,
+  value: any
 ): IterableIterator<Failure> {
-  if (typeof result === 'string') {
-    yield context.fail({ message: result })
-  } else if (result === true) {
-    return
-  } else if (result === false) {
-    yield context.fail()
-  } else {
-    yield* result
+  if (!isIterable(result)) {
+    result = [result]
+  }
+
+  for (const r of result) {
+    const failure = toFailure(r, context, struct, value)
+
+    if (failure) {
+      yield failure
+    }
+  }
+}
+
+/**
+ * Check a value against a struct, traversing deeply into nested values, and
+ * returning an iterator of failures or success.
+ */
+
+export function* run<T, S>(
+  value: unknown,
+  struct: Struct<T, S>,
+  options: {
+    path?: any[]
+    branch?: any[]
+    coerce?: boolean
+  } = {}
+): IterableIterator<[Failure, undefined] | [undefined, T]> {
+  const { path = [], branch = [value], coerce = false } = options
+  const ctx: Context = { path, branch }
+
+  if (coerce) {
+    value = struct.coercer(value, ctx)
+  }
+
+  let valid = true
+
+  for (const failure of struct.validator(value, ctx)) {
+    valid = false
+    yield [failure, undefined]
+  }
+
+  if (valid) {
+    for (const failure of struct.refiner(value as T, ctx)) {
+      valid = false
+      yield [failure, undefined]
+    }
+  }
+
+  for (let [k, v, s] of struct.entries(value, ctx)) {
+    const ts = run(v, s as Struct, {
+      path: k === undefined ? path : [...path, k],
+      branch: k === undefined ? branch : [...branch, v],
+      coerce,
+    })
+
+    for (const t of ts) {
+      if (t[0]) {
+        valid = false
+        yield [t[0], undefined]
+      } else if (coerce) {
+        v = t[1]
+
+        if (k === undefined) {
+          value = v
+        } else if (value instanceof Map) {
+          value.set(k, v)
+        } else if (value instanceof Set) {
+          value.add(v)
+        } else if (isObject(value)) {
+          value[k] = v
+        }
+      }
+    }
+  }
+
+  if (valid) {
+    yield [undefined, value as T]
   }
 }
 

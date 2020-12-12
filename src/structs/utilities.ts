@@ -62,15 +62,12 @@ export function assign(...Structs: Struct<any>[]): any {
  * Define a new struct type with a custom validation function.
  */
 
-export function define<T>(
-  name: string,
-  validator: Validator<T, null>
-): Struct<T, null> {
+export function define<T>(name: string, validator: Validator): Struct<T, null> {
   return new Struct({ type: name, schema: null, validator })
 }
 
 /**
- * Create a struct with dynamic, runtime validation.
+ * Create a struct with dynamic validation logic.
  *
  * The callback will receive the value currently being validated, and must
  * return a struct object to validate it with. This can be useful to model
@@ -78,15 +75,28 @@ export function define<T>(
  */
 
 export function dynamic<T>(
-  fn: (value: unknown, ctx: Context<T, null>) => Struct<T, any>
+  fn: (value: unknown, ctx: Context) => Struct<T, any>
 ): Struct<T, null> {
-  return define('dynamic', (value, ctx) => {
-    return ctx.check(value, fn(value, ctx))
+  return new Struct({
+    type: 'dynamic',
+    schema: null,
+    *entries(value, ctx) {
+      const struct = fn(value, ctx)
+      yield* struct.entries(value, ctx)
+    },
+    validator(value, ctx) {
+      const struct = fn(value, ctx)
+      return struct.validator(value, ctx)
+    },
+    coercer(value, ctx) {
+      const struct = fn(value, ctx)
+      return struct.coercer(value, ctx)
+    },
   })
 }
 
 /**
- * Create a struct with lazily evaluated validation.
+ * Create a struct with lazily evaluated validation logic.
  *
  * The first time validation is run with the struct, the callback will be called
  * and must return a struct object to use. This is useful for cases where you
@@ -95,14 +105,22 @@ export function dynamic<T>(
  */
 
 export function lazy<T>(fn: () => Struct<T, any>): Struct<T, null> {
-  let s: Struct<T, any> | undefined
-
-  return define('lazy', (value, ctx) => {
-    if (!s) {
-      s = fn()
-    }
-
-    return ctx.check(value, s)
+  let struct: Struct<T, any> | undefined
+  return new Struct({
+    type: 'lazy',
+    schema: null,
+    *entries(value, ctx) {
+      struct ??= fn()
+      yield* struct.entries(value, ctx)
+    },
+    validator(value, ctx) {
+      struct ??= fn()
+      return struct.validator(value, ctx)
+    },
+    coercer(value, ctx) {
+      struct ??= fn()
+      return struct.coercer(value, ctx)
+    },
   })
 }
 
@@ -174,10 +192,7 @@ export function pick<S extends ObjectSchema, K extends keyof S>(
  * @deprecated This function has been renamed to `define`.
  */
 
-export function struct<T>(
-  name: string,
-  validator: Validator<T, null>
-): Struct<T, null> {
+export function struct<T>(name: string, validator: Validator): Struct<T, null> {
   console.warn(
     'superstruct@0.11 - The `struct` helper has been renamed to `define`.'
   )
