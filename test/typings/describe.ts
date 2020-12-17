@@ -19,9 +19,14 @@ import {
   nullable,
   optional,
   regexp,
+  size,
   set,
   union,
   unknown,
+  empty,
+  max,
+  min,
+  pattern,
 } from '../..'
 import { test } from '..'
 
@@ -39,6 +44,10 @@ test<Describe<boolean>>((x) => {
 
 test<Describe<Date>>((x) => {
   return date()
+})
+
+test<Describe<string>>((x) => {
+  return empty(string())
 })
 
 test<Describe<'a' | 'b' | 'c'>>((x) => {
@@ -65,6 +74,14 @@ test<Describe<Map<string, number>>>((x) => {
   return map(string(), number())
 })
 
+test<Describe<number>>((x) => {
+  return max(integer(), 0)
+})
+
+test<Describe<number>>((x) => {
+  return min(integer(), 0)
+})
+
 test<Describe<never>>((x) => {
   return never()
 })
@@ -89,6 +106,10 @@ test<Describe<string | undefined>>((x) => {
   return optional(string())
 })
 
+test<Describe<string>>((x) => {
+  return pattern(string(), /\d+/)
+})
+
 test<Describe<Record<string, number>>>((x) => {
   return record(string(), number())
 })
@@ -99,6 +120,10 @@ test<Describe<RegExp>>((x) => {
 
 test<Describe<Set<number>>>((x) => {
   return set(number())
+})
+
+test<Describe<string>>((x) => {
+  return size(string(), 1, 100)
 })
 
 test<Describe<string>>((x) => {

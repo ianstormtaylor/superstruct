@@ -5,9 +5,10 @@ import { toFailures } from '../utils'
  * Ensure that a string, array, map, or set is empty.
  */
 
-export function empty<T extends string | any[] | Map<any, any> | Set<any>>(
-  struct: Struct<T>
-): Struct<T> {
+export function empty<
+  T extends string | any[] | Map<any, any> | Set<any>,
+  S extends any
+>(struct: Struct<T, S>): Struct<T, S> {
   const expected = `Expected an empty ${struct.type}`
 
   return refine(struct, 'empty', (value) => {
@@ -30,13 +31,13 @@ export function empty<T extends string | any[] | Map<any, any> | Set<any>>(
  * Ensure that a number or date is below a threshold.
  */
 
-export function max<T extends number | Date>(
-  struct: Struct<T>,
+export function max<T extends number | Date, S extends any>(
+  struct: Struct<T, S>,
   threshold: T,
   options: {
     exclusive?: boolean
   } = {}
-): Struct<T> {
+): Struct<T, S> {
   const { exclusive } = options
   return refine(struct, 'max', (value) => {
     return exclusive
@@ -52,13 +53,13 @@ export function max<T extends number | Date>(
  * Ensure that a number or date is above a threshold.
  */
 
-export function min<T extends number | Date>(
-  struct: Struct<T>,
+export function min<T extends number | Date, S extends any>(
+  struct: Struct<T, S>,
   threshold: T,
   options: {
     exclusive?: boolean
   } = {}
-): Struct<T> {
+): Struct<T, S> {
   const { exclusive } = options
   return refine(struct, 'min', (value) => {
     return exclusive
@@ -73,10 +74,10 @@ export function min<T extends number | Date>(
  * Ensure that a string matches a regular expression.
  */
 
-export function pattern<T extends string>(
-  struct: Struct<T>,
+export function pattern<T extends string, S extends any>(
+  struct: Struct<T, S>,
   regexp: RegExp
-): Struct<T> {
+): Struct<T, S> {
   return refine(struct, 'pattern', (value) => {
     return (
       regexp.test(value) ||
@@ -90,8 +91,9 @@ export function pattern<T extends string>(
  */
 
 export function size<
-  T extends string | number | Date | any[] | Map<any, any> | Set<any>
->(struct: Struct<T>, min: number, max: number = min): Struct<T> {
+  T extends string | number | Date | any[] | Map<any, any> | Set<any>,
+  S extends any
+>(struct: Struct<T, S>, min: number, max: number = min): Struct<T, S> {
   const expected = `Expected a ${struct.type}`
   const of = min === max ? `of \`${min}\`` : `between \`${min}\` and \`${max}\``
 
