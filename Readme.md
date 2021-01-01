@@ -73,8 +73,8 @@ import { is, struct, object, string } from 'superstruct'
 import isUuid from 'is-uuid'
 import isEmail from 'is-email'
 
-const Email = struct('Email', isEmail)
-const Uuid = struct('Uuid', isUuid.v4)
+const Email = define('Email', isEmail)
+const Uuid = define('Uuid', isUuid.v4)
 
 const User = object({
   id: Uuid,
