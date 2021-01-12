@@ -138,13 +138,6 @@ export function* run<T, S>(
     yield [failure, undefined]
   }
 
-  if (valid) {
-    for (const failure of struct.refiner(value as T, ctx)) {
-      valid = false
-      yield [failure, undefined]
-    }
-  }
-
   for (let [k, v, s] of struct.entries(value, ctx)) {
     const ts = run(v, s as Struct, {
       path: k === undefined ? path : [...path, k],
@@ -169,6 +162,13 @@ export function* run<T, S>(
           value[k] = v
         }
       }
+    }
+  }
+
+  if (valid) {
+    for (const failure of struct.refiner(value as T, ctx)) {
+      valid = false
+      yield [failure, undefined]
     }
   }
 

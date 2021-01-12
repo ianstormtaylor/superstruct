@@ -1,5 +1,5 @@
 import { deepStrictEqual, strictEqual } from 'assert'
-import { validate, string, StructError, define, object } from '../..'
+import { validate, string, StructError, define, refine, object } from '../..'
 
 describe('validate', () => {
   it('valid as helper', () => {
@@ -75,5 +75,22 @@ describe('validate', () => {
     S.validate({ a: null, b: null })
     strictEqual(ranA, true)
     strictEqual(ranB, false)
+  })
+
+  it('refiners after children', () => {
+    const order: string[] = []
+
+    const A = define('A', () => {
+      order.push('validator')
+      return true
+    })
+
+    const B = refine(object({ a: A }), 'B', () => {
+      order.push('refiner')
+      return true
+    })
+
+    B.validate({ a: null })
+    deepStrictEqual(order, ['validator', 'refiner'])
   })
 })
