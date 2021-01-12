@@ -220,6 +220,11 @@ export function intersection(Structs: Array<Struct<any, any>>): any {
         yield* S.validator(value, ctx)
       }
     },
+    *refiner(value, ctx) {
+      for (const S of Structs) {
+        yield* S.refiner(value, ctx)
+      }
+    },
   })
 }
 
