@@ -27,6 +27,17 @@ export function empty<
   })
 }
 
+export function reqiured<T extends string | any[], S extends any>(
+  struct: Struct<T, S>,
+  message?: string
+): Struct<T, S> {
+  const expected = `Expected required ${struct.type} but received empty`
+
+  return refine<T, S>(struct, 'reqiured', (value) => {
+    return value.length > 0 || (message ?? expected)
+  })
+}
+
 /**
  * Ensure that a number or date is below a threshold.
  */
