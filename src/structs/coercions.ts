@@ -19,7 +19,7 @@ export function coerce<T, S, C, E1 extends Error, E2 extends Error>(
   condition: Struct<C, any, E2>,
   coercer: Coercer<C>
 ): Struct<T, S, E1 | E2> {
-  return new Struct<T,S,E1 | E2>({
+  return new Struct<T, S, E1 | E2>({
     ...struct,
     coercer: (value, ctx) => {
       return is(value, condition)
@@ -77,7 +77,9 @@ export function defaulted<T, S>(
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function masked<T, S, E extends Error>(struct: Struct<T, S, E>): Struct<T, S, E> {
+export function masked<T, S, E extends Error>(
+  struct: Struct<T, S, E>
+): Struct<T, S, E> {
   return coerce(struct, unknown(), (x) => {
     if (
       typeof struct.schema !== 'object' ||
@@ -107,6 +109,8 @@ export function masked<T, S, E extends Error>(struct: Struct<T, S, E>): Struct<T
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function trimmed<T, S, E extends Error>(struct: Struct<T, S, E>): Struct<T, S, E|TypeErrorDetail> {
+export function trimmed<T, S, E extends Error>(
+  struct: Struct<T, S, E>
+): Struct<T, S, E | TypeErrorDetail> {
   return coerce(struct, string(), (x) => x.trim())
 }

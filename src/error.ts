@@ -14,33 +14,38 @@ export type Failure<E extends Error> = {
   failures?: Failure<E>[]
 }
 
-export type Error = ErrorDetail | never;
+export type Error = ErrorDetail | never
 export interface ErrorDetail {
-  class: string;
-  message?: string;
+  class: string
+  message?: string
 }
 export interface BasicErrorDetail extends ErrorDetail {
-  class: 'basic';
-  except: string;
-  actually: string;
+  class: 'basic'
+  except: string
+  actually: string
 }
 
 export interface TypeErrorDetail extends ErrorDetail {
-  class: 'type';
-  except: string;
-  actually: unknown;
+  class: 'type'
+  except: string
+  actually: unknown
 }
 
 export interface ValuesErrorDetail<T> extends ErrorDetail {
-  class: 'values';
-  except: T[];
-  actually: T;
+  class: 'values'
+  except: T[]
+  actually: T
 }
 
 export interface ValueErrorDetail<T> extends ErrorDetail {
-  class: 'value';
-  except: T;
-  actually: unknown;
+  class: 'value'
+  except: T
+  actually: unknown
+}
+
+export interface ThrowErrorDetail extends ErrorDetail {
+  class: 'throw'
+  error: any
 }
 
 /**
@@ -59,7 +64,7 @@ export class StructError<E extends Error> extends TypeError {
   refinement!: string | undefined
   path!: Array<any>
   branch!: Array<any>
-  failures: () => Array<Failure<E>>;
+  failures: () => Array<Failure<E>>
   detail: E;
   [x: string]: any
 
@@ -69,9 +74,9 @@ export class StructError<E extends Error> extends TypeError {
     const { path, detail } = failure
     const msg =
       path.length === 0 ? message : `At path: ${path.join('.')} -- ${message}`
-      super(msg)
-      Object.assign(this, rest)
-    this.detail = detail;
+    super(msg)
+    Object.assign(this, rest)
+    this.detail = detail
     this.name = this.constructor.name
     this.failures = () => {
       return (cached ??= [failure, ...failures()])

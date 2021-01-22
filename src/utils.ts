@@ -1,6 +1,12 @@
-import { Struct, Infer, Result, Context, Describe, DescribedResult } from './struct'
-import { BasicErrorDetail, Error, ErrorDetail, Failure, StructError } from './error'
-import { string } from './structs/types'
+import {
+  Struct,
+  Infer,
+  Result,
+  Context,
+  Describe,
+  DescribedResult,
+} from './struct'
+import { Error, ErrorDetail, Failure, ThrowErrorDetail } from './error'
 
 /**
  * Check if a value is an iterator.
@@ -59,18 +65,20 @@ export function toFailure<T, S, E extends ErrorDetail>(
   struct: Struct<T, S, any>,
   value: any
 ): Failure<E> {
-  if(!('class' in result)) {
+  if (!('class' in result)) {
     return result
   }
 
-  let { message } = result;
+  let { message } = result
 
   const { path, branch } = context
   const { type } = struct
 
   if (message === undefined) {
-    message = `Expected a value of type \`${type}\, but received: \`${print(value)}\``
-    result.message = message;
+    message = `Expected a value of type \`${type}\, but received: \`${print(
+      value
+    )}\``
+    result.message = message
   }
 
   return {
@@ -101,7 +109,7 @@ export function* toFailures<T, S, E extends ErrorDetail>(
   }
 
   for (const r of result) {
-    yield toFailure<T,S,E>(r, context, struct, value)
+    yield toFailure<T, S, E>(r, context, struct, value)
   }
 }
 
@@ -118,7 +126,9 @@ export function* run<T, S, E extends Error>(
     branch?: any[]
     coerce?: boolean
   } = {}
-): IterableIterator<[Failure<E>, undefined] | [undefined, T]> {
+): IterableIterator<
+  [Failure<E | ThrowErrorDetail>, undefined] | [undefined, T]
+> {
   const { path = [], branch = [value], coerce = false } = options
   const ctx: Context = { path, branch }
 
@@ -128,7 +138,26 @@ export function* run<T, S, E extends Error>(
 
   let valid = true
 
-  for (const failure of struct.validator(value, ctx)) {
+  let failures: Iterable<Failure<E>> = []
+  try {
+    failures = struct.validator(value, ctx)
+  } catch (e) {
+    yield [
+      toFailure(
+        {
+          class: 'throw',
+          error: e,
+          message: `Throw error in run validation: \`${e?.toString()}\``,
+        } as ThrowErrorDetail,
+        ctx,
+        struct,
+        value
+      ),
+      undefined,
+    ]
+  }
+
+  for (const failure of failures) {
     valid = false
     yield [failure, undefined]
   }
@@ -267,7 +296,9 @@ export type ObjectType<S extends ObjectSchema> = Simplify<
 
 export type ObjectError<S extends ObjectSchema> = {
   [K in keyof S]: S[K]
-} extends Record<any, Struct<any, any, infer E>> ? E : never
+} extends Record<any, Struct<any, any, infer E>>
+  ? E
+  : never
 
 /**
  * Transform an object schema type to represent a partial.

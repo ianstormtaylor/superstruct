@@ -63,7 +63,10 @@ export function assign(...Structs: Struct<any>[]): any {
  * Define a new struct type with a custom validation function.
  */
 
-export function define<T, E extends Error>(name: string, validator: Validator<E>): Struct<T, null, E> {
+export function define<T, E extends Error>(
+  name: string,
+  validator: Validator<E>
+): Struct<T, null, E> {
   return new Struct({ type: name, schema: null, validator })
 }
 
@@ -193,7 +196,10 @@ export function pick<S extends ObjectSchema, K extends keyof S>(
  * @deprecated This function has been renamed to `define`.
  */
 
-export function struct<T, E extends Error>(name: string, validator: Validator<E>): Struct<T, null, E> {
+export function struct<T, E extends Error>(
+  name: string,
+  validator: Validator<E>
+): Struct<T, null, E> {
   console.warn(
     'superstruct@0.11 - The `struct` helper has been renamed to `define`.'
   )
