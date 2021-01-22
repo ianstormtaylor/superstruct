@@ -1,6 +1,7 @@
 import { Struct, Context, Validator } from '../struct'
 import { object, optional } from './types'
 import { ObjectSchema, Assign, ObjectType, PartialObjectSchema } from '../utils'
+import { Error } from '../error'
 
 /**
  * Create a new struct that combines the properties properties from multiple
@@ -62,7 +63,7 @@ export function assign(...Structs: Struct<any>[]): any {
  * Define a new struct type with a custom validation function.
  */
 
-export function define<T>(name: string, validator: Validator): Struct<T, null> {
+export function define<T, E extends Error>(name: string, validator: Validator<E>): Struct<T, null, E> {
   return new Struct({ type: name, schema: null, validator })
 }
 
@@ -192,7 +193,7 @@ export function pick<S extends ObjectSchema, K extends keyof S>(
  * @deprecated This function has been renamed to `define`.
  */
 
-export function struct<T>(name: string, validator: Validator): Struct<T, null> {
+export function struct<T, E extends Error>(name: string, validator: Validator<E>): Struct<T, null, E> {
   console.warn(
     'superstruct@0.11 - The `struct` helper has been renamed to `define`.'
   )

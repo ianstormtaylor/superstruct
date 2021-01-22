@@ -1,4 +1,4 @@
-import { Infer, Struct } from '../struct'
+import { Struct } from '../struct'
 import { define } from './utilities'
 import {
   TupleSchema,
@@ -7,14 +7,16 @@ import {
   print,
   run,
   isObject,
+  ObjectError,
 } from '../utils'
+import { ValuesErrorDetail, Error,ErrorDetail,TypeErrorDetail, ValueErrorDetail, Failure } from '../error'
 
 /**
  * Ensure that any value passes validation.
  */
 
-export function any(): Struct<any, null> {
-  return define('any', () => true)
+export function any(): Struct<any, null, never> {
+  return define('any', () => [])
 }
 
 /**
@@ -25,10 +27,10 @@ export function any(): Struct<any, null> {
  * and it is preferred to using `array(any())`.
  */
 
-export function array<T extends Struct<any>>(Element: T): Struct<Infer<T>[], T>
-export function array(): Struct<unknown[], undefined>
-export function array<T extends Struct<any>>(Element?: T): any {
-  return new Struct({
+export function array<T, E extends Error>(Element: Struct<T, unknown, E>): Struct<T[], T, E | TypeErrorDetail>
+export function array(): Struct<unknown[], undefined, Error | TypeErrorDetail>
+export function array<T, E extends Error>(Element?: Struct<T, unknown, E>): any {
+  return new Struct<T, unknown, E | TypeErrorDetail>({
     type: 'array',
     schema: Element,
     *entries(value) {
@@ -42,10 +44,12 @@ export function array<T extends Struct<any>>(Element?: T): any {
       return Array.isArray(value) ? value.slice() : value
     },
     validator(value) {
-      return (
-        Array.isArray(value) ||
-        `Expected an array value, but received: ${print(value)}`
-      )
+      return Array.isArray(value) ? [] : [{
+        class: "type",
+        except: 'array',
+        actually: value,
+        message: `Expected an array value, but received: ${print(value)}`
+      }] as TypeErrorDetail[]
     },
   })
 }
@@ -54,9 +58,13 @@ export function array<T extends Struct<any>>(Element?: T): any {
  * Ensure that a value is a boolean.
  */
 
-export function boolean(): Struct<boolean, null> {
+export function boolean(): Struct<boolean, null, TypeErrorDetail> {
   return define('boolean', (value) => {
-    return typeof value === 'boolean'
+    return typeof value === 'boolean' ? [] : [{
+      class: "type",
+      except: 'boolean',
+      actually: value,
+    }] as TypeErrorDetail[]
   })
 }
 
@@ -67,12 +75,13 @@ export function boolean(): Struct<boolean, null> {
  * which can occur when parsing a date fails but still returns a `Date`.
  */
 
-export function date(): Struct<Date, null> {
+export function date(): Struct<Date, null, TypeErrorDetail> {
   return define('date', (value) => {
-    return (
-      (value instanceof Date && !isNaN(value.getTime())) ||
-      `Expected a valid \`Date\` object, but received: ${print(value)}`
-    )
+    return (value instanceof Date && !isNaN(value.getTime())) ? [] : [{
+      class: "type",
+      except: 'date',
+      actually: value,
+    }] as TypeErrorDetail[]
   })
 }
 
@@ -85,10 +94,10 @@ export function date(): Struct<Date, null> {
 
 export function enums<T extends number>(
   values: readonly T[]
-): Struct<T, { [K in T[][number]]: K }>
+): Struct<T, { [K in T[][number]]: K }, ValuesErrorDetail<T>>
 export function enums<T extends string>(
   values: readonly T[]
-): Struct<T, { [K in T[][number]]: K }>
+): Struct<T, { [K in T[][number]]: K }, ValuesErrorDetail<T>>
 export function enums<T extends number | string>(values: readonly T[]): any {
   const schema: any = {}
   const description = values.map((v) => print(v)).join()
@@ -101,10 +110,12 @@ export function enums<T extends number | string>(values: readonly T[]): any {
     type: 'enums',
     schema,
     validator(value) {
-      return (
-        values.includes(value as any) ||
-        `Expected one of \`${description}\`, but received: ${print(value)}`
-      )
+      return values.includes(value as any) ? [] : [{
+        class: 'values',
+        except: values,
+        actually: value,
+        message: `Expected one of \`${description}\`, but received: ${print(value)}`
+      }] as ValuesErrorDetail<T>[]
     },
   })
 }
@@ -113,11 +124,15 @@ export function enums<T extends number | string>(values: readonly T[]): any {
  * Ensure that a value is a function.
  */
 
-export function func(): Struct<Function, null> {
+export function func(): Struct<Function, null, TypeErrorDetail> {
   return define('func', (value) => {
     return (
-      typeof value === 'function' ||
-      `Expected a function, but received: ${print(value)}`
+      typeof value === 'function' ? [] : [{
+        class:'type',
+        except: 'funciton',
+        actually: value,
+        message: `Expected a function, but received: ${print(value)}`
+      }] as TypeErrorDetail[]
     )
   })
 }
@@ -128,11 +143,16 @@ export function func(): Struct<Function, null> {
 
 export function instance<T extends { new (...args: any): any }>(
   Class: T
-): Struct<InstanceType<T>, null> {
+): Struct<InstanceType<T>, null, TypeErrorDetail> {
   return define('instance', (value) => {
     return (
-      value instanceof Class ||
-      `Expected a \`${Class.name}\` instance, but received: ${print(value)}`
+      value instanceof Class ? [] : [{
+        class: 'type',
+        varidator: 'instance',
+        except: Class.name,
+        actually: value,
+        message: `Expected a \`${Class.name}\` instance, but received: ${print(value)}`
+      }]
     )
   })
 }
@@ -141,11 +161,15 @@ export function instance<T extends { new (...args: any): any }>(
  * Ensure that a value is an integer.
  */
 
-export function integer(): Struct<number, null> {
+export function integer(): Struct<number, null, TypeErrorDetail> {
   return define('integer', (value) => {
     return (
-      (typeof value === 'number' && !isNaN(value) && Number.isInteger(value)) ||
-      `Expected an integer, but received: ${print(value)}`
+      (typeof value === 'number' && !isNaN(value) && Number.isInteger(value)) ? [] : [{
+        class: 'type',
+        except: 'number',
+        actually: value,
+        message: `Expected an integer, but received: ${print(value)}`,
+      }]
     )
   })
 }
@@ -154,59 +178,59 @@ export function integer(): Struct<number, null> {
  * Ensure that a value matches all of a set of types.
  */
 
-export function intersection<A>(Structs: TupleSchema<[A]>): Struct<A, null>
+export function intersection<A>(Structs: TupleSchema<[A]>): Struct<A, null, Error> // todo
 export function intersection<A, B>(
   Structs: TupleSchema<[A, B]>
-): Struct<A & B, null>
+): Struct<A & B, null, Error>
 export function intersection<A, B, C>(
   Structs: TupleSchema<[A, B, C]>
-): Struct<A & B & C, null>
+): Struct<A & B & C, null, Error>
 export function intersection<A, B, C, D>(
   Structs: TupleSchema<[A, B, C, D]>
-): Struct<A & B & C & D, null>
+): Struct<A & B & C & D, null, Error>
 export function intersection<A, B, C, D, E>(
   Structs: TupleSchema<[A, B, C, D, E]>
-): Struct<A & B & C & D & E, null>
+): Struct<A & B & C & D & E, null, Error>
 export function intersection<A, B, C, D, E, F>(
   Structs: TupleSchema<[A, B, C, D, E, F]>
-): Struct<A & B & C & D & E & F, null>
+): Struct<A & B & C & D & E & F, null, Error>
 export function intersection<A, B, C, D, E, F, G>(
   Structs: TupleSchema<[A, B, C, D, E, F, G]>
-): Struct<A & B & C & D & E & F & G, null>
+): Struct<A & B & C & D & E & F & G, null, Error>
 export function intersection<A, B, C, D, E, F, G, H>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H]>
-): Struct<A & B & C & D & E & F & G & H, null>
+): Struct<A & B & C & D & E & F & G & H, null, Error>
 export function intersection<A, B, C, D, E, F, G, H, I>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H, I]>
-): Struct<A & B & C & D & E & F & G & H & I, null>
+): Struct<A & B & C & D & E & F & G & H & I, null, Error>
 export function intersection<A, B, C, D, E, F, G, H, I, J>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J]>
-): Struct<A & B & C & D & E & F & G & H & I & J, null>
+): Struct<A & B & C & D & E & F & G & H & I & J, null, Error>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K, null>
+): Struct<A & B & C & D & E & F & G & H & I & J & K, null, Error>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L, null>
+): Struct<A & B & C & D & E & F & G & H & I & J & K & L, null, Error>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M, null>
+): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M, null, Error>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N, null>
+): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N, null, Error>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O, null>
+): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O, null, Error>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
-): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P, null>
+): Struct<A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P, null, Error>
 export function intersection<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
   Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
 ): Struct<
   A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q,
-  null
+  null, Error
 >
-export function intersection(Structs: Array<Struct<any, any>>): any {
+export function intersection(Structs: Array<Struct<any, any, Error>>): any {
   return new Struct({
     type: 'intersection',
     schema: null,
@@ -232,16 +256,20 @@ export function intersection(Structs: Array<Struct<any, any>>): any {
  * Ensure that a value is an exact value, using `===` for comparison.
  */
 
-export function literal<T extends boolean>(constant: T): Struct<T, null>
-export function literal<T extends number>(constant: T): Struct<T, null>
-export function literal<T extends string>(constant: T): Struct<T, null>
-export function literal<T>(constant: T): Struct<T, null>
+export function literal<T extends boolean>(constant: T): Struct<T, null, ValueErrorDetail<T>>
+export function literal<T extends number>(constant: T): Struct<T, null, ValueErrorDetail<T>>
+export function literal<T extends string>(constant: T): Struct<T, null, ValueErrorDetail<T>>
+export function literal<T>(constant: T): Struct<T, null, ValueErrorDetail<T>>
 export function literal<T>(constant: T): any {
   const description = print(constant)
   return define('literal', (value) => {
     return (
-      value === constant ||
-      `Expected the literal \`${description}\`, but received: ${print(value)}`
+      value === constant ? [] : [{
+        class: 'value',
+        except: constant,
+        actually: value,
+        message: `Expected the literal \`${description}\`, but received: ${print(value)}`,
+      }] as ValueErrorDetail<T>[]
     )
   })
 }
@@ -251,12 +279,12 @@ export function literal<T>(constant: T): any {
  * specific types.
  */
 
-export function map(): Struct<Map<unknown, unknown>, null>
-export function map<K, V>(
-  Key: Struct<K>,
-  Value: Struct<V>
-): Struct<Map<K, V>, null>
-export function map<K, V>(Key?: Struct<K>, Value?: Struct<V>): any {
+export function map(): Struct<Map<unknown, unknown>, null, TypeErrorDetail>
+export function map<K, V, KE extends Error, VE extends Error>(
+  Key: Struct<K, unknown, KE>,
+  Value: Struct<V, unknown, VE>
+): Struct<Map<K, V>, null, TypeErrorDetail | KE | VE>
+export function map<K, V>(Key?: Struct<K, unknown, any>, Value?: Struct<V, unknown, any>): any {
   return new Struct({
     type: 'map',
     schema: null,
@@ -273,8 +301,12 @@ export function map<K, V>(Key?: Struct<K>, Value?: Struct<V>): any {
     },
     validator(value) {
       return (
-        value instanceof Map ||
-        `Expected a \`Map\` object, but received: ${print(value)}`
+        value instanceof Map ? [] : [{
+          class: 'type',
+          except: 'Map',
+          actually: value,
+          message: `Expected a \`Map\` object, but received: ${print(value)}`,
+        }] as TypeErrorDetail[]
       )
     },
   })
@@ -284,19 +316,23 @@ export function map<K, V>(Key?: Struct<K>, Value?: Struct<V>): any {
  * Ensure that no value ever passes validation.
  */
 
-export function never(): Struct<never, null> {
-  return define('never', () => false)
+export function never(): Struct<never, null, TypeErrorDetail> {
+  return define('never', value => [{
+    class: 'type',
+    except: 'never',
+    actually: value
+  }] as TypeErrorDetail[])
 }
 
 /**
  * Augment an existing struct to allow `null` values.
  */
 
-export function nullable<T, S>(struct: Struct<T, S>): Struct<T | null, S> {
+export function nullable<T, S, E extends ErrorDetail>(struct: Struct<T, S, E>): Struct<T | null, S, E> {
   return new Struct({
     ...struct,
-    validator: (value, ctx) => value === null || struct.validator(value, ctx),
-    refiner: (value, ctx) => value === null || struct.refiner(value, ctx),
+    validator: (value, ctx) => value === null ? [] : struct.validator(value, ctx),
+    refiner: (value, ctx) => value === null ? [] : struct.refiner(value, ctx),
   })
 }
 
@@ -304,11 +340,15 @@ export function nullable<T, S>(struct: Struct<T, S>): Struct<T | null, S> {
  * Ensure that a value is a number.
  */
 
-export function number(): Struct<number, null> {
+export function number(): Struct<number, null, TypeErrorDetail> {
   return define('number', (value) => {
     return (
-      (typeof value === 'number' && !isNaN(value)) ||
-      `Expected a number, but received: ${print(value)}`
+      (typeof value === 'number' && !isNaN(value)) ? [] : [{
+        class: 'type',
+        except: 'number',
+        actually: value,
+        message: `Expected a number, but received: ${print(value)}`,
+      }] as TypeErrorDetail[]
     )
   })
 }
@@ -320,14 +360,14 @@ export function number(): Struct<number, null> {
  * Note: Unrecognized properties will fail validation.
  */
 
-export function object(): Struct<Record<string, unknown>, null>
+export function object(): Struct<Record<string, unknown>, null, Error>
 export function object<S extends ObjectSchema>(
   schema: S
-): Struct<ObjectType<S>, S>
+): Struct<ObjectType<S>, S, ObjectError<S> | TypeErrorDetail>
 export function object<S extends ObjectSchema>(schema?: S): any {
   const knowns = schema ? Object.keys(schema) : []
   const Never = never()
-  return new Struct({
+  return new Struct<ObjectType<S>, S | null, ObjectError<S> | TypeErrorDetail>({
     type: 'object',
     schema: schema ? schema : null,
     *entries(value) {
@@ -346,7 +386,12 @@ export function object<S extends ObjectSchema>(schema?: S): any {
     },
     validator(value) {
       return (
-        isObject(value) || `Expected an object, but received: ${print(value)}`
+        isObject(value) ? [] : [{
+          class: 'type',
+          except: 'object',
+          actually: value,
+          message: `Expected an object, but received: ${print(value)}`
+        }] as TypeErrorDetail[]
       )
     },
     coercer(value) {
@@ -359,12 +404,12 @@ export function object<S extends ObjectSchema>(schema?: S): any {
  * Augment a struct to allow `undefined` values.
  */
 
-export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
+export function optional<T, S, E extends Error>(struct: Struct<T, S, E>): Struct<T | undefined, S, E> {
   return new Struct({
     ...struct,
     validator: (value, ctx) =>
-      value === undefined || struct.validator(value, ctx),
-    refiner: (value, ctx) => value === undefined || struct.refiner(value, ctx),
+      value === undefined ? [] : struct.validator(value, ctx),
+    refiner: (value, ctx) => value === undefined ? [] : struct.refiner(value, ctx),
   })
 }
 
@@ -375,11 +420,11 @@ export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
  * Like TypeScript's `Record` utility.
  */
 
-export function record<K extends string, V>(
-  Key: Struct<K>,
-  Value: Struct<V>
-): Struct<Record<K, V>, null> {
-  return new Struct({
+export function record<K extends string, V, KE extends Error, VE extends Error>(
+  Key: Struct<K, unknown, KE>,
+  Value: Struct<V, unknown, VE>
+): Struct<Record<K, V>, null, KE | VE | TypeErrorDetail> {
+  return new Struct<Record<K, V>, null, KE | VE | TypeErrorDetail>({
     type: 'record',
     schema: null,
     *entries(value) {
@@ -393,7 +438,12 @@ export function record<K extends string, V>(
     },
     validator(value) {
       return (
-        isObject(value) || `Expected an object, but received: ${print(value)}`
+        isObject(value) ? [] : [{
+          class: 'type',
+          except: 'object',
+          actually: value,
+          message: `Expected an object, but received: ${print(value)}`
+        }] as TypeErrorDetail[]
       )
     },
   })
@@ -406,9 +456,13 @@ export function record<K extends string, V>(
  * you need to use the `pattern()` refinement.
  */
 
-export function regexp(): Struct<RegExp, null> {
+export function regexp(): Struct<RegExp, null, TypeErrorDetail> {
   return define('regexp', (value) => {
-    return value instanceof RegExp
+    return value instanceof RegExp ? [] : [{
+      class: 'type',
+      except:'regexp',
+      actually:value,
+    }] as TypeErrorDetail[]
   })
 }
 
@@ -417,10 +471,10 @@ export function regexp(): Struct<RegExp, null> {
  * specific type.
  */
 
-export function set(): Struct<Set<unknown>, null>
-export function set<T>(Element: Struct<T>): Struct<Set<T>, null>
-export function set<T>(Element?: Struct<T>): any {
-  return new Struct({
+export function set(): Struct<Set<unknown>, null, Error>
+export function set<T, E extends ErrorDetail>(Element: Struct<T, unknown, E>): Struct<Set<T>, null, E | TypeErrorDetail>
+export function set<T, E extends ErrorDetail>(Element?: Struct<T, unknown, E>): any {
+  return new Struct<T, unknown, E | TypeErrorDetail>({
     type: 'set',
     schema: null,
     *entries(value) {
@@ -435,8 +489,12 @@ export function set<T>(Element?: Struct<T>): any {
     },
     validator(value) {
       return (
-        value instanceof Set ||
-        `Expected a \`Set\` object, but received: ${print(value)}`
+        value instanceof Set ? [] : [{
+          class: 'type',
+          except: 'Set',
+          actually: value,
+          message: `Expected a \`Set\` object, but received: ${print(value)}`
+        }] as TypeErrorDetail[]
       )
     },
   })
@@ -446,11 +504,15 @@ export function set<T>(Element?: Struct<T>): any {
  * Ensure that a value is a string.
  */
 
-export function string(): Struct<string, null> {
+export function string(): Struct<string, null, TypeErrorDetail> {
   return define('string', (value) => {
     return (
-      typeof value === 'string' ||
-      `Expected a string, but received: ${print(value)}`
+      typeof value === 'string' ? [] : [{
+        class: 'type',
+        except: 'string',
+        actually: value,
+        message: `Expected a string, but received: ${print(value)}`
+      }] as TypeErrorDetail[]
     )
   })
 }
@@ -459,55 +521,69 @@ export function string(): Struct<string, null> {
  * Ensure that a value is a tuple of a specific length, and that each of its
  * elements is of a specific type.
  */
-
-export function tuple<A>(Structs: TupleSchema<[A]>): Struct<[A], null>
-export function tuple<A, B>(Structs: TupleSchema<[A, B]>): Struct<[A, B], null>
-export function tuple<A, B, C>(
-  Structs: TupleSchema<[A, B, C]>
-): Struct<[A, B, C], null>
-export function tuple<A, B, C, D>(
-  Structs: TupleSchema<[A, B, C, D]>
-): Struct<[A, B, C, D], null>
-export function tuple<A, B, C, D, E>(
-  Structs: TupleSchema<[A, B, C, D, E]>
-): Struct<[A, B, C, D, E], null>
-export function tuple<A, B, C, D, E, F>(
-  Structs: TupleSchema<[A, B, C, D, E, F]>
-): Struct<[A, B, C, D, E, F], null>
-export function tuple<A, B, C, D, E, F, G>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G]>
-): Struct<[A, B, C, D, E, F, G], null>
-export function tuple<A, B, C, D, E, F, G, H>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H]>
-): Struct<[A, B, C, D, E, F, G, H], null>
-export function tuple<A, B, C, D, E, F, G, H, I>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I]>
-): Struct<[A, B, C, D, E, F, G, H, I], null>
-export function tuple<A, B, C, D, E, F, G, H, I, J>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J]>
-): Struct<[A, B, C, D, E, F, G, H, I, J], null>
-export function tuple<A, B, C, D, E, F, G, H, I, J, K>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K]>
-): Struct<[A, B, C, D, E, F, G, H, I, J, K], null>
-export function tuple<A, B, C, D, E, F, G, H, I, J, K, L>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L]>
-): Struct<[A, B, C, D, E, F, G, H, I, J, K, L], null>
-export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
-): Struct<[A, B, C, D, E, F, G, H, I, J, K, L, M], null>
-export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
-): Struct<[A, B, C, D, E, F, G, H, I, J, K, L, M, N], null>
-export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
-): Struct<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O], null>
-export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
-): Struct<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P], null>
-export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
-): Struct<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q], null>
-export function tuple(Elements: Struct<any>[]): any {
+export function tuple<A, AE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>]
+): Struct<[A], null, AE>
+export function tuple<A, B, AE extends ErrorDetail, BE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>]
+): Struct<[A | B], null, AE | BE>
+export function tuple<A, B, C, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>]
+): Struct<[A | B | C], null, AE | BE | CE>
+export function tuple<A, B, C, D, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>]
+): Struct<[A | B | C | D], null, AE | BE | CE | DE>
+export function tuple<A, B, C, D, E, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>]
+): Struct<[A | B | C | D | E], null, AE | BE | CE | DE | EE>
+export function tuple<A, B, C, D, E, F, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>]
+): Struct<[A | B | C | D | E | F], null, AE | BE | CE | DE | EE | FE>
+export function tuple<A, B, C, D, E, F, G, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>]
+): Struct<[A | B | C | D | E | F | G], null, AE | BE | CE | DE | EE | FE | GE>
+export function tuple<A, B, C, D, E, F, G, H, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>]
+): Struct<[A | B | C | D | E | F | G | H], null, AE | BE | CE | DE | EE | FE | GE | HE>
+export function tuple<A, B, C, D, E, F, G, H, I, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>]
+): Struct<[A | B | C | D | E | F | G | H | I], null, AE | BE | CE | DE | EE | FE | GE | HE | IE>
+export function tuple<A, B, C, D, E, F, G, H, I, J, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE>
+export function tuple<A, B, C, D, E, F, G, H, I, J, K, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE>
+export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE>
+export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail, ME extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>, Struct<M, unknown, ME>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L | M], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME>
+export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail, ME extends ErrorDetail, NE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>, Struct<M, unknown, ME>, Struct<N, unknown, NE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L | M | N], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE>
+export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail, ME extends ErrorDetail, NE extends ErrorDetail, OE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>, Struct<M, unknown, ME>, Struct<N, unknown, NE>, Struct<O, unknown, OE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L | M | N | O], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE>
+export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail, ME extends ErrorDetail, NE extends ErrorDetail, OE extends ErrorDetail, PE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>, Struct<M, unknown, ME>, Struct<N, unknown, NE>, Struct<O, unknown, OE>, Struct<P, unknown, PE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE | PE>
+export function tuple<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail, ME extends ErrorDetail, NE extends ErrorDetail, OE extends ErrorDetail, PE extends ErrorDetail, QE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>, Struct<M, unknown, ME>, Struct<N, unknown, NE>, Struct<O, unknown, OE>, Struct<P, unknown, PE>, Struct<Q, unknown, QE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE | PE | QE>
+/*
+// generate script
+var keys = 'A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q'.split(',').map(s=>s.trim());
+keys.map((v,i) => {
+  const types = keys.slice(0, i+1);
+  const errors = types.map(t => `${t}E extends ErrorDetail`);
+  return `export function tuple<${types.join(', ')}, ${errors.join(', ')}>(
+  Structs: [${types.map(t => `Struct<${t}, unknown, ${t}E>`).join(', ')}]
+): Struct<[${types.join(' | ')}], null, ${types.map(t => t+'E').join(' | ')}>`;
+}).join('\n')
+*/
+export function tuple(Elements: Struct<any, any, any>[]): any {
   const Never = never()
 
   return new Struct({
@@ -524,8 +600,12 @@ export function tuple(Elements: Struct<any>[]): any {
     },
     validator(value) {
       return (
-        Array.isArray(value) ||
-        `Expected an array, but received: ${print(value)}`
+        Array.isArray(value) ? [] : [{
+          class: 'type',
+          except: 'array',
+          actually: value,
+          message: `Expected an array, but received: ${print(value)}`
+        }] as TypeErrorDetail[]
       )
     },
   })
@@ -540,7 +620,7 @@ export function tuple(Elements: Struct<any>[]): any {
 
 export function type<S extends ObjectSchema>(
   schema: S
-): Struct<ObjectType<S>, S> {
+): Struct<ObjectType<S>, S, ObjectError<S> | TypeErrorDetail> {
   const keys = Object.keys(schema)
   return new Struct({
     type: 'type',
@@ -554,7 +634,12 @@ export function type<S extends ObjectSchema>(
     },
     validator(value) {
       return (
-        isObject(value) || `Expected an object, but received: ${print(value)}`
+        isObject(value) ? [] : [{
+          class: 'type',
+          except:'object',
+          actually: value,
+          message: `Expected an object, but received: ${print(value)}`,
+        }] as TypeErrorDetail[]
       )
     },
   })
@@ -563,58 +648,69 @@ export function type<S extends ObjectSchema>(
 /**
  * Ensure that a value matches one of a set of types.
  */
-
-export function union<A>(Structs: TupleSchema<[A]>): Struct<A, null>
-export function union<A, B>(Structs: TupleSchema<[A, B]>): Struct<A | B, null>
-export function union<A, B, C>(
-  Structs: TupleSchema<[A, B, C]>
-): Struct<A | B | C, null>
-export function union<A, B, C, D>(
-  Structs: TupleSchema<[A, B, C, D]>
-): Struct<A | B | C | D, null>
-export function union<A, B, C, D, E>(
-  Structs: TupleSchema<[A, B, C, D, E]>
-): Struct<A | B | C | D | E, null>
-export function union<A, B, C, D, E, F>(
-  Structs: TupleSchema<[A, B, C, D, E, F]>
-): Struct<A | B | C | D | E | F, null>
-export function union<A, B, C, D, E, F, G>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G]>
-): Struct<A | B | C | D | E | F | G, null>
-export function union<A, B, C, D, E, F, G, H>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H]>
-): Struct<A | B | C | D | E | F | G | H, null>
-export function union<A, B, C, D, E, F, G, H, I>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I]>
-): Struct<A | B | C | D | E | F | G | H | I, null>
-export function union<A, B, C, D, E, F, G, H, I, J>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J]>
-): Struct<A | B | C | D | E | F | G | H | I | J, null>
-export function union<A, B, C, D, E, F, G, H, I, J, K>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K]>
-): Struct<A | B | C | D | E | F | G | H | I | J | K, null>
-export function union<A, B, C, D, E, F, G, H, I, J, K, L>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L]>
-): Struct<A | B | C | D | E | F | G | H | I | J | K | L, null>
-export function union<A, B, C, D, E, F, G, H, I, J, K, L, M>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M]>
-): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M, null>
-export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N]>
-): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N, null>
-export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]>
-): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N | O, null>
-export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]>
-): Struct<A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P, null>
-export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
-  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]>
-): Struct<
-  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q,
-  null
->
-export function union(Structs: Struct<any>[]): any {
+export function union<A, AE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>]
+): Struct<[A], null, AE>
+export function union<A, B, AE extends ErrorDetail, BE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>]
+): Struct<[A | B], null, AE | BE>
+export function union<A, B, C, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>]
+): Struct<[A | B | C], null, AE | BE | CE>
+export function union<A, B, C, D, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>]
+): Struct<[A | B | C | D], null, AE | BE | CE | DE>
+export function union<A, B, C, D, E, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>]
+): Struct<[A | B | C | D | E], null, AE | BE | CE | DE | EE>
+export function union<A, B, C, D, E, F, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>]
+): Struct<[A | B | C | D | E | F], null, AE | BE | CE | DE | EE | FE>
+export function union<A, B, C, D, E, F, G, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>]
+): Struct<[A | B | C | D | E | F | G], null, AE | BE | CE | DE | EE | FE | GE>
+export function union<A, B, C, D, E, F, G, H, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>]
+): Struct<[A | B | C | D | E | F | G | H], null, AE | BE | CE | DE | EE | FE | GE | HE>
+export function union<A, B, C, D, E, F, G, H, I, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>]
+): Struct<[A | B | C | D | E | F | G | H | I], null, AE | BE | CE | DE | EE | FE | GE | HE | IE>
+export function union<A, B, C, D, E, F, G, H, I, J, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE>
+export function union<A, B, C, D, E, F, G, H, I, J, K, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE>
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE>
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail, ME extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>, Struct<M, unknown, ME>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L | M], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME>
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail, ME extends ErrorDetail, NE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>, Struct<M, unknown, ME>, Struct<N, unknown, NE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L | M | N], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE>
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail, ME extends ErrorDetail, NE extends ErrorDetail, OE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>, Struct<M, unknown, ME>, Struct<N, unknown, NE>, Struct<O, unknown, OE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L | M | N | O], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE>
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail, ME extends ErrorDetail, NE extends ErrorDetail, OE extends ErrorDetail, PE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>, Struct<M, unknown, ME>, Struct<N, unknown, NE>, Struct<O, unknown, OE>, Struct<P, unknown, PE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE | PE>
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, AE extends ErrorDetail, BE extends ErrorDetail, CE extends ErrorDetail, DE extends ErrorDetail, EE extends ErrorDetail, FE extends ErrorDetail, GE extends ErrorDetail, HE extends ErrorDetail, IE extends ErrorDetail, JE extends ErrorDetail, KE extends ErrorDetail, LE extends ErrorDetail, ME extends ErrorDetail, NE extends ErrorDetail, OE extends ErrorDetail, PE extends ErrorDetail, QE extends ErrorDetail>(
+  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>, Struct<C, unknown, CE>, Struct<D, unknown, DE>, Struct<E, unknown, EE>, Struct<F, unknown, FE>, Struct<G, unknown, GE>, Struct<H, unknown, HE>, Struct<I, unknown, IE>, Struct<J, unknown, JE>, Struct<K, unknown, KE>, Struct<L, unknown, LE>, Struct<M, unknown, ME>, Struct<N, unknown, NE>, Struct<O, unknown, OE>, Struct<P, unknown, PE>, Struct<Q, unknown, QE>]
+): Struct<[A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q], null, AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE | PE | QE>
+/*
+// generate script
+var keys = 'A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q'.split(',').map(s=>s.trim());
+keys.map((v,i) => {
+  const types = keys.slice(0, i+1);
+  const errors = types.map(t => `${t}E extends ErrorDetail`);
+  return `export function union<${types.join(', ')}, ${errors.join(', ')}>(
+  Structs: [${types.map(t => `Struct<${t}, unknown, ${t}E>`).join(', ')}]
+): Struct<[${types.join(' | ')}], null, ${types.map(t => t+'E').join(' | ')}>`;
+}).join('\n')
+*/
+export function union(Structs: Struct<any, any, any>[]): any {
   const description = Structs.map((s) => s.type).join(' | ')
   return new Struct({
     type: 'union',
@@ -637,12 +733,25 @@ export function union(Structs: Struct<any>[]): any {
         }
       }
 
-      return [
-        `Expected the value to satisfy a union of \`${description}\`, but received: ${print(
-          value
-        )}`,
-        ...failures,
-      ]
+      const message = `Expected the value to satisfy a union of \`${description}\`, but received: ${print(
+        value
+      )}`;
+      return [{
+          value: value,
+          key: ctx.path[ctx.path.length - 1],
+          type: 'union',
+          refinement: undefined,
+          message,
+          branch: ctx.branch,
+          path: ctx.path,
+          detail: {
+            class: 'type',
+            except: description,
+            actually: value,
+            message
+          } as TypeErrorDetail,
+          failures,
+      }]
     },
   })
 }
@@ -651,6 +760,6 @@ export function union(Structs: Struct<any>[]): any {
  * Ensure that any value passes validation, without widening its type to `any`.
  */
 
-export function unknown(): Struct<unknown, null> {
-  return define('unknown', () => true)
+export function unknown(): Struct<unknown, null, never> {
+  return define('unknown', () => [])
 }

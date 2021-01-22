@@ -1,11 +1,12 @@
-import { Struct, Infer, Result, Context, Describe } from './struct'
-import { Failure } from './error'
+import { Struct, Infer, Result, Context, Describe, DescribedResult } from './struct'
+import { BasicErrorDetail, Error, ErrorDetail, Failure, StructError } from './error'
+import { string } from './structs/types'
 
 /**
  * Check if a value is an iterator.
  */
 
-function isIterable<T>(x: unknown): x is Iterable<T> {
+export function isIterable<T>(x: unknown): x is Iterable<T> {
   return isObject(x) && typeof x[Symbol.iterator] === 'function'
 }
 
@@ -52,38 +53,36 @@ export function shiftIterator<T>(input: Iterator<T>): T | undefined {
  * Convert a single validation result to a failure.
  */
 
-export function toFailure<T, S>(
-  result: string | boolean | Partial<Failure>,
+export function toFailure<T, S, E extends ErrorDetail>(
+  result: DescribedResult<E>,
   context: Context,
-  struct: Struct<T, S>,
+  struct: Struct<T, S, any>,
   value: any
-): Failure | undefined {
-  if (result === true) {
-    return
-  } else if (result === false) {
-    result = {}
-  } else if (typeof result === 'string') {
-    result = { message: result }
+): Failure<E> {
+  if(!('class' in result)) {
+    return result
   }
+
+  let { message } = result;
 
   const { path, branch } = context
   const { type } = struct
-  const {
-    refinement,
-    message = `Expected a value of type \`${type}\`${
-      refinement ? ` with refinement \`${refinement}\`` : ''
-    }, but received: \`${print(value)}\``,
-  } = result
+
+  if (message === undefined) {
+    message = `Expected a value of type \`${type}\, but received: \`${print(value)}\``
+    result.message = message;
+  }
 
   return {
     value,
     type,
-    refinement,
+    refinement: undefined,
     key: path[path.length - 1],
     path,
     branch,
-    ...result,
     message,
+    detail: result,
+    failures: [],
   }
 }
 
@@ -91,22 +90,18 @@ export function toFailure<T, S>(
  * Convert a validation result to an iterable of failures.
  */
 
-export function* toFailures<T, S>(
-  result: Result,
+export function* toFailures<T, S, E extends ErrorDetail>(
+  result: Result<E>,
   context: Context,
-  struct: Struct<T, S>,
+  struct: Struct<T, S, E>,
   value: any
-): IterableIterator<Failure> {
+): IterableIterator<Failure<E>> {
   if (!isIterable(result)) {
     result = [result]
   }
 
   for (const r of result) {
-    const failure = toFailure(r, context, struct, value)
-
-    if (failure) {
-      yield failure
-    }
+    yield toFailure<T,S,E>(r, context, struct, value)
   }
 }
 
@@ -115,15 +110,15 @@ export function* toFailures<T, S>(
  * returning an iterator of failures or success.
  */
 
-export function* run<T, S>(
+export function* run<T, S, E extends Error>(
   value: unknown,
-  struct: Struct<T, S>,
+  struct: Struct<T, S, E>,
   options: {
     path?: any[]
     branch?: any[]
     coerce?: boolean
   } = {}
-): IterableIterator<[Failure, undefined] | [undefined, T]> {
+): IterableIterator<[Failure<E>, undefined] | [undefined, T]> {
   const { path = [], branch = [value], coerce = false } = options
   const ctx: Context = { path, branch }
 
@@ -139,7 +134,7 @@ export function* run<T, S>(
   }
 
   for (let [k, v, s] of struct.entries(value, ctx)) {
-    const ts = run(v, s as Struct, {
+    const ts = run(v, s as Struct<unknown, unknown, E>, {
       path: k === undefined ? path : [...path, k],
       branch: k === undefined ? branch : [...branch, v],
       coerce,
@@ -256,7 +251,7 @@ export type Assign<T, U> = Simplify<U & Omit<T, keyof U>>
  * A schema for object structs.
  */
 
-export type ObjectSchema = Record<string, Struct<any, any>>
+export type ObjectSchema = Record<string, Struct<any, any, any>>
 
 /**
  * Infer a type from an object struct schema.
@@ -265,6 +260,14 @@ export type ObjectSchema = Record<string, Struct<any, any>>
 export type ObjectType<S extends ObjectSchema> = Simplify<
   Optionalize<{ [K in keyof S]: Infer<S[K]> }>
 >
+
+/**
+ * Extract error types from an object struct schema.
+ */
+
+export type ObjectError<S extends ObjectSchema> = {
+  [K in keyof S]: S[K]
+} extends Record<any, Struct<any, any, infer E>> ? E : never
 
 /**
  * Transform an object schema type to represent a partial.
@@ -324,4 +327,4 @@ export type EnumSchema<T extends string> = { [K in T]: K }
  * A schema for tuple structs.
  */
 
-export type TupleSchema<T> = { [K in keyof T]: Struct<T[K]> }
+export type TupleSchema<T> = { [K in keyof T]: Struct<T[K], unknown, any> }
