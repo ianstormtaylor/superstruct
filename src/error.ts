@@ -19,10 +19,9 @@ export interface ErrorDetail {
   class: string
   message?: string
 }
-export interface BasicErrorDetail extends ErrorDetail {
-  class: 'basic'
-  except: string
-  actually: string
+export interface GenericErrorDetail extends ErrorDetail {
+  class: 'generic'
+  message: string
 }
 
 export interface TypeErrorDetail extends ErrorDetail {

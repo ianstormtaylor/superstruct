@@ -1,6 +1,6 @@
 /* eslint-disable no-redeclare */
 
-import { Struct } from '../struct'
+import { Infer, Struct } from '../struct'
 import { define } from './utilities'
 import {
   TupleSchema,
@@ -35,10 +35,10 @@ export function any(): Struct<any, null, never> {
  * and it is preferred to using `array(any())`.
  */
 
-export function array<T, E extends Error>(
-  Element: Struct<T, unknown, E>
-): Struct<T[], T, E | TypeErrorDetail>
-export function array(): Struct<unknown[], undefined, Error | TypeErrorDetail>
+export function array<E extends ErrorDetail, T extends Struct<any, any, E>>(
+  Element: T
+): Struct<Infer<T>[], T, E>
+export function array(): Struct<unknown[], undefined, any>
 export function array<T, E extends Error>(
   Element?: Struct<T, unknown, E>
 ): any {
@@ -632,7 +632,7 @@ export function tuple<A, AE extends ErrorDetail>(
 ): Struct<[A], null, AE>
 export function tuple<A, B, AE extends ErrorDetail, BE extends ErrorDetail>(
   Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>]
-): Struct<[A | B], null, AE | BE>
+): Struct<[A, B], null, AE | BE>
 export function tuple<
   A,
   B,
@@ -646,7 +646,7 @@ export function tuple<
     Struct<B, unknown, BE>,
     Struct<C, unknown, CE>
   ]
-): Struct<[A | B | C], null, AE | BE | CE>
+): Struct<[A, B, C], null, AE | BE | CE>
 export function tuple<
   A,
   B,
@@ -663,7 +663,7 @@ export function tuple<
     Struct<C, unknown, CE>,
     Struct<D, unknown, DE>
   ]
-): Struct<[A | B | C | D], null, AE | BE | CE | DE>
+): Struct<[A, B, C, D], null, AE | BE | CE | DE>
 export function tuple<
   A,
   B,
@@ -683,7 +683,7 @@ export function tuple<
     Struct<D, unknown, DE>,
     Struct<E, unknown, EE>
   ]
-): Struct<[A | B | C | D | E], null, AE | BE | CE | DE | EE>
+): Struct<[A, B, C, D, E], null, AE | BE | CE | DE | EE>
 export function tuple<
   A,
   B,
@@ -706,7 +706,7 @@ export function tuple<
     Struct<E, unknown, EE>,
     Struct<F, unknown, FE>
   ]
-): Struct<[A | B | C | D | E | F], null, AE | BE | CE | DE | EE | FE>
+): Struct<[A, B, C, D, E, F], null, AE | BE | CE | DE | EE | FE>
 export function tuple<
   A,
   B,
@@ -732,7 +732,7 @@ export function tuple<
     Struct<F, unknown, FE>,
     Struct<G, unknown, GE>
   ]
-): Struct<[A | B | C | D | E | F | G], null, AE | BE | CE | DE | EE | FE | GE>
+): Struct<[A, B, C, D, E, F, G], null, AE | BE | CE | DE | EE | FE | GE>
 export function tuple<
   A,
   B,
@@ -761,11 +761,7 @@ export function tuple<
     Struct<G, unknown, GE>,
     Struct<H, unknown, HE>
   ]
-): Struct<
-  [A | B | C | D | E | F | G | H],
-  null,
-  AE | BE | CE | DE | EE | FE | GE | HE
->
+): Struct<[A, B, C, D, E, F, G, H], null, AE | BE | CE | DE | EE | FE | GE | HE>
 export function tuple<
   A,
   B,
@@ -798,7 +794,7 @@ export function tuple<
     Struct<I, unknown, IE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I],
+  [A, B, C, D, E, F, G, H, I],
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE
 >
@@ -837,7 +833,7 @@ export function tuple<
     Struct<J, unknown, JE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J],
+  [A, B, C, D, E, F, G, H, I, J],
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE
 >
@@ -879,7 +875,7 @@ export function tuple<
     Struct<K, unknown, KE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K],
+  [A, B, C, D, E, F, G, H, I, J, K],
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE
 >
@@ -924,7 +920,7 @@ export function tuple<
     Struct<L, unknown, LE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L],
+  [A, B, C, D, E, F, G, H, I, J, K, L],
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE
 >
@@ -972,7 +968,7 @@ export function tuple<
     Struct<M, unknown, ME>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L | M],
+  [A, B, C, D, E, F, G, H, I, J, K, L, M],
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME
 >
@@ -1023,7 +1019,7 @@ export function tuple<
     Struct<N, unknown, NE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L | M | N],
+  [A, B, C, D, E, F, G, H, I, J, K, L, M, N],
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE
 >
@@ -1077,7 +1073,7 @@ export function tuple<
     Struct<O, unknown, OE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L | M | N | O],
+  [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O],
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE
 >
@@ -1134,7 +1130,7 @@ export function tuple<
     Struct<P, unknown, PE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P],
+  [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P],
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE | PE
 >
@@ -1194,7 +1190,7 @@ export function tuple<
     Struct<Q, unknown, QE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q],
+  [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q],
   null,
   | AE
   | BE
@@ -1222,7 +1218,7 @@ keys.map((v,i) => {
   const errors = types.map(t => `${t}E extends ErrorDetail`);
   return `export function tuple<${types.join(', ')}, ${errors.join(', ')}>(
   Structs: [${types.map(t => `Struct<${t}, unknown, ${t}E>`).join(', ')}]
-): Struct<[${types.join(' | ')}], null, ${types.map(t => t+'E').join(' | ')}>`;
+): Struct<[${types.join(', ')}], null, ${types.map(t => t+'E').join(' | ')}>`;
 }).join('\n')
 */
 export function tuple(Elements: Struct<any, any, any>[]): any {
@@ -1298,10 +1294,10 @@ export function type<S extends ObjectSchema>(
  */
 export function union<A, AE extends ErrorDetail>(
   Structs: [Struct<A, unknown, AE>]
-): Struct<[A], null, AE>
+): Struct<A, null, AE>
 export function union<A, B, AE extends ErrorDetail, BE extends ErrorDetail>(
   Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>]
-): Struct<[A | B], null, AE | BE>
+): Struct<A | B, null, AE | BE>
 export function union<
   A,
   B,
@@ -1315,7 +1311,7 @@ export function union<
     Struct<B, unknown, BE>,
     Struct<C, unknown, CE>
   ]
-): Struct<[A | B | C], null, AE | BE | CE>
+): Struct<A | B | C, null, AE | BE | CE>
 export function union<
   A,
   B,
@@ -1332,7 +1328,7 @@ export function union<
     Struct<C, unknown, CE>,
     Struct<D, unknown, DE>
   ]
-): Struct<[A | B | C | D], null, AE | BE | CE | DE>
+): Struct<A | B | C | D, null, AE | BE | CE | DE>
 export function union<
   A,
   B,
@@ -1352,7 +1348,7 @@ export function union<
     Struct<D, unknown, DE>,
     Struct<E, unknown, EE>
   ]
-): Struct<[A | B | C | D | E], null, AE | BE | CE | DE | EE>
+): Struct<A | B | C | D | E, null, AE | BE | CE | DE | EE>
 export function union<
   A,
   B,
@@ -1375,7 +1371,7 @@ export function union<
     Struct<E, unknown, EE>,
     Struct<F, unknown, FE>
   ]
-): Struct<[A | B | C | D | E | F], null, AE | BE | CE | DE | EE | FE>
+): Struct<A | B | C | D | E | F, null, AE | BE | CE | DE | EE | FE>
 export function union<
   A,
   B,
@@ -1401,7 +1397,7 @@ export function union<
     Struct<F, unknown, FE>,
     Struct<G, unknown, GE>
   ]
-): Struct<[A | B | C | D | E | F | G], null, AE | BE | CE | DE | EE | FE | GE>
+): Struct<A | B | C | D | E | F | G, null, AE | BE | CE | DE | EE | FE | GE>
 export function union<
   A,
   B,
@@ -1431,7 +1427,7 @@ export function union<
     Struct<H, unknown, HE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H],
+  A | B | C | D | E | F | G | H,
   null,
   AE | BE | CE | DE | EE | FE | GE | HE
 >
@@ -1467,7 +1463,7 @@ export function union<
     Struct<I, unknown, IE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I],
+  A | B | C | D | E | F | G | H | I,
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE
 >
@@ -1506,7 +1502,7 @@ export function union<
     Struct<J, unknown, JE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J],
+  A | B | C | D | E | F | G | H | I | J,
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE
 >
@@ -1548,7 +1544,7 @@ export function union<
     Struct<K, unknown, KE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K],
+  A | B | C | D | E | F | G | H | I | J | K,
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE
 >
@@ -1593,7 +1589,7 @@ export function union<
     Struct<L, unknown, LE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L],
+  A | B | C | D | E | F | G | H | I | J | K | L,
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE
 >
@@ -1641,7 +1637,7 @@ export function union<
     Struct<M, unknown, ME>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L | M],
+  A | B | C | D | E | F | G | H | I | J | K | L | M,
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME
 >
@@ -1692,7 +1688,7 @@ export function union<
     Struct<N, unknown, NE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L | M | N],
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N,
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE
 >
@@ -1746,7 +1742,7 @@ export function union<
     Struct<O, unknown, OE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L | M | N | O],
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O,
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE
 >
@@ -1803,7 +1799,7 @@ export function union<
     Struct<P, unknown, PE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P],
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P,
   null,
   AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE | PE
 >
@@ -1863,7 +1859,7 @@ export function union<
     Struct<Q, unknown, QE>
   ]
 ): Struct<
-  [A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q],
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q,
   null,
   | AE
   | BE
@@ -1891,7 +1887,7 @@ keys.map((v,i) => {
   const errors = types.map(t => `${t}E extends ErrorDetail`);
   return `export function union<${types.join(', ')}, ${errors.join(', ')}>(
   Structs: [${types.map(t => `Struct<${t}, unknown, ${t}E>`).join(', ')}]
-): Struct<[${types.join(' | ')}], null, ${types.map(t => t+'E').join(' | ')}>`;
+): Struct<${types.join(' | ')}, null, ${types.map(t => t+'E').join(' | ')}>`;
 }).join('\n')
 */
 export function union(Structs: Struct<any, any, any>[]): any {

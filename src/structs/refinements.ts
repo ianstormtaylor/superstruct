@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
-import { ErrorDetail, ValueErrorDetail } from '../error'
-import { Struct, Refiner } from '../struct'
+import { ErrorDetail, GenericErrorDetail, ValueErrorDetail } from '../error'
+import { Struct, Refiner, SimpleRefiner } from '../struct'
 import { toFailures } from '../utils'
 
 interface SizeErrorDetail<T extends number | Date> extends ErrorDetail {
@@ -235,16 +235,33 @@ export function refine<T, S, E1 extends ErrorDetail, E2 extends ErrorDetail>(
   struct: Struct<T, S, E1>,
   name: string,
   refiner: Refiner<T, E2>
-): Struct<T, S, E1 | E2> {
-  return new Struct<T, S, E1 | E2>({
+): Struct<T, S, E1 | E2>
+export function refine<T, S, E1 extends ErrorDetail>(
+  struct: Struct<T, S, E1>,
+  name: string,
+  refiner: SimpleRefiner<T>
+): Struct<T, S, E1 | GenericErrorDetail>
+export function refine<T, S>(
+  struct: Struct<T, S, any>,
+  name: string,
+  refiner: Refiner<T, any> | SimpleRefiner<T>
+): Struct<T, S, any> {
+  return new Struct<T, S, any>({
     ...struct,
     *refiner(value, ctx) {
       yield* struct.refiner(value, ctx)
       const result = refiner(value, ctx)
-      const failures =
-        result === true || result === undefined
-          ? []
-          : toFailures<T, S, E1 | E2>(result, ctx, struct, value)
+      if (result === false || typeof result === 'string') {
+        return [
+          {
+            class: 'generic',
+            message: result || 'error',
+          },
+        ] as GenericErrorDetail[]
+      } else if (result === true || result === undefined) {
+        return
+      }
+      const failures = toFailures<T, S, any>(result, ctx, struct, value)
 
       for (const failure of failures) {
         yield { ...failure, refinement: name }

@@ -36,13 +36,13 @@ export function coerce<T, S, C, E1 extends Error, E2 extends Error>(
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function defaulted<T, S>(
-  struct: Struct<T, S>,
+export function defaulted<T, S, E extends Error>(
+  struct: Struct<T, S, E>,
   fallback: any,
   options: {
     strict?: boolean
   } = {}
-): Struct<T, S> {
+): Struct<T, S, E> {
   return coerce(struct, unknown(), (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 

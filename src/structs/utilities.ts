@@ -1,4 +1,4 @@
-import { Struct, Context, Validator } from '../struct'
+import { Struct, Context, Validator, SimpleValidator } from '../struct'
 import { object, optional } from './types'
 import {
   ObjectSchema,
@@ -7,7 +7,7 @@ import {
   PartialObjectSchema,
   ObjectError,
 } from '../utils'
-import { Error, ErrorDetail, TypeErrorDetail } from '../error'
+import { Error, GenericErrorDetail, TypeErrorDetail } from '../error'
 
 /**
  * Create a new struct that combines the properties properties from multiple
@@ -82,7 +82,7 @@ export function assign<
   Assign<Assign<Assign<Assign<A, B>, C>, D>, E>,
   E1 | E2 | E3 | E4 | E5
 >
-export function assign(...Structs: Struct<any>[]): any {
+export function assign(...Structs: Struct<any, any, any>[]): any {
   const schemas = Structs.map((s) => s.schema)
   const schema = Object.assign({}, ...schemas)
   return object(schema)
@@ -92,11 +92,42 @@ export function assign(...Structs: Struct<any>[]): any {
  * Define a new struct type with a custom validation function.
  */
 
+// export function define<T, E extends Error>(
+//   name: string,
+//   validator: Validator<E>
+// ): Struct<T, null, E> {
+//   return new Struct({ type: name, schema: null, validator })
+// }
 export function define<T, E extends Error>(
   name: string,
   validator: Validator<E>
-): Struct<T, null, E> {
-  return new Struct({ type: name, schema: null, validator })
+): Struct<T, null, E>
+export function define<T>(
+  name: string,
+  validator: SimpleValidator
+): Struct<T, null, GenericErrorDetail>
+export function define(
+  name: string,
+  validator: Validator<any> | SimpleValidator
+): Struct<any, any, any> {
+  return new Struct({
+    type: name,
+    schema: null,
+    validator(value, context) {
+      const res = validator(value, context)
+      if (res === false || typeof res === 'string') {
+        return [
+          {
+            class: 'generic',
+            message: res || 'error',
+          },
+        ] as GenericErrorDetail[]
+      } else if (res === undefined || res === true) {
+        return []
+      }
+      return res
+    },
+  })
 }
 
 /**
@@ -192,8 +223,12 @@ export function omit<S extends ObjectSchema, K extends keyof S>(
  */
 
 export function partial<S extends ObjectSchema>(
-  struct: Struct<ObjectType<S>, S> | S
-): Struct<ObjectType<PartialObjectSchema<S>>, PartialObjectSchema<S>> {
+  struct: Struct<ObjectType<S>, S, any> | S
+): Struct<
+  ObjectType<PartialObjectSchema<S>>,
+  PartialObjectSchema<S>,
+  ObjectError<S>
+> {
   const schema: any =
     struct instanceof Struct ? { ...struct.schema } : { ...struct }
 
@@ -212,7 +247,7 @@ export function partial<S extends ObjectSchema>(
  */
 
 export function pick<S extends ObjectSchema, K extends keyof S>(
-  struct: Struct<ObjectType<S>, S>,
+  struct: Struct<ObjectType<S>, S, any>,
   keys: K[]
 ): Struct<
   ObjectType<Pick<S, K>>,

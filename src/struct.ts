@@ -234,7 +234,7 @@ export type Infer<T extends Struct<any, any, any>> = T['TYPE']
  * A type utility to describe that a struct represents a TypeScript type.
  */
 
-export type Describe<T> = Struct<T, StructSchema<T>>
+export type Describe<T> = Struct<T, StructSchema<T>, any> // todo
 
 /**
  * A `Result` is returned from validation functions.
@@ -265,7 +265,12 @@ export type Coercer<T = unknown> = (value: T, context: Context) => unknown
 export type Validator<E extends ErrorDetail> = (
   value: unknown,
   context: Context
-) => Iterable<E | Failure<E>> | undefined | true
+) => Iterable<E | Failure<E>> | true
+
+export type SimpleValidator = (
+  value: unknown,
+  context: Context
+) => string | boolean | undefined
 
 /**
  * A `Refiner` takes a value of a known type and validates it against a further
@@ -275,4 +280,9 @@ export type Validator<E extends ErrorDetail> = (
 export type Refiner<T, E extends ErrorDetail> = (
   value: T,
   context: Context
-) => Iterable<E | Failure<E>> | undefined | true
+) => Iterable<E | Failure<E>> | true
+
+export type SimpleRefiner<T> = (
+  value: T,
+  context: Context
+) => string | boolean | undefined
