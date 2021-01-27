@@ -2,6 +2,14 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
+### `0.14.0` — January 26, 2021
+
+###### BREAKING
+
+**The `mask` helper now works for nested objects.** Previously it would only mask the properties at the top-level of a struct, however now it acts deeply. You can use it to define object structs once, but use them either strictly or loosely.
+
+**The `masked` coercion has been removed.** This previously allowed you to mix in masking to a specific struct, but the `mask` helper is a more robust way to do this, and it doesn't force you to maintain two separate structs.
+
 ### `0.13.0` — December 11, 2020
 
 ###### NEW
