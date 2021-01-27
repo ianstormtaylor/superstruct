@@ -1,6 +1,5 @@
 import { toFailures, shiftIterator, StructSchema, run } from './utils'
 import { StructError, Failure } from './error'
-import { masked } from './structs/coercions'
 
 /**
  * `Struct` objects encapsulate the validation logic for a specific type of
@@ -147,9 +146,13 @@ export function create<T, S>(value: unknown, struct: Struct<T, S>): T {
  */
 
 export function mask<T, S>(value: unknown, struct: Struct<T, S>): T {
-  const M = masked(struct)
-  const ret = create(value, M)
-  return ret
+  const result = validate(value, struct, { coerce: true, mask: true })
+
+  if (result[0]) {
+    throw result[0]
+  } else {
+    return result[1]
+  }
 }
 
 /**
@@ -171,6 +174,7 @@ export function validate<T, S>(
   struct: Struct<T, S>,
   options: {
     coerce?: boolean
+    mask?: boolean
   } = {}
 ): [StructError, undefined] | [undefined, T] {
   const tuples = run(value, struct, options)

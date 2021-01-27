@@ -28,7 +28,7 @@ masked(
 )
 ```
 
-`masked` augments an object struct to strip any unknown properties from the input when coercing it.
+`masked` augments an object struct to strip any unknown properties from the input when coercing it. It affects the direct properties of the struct only and not the nested structs.
 
 ### `trimmed`
 

@@ -214,7 +214,7 @@ struct({
 
 `object` structs validate that a value is an object and that each of its properties match a specific type as well.
 
-> 🤖 Note that `object` structs throw errors if they encounter extra properites on an object! If you want to be less strict and ignore any extra properties, use [`type`](#type) instead. For other more complex object use cases, check out the [coercions](./coercions.md) and [utilities](./utilities.md) too.
+> 🤖 Note that `object` structs throw errors if they encounter extra properties on an object, unless `mask` is used! If you want to be less strict and ignore any extra properties, use [`type`](#type) instead. For other more complex object use cases, check out the [coercions](./coercions.md) and [utilities](./utilities.md) too.
 
 ### `optional`
 
@@ -316,6 +316,8 @@ type({
 ```
 
 `type` structs validate that a value has a set of properties on it, but it does not assert anything about unspecified properties. This allows you to assert that a particular set of functionality exists without a strict equality check for properties.
+
+When `mask()` is used with a value of `type`, its unknown properties are not removed. I.e. consider `type` as a signal to the core that the object may have arbitrary properties in addition to the known ones, in both masked and non-masked validation.
 
 > 🤖 If you want to throw errors when encountering unknown properties, use [`object`](#object) instead.
 

@@ -122,13 +122,28 @@ export function* run<T, S>(
     path?: any[]
     branch?: any[]
     coerce?: boolean
+    mask?: boolean
   } = {}
 ): IterableIterator<[Failure, undefined] | [undefined, T]> {
-  const { path = [], branch = [value], coerce = false } = options
+  const { path = [], branch = [value], coerce = false, mask = false } = options
   const ctx: Context = { path, branch }
 
   if (coerce) {
     value = struct.coercer(value, ctx)
+
+    if (
+      mask &&
+      struct.type !== 'type' &&
+      isObject(struct.schema) &&
+      isObject(value) &&
+      !Array.isArray(value)
+    ) {
+      for (const key in value) {
+        if (struct.schema[key] === undefined) {
+          delete value[key]
+        }
+      }
+    }
   }
 
   let valid = true
@@ -143,6 +158,7 @@ export function* run<T, S>(
       path: k === undefined ? path : [...path, k],
       branch: k === undefined ? branch : [...branch, v],
       coerce,
+      mask,
     })
 
     for (const t of ts) {
