@@ -70,36 +70,6 @@ export function defaulted<T, S>(
 }
 
 /**
- * Augment a struct to mask its input to only properties defined in the struct.
- *
- * Note: You must use `create(value, Struct)` on the value to have the coercion
- * take effect! Using simply `assert()` or `is()` will not use coercion.
- */
-
-export function masked<T, S>(struct: Struct<T, S>): Struct<T, S> {
-  return coerce(struct, unknown(), (x) => {
-    if (
-      typeof struct.schema !== 'object' ||
-      struct.schema == null ||
-      typeof x !== 'object' ||
-      x == null
-    ) {
-      return x
-    } else {
-      const ret: any = {}
-
-      for (const key in struct.schema) {
-        if (key in x) {
-          ret[key] = (x as any)[key]
-        }
-      }
-
-      return ret
-    }
-  })
-}
-
-/**
  * Augment a struct to trim string inputs.
  *
  * Note: You must use `create(value, Struct)` on the value to have the coercion

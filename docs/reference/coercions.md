@@ -18,18 +18,6 @@ object({
 
 > 🤖 If you add `defaulted` to an `object` struct with a dictionary of values, those values will be mixed in one-by-one, so the input doesn't need to be `undefined`, but certain properties can be `undefined`.
 
-### `masked`
-
-```ts
-masked(
-  object({
-    name: string(),
-  })
-)
-```
-
-`masked` augments an object struct to strip any unknown properties from the input when coercing it. It affects the direct properties of the struct only and not the nested structs.
-
 ### `trimmed`
 
 ```ts

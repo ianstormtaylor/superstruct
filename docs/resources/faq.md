@@ -8,8 +8,6 @@ The [`object`](../reference/types.md#object) struct validates that a value match
 
 However, there are cases where you'd like to validate a set of properties but ignore any unknown ones. For that you can use the [`type`](../reference/types.md#type) struct which is more generic, and acts similar to TypeScript's structural typing in that it does not care about any extra properties.
 
-There are also cases where you want to "mask" an input object to remove any unknown keys without considering it invalid. In this case you can use the [`masked`](../reference/coercions.md#masked) coercion.
-
 ### Why not have a built-in `json` struct?
 
 The problem with a built-in `json` struct is that it needs to recursively iterate through deep objects to guarantee they're valid JSON. What's wrong with that? Nothing, except that it would be a footgun.
