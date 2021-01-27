@@ -75,4 +75,11 @@ describe('mask', () => {
       sub: [{ prop: '2' }],
     })
   })
+
+  it('masking does not change the original value', () => {
+    const S = object({ id: string() })
+    const value = { id: '1', unknown: true }
+    deepStrictEqual(mask(value, S), { id: '1' })
+    deepStrictEqual(value, { id: '1', unknown: true })
+  })
 })

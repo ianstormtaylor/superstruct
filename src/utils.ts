@@ -129,6 +129,8 @@ export function* run<T, S>(
   const ctx: Context = { path, branch }
 
   if (coerce) {
+    value = struct.coercer(value, ctx)
+
     if (
       mask &&
       struct.type !== 'type' &&
@@ -142,8 +144,6 @@ export function* run<T, S>(
         }
       }
     }
-
-    value = struct.coercer(value, ctx)
   }
 
   let valid = true
