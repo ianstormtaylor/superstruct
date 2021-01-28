@@ -90,7 +90,6 @@ export function toFailure<T, S, E extends ErrorDetail>(
     branch,
     message,
     detail: result,
-    failures: [],
   }
 }
 
@@ -339,7 +338,7 @@ export type StructSchema<T> = [T] extends [string]
   : T extends Array<infer E>
   ? T extends IsTuple<T>
     ? null
-    : Struct<E>
+    : Struct<E, unknown, ErrorDetail>
   : T extends Promise<any>
   ? null
   : T extends object

@@ -236,6 +236,8 @@ export type Infer<T extends Struct<any, any, any>> = T['TYPE']
 
 export type Describe<T> = Struct<T, StructSchema<T>, any> // todo
 
+export type InferError<T> = T extends Struct<any, any, infer E> ? E : Error
+
 /**
  * A `Result` is returned from validation functions.
  */

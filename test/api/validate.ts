@@ -17,7 +17,7 @@ describe('validate', () => {
     const [err, value] = validate(42, S)
     strictEqual(value, undefined)
     strictEqual(err instanceof StructError, true)
-    deepStrictEqual(Array.from((err as StructError).failures()), [
+    deepStrictEqual(Array.from(err!.failures()), [
       {
         value: 42,
         key: undefined,
@@ -35,7 +35,7 @@ describe('validate', () => {
     const [err, value] = S.validate(42)
     strictEqual(value, undefined)
     strictEqual(err instanceof StructError, true)
-    deepStrictEqual(Array.from((err as StructError).failures()), [
+    deepStrictEqual(Array.from(err!.failures()), [
       {
         value: 42,
         key: undefined,
@@ -52,14 +52,14 @@ describe('validate', () => {
     const S = object({ author: object({ name: string() }) })
     const [err] = S.validate({ author: { name: 42 } })
     strictEqual(
-      (err as StructError).message,
+      err!.message,
       'At path: author.name -- Expected a string, but received: 42'
     )
   })
 
   it('early exit', () => {
     let ranA = false
-    let ranB = false
+    const ranB = false
 
     const A = define('A', (x) => {
       ranA = true

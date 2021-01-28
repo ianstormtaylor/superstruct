@@ -1,6 +1,6 @@
 /* eslint-disable no-redeclare */
 
-import { Infer, Struct } from '../struct'
+import { Infer, InferError, Struct } from '../struct'
 import { define } from './utilities'
 import {
   TupleSchema,
@@ -35,14 +35,12 @@ export function any(): Struct<any, null, never> {
  * and it is preferred to using `array(any())`.
  */
 
-export function array<E extends ErrorDetail, T extends Struct<any, any, E>>(
+export function array<T extends Struct<any, any, any>>(
   Element: T
-): Struct<Infer<T>[], T, E>
+): Struct<Infer<T>[], T, InferError<T> | TypeErrorDetail>
 export function array(): Struct<unknown[], undefined, any>
-export function array<T, E extends Error>(
-  Element?: Struct<T, unknown, E>
-): any {
-  return new Struct<T, unknown, E | TypeErrorDetail>({
+export function array<T>(Element?: Struct<T, unknown, any>): any {
+  return new Struct<T, unknown, ErrorDetail>({
     type: 'array',
     schema: Element,
     *entries(value) {
@@ -626,599 +624,554 @@ export function string(): Struct<string, null, TypeErrorDetail> {
 /**
  * Ensure that a value is a tuple of a specific length, and that each of its
  * elements is of a specific type.
- */
-export function tuple<A, AE extends ErrorDetail>(
-  Structs: [Struct<A, unknown, AE>]
-): Struct<[A], null, AE>
-export function tuple<A, B, AE extends ErrorDetail, BE extends ErrorDetail>(
-  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>]
-): Struct<[A, B], null, AE | BE>
+ */ export function tuple<A extends Struct<any, any, Error>>(
+  Structs: [A]
+): Struct<[Infer<A>], null, InferError<A>>
 export function tuple<
-  A,
-  B,
-  C,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>
-  ]
-): Struct<[A, B, C], null, AE | BE | CE>
+  Structs: [A, B]
+): Struct<[Infer<A>, Infer<B>], null, InferError<A> | InferError<B>>
 export function tuple<
-  A,
-  B,
-  C,
-  D,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>
-  ]
-): Struct<[A, B, C, D], null, AE | BE | CE | DE>
-export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail
->(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>
-  ]
-): Struct<[A, B, C, D, E], null, AE | BE | CE | DE | EE>
-export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail
->(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>
-  ]
-): Struct<[A, B, C, D, E, F], null, AE | BE | CE | DE | EE | FE>
-export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail
->(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>
-  ]
-): Struct<[A, B, C, D, E, F, G], null, AE | BE | CE | DE | EE | FE | GE>
-export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail
->(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>
-  ]
-): Struct<[A, B, C, D, E, F, G, H], null, AE | BE | CE | DE | EE | FE | GE | HE>
-export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail
->(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>
-  ]
+  Structs: [A, B, C]
 ): Struct<
-  [A, B, C, D, E, F, G, H, I],
+  [Infer<A>, Infer<B>, Infer<C>],
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE
+  InferError<A> | InferError<B> | InferError<C>
 >
 export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>
-  ]
+  Structs: [A, B, C, D]
 ): Struct<
-  [A, B, C, D, E, F, G, H, I, J],
+  [Infer<A>, Infer<B>, Infer<C>, Infer<D>],
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE
+  InferError<A> | InferError<B> | InferError<C> | InferError<D>
 >
 export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>
-  ]
+  Structs: [A, B, C, D, E]
 ): Struct<
-  [A, B, C, D, E, F, G, H, I, J, K],
+  [Infer<A>, Infer<B>, Infer<C>, Infer<D>, Infer<E>],
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE
+  InferError<A> | InferError<B> | InferError<C> | InferError<D> | InferError<E>
 >
 export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>
-  ]
+  Structs: [A, B, C, D, E, F]
 ): Struct<
-  [A, B, C, D, E, F, G, H, I, J, K, L],
+  [Infer<A>, Infer<B>, Infer<C>, Infer<D>, Infer<E>, Infer<F>],
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
 >
 export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail,
-  ME extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>,
-    Struct<M, unknown, ME>
-  ]
+  Structs: [A, B, C, D, E, F, G]
 ): Struct<
-  [A, B, C, D, E, F, G, H, I, J, K, L, M],
+  [Infer<A>, Infer<B>, Infer<C>, Infer<D>, Infer<E>, Infer<F>, Infer<G>],
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
 >
 export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail,
-  ME extends ErrorDetail,
-  NE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>,
-    Struct<M, unknown, ME>,
-    Struct<N, unknown, NE>
-  ]
+  Structs: [A, B, C, D, E, F, G, H]
 ): Struct<
-  [A, B, C, D, E, F, G, H, I, J, K, L, M, N],
+  [
+    Infer<A>,
+    Infer<B>,
+    Infer<C>,
+    Infer<D>,
+    Infer<E>,
+    Infer<F>,
+    Infer<G>,
+    Infer<H>
+  ],
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
 >
 export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  O,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail,
-  ME extends ErrorDetail,
-  NE extends ErrorDetail,
-  OE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>,
-    Struct<M, unknown, ME>,
-    Struct<N, unknown, NE>,
-    Struct<O, unknown, OE>
-  ]
+  Structs: [A, B, C, D, E, F, G, H, I]
 ): Struct<
-  [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O],
+  [
+    Infer<A>,
+    Infer<B>,
+    Infer<C>,
+    Infer<D>,
+    Infer<E>,
+    Infer<F>,
+    Infer<G>,
+    Infer<H>,
+    Infer<I>
+  ],
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
 >
 export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  O,
-  P,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail,
-  ME extends ErrorDetail,
-  NE extends ErrorDetail,
-  OE extends ErrorDetail,
-  PE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>,
-    Struct<M, unknown, ME>,
-    Struct<N, unknown, NE>,
-    Struct<O, unknown, OE>,
-    Struct<P, unknown, PE>
-  ]
+  Structs: [A, B, C, D, E, F, G, H, I, J]
 ): Struct<
-  [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P],
+  [
+    Infer<A>,
+    Infer<B>,
+    Infer<C>,
+    Infer<D>,
+    Infer<E>,
+    Infer<F>,
+    Infer<G>,
+    Infer<H>,
+    Infer<I>,
+    Infer<J>
+  ],
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE | PE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
 >
 export function tuple<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  O,
-  P,
-  Q,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail,
-  ME extends ErrorDetail,
-  NE extends ErrorDetail,
-  OE extends ErrorDetail,
-  PE extends ErrorDetail,
-  QE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>,
-    Struct<M, unknown, ME>,
-    Struct<N, unknown, NE>,
-    Struct<O, unknown, OE>,
-    Struct<P, unknown, PE>,
-    Struct<Q, unknown, QE>
-  ]
+  Structs: [A, B, C, D, E, F, G, H, I, J, K]
 ): Struct<
-  [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q],
+  [
+    Infer<A>,
+    Infer<B>,
+    Infer<C>,
+    Infer<D>,
+    Infer<E>,
+    Infer<F>,
+    Infer<G>,
+    Infer<H>,
+    Infer<I>,
+    Infer<J>,
+    Infer<K>
+  ],
   null,
-  | AE
-  | BE
-  | CE
-  | DE
-  | EE
-  | FE
-  | GE
-  | HE
-  | IE
-  | JE
-  | KE
-  | LE
-  | ME
-  | NE
-  | OE
-  | PE
-  | QE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+>
+export function tuple<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L]
+): Struct<
+  [
+    Infer<A>,
+    Infer<B>,
+    Infer<C>,
+    Infer<D>,
+    Infer<E>,
+    Infer<F>,
+    Infer<G>,
+    Infer<H>,
+    Infer<I>,
+    Infer<J>,
+    Infer<K>,
+    Infer<L>
+  ],
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+>
+export function tuple<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>,
+  M extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L, M]
+): Struct<
+  [
+    Infer<A>,
+    Infer<B>,
+    Infer<C>,
+    Infer<D>,
+    Infer<E>,
+    Infer<F>,
+    Infer<G>,
+    Infer<H>,
+    Infer<I>,
+    Infer<J>,
+    Infer<K>,
+    Infer<L>,
+    Infer<M>
+  ],
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+  | InferError<M>
+>
+export function tuple<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>,
+  M extends Struct<any, any, Error>,
+  N extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L, M, N]
+): Struct<
+  [
+    Infer<A>,
+    Infer<B>,
+    Infer<C>,
+    Infer<D>,
+    Infer<E>,
+    Infer<F>,
+    Infer<G>,
+    Infer<H>,
+    Infer<I>,
+    Infer<J>,
+    Infer<K>,
+    Infer<L>,
+    Infer<M>,
+    Infer<N>
+  ],
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+  | InferError<M>
+  | InferError<N>
+>
+export function tuple<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>,
+  M extends Struct<any, any, Error>,
+  N extends Struct<any, any, Error>,
+  O extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]
+): Struct<
+  [
+    Infer<A>,
+    Infer<B>,
+    Infer<C>,
+    Infer<D>,
+    Infer<E>,
+    Infer<F>,
+    Infer<G>,
+    Infer<H>,
+    Infer<I>,
+    Infer<J>,
+    Infer<K>,
+    Infer<L>,
+    Infer<M>,
+    Infer<N>,
+    Infer<O>
+  ],
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+  | InferError<M>
+  | InferError<N>
+  | InferError<O>
+>
+export function tuple<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>,
+  M extends Struct<any, any, Error>,
+  N extends Struct<any, any, Error>,
+  O extends Struct<any, any, Error>,
+  P extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]
+): Struct<
+  [
+    Infer<A>,
+    Infer<B>,
+    Infer<C>,
+    Infer<D>,
+    Infer<E>,
+    Infer<F>,
+    Infer<G>,
+    Infer<H>,
+    Infer<I>,
+    Infer<J>,
+    Infer<K>,
+    Infer<L>,
+    Infer<M>,
+    Infer<N>,
+    Infer<O>,
+    Infer<P>
+  ],
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+  | InferError<M>
+  | InferError<N>
+  | InferError<O>
+  | InferError<P>
+>
+export function tuple<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>,
+  M extends Struct<any, any, Error>,
+  N extends Struct<any, any, Error>,
+  O extends Struct<any, any, Error>,
+  P extends Struct<any, any, Error>,
+  Q extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]
+): Struct<
+  [
+    Infer<A>,
+    Infer<B>,
+    Infer<C>,
+    Infer<D>,
+    Infer<E>,
+    Infer<F>,
+    Infer<G>,
+    Infer<H>,
+    Infer<I>,
+    Infer<J>,
+    Infer<K>,
+    Infer<L>,
+    Infer<M>,
+    Infer<N>,
+    Infer<O>,
+    Infer<P>,
+    Infer<Q>
+  ],
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+  | InferError<M>
+  | InferError<N>
+  | InferError<O>
+  | InferError<P>
+  | InferError<Q>
 >
 /*
 // generate script
 var keys = 'A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q'.split(',').map(s=>s.trim());
 keys.map((v,i) => {
   const types = keys.slice(0, i+1);
-  const errors = types.map(t => `${t}E extends ErrorDetail`);
-  return `export function tuple<${types.join(', ')}, ${errors.join(', ')}>(
-  Structs: [${types.map(t => `Struct<${t}, unknown, ${t}E>`).join(', ')}]
-): Struct<[${types.join(', ')}], null, ${types.map(t => t+'E').join(' | ')}>`;
+  return `export function tuple<${types.map(t => `${t} extends Struct<any,any,Error>`).join(', ')}>(
+  Structs: [${types.join(', ')}]
+): Struct<[${types.map(t => `Infer<${t}>`).join(', ')}], null, ${types.map(t => `InferError<${t}>`).join(' | ')}>`;
 }).join('\n')
 */
 export function tuple(Elements: Struct<any, any, any>[]): any {
@@ -1292,602 +1245,534 @@ export function type<S extends ObjectSchema>(
 /**
  * Ensure that a value matches one of a set of types.
  */
-export function union<A, AE extends ErrorDetail>(
-  Structs: [Struct<A, unknown, AE>]
-): Struct<A, null, AE>
-export function union<A, B, AE extends ErrorDetail, BE extends ErrorDetail>(
-  Structs: [Struct<A, unknown, AE>, Struct<B, unknown, BE>]
-): Struct<A | B, null, AE | BE>
+export function union<A extends Struct<any, any, Error>>(
+  Structs: [A]
+): Struct<Infer<A>, null, InferError<A>>
 export function union<
-  A,
-  B,
-  C,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>
-  ]
-): Struct<A | B | C, null, AE | BE | CE>
+  Structs: [A, B]
+): Struct<Infer<A> | Infer<B>, null, InferError<A> | InferError<B>>
 export function union<
-  A,
-  B,
-  C,
-  D,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>
-  ]
-): Struct<A | B | C | D, null, AE | BE | CE | DE>
-export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail
->(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>
-  ]
-): Struct<A | B | C | D | E, null, AE | BE | CE | DE | EE>
-export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail
->(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>
-  ]
-): Struct<A | B | C | D | E | F, null, AE | BE | CE | DE | EE | FE>
-export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail
->(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>
-  ]
-): Struct<A | B | C | D | E | F | G, null, AE | BE | CE | DE | EE | FE | GE>
-export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail
->(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>
-  ]
+  Structs: [A, B, C]
 ): Struct<
-  A | B | C | D | E | F | G | H,
+  Infer<A> | Infer<B> | Infer<C>,
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE
+  InferError<A> | InferError<B> | InferError<C>
 >
 export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>
-  ]
+  Structs: [A, B, C, D]
 ): Struct<
-  A | B | C | D | E | F | G | H | I,
+  Infer<A> | Infer<B> | Infer<C> | Infer<D>,
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE
+  InferError<A> | InferError<B> | InferError<C> | InferError<D>
 >
 export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>
-  ]
+  Structs: [A, B, C, D, E]
 ): Struct<
-  A | B | C | D | E | F | G | H | I | J,
+  Infer<A> | Infer<B> | Infer<C> | Infer<D> | Infer<E>,
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE
+  InferError<A> | InferError<B> | InferError<C> | InferError<D> | InferError<E>
 >
 export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>
-  ]
+  Structs: [A, B, C, D, E, F]
 ): Struct<
-  A | B | C | D | E | F | G | H | I | J | K,
+  Infer<A> | Infer<B> | Infer<C> | Infer<D> | Infer<E> | Infer<F>,
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
 >
 export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>
-  ]
+  Structs: [A, B, C, D, E, F, G]
 ): Struct<
-  A | B | C | D | E | F | G | H | I | J | K | L,
+  Infer<A> | Infer<B> | Infer<C> | Infer<D> | Infer<E> | Infer<F> | Infer<G>,
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
 >
 export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail,
-  ME extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>,
-    Struct<M, unknown, ME>
-  ]
+  Structs: [A, B, C, D, E, F, G, H]
 ): Struct<
-  A | B | C | D | E | F | G | H | I | J | K | L | M,
+  | Infer<A>
+  | Infer<B>
+  | Infer<C>
+  | Infer<D>
+  | Infer<E>
+  | Infer<F>
+  | Infer<G>
+  | Infer<H>,
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
 >
 export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail,
-  ME extends ErrorDetail,
-  NE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>,
-    Struct<M, unknown, ME>,
-    Struct<N, unknown, NE>
-  ]
+  Structs: [A, B, C, D, E, F, G, H, I]
 ): Struct<
-  A | B | C | D | E | F | G | H | I | J | K | L | M | N,
+  | Infer<A>
+  | Infer<B>
+  | Infer<C>
+  | Infer<D>
+  | Infer<E>
+  | Infer<F>
+  | Infer<G>
+  | Infer<H>
+  | Infer<I>,
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
 >
 export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  O,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail,
-  ME extends ErrorDetail,
-  NE extends ErrorDetail,
-  OE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>,
-    Struct<M, unknown, ME>,
-    Struct<N, unknown, NE>,
-    Struct<O, unknown, OE>
-  ]
+  Structs: [A, B, C, D, E, F, G, H, I, J]
 ): Struct<
-  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O,
+  | Infer<A>
+  | Infer<B>
+  | Infer<C>
+  | Infer<D>
+  | Infer<E>
+  | Infer<F>
+  | Infer<G>
+  | Infer<H>
+  | Infer<I>
+  | Infer<J>,
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
 >
 export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  O,
-  P,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail,
-  ME extends ErrorDetail,
-  NE extends ErrorDetail,
-  OE extends ErrorDetail,
-  PE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>,
-    Struct<M, unknown, ME>,
-    Struct<N, unknown, NE>,
-    Struct<O, unknown, OE>,
-    Struct<P, unknown, PE>
-  ]
+  Structs: [A, B, C, D, E, F, G, H, I, J, K]
 ): Struct<
-  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P,
+  | Infer<A>
+  | Infer<B>
+  | Infer<C>
+  | Infer<D>
+  | Infer<E>
+  | Infer<F>
+  | Infer<G>
+  | Infer<H>
+  | Infer<I>
+  | Infer<J>
+  | Infer<K>,
   null,
-  AE | BE | CE | DE | EE | FE | GE | HE | IE | JE | KE | LE | ME | NE | OE | PE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
 >
 export function union<
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  O,
-  P,
-  Q,
-  AE extends ErrorDetail,
-  BE extends ErrorDetail,
-  CE extends ErrorDetail,
-  DE extends ErrorDetail,
-  EE extends ErrorDetail,
-  FE extends ErrorDetail,
-  GE extends ErrorDetail,
-  HE extends ErrorDetail,
-  IE extends ErrorDetail,
-  JE extends ErrorDetail,
-  KE extends ErrorDetail,
-  LE extends ErrorDetail,
-  ME extends ErrorDetail,
-  NE extends ErrorDetail,
-  OE extends ErrorDetail,
-  PE extends ErrorDetail,
-  QE extends ErrorDetail
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>
 >(
-  Structs: [
-    Struct<A, unknown, AE>,
-    Struct<B, unknown, BE>,
-    Struct<C, unknown, CE>,
-    Struct<D, unknown, DE>,
-    Struct<E, unknown, EE>,
-    Struct<F, unknown, FE>,
-    Struct<G, unknown, GE>,
-    Struct<H, unknown, HE>,
-    Struct<I, unknown, IE>,
-    Struct<J, unknown, JE>,
-    Struct<K, unknown, KE>,
-    Struct<L, unknown, LE>,
-    Struct<M, unknown, ME>,
-    Struct<N, unknown, NE>,
-    Struct<O, unknown, OE>,
-    Struct<P, unknown, PE>,
-    Struct<Q, unknown, QE>
-  ]
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L]
 ): Struct<
-  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q,
+  | Infer<A>
+  | Infer<B>
+  | Infer<C>
+  | Infer<D>
+  | Infer<E>
+  | Infer<F>
+  | Infer<G>
+  | Infer<H>
+  | Infer<I>
+  | Infer<J>
+  | Infer<K>
+  | Infer<L>,
   null,
-  | AE
-  | BE
-  | CE
-  | DE
-  | EE
-  | FE
-  | GE
-  | HE
-  | IE
-  | JE
-  | KE
-  | LE
-  | ME
-  | NE
-  | OE
-  | PE
-  | QE
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+>
+export function union<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>,
+  M extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L, M]
+): Struct<
+  | Infer<A>
+  | Infer<B>
+  | Infer<C>
+  | Infer<D>
+  | Infer<E>
+  | Infer<F>
+  | Infer<G>
+  | Infer<H>
+  | Infer<I>
+  | Infer<J>
+  | Infer<K>
+  | Infer<L>
+  | Infer<M>,
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+  | InferError<M>
+>
+export function union<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>,
+  M extends Struct<any, any, Error>,
+  N extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L, M, N]
+): Struct<
+  | Infer<A>
+  | Infer<B>
+  | Infer<C>
+  | Infer<D>
+  | Infer<E>
+  | Infer<F>
+  | Infer<G>
+  | Infer<H>
+  | Infer<I>
+  | Infer<J>
+  | Infer<K>
+  | Infer<L>
+  | Infer<M>
+  | Infer<N>,
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+  | InferError<M>
+  | InferError<N>
+>
+export function union<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>,
+  M extends Struct<any, any, Error>,
+  N extends Struct<any, any, Error>,
+  O extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O]
+): Struct<
+  | Infer<A>
+  | Infer<B>
+  | Infer<C>
+  | Infer<D>
+  | Infer<E>
+  | Infer<F>
+  | Infer<G>
+  | Infer<H>
+  | Infer<I>
+  | Infer<J>
+  | Infer<K>
+  | Infer<L>
+  | Infer<M>
+  | Infer<N>
+  | Infer<O>,
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+  | InferError<M>
+  | InferError<N>
+  | InferError<O>
+>
+export function union<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>,
+  M extends Struct<any, any, Error>,
+  N extends Struct<any, any, Error>,
+  O extends Struct<any, any, Error>,
+  P extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]
+): Struct<
+  | Infer<A>
+  | Infer<B>
+  | Infer<C>
+  | Infer<D>
+  | Infer<E>
+  | Infer<F>
+  | Infer<G>
+  | Infer<H>
+  | Infer<I>
+  | Infer<J>
+  | Infer<K>
+  | Infer<L>
+  | Infer<M>
+  | Infer<N>
+  | Infer<O>
+  | Infer<P>,
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+  | InferError<M>
+  | InferError<N>
+  | InferError<O>
+  | InferError<P>
+>
+export function union<
+  A extends Struct<any, any, Error>,
+  B extends Struct<any, any, Error>,
+  C extends Struct<any, any, Error>,
+  D extends Struct<any, any, Error>,
+  E extends Struct<any, any, Error>,
+  F extends Struct<any, any, Error>,
+  G extends Struct<any, any, Error>,
+  H extends Struct<any, any, Error>,
+  I extends Struct<any, any, Error>,
+  J extends Struct<any, any, Error>,
+  K extends Struct<any, any, Error>,
+  L extends Struct<any, any, Error>,
+  M extends Struct<any, any, Error>,
+  N extends Struct<any, any, Error>,
+  O extends Struct<any, any, Error>,
+  P extends Struct<any, any, Error>,
+  Q extends Struct<any, any, Error>
+>(
+  Structs: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q]
+): Struct<
+  | Infer<A>
+  | Infer<B>
+  | Infer<C>
+  | Infer<D>
+  | Infer<E>
+  | Infer<F>
+  | Infer<G>
+  | Infer<H>
+  | Infer<I>
+  | Infer<J>
+  | Infer<K>
+  | Infer<L>
+  | Infer<M>
+  | Infer<N>
+  | Infer<O>
+  | Infer<P>
+  | Infer<Q>,
+  null,
+  | InferError<A>
+  | InferError<B>
+  | InferError<C>
+  | InferError<D>
+  | InferError<E>
+  | InferError<F>
+  | InferError<G>
+  | InferError<H>
+  | InferError<I>
+  | InferError<J>
+  | InferError<K>
+  | InferError<L>
+  | InferError<M>
+  | InferError<N>
+  | InferError<O>
+  | InferError<P>
+  | InferError<Q>
 >
 /*
 // generate script
 var keys = 'A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q'.split(',').map(s=>s.trim());
 keys.map((v,i) => {
   const types = keys.slice(0, i+1);
-  const errors = types.map(t => `${t}E extends ErrorDetail`);
-  return `export function union<${types.join(', ')}, ${errors.join(', ')}>(
-  Structs: [${types.map(t => `Struct<${t}, unknown, ${t}E>`).join(', ')}]
-): Struct<${types.join(' | ')}, null, ${types.map(t => t+'E').join(' | ')}>`;
+  return `export function union<${types.map(t => `${t} extends Struct<any,any,Error>`).join(', ')}>(
+  Structs: [${types.join(', ')}]
+): Struct<${types.map(t => `Infer<${t}>`).join(' | ')}, null, ${types.map(t => `InferError<${t}>`).join(' | ')}>`;
 }).join('\n')
 */
 export function union(Structs: Struct<any, any, any>[]): any {
