@@ -26,6 +26,12 @@ describe('validate', () => {
         message: 'Expected a string, but received: 42',
         path: [],
         branch: [42],
+        detail: {
+          actually: 42,
+          class: 'type',
+          except: 'string',
+          message: 'Expected a string, but received: 42',
+        },
       },
     ])
   })
@@ -44,6 +50,12 @@ describe('validate', () => {
         message: 'Expected a string, but received: 42',
         path: [],
         branch: [42],
+        detail: {
+          actually: 42,
+          class: 'type',
+          except: 'string',
+          message: 'Expected a string, but received: 42',
+        },
       },
     ])
   })

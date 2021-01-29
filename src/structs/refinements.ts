@@ -250,9 +250,9 @@ export function refine<T, S>(
     ...struct,
     *refiner(value, ctx) {
       yield* struct.refiner(value, ctx)
-      const result = refiner(value, ctx)
+      let result = refiner(value, ctx)
       if (result === false || typeof result === 'string') {
-        return [
+        result = [
           {
             class: 'generic',
             message: result || 'error',

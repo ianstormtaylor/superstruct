@@ -1816,8 +1816,8 @@ export function union(Structs: Struct<any, any, any>[]): any {
             actually: value,
             message,
           } as TypeErrorDetail,
-          failures,
         },
+        ...failures,
       ]
     },
   })
