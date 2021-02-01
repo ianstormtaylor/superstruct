@@ -90,7 +90,7 @@ object({
 ```
 
 `deprecated` structs validate that a value matches a specific struct, or that it is `undefined`.
-Additionally it calls the `log` method with this message:
+Additionally it calls the `log` method with a message like:
 
 ```
 name is deprecated and will be removed in the future.
