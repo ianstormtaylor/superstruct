@@ -11,6 +11,7 @@ describe('superstruct', () => {
     require('./api/is')
     require('./api/mask')
     require('./api/validate')
+    require('./api/throw')
   })
 
   describe('validation', () => {

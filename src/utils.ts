@@ -154,6 +154,7 @@ export function* run<T, S, E extends Error>(
       ),
       undefined,
     ]
+    return
   }
 
   for (const failure of failures) {
