@@ -76,6 +76,26 @@ partial(
 
 `partial` allows you to create a new struct based on an existing object struct, but with all of its properties being optional.
 
+### `deprecated`
+
+```ts
+object({
+  id: number(),
+  name: deprecated(string(), (message) => console.warn(message)),
+})
+```
+
+```ts
+{ id: 1, name: 'Jane' }
+```
+
+`deprecated` structs validate that a value matches a specific struct, or that it is `undefined`.
+Additionally it calls the `log` method with this message:
+
+```
+name is deprecated and will be removed in the future.
+```
+
 ### `pick`
 
 ```ts
