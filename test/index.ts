@@ -2,7 +2,13 @@ import assert from 'assert'
 import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
-import { assert as assertValue, create as createValue, StructError } from '..'
+import {
+  assert as assertValue,
+  create as createValue,
+  StructError,
+  deprecated,
+  any,
+} from '..'
 
 describe('superstruct', () => {
   describe('api', () => {
@@ -90,10 +96,11 @@ describe('superstruct', () => {
       const fakeLog = (_message: string) => {}
       const logSpy = tracker.calls(fakeLog, 1)
 
-      assertValue({ a: undefined }, object({ a: deprecated(any(), logSpy) }))
+      assertValue(undefined, deprecated(any(), logSpy))
 
       tracker.verify()
     })
+  })
 })
 
 /**

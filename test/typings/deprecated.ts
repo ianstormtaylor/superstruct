@@ -1,4 +1,4 @@
-import { assert, deprecated, object, any } from '../..'
+import { assert, object, deprecated, any } from '../..'
 import { test } from '..'
 
 test<unknown>((x) => {

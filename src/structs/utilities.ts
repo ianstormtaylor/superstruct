@@ -148,6 +148,21 @@ export function partial<S extends ObjectSchema>(
 }
 
 /**
+ * Create a new struct based on an existing struct, but calls `log` with deprecation message.
+ */
+
+export function deprecated<T>(
+  struct: Struct<T>,
+  log: (message: string) => void
+): Struct<T> {
+  return define('deprecated', (value, ctx) => {
+    const path = ctx.path.join('.')
+    log(`${path} is deprecated and will be removed in the future.`)
+    return value === undefined || ctx.check(value, struct)
+  })
+}
+
+/**
  * Create a new struct based on an existing object struct, but only including
  * specific properties.
  *
