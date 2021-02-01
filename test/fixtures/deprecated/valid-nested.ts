@@ -1,7 +1,7 @@
-import { type, number, deprecated } from '../../..'
+import { type, number, deprecated, any } from '../../..'
 
 export const Struct = type({
-  name: deprecated(() => {}),
+  name: deprecated(any(), () => {}),
   age: number(),
 })
 

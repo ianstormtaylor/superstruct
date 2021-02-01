@@ -3,6 +3,7 @@ import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
 import {
+  any,
   assert as assertValue,
   coerce as coerceValue,
   deprecated,
@@ -76,7 +77,7 @@ describe('superstruct', () => {
       const fakeLog = (_message: string) => {}
       const logSpy = tracker.calls(fakeLog, 1)
 
-      assertValue({ a: undefined }, object({ a: deprecated(logSpy) }))
+      assertValue({ a: undefined }, object({ a: deprecated(any(), logSpy) }))
 
       tracker.verify()
     })

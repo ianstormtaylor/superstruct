@@ -344,11 +344,18 @@ export function optional<T>(S: Struct<T>): Struct<T | undefined> {
 
 type LogDeprecation = (message: string) => void
 
-export function deprecated(log: LogDeprecation): Struct<unknown> {
-  return struct('deprecated', (_value, context) => {
-    const path = context.path.join('.')
-    log(`${path} is deprecated and will be removed in the future.`)
-    return true
+export function deprecated<T>(
+  S: Struct<T>,
+  log: LogDeprecation
+): Struct<T | unknown> {
+  return new Struct({
+    type: S.type,
+    schema: S.schema,
+    validator: (value, ctx) => {
+      const path = ctx.path.join('.')
+      log(`${path} is deprecated and will be removed in the future.`)
+      return S.validator(value, ctx)
+    },
   })
 }
 
