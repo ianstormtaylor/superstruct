@@ -229,6 +229,12 @@ export type IsGenericString<T> = T extends string
     : never
   : never
 
+export type IsGenericNumber<T> = T extends number
+  ? number extends T
+    ? T
+    : never
+  : never
+
 /**
  * Normalize properties of a type that allow `undefined` to make them optional.
  */
@@ -298,6 +304,10 @@ export type StructSchema<T> = [T] extends [string]
   ? [T] extends [IsGenericString<T>]
     ? null
     : EnumSchema<T>
+  : [T] extends [number]
+  ? [T] extends [IsGenericNumber<T>]
+    ? null
+    : EnumSchema<T>
   : T extends
       | number
       | boolean
@@ -334,7 +344,7 @@ export type StructSchema<T> = [T] extends [string]
  * A schema for enum structs.
  */
 
-export type EnumSchema<T extends string> = { [K in T]: K }
+export type EnumSchema<T extends string | number> = { [K in T]: K }
 
 /**
  * A schema for tuple structs.

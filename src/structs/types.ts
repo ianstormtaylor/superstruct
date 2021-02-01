@@ -233,16 +233,31 @@ export function intersection(Structs: Array<Struct<any, any>>): any {
  */
 
 export function literal<T extends boolean>(constant: T): Struct<T, null>
-export function literal<T extends number>(constant: T): Struct<T, null>
-export function literal<T extends string>(constant: T): Struct<T, null>
-export function literal<T>(constant: T): Struct<T, null>
+export function literal<T extends number>(
+  constant: T
+): Struct<T, { [K in T[][number]]: K }>
+export function literal<T extends string>(
+  constant: T
+): Struct<T, { [K in T[][number]]: K }>
+export function literal<T>(
+  constant: T
+): Struct<T, T extends string | number ? { [K in T[][number]]: K } : null>
 export function literal<T>(constant: T): any {
   const description = print(constant)
-  return define('literal', (value) => {
-    return (
-      value === constant ||
-      `Expected the literal \`${description}\`, but received: ${print(value)}`
-    )
+  return new Struct({
+    type: 'literal',
+    schema:
+      typeof constant === 'string' || typeof constant === 'number'
+        ? {
+            [description]: constant,
+          }
+        : null,
+    validator(value) {
+      return (
+        value === constant ||
+        `Expected the literal \`${description}\`, but received: ${print(value)}`
+      )
+    },
   })
 }
 

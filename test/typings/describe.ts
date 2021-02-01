@@ -54,6 +54,10 @@ test<Describe<'a' | 'b' | 'c'>>((x) => {
   return enums(['a', 'b', 'c'])
 })
 
+test<Describe<1 | 2 | 3>>((x) => {
+  return enums([1, 2, 3])
+})
+
 test<Describe<Function>>((x) => {
   return func()
 })
@@ -68,6 +72,10 @@ test<Describe<string & number>>((x) => {
 
 test<Describe<42>>((x) => {
   return literal(42)
+})
+
+test<Describe<'test'>>((x) => {
+  return literal('test')
 })
 
 test<Describe<Map<string, number>>>((x) => {
