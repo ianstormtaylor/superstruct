@@ -4,7 +4,7 @@
 
 <p align="center">
   A simple and composable way  <br/>
-  to validate data in JavaScript.
+  to validate data in JavaScript (and TypeScript).
 </p>
 <br/>
 <br/>
@@ -19,17 +19,11 @@
 </p>
 
 <p align="center">
-  <a href="https://travis-ci.org/ianstormtaylor/superstruct">
-    <img src="https://travis-ci.org/ianstormtaylor/superstruct.svg?branch=master">
-  </a>
   <a href="https://unpkg.com/superstruct/umd/superstruct.min.js">
-    <img src="http://img.badgesize.io/https://unpkg.com/superstruct/umd/superstruct.min.js?compression=gzip&amp;label=size&amp;maxAge=300">
+    <img src="https://badgen.net/bundlephobia/minzip/superstruct?color=green&label=size">
   </a>
   <a href="./package.json">
-    <img src="https://img.shields.io/npm/v/superstruct.svg?maxAge=300&label=version&colorB=007ec6&maxAge=300">
-  </a>
-  <a href="./License.md">
-    <img src="https://img.shields.io/npm/l/slate.svg?maxAge=300">
+    <img src="https://badgen.net/npm/v/superstruct?color=blue&label=version">
   </a>
 </p>
 
@@ -102,7 +96,7 @@ if (is(data, User)) {
 Superstruct can also handle coercion of your data before validating it, for example to mix in default values:
 
 ```ts
-import { coerce, object, number, string, defaulted } from 'superstruct'
+import { create, object, number, string, defaulted } from 'superstruct'
 
 const User = object({
   id: defaulted(number(), () => i++),
@@ -114,7 +108,7 @@ const data = {
 }
 
 // You can apply the defaults to your data while validating.
-const user = coerce(data, User)
+const user = create(data, User)
 // {
 //   id: 1,
 //   name: 'Jane',
@@ -183,9 +177,9 @@ Which brings me to how Superstruct solves these issues...
 
 ### Demo
 
-Try out the [live demo on JSFiddle](https://jsfiddle.net/yjugaeg8/2/) to get an idea for how the API works, or to quickly verify your use case:
+Try out the [live demo on JSFiddle](https://jsfiddle.net/85nse1mk/) to get an idea for how the API works, or to quickly verify your use case:
 
-[![Demo screenshot.](./docs/images/demo-screenshot.png)](https://jsfiddle.net/yjugaeg8/2/)
+[![Demo screenshot.](./docs/images/demo-screenshot.png)](https://jsfiddle.net/85nse1mk/)
 
 <br/>
 
@@ -209,58 +203,25 @@ Superstruct's API is very flexible, allowing it to be used for a variety of use 
 
 Read the getting started guide to familiarize yourself with how Superstruct works. After that, check out the full API reference for more detailed information about structs, types and errors...
 
-- [**Guide**](./docs/guide.md)
-  - [Installing Superstruct](./docs/guide.md#installing-superstruct)
-  - [Creating Structs](./docs/guide.md#creating-structs)
-  - [Defining Custom Data Types](./docs/guide.md#defining-custom-data-types)
-  - [Setting Default Values](./docs/guide.md#setting-default-values)
-  - [Throwing Customized Errors](./docs/guide.md#throwing-customized-errors)
-  - [Validating Complex Shapes](./docs/guide.md#validating-complex-shapes)
-  - [Composing Structs](./docs/guide.md#composing-structs)
-- [**Reference**](./docs/reference.md)
-  - [Validation](./docs/reference.md#validation)
-    - [`assert`](./docs/reference.md#assert)
-    - [`coerce`](./docs/reference.md#coerce)
-    - [`is`](./docs/reference.md#is)
-    - [`validate`](./docs/reference.md#validate)
-  - [Types](./docs/reference.md#types)
-    - [`any`](./docs/reference.md#any)
-    - [`array`](./docs/reference.md#array)
-    - [`boolean`](./docs/reference.md#boolean)
-    - [`date`](./docs/reference.md#date)
-    - [`enums`](./docs/reference.md#enums)
-    - [`instance`](./docs/reference.md#instance)
-    - [`intersection`](./docs/reference.md#intersection)
-    - [`literal`](./docs/reference.md#literal)
-    - [`map`](./docs/reference.md#map)
-    - [`never`](./docs/reference.md#never)
-    - [`number`](./docs/reference.md#number)
-    - [`object`](./docs/reference.md#object)
-    - [`optional`](./docs/reference.md#optional)
-    - [`partial`](./docs/reference.md#partial)
-    - [`record`](./docs/reference.md#record)
-    - [`set`](./docs/reference.md#set)
-    - [`string`](./docs/reference.md#string)
-    - [`tuple`](./docs/reference.md#tuple)
-    - [`type`](./docs/reference.md#type)
-    - [`union`](./docs/reference.md#union)
-    - [Custom Types](./docs/reference.md#custom-types)
-  - [Refinements](./docs/reference.md#refinements)
-    - [`empty`](./docs/reference.md#empty)
-    - [`length`](./docs/reference.md#length)
-    - [`pattern`](./docs/reference.md#pattern)
-    - [Custom Refinements](./docs/reference.md#custom-refinements)
-  - [Coercions](./docs/reference.md#coercions)
-    - [`defaulted`](./docs/reference.md#defaulted)
-    - [`masked`](./docs/reference.md#masked)
-    - [Custom Coercions](./docs/reference.md#custom-coercions)
-  - [Errors](./docs/reference.md#errors)
-    - [`StructError`](./docs/reference.md#structerror)
-    - [Error Properties](./docs/reference.md#error-properties)
-    - [Multiple Errors](./docs/reference.md#multiple-errors)
-  - [Utilities](./docs/reference.md#utilities)
-    - [`StructType`](./docs/reference.md#structtype)
-- [**Resources**](/docs/resources.md)
+- [**Guide**](https://docs.superstructjs.org/guides/01-getting-started)
+  - [Getting Started](https://docs.superstructjs.org/guides/01-getting-started)
+  - [Validating Data](https://docs.superstructjs.org/guides/02-validating-data)
+  - [Coercing Data](https://docs.superstructjs.org/guides/03-coercing-data)
+  - [Refining Validation](https://docs.superstructjs.org/guides/04-refining-validation)
+  - [Handling Errors](https://docs.superstructjs.org/guides/05-handling-errors)
+  - [Using TypeScript](https://docs.superstructjs.org/guides/06-using-typescript)
+- [**Reference**](https://docs.superstructjs.org/api-reference/core)
+  - [Core](https://docs.superstructjs.org/api-reference/core)
+  - [Types](https://docs.superstructjs.org/api-reference/types)
+  - [Refinements](https://docs.superstructjs.org/api-reference/refinements)
+  - [Coercions](https://docs.superstructjs.org/api-reference/coercions)
+  - [Utilities](https://docs.superstructjs.org/api-reference/utilities)
+  - [Errors](https://docs.superstructjs.org/api-reference/errors)
+  - [TypeScript](https://docs.superstructjs.org/api-reference/typescript)
+- [**FAQ**](https://docs.superstructjs.org/resources/faq)
+- [**Resources**](https://docs.superstructjs.org/resources/links)
+
+[![Docs screenshot.](./docs/images/docs-screenshot.png)](https://docs.superstructjs.org)
 
 <br/>
 

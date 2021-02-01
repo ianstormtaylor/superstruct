@@ -19,8 +19,7 @@ const data = {
 try {
   assert(data, User)
 } catch (e) {
-  const { path, value, type } = e
-  const key = path[0]
+  const { key, value, type } = e
 
   if (value === undefined) {
     const error = new Error(`user_${key}_required`)

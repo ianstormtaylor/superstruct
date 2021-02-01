@@ -78,7 +78,6 @@
     "no-tabs": "error",
     "no-this-before-super": "error",
     "no-throw-literal": "error",
-    "no-undef": "error",
     "no-unneeded-ternary": "error",
     "no-unreachable": "error",
     "no-unsafe-finally": "error",
