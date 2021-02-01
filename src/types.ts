@@ -1,4 +1,4 @@
-import { Struct, StructType, coerce, StructContext } from './struct'
+import { coerce, Struct, StructContext, StructType } from './struct'
 import { StructRecord, StructTuple } from './utils'
 
 /**
@@ -339,22 +339,19 @@ export function optional<T>(S: Struct<T>): Struct<T | undefined> {
 }
 
 /**
- * Augment a struct to allow everything and log message.
+ * Augment a struct to log message.
  */
 
 type LogDeprecation = (message: string) => void
 
-export function deprecated<T>(
-  S: Struct<T>,
-  log: LogDeprecation
-): Struct<T | unknown> {
+export function deprecated<T>(S: Struct<T>, log: LogDeprecation): Struct<T> {
   return new Struct({
     type: S.type,
     schema: S.schema,
     validator: (value, ctx) => {
       const path = ctx.path.join('.')
       log(`${path} is deprecated and will be removed in the future.`)
-      return S.validator(value, ctx)
+      return ctx.check(value, S)
     },
   })
 }
