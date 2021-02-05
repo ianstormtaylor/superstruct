@@ -148,7 +148,7 @@ export function partial<S extends ObjectSchema>(
 }
 
 /**
- * Create a new struct based on an existing struct, but calls `log` with deprecation message.
+ * Create a new struct based on an existing struct, but calls `log` in case the value is not undefined.
  */
 
 export function deprecated<T>(
