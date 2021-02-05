@@ -81,7 +81,10 @@ partial(
 ```ts
 object({
   id: number(),
-  name: deprecated(string(), (message) => console.warn(message)),
+  name: deprecated(string(), (value, ctx) => {
+    console.warn(`${ctx.path} is deprecated, but value was '${value}'. Please use 'full_name' instead.`)
+  }),
+  full_name: string(),
 })
 ```
 
@@ -90,11 +93,7 @@ object({
 ```
 
 `deprecated` structs validate that a value matches a specific struct, or that it is `undefined`.
-Additionally it calls the `log` method with a message like:
-
-```
-name is deprecated and will be removed in the future.
-```
+Additionally it calls the `log` method with value and context in case it's not `undefined`.
 
 ### `pick`
 
