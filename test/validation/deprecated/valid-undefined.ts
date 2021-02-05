@@ -1,6 +1,6 @@
-import { deprecated, any } from '../../..'
+import { deprecated, number } from '../../..'
 
-export const Struct = deprecated(any(), () => {})
+export const Struct = deprecated(number(), () => {})
 
 export const data = undefined
 

@@ -153,11 +153,10 @@ export function partial<S extends ObjectSchema>(
 
 export function deprecated<T>(
   struct: Struct<T>,
-  log: (message: string) => void
+  log: (value: unknown, ctx: Context<T, null>) => void
 ): Struct<T> {
   return define('deprecated', (value, ctx) => {
-    const path = ctx.path.join('.')
-    log(`${path} is deprecated and will be removed in the future.`)
+    log(value, ctx)
     return value === undefined || ctx.check(value, struct)
   })
 }

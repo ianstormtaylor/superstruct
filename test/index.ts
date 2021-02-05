@@ -1,13 +1,14 @@
-import assert from 'assert'
+import assert, { CallTracker } from 'assert'
 import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
 import {
-  assert as assertValue,
-  create as createValue,
-  StructError,
-  deprecated,
   any,
+  assert as assertValue,
+  Context,
+  create as createValue,
+  deprecated,
+  StructError,
 } from '..'
 
 describe('superstruct', () => {
@@ -91,12 +92,12 @@ describe('superstruct', () => {
   })
 
   describe('deprecated', () => {
-    it('logs deprecated type as message to passed function', () => {
-      const tracker = new assert.CallTracker()
-      const fakeLog = (_message: string) => {}
+    it('logs deprecated type to passed function', () => {
+      const tracker = new CallTracker()
+      const fakeLog = (value: unknown, ctx: Context<unknown, null>) => {}
       const logSpy = tracker.calls(fakeLog, 1)
 
-      assertValue(undefined, deprecated(any(), logSpy))
+      assertValue('present', deprecated(any(), logSpy))
 
       tracker.verify()
     })
