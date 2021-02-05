@@ -156,8 +156,12 @@ export function deprecated<T>(
   log: (value: unknown, ctx: Context<T, null>) => void
 ): Struct<T> {
   return define('deprecated', (value, ctx) => {
+    if (value === undefined) {
+      return true
+    }
+
     log(value, ctx)
-    return value === undefined || ctx.check(value, struct)
+    return ctx.check(value, struct)
   })
 }
 
