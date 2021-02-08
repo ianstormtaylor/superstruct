@@ -94,11 +94,8 @@ describe('superstruct', () => {
   describe('deprecated', () => {
     it('does not log deprecated type if value is undefined', () => {
       const tracker = new CallTracker()
-
       const logSpy = buildSpyWithZeroCalls(tracker)
-
       assertValue(undefined, deprecated(any(), logSpy))
-
       tracker.verify()
     })
 
@@ -106,9 +103,7 @@ describe('superstruct', () => {
       const tracker = new CallTracker()
       const fakeLog = (value: unknown, ctx: Context) => {}
       const logSpy = tracker.calls(fakeLog, 1)
-
       assertValue('present', deprecated(any(), logSpy))
-
       tracker.verify()
     })
   })
@@ -123,16 +118,12 @@ export function test<T>(fn: (x: unknown) => T) {}
 /**
  * This emulates `tracker.calls(0)`.
  *
- * `CallTracker.calls` doesn't support to pass 0, therefore we expect it
+ * `CallTracker.calls` doesn't support passing `0`, therefore we expect it
  * to be called once which is our call in this test. This proves that
  * the following action didn't call it.
- *
- * @param {CallTracker} tracker - instance of `assert.CallTracker`
- * @returns {Function} logSpy - spy returned by `tracker.calls()`
  */
 function buildSpyWithZeroCalls(tracker: CallTracker) {
   const logSpy = tracker.calls(1)
   logSpy()
-
   return logSpy
 }
