@@ -1,8 +1,15 @@
-import assert from 'assert'
+import assert, { CallTracker } from 'assert'
 import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
-import { assert as assertValue, create as createValue, StructError } from '..'
+import {
+  any,
+  assert as assertValue,
+  Context,
+  create as createValue,
+  deprecated,
+  StructError,
+} from '..'
 
 describe('superstruct', () => {
   describe('api', () => {
@@ -83,6 +90,23 @@ describe('superstruct', () => {
       })
     }
   })
+
+  describe('deprecated', () => {
+    it('does not log deprecated type if value is undefined', () => {
+      const tracker = new CallTracker()
+      const logSpy = buildSpyWithZeroCalls(tracker)
+      assertValue(undefined, deprecated(any(), logSpy))
+      tracker.verify()
+    })
+
+    it('logs deprecated type to passed function if value is present', () => {
+      const tracker = new CallTracker()
+      const fakeLog = (value: unknown, ctx: Context) => {}
+      const logSpy = tracker.calls(fakeLog, 1)
+      assertValue('present', deprecated(any(), logSpy))
+      tracker.verify()
+    })
+  })
 })
 
 /**
@@ -90,3 +114,16 @@ describe('superstruct', () => {
  */
 
 export function test<T>(fn: (x: unknown) => T) {}
+
+/**
+ * This emulates `tracker.calls(0)`.
+ *
+ * `CallTracker.calls` doesn't support passing `0`, therefore we expect it
+ * to be called once which is our call in this test. This proves that
+ * the following action didn't call it.
+ */
+function buildSpyWithZeroCalls(tracker: CallTracker) {
+  const logSpy = tracker.calls(1)
+  logSpy()
+  return logSpy
+}

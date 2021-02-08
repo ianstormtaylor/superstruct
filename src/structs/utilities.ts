@@ -67,6 +67,29 @@ export function define<T>(name: string, validator: Validator): Struct<T, null> {
 }
 
 /**
+ * Create a new struct based on an existing struct, but the value is allowed to
+ * be `undefined`. `log` will be called if the value is not `undefined`.
+ */
+
+export function deprecated<T>(
+  struct: Struct<T>,
+  log: (value: unknown, ctx: Context) => void
+): Struct<T> {
+  return new Struct({
+    ...struct,
+    refiner: (value, ctx) => value === undefined || struct.refiner(value, ctx),
+    validator(value, ctx) {
+      if (value === undefined) {
+        return true
+      } else {
+        log(value, ctx)
+        return struct.validator(value, ctx)
+      }
+    },
+  })
+}
+
+/**
  * Create a struct with dynamic validation logic.
  *
  * The callback will receive the value currently being validated, and must

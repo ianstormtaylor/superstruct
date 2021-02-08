@@ -17,6 +17,24 @@ assign(object({ id: string() }), object({ name: string() }))
 
 `assign` creates a new struct by mixing the properties of existing object structs, similar to JavaScript's native [`Object.assign`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign).
 
+### `deprecated`
+
+```ts
+object({
+  id: number(),
+  full_name: string(),
+  name: deprecated(string(), (value, ctx) => {
+    console.warn(`${ctx.path} is deprecated, but value was '${value}'. Please use 'full_name' instead.`)
+  }),
+})
+```
+
+```ts
+{ id: 1, name: 'Jane' }
+```
+
+`deprecated` structs validate that a value matches a specific struct, or that it is `undefined`. But in addition, when the value is not `undefined`, it will call the `log` function you pass in so you can warn users that they're using a deprecated API.
+
 ### `dynamic`
 
 ```ts
