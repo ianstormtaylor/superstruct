@@ -37,12 +37,12 @@ assert(data, Article)
 Superstruct ships with validators for all the common JavaScript data types, and you can define custom ones too:
 
 ```js
-import { is, struct, object, string } from 'superstruct'
+import { is, define, object, string } from 'superstruct'
 import isUuid from 'is-uuid'
 import isEmail from 'is-email'
 
-const Email = struct('Email', isEmail)
-const Uuid = struct('Uuid', isUuid.v4)
+const Email = define('Email', isEmail)
+const Uuid = define('Uuid', isUuid.v4)
 
 const User = object({
   id: Uuid,
@@ -67,7 +67,7 @@ Superstruct can also handle coercion of your data before validating it, for exam
 import { create, object, number, string, defaulted } from 'superstruct'
 
 const User = object({
-  id: defaulted(number(), () => i++),
+  id: defaulted(number(), () => 1),
   name: string(),
 })
 
