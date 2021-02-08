@@ -104,7 +104,7 @@ describe('superstruct', () => {
 
     it('logs deprecated type to passed function if value is present', () => {
       const tracker = new CallTracker()
-      const fakeLog = (value: unknown, ctx: Context<unknown, null>) => {}
+      const fakeLog = (value: unknown, ctx: Context) => {}
       const logSpy = tracker.calls(fakeLog, 1)
 
       assertValue('present', deprecated(any(), logSpy))
