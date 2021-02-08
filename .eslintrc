@@ -104,10 +104,6 @@
     "radix": "error",
     "spaced-comment": ["error", "always", { "exceptions": ["-"] }],
     "use-isnan": "error",
-    "valid-jsdoc": [
-      "error",
-      { "prefer": { "return": "returns" }, "requireReturn": false }
-    ],
     "valid-typeof": "error",
     "yield-star-spacing": ["error", "after"],
     "yoda": ["error", "never"]
