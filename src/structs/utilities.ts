@@ -166,7 +166,8 @@ export function partial<S extends ObjectSchema>(
 }
 
 /**
- * Create a new struct based on an existing struct, but calls `log` in case the value is not undefined.
+ * Create a new struct based on an existing struct, but the value is allowed to
+ * be `undefined` and it calls `log` in case the value is not `undefined`.
  */
 
 export function deprecated<T>(
