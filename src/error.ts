@@ -4,12 +4,12 @@
 
 export type Failure = {
   value: any
-  key: string | number | undefined
+  key: any
   type: string
   refinement: string | undefined
   message: string
   branch: Array<any>
-  path: Array<string | number>
+  path: Array<any>
 }
 
 /**
@@ -23,29 +23,25 @@ export type Failure = {
 
 export class StructError extends TypeError {
   value: any
-  key!: string | number | undefined
+  key!: any
   type!: string
   refinement!: string | undefined
-  path!: Array<number | string>
+  path!: Array<any>
   branch!: Array<any>
   failures: () => Array<Failure>;
   [x: string]: any
 
-  constructor(failure: Failure, moreFailures: IterableIterator<Failure>) {
+  constructor(failure: Failure, failures: () => Generator<Failure>) {
+    let cached: Array<Failure> | undefined
     const { message, ...rest } = failure
     const { path } = failure
-    let failures: Array<Failure> | undefined
     const msg =
       path.length === 0 ? message : `At path: ${path.join('.')} -- ${message}`
     super(msg)
     Object.assign(this, rest)
     this.name = this.constructor.name
-    this.failures = (): Array<Failure> => {
-      if (!failures) {
-        failures = [failure, ...moreFailures]
-      }
-
-      return failures
+    this.failures = () => {
+      return (cached ??= [failure, ...failures()])
     }
   }
 }

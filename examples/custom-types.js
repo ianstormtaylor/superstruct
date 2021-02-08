@@ -1,22 +1,22 @@
-import { object, string, optional, struct, assert } from 'superstruct'
+import { object, string, optional, define, assert } from 'superstruct'
 import isEmail from 'is-email'
 import isUuid from 'is-uuid'
 import isUrl from 'is-url'
 
 // Define custom structs with validation functions.
-const Uuid = struct('Uuid', isUuid.v4)
+const Uuid = define('Uuid', isUuid.v4)
 
-const Url = struct('Url', (value) => {
+const Url = define('Url', (value) => {
   return isUrl(value) && value.length < 2048
 })
 
-const Email = struct('Email', (value, context) => {
+const Email = define('Email', (value) => {
   if (!isEmail(value)) {
-    return [context.fail({ code: 'not_email' })]
+    return { code: 'not_email' }
   } else if (value.length >= 256) {
-    return [context.fail({ code: 'too_long' })]
+    return { code: 'too_long' }
   } else {
-    return []
+    return true
   }
 })
 
