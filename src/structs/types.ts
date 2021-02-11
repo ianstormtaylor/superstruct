@@ -232,26 +232,17 @@ export function intersection(Structs: Array<Struct<any, any>>): any {
  * Ensure that a value is an exact value, using `===` for comparison.
  */
 
-export function literal<T extends boolean>(constant: T): Struct<T, null>
-export function literal<T extends number>(
-  constant: T
-): Struct<T, { [K in T[][number]]: K }>
-export function literal<T extends string>(
-  constant: T
-): Struct<T, { [K in T[][number]]: K }>
-export function literal<T>(
-  constant: T
-): Struct<T, T extends string | number ? { [K in T[][number]]: K } : null>
+export function literal<T extends boolean>(constant: T): Struct<T, T>
+export function literal<T extends number>(constant: T): Struct<T, T>
+export function literal<T extends string>(constant: T): Struct<T, T>
+export function literal<T>(constant: T): Struct<T, null>
 export function literal<T>(constant: T): any {
   const description = print(constant)
+  const t = typeof constant
   return new Struct({
     type: 'literal',
     schema:
-      typeof constant === 'string' || typeof constant === 'number'
-        ? {
-            [description]: constant,
-          }
-        : null,
+      t === 'string' || t === 'number' || t === 'boolean' ? constant : null,
     validator(value) {
       return (
         value === constant ||
