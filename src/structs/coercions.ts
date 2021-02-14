@@ -37,7 +37,7 @@ export function coerce<T, S, C>(
 
 export function defaulted<T, S>(
   struct: Struct<T, S>,
-  fallback: any,
+  fallback: Struct<T, S>['TYPE'],
   options: {
     strict?: boolean
   } = {}
