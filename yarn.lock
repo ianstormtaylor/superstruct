@@ -1150,12 +1150,12 @@
   integrity sha512-ngUKcHnytUodUCL7C6EZ+lVXUjTMQb+9p/e1JjV5tN9TVzS98lHozWEFRPY1QcCdwFeMsmVWfZ3DPPT/udCyIw==
 
 "@typescript-eslint/eslint-plugin@^4.8.2":
-  version "4.15.1"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-4.15.1.tgz#835f64aa0a403e5e9e64c10ceaf8d05c3f015180"
-  integrity sha512-yW2epMYZSpNJXZy22Biu+fLdTG8Mn6b22kR3TqblVk50HGNV8Zya15WAXuQCr8tKw4Qf1BL4QtI6kv6PCkLoJw==
+  version "4.16.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-4.16.0.tgz#9ac1ca8f2977068e2751d1e6e9f94110fc3ae605"
+  integrity sha512-+XUwgQu2NOynFBQpzvwqE2kwR+bAY+5t1UQ9Nl18NJQmEC2kxovwPPMy8GHlwMeOpfLT1Gy2uqD7CqLQ0l9MFg==
   dependencies:
-    "@typescript-eslint/experimental-utils" "4.15.1"
-    "@typescript-eslint/scope-manager" "4.15.1"
+    "@typescript-eslint/experimental-utils" "4.16.0"
+    "@typescript-eslint/scope-manager" "4.16.0"
     debug "^4.1.1"
     functional-red-black-tree "^1.0.1"
     lodash "^4.17.15"
@@ -1163,15 +1163,15 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@typescript-eslint/experimental-utils@4.15.1":
-  version "4.15.1"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-4.15.1.tgz#d744d1ac40570a84b447f7aa1b526368afd17eec"
-  integrity sha512-9LQRmOzBRI1iOdJorr4jEnQhadxK4c9R2aEAsm7WE/7dq8wkKD1suaV0S/JucTL8QlYUPU1y2yjqg+aGC0IQBQ==
+"@typescript-eslint/experimental-utils@4.16.0":
+  version "4.16.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-4.16.0.tgz#2a7cd270ee753a03ebcc9578130facf3e3916865"
+  integrity sha512-4mXOw/VHPVybKe7FfI+ROvHDALy3pn9ASft3GwTYuRw27XggNriNoJ1ZNL6x2JSYpeLjHP0y9SoTmM6CXDAq+g==
   dependencies:
     "@types/json-schema" "^7.0.3"
-    "@typescript-eslint/scope-manager" "4.15.1"
-    "@typescript-eslint/types" "4.15.1"
-    "@typescript-eslint/typescript-estree" "4.15.1"
+    "@typescript-eslint/scope-manager" "4.16.0"
+    "@typescript-eslint/types" "4.16.0"
+    "@typescript-eslint/typescript-estree" "4.16.0"
     eslint-scope "^5.0.0"
     eslint-utils "^2.0.0"
 
