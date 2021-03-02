@@ -69,7 +69,7 @@ assert(data, Article)
 Superstruct ships with validators for all the common JavaScript data types, and you can define custom ones too:
 
 ```js
-import { is, struct, object, string } from 'superstruct'
+import { is, define, object, string } from 'superstruct'
 import isUuid from 'is-uuid'
 import isEmail from 'is-email'
 
