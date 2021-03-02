@@ -32,7 +32,7 @@ min(number(), 9000)
 
 > 🤖 If you need an exclusive minimum you can pass `{ exclusive: true }` as the third argument, like `min(number(), 0, { exclusive: true })` for negative numbers.
 
-### `below`
+### `max`
 
 ```ts
 max(number(), 0)
