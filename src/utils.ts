@@ -203,7 +203,9 @@ export type Assign<T, U> = Simplify<U & Omit<T, keyof U>>
  * A schema for enum structs.
  */
 
-export type EnumSchema<T extends string | number> = { [K in T]: K }
+export type EnumSchema<T extends string | number | undefined> = {
+  [K in NonNullable<T>]: K
+}
 
 /**
  * Check if a type is an exact match.
@@ -307,14 +309,14 @@ export type If<B extends Boolean, Then, Else> = B extends true ? Then : Else
  * A schema for any type of struct.
  */
 
-export type StructSchema<T> = [T] extends [string]
-  ? [T] extends [IsMatch<T, string>]
+export type StructSchema<T> = [T] extends [string | undefined]
+  ? [T] extends [IsMatch<T, string | undefined>]
     ? null
     : [T] extends [IsUnion<T>]
     ? EnumSchema<T>
     : T
-  : [T] extends [number]
-  ? [T] extends [IsMatch<T, number>]
+  : [T] extends [number | undefined]
+  ? [T] extends [IsMatch<T, number | undefined>]
     ? null
     : [T] extends [IsUnion<T>]
     ? EnumSchema<T>
