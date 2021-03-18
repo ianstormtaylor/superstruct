@@ -620,6 +620,69 @@ export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>(
   A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q,
   null
 >
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R>(
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R]>
+): Struct<
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R,
+  null
+>
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S>(
+  Structs: TupleSchema<
+    [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S]
+  >
+): Struct<
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S,
+  null
+>
+// prettier-ignore
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T>(
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T]>
+): Struct<
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T,
+  null
+>
+// prettier-ignore
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U>(
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]>
+): Struct<
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U,
+  null
+>
+// prettier-ignore
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V>(
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V]>
+): Struct<
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V,
+  null
+>
+// prettier-ignore
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W>(
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W]>
+): Struct<
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W,
+  null
+>
+// prettier-ignore
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X>(
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X]>
+): Struct<
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X,
+  null
+>
+// prettier-ignore
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y>(
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y]>
+): Struct<
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y,
+  null
+>
+// prettier-ignore
+export function union<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z>(
+  Structs: TupleSchema<[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z]>
+): Struct<
+  A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z,
+  null
+>
 export function union(Structs: Struct<any>[]): any {
   const description = Structs.map((s) => s.type).join(' | ')
   return new Struct({
