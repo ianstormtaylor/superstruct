@@ -149,8 +149,6 @@ There are lots of existing validation libraries—[`joi`](https://github.com/hap
 
 - **They don't throw errors.** Many don't actually throw the errors, forcing you to wrap everywhere. Although helpful in the days of callbacks, not using `throw` in modern JavaScript makes code much more complex.
 
-- **They don't pre-compile schemas.** Many validators define schemas as plain JavaScript objects, which means they delegate the parsing of the schema logic to validation time, making them much slower.
-
 - **They're tightly coupled to other concerns.** Many validators are tightly coupled to Express or other frameworks, which results in one-off, confusing code that isn't reusable across your code base.
 
 - **They use JSON Schema.** Don't get me wrong, JSON Schema _can_ be useful. But it's kind of like HATEOAS—it's usually way more complexity than you need and you aren't using any of its benefits. (Sorry, I said it.)
