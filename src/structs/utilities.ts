@@ -1,10 +1,10 @@
 import { Struct, Context, Validator } from '../struct'
-import { object, optional } from './types'
+import { object, optional, type } from './types'
 import { ObjectSchema, Assign, ObjectType, PartialObjectSchema } from '../utils'
 
 /**
  * Create a new struct that combines the properties properties from multiple
- * object structs.
+ * object or type structs. Its return type will match the first parameter's type.
  *
  * Like JavaScript's `Object.assign` utility.
  */
@@ -53,9 +53,10 @@ export function assign<
   Assign<Assign<Assign<Assign<A, B>, C>, D>, E>
 >
 export function assign(...Structs: Struct<any>[]): any {
+  const isType = Structs[0].type === 'type'
   const schemas = Structs.map((s) => s.schema)
   const schema = Object.assign({}, ...schemas)
-  return object(schema)
+  return isType ? type(schema) : object(schema)
 }
 
 /**
