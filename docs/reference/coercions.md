@@ -1,6 +1,6 @@
 # Coercions
 
-Superstruct allows structs to be augmented with coercion logic, allowing you to transform input data before validating it. This is most commonly used to apply default values to an input, but it can be used for more complex cases like pre-trimming strings, or pre-parsing inputs.
+Superstruct allows structs to be augmented with coercion logic, letting you to transform input data before validating it. This is most commonly used to apply default values to an input, but it can be used for more complex cases like pre-trimming strings, or pre-parsing inputs.
 
 ### `defaulted`
 
