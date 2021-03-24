@@ -625,6 +625,14 @@ export function union(Structs: Struct<any>[]): any {
   return new Struct({
     type: 'union',
     schema: null,
+    coercer(value, ctx) {
+      const firstMatch =
+        Structs.find((s) => {
+          const [e] = s.validate(value, { coerce: true })
+          return !e
+        }) || unknown()
+      return firstMatch.coercer(value, ctx)
+    },
     validator(value, ctx) {
       const failures = []
 
