@@ -1,6 +1,6 @@
-import { object, assign, string, number } from '../../..'
+import { type, object, assign, string, number } from '../../../lib'
 
-const A = object({ a: string() })
+const A = type({ a: string() })
 const B = object({ a: number(), b: number() })
 
 export const Struct = assign(A, B)
@@ -8,6 +8,7 @@ export const Struct = assign(A, B)
 export const data = {
   a: 'invalid',
   b: 2,
+  c: 5,
 }
 
 export const failures = [

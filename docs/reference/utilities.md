@@ -15,7 +15,7 @@ assign(object({ id: string() }), object({ name: string() }))
 }
 ```
 
-`assign` creates a new struct by mixing the properties of existing object structs, similar to JavaScript's native [`Object.assign`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign).
+`assign` creates a new struct by mixing the properties of existing object structs, similar to JavaScript's native [`Object.assign`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign). It can accept `object` and `type` structs, returning a struct matching whichever is passed in as the first parameter (ie, which struct is being "assigned" into).
 
 ### `deprecated`
 
