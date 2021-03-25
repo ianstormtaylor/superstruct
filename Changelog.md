@@ -2,6 +2,14 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
+### `0.15.0` — March 25, 2021
+
+###### FIXED
+
+**Unions can now be coerced.** Previously unions created a barrier in coercion such that structs nested inside unions would not have their coercion logic triggered, but this has been fixed.
+
+**Assigning preserves `type` structs.** Previously using the `assign` helper would implicitly convert `type` structs into `object` structs which wasn't expected and confusing, but this has been fixed.
+
 ### `0.14.0` — January 26, 2021
 
 ###### BREAKING
