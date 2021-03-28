@@ -43,7 +43,7 @@ export function max<T extends number | Date, S extends any>(
     return exclusive
       ? value < threshold
       : value <= threshold ||
-          `Expected a ${struct.type} greater than ${
+          `Expected a ${struct.type} less than ${
             exclusive ? '' : 'or equal to '
           }${threshold} but received \`${value}\``
   })
