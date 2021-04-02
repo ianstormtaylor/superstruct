@@ -92,7 +92,7 @@ partial(
 { name: 'Jane' }
 ```
 
-`partial` allows you to create a new struct based on an existing object struct, but with all of its properties being optional.
+`partial` allows you to create a new struct based on an existing object or type struct, but with all of its properties being optional.
 
 ### `pick`
 
