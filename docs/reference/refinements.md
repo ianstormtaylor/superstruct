@@ -46,6 +46,15 @@ max(number(), 0)
 
 > 🤖 If you need an exclusive maxmimum you can pass `{ exclusive: true }` as the third argument, like `max(number(), 0, { exclusive: true })` for negative numbers.
 
+### `notEmpty`
+
+```
+notEmpty(string())
+notEmpty(array())
+```
+
+`notEmpty` enforces that a string, array, map, or set is not empty. As you may imagine, it does the exact opposite of `empty`.
+
 ### `pattern`
 
 ```ts
