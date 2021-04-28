@@ -374,3 +374,8 @@ const User = object({
 ```
 
 Custom types take validator functions that return either `true/false` or an array of `StructFailure` objects, in case you want to build more helpful error messages.
+
+> 🤖 If you are using Typescript the value will be of type `unknown` by default. You can pass a more specific type for Typescript:
+> ```ts
+> const Email = define<string>('Email', isEmail)
+> ```
