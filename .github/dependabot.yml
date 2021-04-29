@@ -1,0 +1,25 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "13:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: eslint-config-prettier
+    versions:
+    - 8.0.0
+    - 8.1.0
+    - 8.2.0
+  - dependency-name: "@typescript-eslint/parser"
+    versions:
+    - 4.15.2
+    - 4.21.0
+  - dependency-name: "@babel/plugin-transform-modules-commonjs"
+    versions:
+    - 7.12.13
+    - 7.13.8
+  - dependency-name: "@typescript-eslint/eslint-plugin"
+    versions:
+    - 4.15.2
