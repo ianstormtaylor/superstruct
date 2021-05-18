@@ -170,7 +170,7 @@ export function omit<S extends ObjectSchema, K extends keyof S>(
 }
 
 /**
- * Create a new struct based on an existing object struct, but with all of its
+ * Create a new struct based on an existing object or type struct, but with all of its
  * properties allowed to be `undefined`.
  *
  * Like TypeScript's `Partial` utility.
@@ -186,7 +186,7 @@ export function partial<S extends ObjectSchema>(
     schema[key] = optional(schema[key])
   }
 
-  return object(schema) as any
+  return (struct.type === 'type' ? type : object)(schema) as any
 }
 
 /**
