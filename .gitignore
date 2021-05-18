@@ -8,3 +8,4 @@ site/
 tmp/
 umd/
 yarn-error.log
+.idea/
