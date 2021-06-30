@@ -25,6 +25,7 @@ export function any(): Struct<any, null> {
  * and it is preferred to using `array(any())`.
  */
 
+export function array<T extends Struct<any>>(Element: T, isReadonly: true): Struct<ReadonlyArray<Infer<T>>, T>
 export function array<T extends Struct<any>>(Element: T): Struct<Infer<T>[], T>
 export function array(): Struct<unknown[], undefined>
 export function array<T extends Struct<any>>(Element?: T): any {
