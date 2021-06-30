@@ -51,8 +51,8 @@ You can also write your own custom refinements for more domain-specific use case
 ```ts
 import { refine } from 'superstruct'
 
-const MyString = refine(string(), 'MyString', value => {
-  return value.startsWith('The') && value.length > 20)
+const MyString = refine(string(), 'MyString', (value) => {
+  return value.startsWith('The') && value.length > 20
 })
 ```
 
