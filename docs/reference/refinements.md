@@ -62,13 +62,13 @@ pattern(string(), /\d+/)
 
 ```ts
 size(string(), 1, 100)
-size(array(number), 0)
+size(array(number()), 0)
 size(number(), 93, Infinity)
 ```
 
 ```txt
 'a string of text'
-[1, 2, 3]
+[]
 Infinity
 ```
 
