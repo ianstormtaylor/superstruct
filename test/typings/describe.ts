@@ -70,6 +70,10 @@ test<Describe<string & number>>((x) => {
   return intersection([string(), number()])
 })
 
+test<Describe<false>>((x) => {
+  return literal(false)
+})
+
 test<Describe<42>>((x) => {
   return literal(42)
 })

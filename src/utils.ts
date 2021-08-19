@@ -208,10 +208,21 @@ export type EnumSchema<T extends string | number | undefined> = {
 }
 
 /**
- * Check if a type is an exact match.
+ * Check if a type is a match for another whilst treating overlapping
+ * unions as a match.
  */
 
 export type IsMatch<T, G> = T extends G ? (G extends T ? T : never) : never
+
+/**
+ * Check if a type is an exact match.
+ */
+
+export type IsExactMatch<T, U> = (<G>() => G extends T ? 1 : 2) extends <
+  G
+>() => G extends U ? 1 : 2
+  ? T
+  : never
 
 /**
  * Check if a type is a record type.
@@ -322,7 +333,7 @@ export type StructSchema<T> = [T] extends [string | undefined]
     ? EnumSchema<T>
     : T
   : [T] extends [boolean]
-  ? [T] extends [IsMatch<T, boolean>]
+  ? [T] extends [IsExactMatch<T, boolean>]
     ? null
     : T
   : T extends
