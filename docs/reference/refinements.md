@@ -30,7 +30,7 @@ min(number(), 9000)
 
 `min` enforces that a `number` struct is greater than a threshold.
 
-> 🤖 If you need an exclusive minimum you can pass `{ exclusive: true }` as the third argument, like `min(number(), 0, { exclusive: true })` for negative numbers.
+> 🤖 If you need an exclusive minimum you can pass `{ exclusive: true }` as the third argument, like `min(number(), 0, { exclusive: true })` for positive numbers.
 
 ### `max`
 
@@ -44,7 +44,7 @@ max(number(), 0)
 
 `max` enforces that a `number` struct is less than a threshold.
 
-> 🤖 If you need an exclusive maxmimum you can pass `{ exclusive: true }` as the third argument, like `max(number(), 0, { exclusive: true })` for positive numbers.
+> 🤖 If you need an exclusive maxmimum you can pass `{ exclusive: true }` as the third argument, like `max(number(), 0, { exclusive: true })` for negative numbers.
 
 ### `pattern`
 
@@ -62,13 +62,13 @@ pattern(string(), /\d+/)
 
 ```ts
 size(string(), 1, 100)
-size(array(number), 0)
+size(array(number()), 0)
 size(number(), 93, Infinity)
 ```
 
 ```txt
 'a string of text'
-[1, 2, 3]
+[]
 Infinity
 ```
 
