@@ -51,6 +51,16 @@ export function array<T extends Struct<any>>(Element?: T): any {
 }
 
 /**
+ * Ensure that a value is a bigint.
+ */
+
+export function bigint(): Struct<bigint, null> {
+  return define('bigint', (value) => {
+    return typeof value === 'bigint'
+  })
+}
+
+/**
  * Ensure that a value is a boolean.
  */
 
