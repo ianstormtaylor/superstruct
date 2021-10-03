@@ -18,20 +18,6 @@ empty(array())
 
 > 🤖 Technically this is the same as using [`size`](#size) of zero, but "empty" feels slightly nicer and will give a slightly easier to read error.
 
-### `min`
-
-```ts
-min(number(), 9000)
-```
-
-```ts
-9001
-```
-
-`min` enforces that a `number` struct is greater than a threshold.
-
-> 🤖 If you need an exclusive minimum you can pass `{ exclusive: true }` as the third argument, like `min(number(), 0, { exclusive: true })` for positive numbers.
-
 ### `max`
 
 ```ts
@@ -46,14 +32,28 @@ max(number(), 0)
 
 > 🤖 If you need an exclusive maxmimum you can pass `{ exclusive: true }` as the third argument, like `max(number(), 0, { exclusive: true })` for negative numbers.
 
-### `notEmpty`
+### `min`
 
-```
-notEmpty(string())
-notEmpty(array())
+```ts
+min(number(), 9000)
 ```
 
-`notEmpty` enforces that a string, array, map, or set is not empty. As you may imagine, it does the exact opposite of `empty`.
+```ts
+9001
+```
+
+`min` enforces that a `number` struct is greater than a threshold.
+
+> 🤖 If you need an exclusive minimum you can pass `{ exclusive: true }` as the third argument, like `min(number(), 0, { exclusive: true })` for positive numbers.
+
+### `nonempty`
+
+```ts
+nonempty(string())
+nonempty(array())
+```
+
+`nonempty` enforces that a string, array, map, or set is not empty. This does the opposite of `empty`.
 
 ### `pattern`
 

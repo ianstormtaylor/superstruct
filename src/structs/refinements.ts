@@ -4,6 +4,7 @@ import { toFailures } from '../utils'
 /**
  * Ensure that a string, array, map, or set is empty.
  */
+
 export function empty<
   T extends string | any[] | Map<any, any> | Set<any>,
   S extends any
@@ -13,22 +14,6 @@ export function empty<
     return (
       size === 0 ||
       `Expected an empty ${struct.type} but received one with a size of \`${size}\``
-    )
-  })
-}
-
-/**
- * Ensure that a string, array, map or set is not empty.
- */
-export function notEmpty<
-  T extends string | any[] | Map<any, any> | Set<any>,
-  S extends any
->(struct: Struct<T, S>): Struct<T, S> {
-  return refine(struct, 'not empty', (value) => {
-    const size = getSize(value)
-    return (
-      size > 0 ||
-      `Expected a not empty ${struct.type} but received an empty one`
     )
   })
 }
@@ -84,6 +69,23 @@ export function min<T extends number | Date, S extends any>(
           }${threshold} but received \`${value}\``
   })
 }
+
+/**
+ * Ensure that a string, array, map or set is not empty.
+ */
+
+export function nonempty<
+  T extends string | any[] | Map<any, any> | Set<any>,
+  S extends any
+>(struct: Struct<T, S>): Struct<T, S> {
+  return refine(struct, 'nonempty', (value) => {
+    const size = getSize(value)
+    return (
+      size > 0 || `Expected a nonempty ${struct.type} but received an empty one`
+    )
+  })
+}
+
 /**
  * Ensure that a string matches a regular expression.
  */
