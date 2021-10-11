@@ -9,22 +9,21 @@ export function empty<
   T extends string | any[] | Map<any, any> | Set<any>,
   S extends any
 >(struct: Struct<T, S>): Struct<T, S> {
-  const expected = `Expected an empty ${struct.type}`
-
   return refine(struct, 'empty', (value) => {
-    if (value instanceof Map || value instanceof Set) {
-      const { size } = value
-      return (
-        size === 0 || `${expected} but received one with a size of \`${size}\``
-      )
-    } else {
-      const { length } = value as string | any[]
-      return (
-        length === 0 ||
-        `${expected} but received one with a length of \`${length}\``
-      )
-    }
+    const size = getSize(value)
+    return (
+      size === 0 ||
+      `Expected an empty ${struct.type} but received one with a size of \`${size}\``
+    )
   })
+}
+
+function getSize(value: string | any[] | Map<any, any> | Set<any>): number {
+  if (value instanceof Map || value instanceof Set) {
+    return value.size
+  } else {
+    return value.length
+  }
 }
 
 /**
@@ -70,6 +69,23 @@ export function min<T extends number | Date, S extends any>(
           }${threshold} but received \`${value}\``
   })
 }
+
+/**
+ * Ensure that a string, array, map or set is not empty.
+ */
+
+export function nonempty<
+  T extends string | any[] | Map<any, any> | Set<any>,
+  S extends any
+>(struct: Struct<T, S>): Struct<T, S> {
+  return refine(struct, 'nonempty', (value) => {
+    const size = getSize(value)
+    return (
+      size > 0 || `Expected a nonempty ${struct.type} but received an empty one`
+    )
+  })
+}
+
 /**
  * Ensure that a string matches a regular expression.
  */
