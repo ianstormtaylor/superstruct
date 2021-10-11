@@ -9,7 +9,7 @@ import {
   create as createValue,
   deprecated,
   StructError,
-} from '..'
+} from '../src'
 
 describe('superstruct', () => {
   describe('api', () => {

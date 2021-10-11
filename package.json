@@ -28,8 +28,8 @@
     "@types/lodash": "^4.14.144",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.7.1",
-    "@typescript-eslint/eslint-plugin": "^4.8.2",
-    "@typescript-eslint/parser": "^4.8.2",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^7.2.0",
@@ -102,5 +102,6 @@
     "validate",
     "validation",
     "validator"
-  ]
+  ],
+  "dependencies": {}
 }
