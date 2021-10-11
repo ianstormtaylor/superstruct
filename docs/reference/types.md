@@ -37,6 +37,21 @@ array(object({ id: number() }))
 
 `array` structs accept a list of values of a specific type.
 
+### `bigint`
+
+```ts
+bigint()
+```
+
+```ts
+0n
+3n
+4000030n
+BigInt(10n^1000n)
+```
+
+`bigint` structs validate that a value is a bigint.
+
 ### `boolean`
 
 ```ts
