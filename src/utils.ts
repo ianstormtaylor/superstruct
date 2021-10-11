@@ -194,6 +194,16 @@ export function* run<T, S>(
 }
 
 /**
+ * Convert a union of type to an intersection.
+ */
+
+export type UnionToIntersection<U> = (
+  U extends any ? (arg: U) => any : never
+) extends (arg: infer I) => void
+  ? I
+  : never
+
+/**
  * Assign properties from one type to another, overwriting existing.
  */
 
@@ -366,3 +376,33 @@ export type StructSchema<T> = [T] extends [string | undefined]
  */
 
 export type TupleSchema<T> = { [K in keyof T]: Struct<T[K]> }
+
+/**
+ * Shorthand type for matching any `Struct`.
+ */
+
+export type AnyStruct = Struct<any, any>
+
+/**
+ * Infer a tuple of types from a tuple of `Struct`s.
+ *
+ * This is used to recursively retrieve the type from `union` `intersection` and
+ * `tuple` structs.
+ */
+
+export type InferStructTuple<
+  Tuple extends AnyStruct[],
+  Length extends number = Tuple['length']
+> = Length extends Length
+  ? number extends Length
+    ? Tuple
+    : _InferTuple<Tuple, Length, []>
+  : never
+type _InferTuple<
+  Tuple extends AnyStruct[],
+  Length extends number,
+  Accumulated extends unknown[],
+  Index extends number = Accumulated['length']
+> = Index extends Length
+  ? Accumulated
+  : _InferTuple<Tuple, Length, [...Accumulated, Infer<Tuple[Index]>]>
