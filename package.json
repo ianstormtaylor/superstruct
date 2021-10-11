@@ -18,6 +18,9 @@
     "umd",
     "lib"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "devDependencies": {
     "@babel/cli": "^7.6.3",
     "@babel/core": "^7.6.3",
