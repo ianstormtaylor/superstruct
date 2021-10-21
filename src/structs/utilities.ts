@@ -149,6 +149,10 @@ export function lazy<T>(fn: () => Struct<T, any>): Struct<T, null> {
       struct ??= fn()
       return struct.coercer(value, ctx)
     },
+    refiner(value, ctx) {
+      struct ??= fn()
+      return struct.refiner(value, ctx)
+    },
   })
 }
 
