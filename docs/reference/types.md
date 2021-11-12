@@ -214,7 +214,7 @@ null
 ### `object`
 
 ```ts
-struct({
+object({
   id: number(),
   name: string(),
 })
