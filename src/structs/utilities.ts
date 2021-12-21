@@ -166,7 +166,10 @@ export function omit<S extends ObjectSchema, K extends keyof S>(
     delete subschema[key]
   }
 
-  return object(subschema as Omit<S, K>)
+  switch (struct.type) {
+    case "type": return type(subschema as Omit<S, K>)
+    default: return object(subschema as Omit<S, K>)
+  }
 }
 
 /**
