@@ -116,6 +116,10 @@ export function dynamic<T>(
       const struct = fn(value, ctx)
       return struct.coercer(value, ctx)
     },
+    refiner(value, ctx) {
+      const struct = fn(value, ctx)
+      return struct.refiner(value, ctx)
+    },
   })
 }
 
