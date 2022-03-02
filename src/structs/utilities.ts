@@ -116,6 +116,10 @@ export function dynamic<T>(
       const struct = fn(value, ctx)
       return struct.coercer(value, ctx)
     },
+    refiner(value, ctx) {
+      const struct = fn(value, ctx)
+      return struct.refiner(value, ctx)
+    },
   })
 }
 
@@ -144,6 +148,10 @@ export function lazy<T>(fn: () => Struct<T, any>): Struct<T, null> {
     coercer(value, ctx) {
       struct ??= fn()
       return struct.coercer(value, ctx)
+    },
+    refiner(value, ctx) {
+      struct ??= fn()
+      return struct.refiner(value, ctx)
     },
   })
 }
