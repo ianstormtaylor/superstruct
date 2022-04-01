@@ -501,9 +501,7 @@ export function union<A extends AnyStruct, B extends AnyStruct[]>(
     schema: null,
     *entries(value, ctx) {
       const S = getMatchingStruct(value)
-      const entiresToYield = [...S.entries(value, ctx)]
-
-      yield* entiresToYield
+      yield* S.entries(value, ctx)
     },
     coercer(value, ctx) {
       const firstMatch = getMatchingStruct(value)
