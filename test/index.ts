@@ -15,6 +15,7 @@ import {
 describe('superstruct', () => {
   describe('api', () => {
     require('./api/assert')
+    require('./api/coerce')
     require('./api/create')
     require('./api/is')
     require('./api/mask')
