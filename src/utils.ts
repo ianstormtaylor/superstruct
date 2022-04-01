@@ -148,7 +148,12 @@ export function* run<T, S>(
 
   let valid = true
 
-  for (const failure of struct.validator(value, ctx)) {
+  for (const failure of struct.validator(value, {
+    path,
+    branch,
+    coerce,
+    mask,
+  })) {
     valid = false
     yield [failure, undefined]
   }

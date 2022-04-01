@@ -12,7 +12,10 @@ export class Struct<T = unknown, S = unknown> {
   type: string
   schema: S
   coercer: (value: unknown, context: Context) => unknown
-  validator: (value: unknown, context: Context) => Iterable<Failure>
+  validator: (
+    value: unknown,
+    context: Context & { coerce: boolean; mask: boolean }
+  ) => Iterable<Failure>
   refiner: (value: T, context: Context) => Iterable<Failure>
   entries: (
     value: unknown,

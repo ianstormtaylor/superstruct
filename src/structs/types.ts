@@ -491,15 +491,22 @@ export function union<A extends AnyStruct, B extends AnyStruct[]>(
   Structs: [A, ...B]
 ): Struct<Infer<A> | InferStructTuple<B>[number], null> {
   const description = Structs.map((s) => s.type).join(' | ')
+  const getMatchingStruct = (value: unknown) =>
+    Structs.find((s) => {
+      const [e] = s.validate(value, { coerce: true })
+      return !e
+    }) || unknown()
   return new Struct({
     type: 'union',
     schema: null,
+    *entries(value, ctx) {
+      const S = getMatchingStruct(value)
+      const entiresToYield = [...S.entries(value, ctx)]
+
+      yield* entiresToYield
+    },
     coercer(value, ctx) {
-      const firstMatch =
-        Structs.find((s) => {
-          const [e] = s.validate(value, { coerce: true })
-          return !e
-        }) || unknown()
+      const firstMatch = getMatchingStruct(value)
       return firstMatch.coercer(value, ctx)
     },
     validator(value, ctx) {

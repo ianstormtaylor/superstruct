@@ -47,11 +47,13 @@ describe('coercion', () => {
       }),
     ])
 
-    const [, coercedDateObject] = validate(
+    const [error, coercedDateObject] = validate(
       { createdAt: '2021-11-11T11:11:11.111Z' },
       simpleValidationWithObject,
       { coerce: true }
     )
+
+    deepStrictEqual(error, undefined)
 
     deepStrictEqual(coercedDateObject, {
       createdAt: expectedDateObject,
