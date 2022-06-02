@@ -1320,9 +1320,9 @@
     "@types/node" "*"
 
 "@types/lodash@^4.14.144":
-  version "4.14.179"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.179.tgz#490ec3288088c91295780237d2497a3aa9dfb5c5"
-  integrity sha512-uwc1x90yCKqGcIOAT6DwOSuxnrAbpkdPsUOZtwrXb4D/6wZs+6qG7QnIawDuZWg0sWpxl+ltIKCaLoMlna678w==
+  version "4.14.182"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.182.tgz#05301a4d5e62963227eaafe0ce04dd77c54ea5c2"
+  integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
 
 "@types/minimist@^1.2.0":
   version "1.2.1"
@@ -3141,9 +3141,9 @@ is-docker@^2.0.0:
   integrity sha512-ZOoqiXfEwtGknTiuDEy8pN2CfE3TxMHprvNer1mXiqwkOT77Rw3YVrUQ52EqAOU3QAWDQ+bQdx7HJzrv7LS2Hw==
 
 is-email@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/is-email/-/is-email-1.0.1.tgz#6f98c0ab6a0e3936dc4da7f2ab334f7faebbaa56"
-  integrity sha512-/+OIyLQ3Vg37svRz0sbw2UIxC0jdVKnIlBJ2BMzDf/xi4wThTel1plETP/+KSyarKgxluljIzJCYjzuvSnANfA==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/is-email/-/is-email-1.0.2.tgz#51a618e2ddc895988ceb550df9f587b3607560e5"
+  integrity sha512-UojUgD2EhDTBQ2SGKwrK9edce5phRzgLsP+V5+Uu2Swi+uvjVXgH3zduM3HhT9iaC/9Kq19/TYUbP0jPoi6ioA==
 
 is-extglob@^2.1.1:
   version "2.1.1"
