@@ -2,7 +2,7 @@
 
 Superstruct is built with TypeScript, and is designed to integrate seamlessly with its guards and assertions. Which means that if you're using TypeScript too you'll get compile-time typings for your data.
 
-> 🤖 Warning: If you are not using TypeScript's [`strictNullChecks`](https://www.typescriptlang.org/tsconfig#strictNullChecks) option, Superstruct will be unable to infer your "optional" types correctly and will mark all types as optional.
+> 🤖 Warning: You must enable TypeScript's [`strictNullChecks`](https://www.typescriptlang.org/tsconfig#strictNullChecks) option in your `tsconfig.json` for Superstruct to work properly with "optional" types. Note that `strictNullChecks` is disabled by default. If you enable `strict`, `strictNullChecks` will automatically be enabled.
 
 ## Narrowing Types
 

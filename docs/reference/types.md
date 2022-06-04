@@ -244,6 +244,8 @@ undefined
 
 `optional` structs validate that a value matches a specific struct, or that it is `undefined`.
 
+> 🤖 Warning: If you are using TypeScript, you must enable TypeScript's [`strictNullChecks`](https://www.typescriptlang.org/tsconfig#strictNullChecks) option in your `tsconfig.json` for Superstruct to work properly with "optional" types. Note that `strictNullChecks` is disabled by default. If you enable `strict`, `strictNullChecks` will automatically be enabled.
+
 ### `record`
 
 ```ts
