@@ -146,10 +146,10 @@ export function* run<T, S>(
     }
   }
 
-  let valid = true
+  let validity: StructValidity = 'valid'
 
   for (const failure of struct.validator(value, ctx)) {
-    valid = false
+    validity = updateStructValidityAfterFailure(validity, failure)
     yield [failure, undefined]
   }
 
@@ -163,7 +163,7 @@ export function* run<T, S>(
 
     for (const t of ts) {
       if (t[0]) {
-        valid = false
+        validity = updateStructValidityAfterFailure(validity, t[0])
         yield [t[0], undefined]
       } else if (coerce) {
         v = t[1]
@@ -181,16 +181,33 @@ export function* run<T, S>(
     }
   }
 
-  if (valid) {
+  if (validity === 'valid' || validity === 'refinement-failed') {
     for (const failure of struct.refiner(value as T, ctx)) {
-      valid = false
+      validity = updateStructValidityAfterFailure(validity, failure)
       yield [failure, undefined]
     }
   }
 
-  if (valid) {
+  if (validity === 'valid') {
     yield [undefined, value as T]
   }
+}
+
+type StructValidity = 'valid' | 'invalid' | 'refinement-failed'
+
+function updateStructValidityAfterFailure(
+  validity: StructValidity,
+  failure: Failure
+): StructValidity {
+  if (validity === 'invalid') {
+    return validity
+  }
+
+  if (failure.refinement !== undefined) {
+    return 'refinement-failed'
+  }
+
+  return 'invalid'
 }
 
 /**

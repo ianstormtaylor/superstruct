@@ -1,5 +1,13 @@
 import { deepStrictEqual, strictEqual } from 'assert'
-import { validate, string, StructError, define, refine, object } from '../..'
+import {
+  validate,
+  string,
+  StructError,
+  define,
+  refine,
+  object,
+  any,
+} from '../..'
 
 describe('validate', () => {
   it('valid as helper', () => {
@@ -92,5 +100,41 @@ describe('validate', () => {
 
     B.validate({ a: null })
     deepStrictEqual(order, ['validator', 'refiner'])
+  })
+
+  it('refiners even if nested refiners fail', () => {
+    let ranOuterRefiner = false
+
+    const A = refine(any(), 'A', () => {
+      return 'inner refiner failed'
+    })
+
+    const B = refine(object({ a: A }), 'B', () => {
+      ranOuterRefiner = true
+      return true
+    })
+
+    const [error] = B.validate({ a: null })
+    // Collect all failures. Ensures all validation runs.
+    error?.failures()
+    strictEqual(ranOuterRefiner, true)
+  })
+
+  it('skips refiners if validators return errors', () => {
+    let ranRefiner = false
+
+    const A = define('A', () => {
+      return false
+    })
+
+    const B = refine(object({ a: A }), 'B', () => {
+      ranRefiner = true
+      return true
+    })
+
+    const [error] = B.validate({ a: null })
+    // Collect all failures. Ensures all validation runs.
+    error?.failures()
+    strictEqual(ranRefiner, false)
   })
 })
