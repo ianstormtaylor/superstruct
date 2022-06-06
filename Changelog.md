@@ -2,6 +2,12 @@
 
 This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
 
+### `0.16.0` — June 6, 2022
+
+###### BREAKING
+
+**Refinement functions are now called with valid, but potentially unrefined values.** Previously the functions passed in to `refine` would always be called with sub-elements (eg. when using objects or arrays) that were completely valid **and** refined. However, this prevented collecting all the refinement errors from subelements in a validation in one go, which is common when validating forms. _Note: this should not have any affect on almost all use cases, so you're safe to upgrade._
+
 ### `0.15.0` — March 25, 2021
 
 ###### FIXED
