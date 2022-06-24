@@ -38,6 +38,21 @@ Test that `value` is valid, returning a boolean representing whether it is valid
 
 > 🤖 When using TypeScript `is` acts as a type guard, so you can use it in an `if` statement to ensure that inside the statement the `value` matches the shape of the struct.
 
+### `mask`
+
+`mask<T>(value: unknown, struct: Struct<T>) => T`
+
+```ts
+const user = mask(value, User)
+```
+
+Mask a `value`, returning a new value containing only properties defined by a `struct`. Conceptually this is similar to `create`, except that extra properties are omitted from the newly created value instead of throwing a [`StructError`](./errors.md#structerror).
+
+Note that when `mask` is used with `type` — given that `type` signals to the core that an object might have arbitrary additional properties — unknown properties will be retained in the returned value.
+
+> 🤖 Just like `create`, `mask` includes coercion logic and works recursively.
+
+
 ### `validate`
 
 `validate<T>(value: unknown, struct: Struct<T>, options: Object) => [StructError, T]`
