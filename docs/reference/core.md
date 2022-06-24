@@ -14,7 +14,7 @@ Assert that `value` is valid according to a `struct`. If the value is invalid a 
 
 ### `create`
 
-`create<T>(value: unknown, struct: Struct<T>) => unknown`
+`create<T>(value: unknown, struct: Struct<T>) => T`
 
 ```ts
 const user = create(value, User)
