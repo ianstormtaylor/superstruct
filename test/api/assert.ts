@@ -1,5 +1,5 @@
 import { throws, doesNotThrow } from 'assert'
-import { assert, string, StructError } from '../..'
+import { assert, string, StructError } from '../../src'
 
 describe('assert', () => {
   it('valid as helper', () => {

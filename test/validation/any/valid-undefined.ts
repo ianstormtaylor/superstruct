@@ -1,4 +1,4 @@
-import { any } from '../../..'
+import { any } from '../../../src'
 
 export const Struct = any()
 

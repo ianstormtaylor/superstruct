@@ -1,4 +1,4 @@
-import { union, string, number, defaulted, type } from '../../..'
+import { union, string, number, defaulted, type } from '../../../src'
 
 const A = string()
 const B = type({ a: number(), b: defaulted(number(), 5) })

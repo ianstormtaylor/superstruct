@@ -1,4 +1,4 @@
-import { assert, empty, string, array, map, set } from '../..'
+import { assert, empty, string, array, map, set } from '../../src'
 import { test } from '..'
 
 test<string>((x) => {

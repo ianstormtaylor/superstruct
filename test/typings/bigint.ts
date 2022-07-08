@@ -1,4 +1,4 @@
-import { assert, bigint } from '../../lib'
+import { assert, bigint } from '../../src'
 import { test } from '..'
 
 test<bigint>((x) => {

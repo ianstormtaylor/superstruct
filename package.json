@@ -28,12 +28,14 @@
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-typescript": "^7.6.0",
     "@babel/register": "^7.6.2",
+    "@types/expect": "^24.3.0",
     "@types/lodash": "^4.14.144",
-    "@types/mocha": "^9.0.0",
+    "@types/mocha": "^9.1.1",
     "@types/node": "^17.0.21",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "babel-eslint": "^10.0.3",
+    "cross-env": "^7.0.3",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-import": "^2.22.1",
@@ -52,6 +54,7 @@
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-ts": "^3.0.1",
+    "ts-mocha": "^10.0.0",
     "typescript": "^4.1.2"
   },
   "scripts": {
@@ -69,8 +72,7 @@
     "lint:eslint": "eslint '{src,test}/*.{js,ts}'",
     "lint:prettier": "prettier --list-different '**/*.{js,json,ts}'",
     "release": "yarn build && yarn lint && np",
-    "test": "yarn build:types && yarn test:types && yarn build:cjs && yarn test:mocha",
-    "test:mocha": "mocha --require ./test/register.cjs --require source-map-support/register ./test/index.ts",
+    "test": "cross-env TS_NODE_COMPILER_OPTIONS='{ \"module\": \"commonjs\", \"target\": \"es2019\" }' ts-mocha -p ./test/tsconfig.json ./test/index.ts",
     "test:types": "tsc --noEmit && tsc --project ./test/tsconfig.json --noEmit",
     "watch": "yarn build:cjs --watch",
     "watch:types": "yarn build:types --watch"

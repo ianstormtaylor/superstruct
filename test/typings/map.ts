@@ -1,4 +1,4 @@
-import { assert, map, string, number } from '../..'
+import { assert, map, string, number } from '../../src'
 import { test } from '..'
 
 test<Map<string, number>>((x) => {

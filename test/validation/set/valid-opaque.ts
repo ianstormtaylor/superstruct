@@ -1,4 +1,4 @@
-import { set } from '../../..'
+import { set } from '../../../src'
 
 export const Struct = set()
 

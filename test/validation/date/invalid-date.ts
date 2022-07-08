@@ -1,4 +1,4 @@
-import { date } from '../../..'
+import { date } from '../../../src'
 
 export const Struct = date()
 

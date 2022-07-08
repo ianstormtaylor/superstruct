@@ -1,4 +1,4 @@
-import { assert, string, trimmed } from '../..'
+import { assert, string, trimmed } from '../../src'
 import { test } from '..'
 
 test<string>((x) => {

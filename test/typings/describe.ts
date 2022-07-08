@@ -27,7 +27,7 @@ import {
   max,
   min,
   pattern,
-} from '../..'
+} from '../../src'
 import { test } from '..'
 
 test<Describe<any>>((x) => {

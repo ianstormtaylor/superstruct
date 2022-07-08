@@ -1,4 +1,4 @@
-import { lazy, nonempty, string } from '../../..'
+import { lazy, nonempty, string } from '../../../src'
 
 export const Struct = lazy(() => nonempty(string()))
 

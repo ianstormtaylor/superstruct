@@ -1,4 +1,4 @@
-import { assert, omit, object, number, string, type } from '../..'
+import { assert, omit, object, number, string, type } from '../../src'
 import { test } from '..'
 
 test<{

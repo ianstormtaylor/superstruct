@@ -1,4 +1,4 @@
-import { assert, array, number } from '../..'
+import { assert, array, number } from '../../src'
 import { test } from '..'
 
 test<Array<unknown>>((x) => {

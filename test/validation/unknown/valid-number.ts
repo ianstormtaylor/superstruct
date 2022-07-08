@@ -1,4 +1,4 @@
-import { unknown } from '../../..'
+import { unknown } from '../../../src'
 
 export const Struct = unknown()
 

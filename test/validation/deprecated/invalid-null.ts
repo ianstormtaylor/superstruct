@@ -1,4 +1,4 @@
-import { deprecated, string } from '../../..'
+import { deprecated, string } from '../../../src'
 
 export const Struct = deprecated(string(), () => {})
 

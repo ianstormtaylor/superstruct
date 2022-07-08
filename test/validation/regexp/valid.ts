@@ -1,4 +1,4 @@
-import { regexp } from '../../..'
+import { regexp } from '../../../src'
 
 export const Struct = regexp()
 

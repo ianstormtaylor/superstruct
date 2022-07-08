@@ -1,4 +1,4 @@
-import { assert, func } from '../..'
+import { assert, func } from '../../src'
 import { test } from '..'
 
 test<Function>((x) => {

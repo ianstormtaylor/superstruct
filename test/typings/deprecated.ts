@@ -1,4 +1,4 @@
-import { assert, object, deprecated, any, Context } from '../..'
+import { assert, object, deprecated, any, Context } from '../../src'
 import { test } from '..'
 
 test<unknown>((x) => {

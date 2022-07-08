@@ -1,4 +1,4 @@
-import { string, number, coerce } from '../../..'
+import { string, number, coerce } from '../../../src'
 
 export const Struct = coerce(string(), number(), (x) => 'known')
 

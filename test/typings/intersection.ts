@@ -1,4 +1,4 @@
-import { assert, intersection, object, string } from '../..'
+import { assert, intersection, object, string } from '../../src'
 import { test } from '..'
 
 test<{ a: string; b: string }>((x) => {

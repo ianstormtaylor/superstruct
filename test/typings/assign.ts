@@ -1,4 +1,4 @@
-import { assert, assign, object, number, string } from '../..'
+import { assert, assign, object, number, string } from '../../src'
 import { test } from '..'
 
 test<{

@@ -1,4 +1,4 @@
-import { string, size } from '../../..'
+import { string, size } from '../../../src'
 
 export const Struct = size(string(), 4)
 

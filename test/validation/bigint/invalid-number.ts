@@ -1,4 +1,4 @@
-import { bigint } from '../../../lib'
+import { bigint } from '../../../src'
 
 export const Struct = bigint()
 

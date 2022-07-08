@@ -1,4 +1,4 @@
-import { assert, nullable, string, object, enums } from '../..'
+import { assert, nullable, string, object, enums } from '../../src'
 import { test } from '..'
 
 test<string | null>((x) => {

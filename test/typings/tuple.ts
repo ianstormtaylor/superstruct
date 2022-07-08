@@ -1,4 +1,4 @@
-import { assert, tuple, string, number, literal } from '../..'
+import { assert, tuple, string, number, literal } from '../../src'
 import { test } from '..'
 
 test<[string, number]>((x) => {

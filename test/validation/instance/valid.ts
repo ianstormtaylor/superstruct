@@ -1,4 +1,4 @@
-import { instance } from '../../..'
+import { instance } from '../../../src'
 
 export const Struct = instance(Array)
 

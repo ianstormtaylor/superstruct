@@ -1,4 +1,4 @@
-import { intersection, refine, number } from '../../..'
+import { intersection, refine, number } from '../../../src'
 
 const A = number()
 const B = refine(number(), 'positive', (value) => value > 0)

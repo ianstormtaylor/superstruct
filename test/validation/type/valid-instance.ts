@@ -1,4 +1,4 @@
-import { type, string } from '../../..'
+import { type, string } from '../../../src'
 
 class Person {
   name: string

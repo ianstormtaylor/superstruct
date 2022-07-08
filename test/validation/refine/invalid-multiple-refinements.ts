@@ -1,4 +1,4 @@
-import { string, refine, object } from '../../..'
+import { string, refine, object } from '../../../src'
 
 const PasswordValidator = refine(string(), 'MinimumLength', (pw) =>
   pw.length >= 8 ? true : 'required minimum length of 8'
