@@ -7,11 +7,11 @@
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
   "source": "./src/index.ts",
   "types": "./lib/index.d.ts",
-  "main": "./lib/index.cjs",
+  "main": "./lib/index.cjs.js",
   "module": "./lib/index.es.js",
   "exports": {
     "import": "./lib/index.es.js",
-    "require": "./lib/index.cjs"
+    "require": "./lib/index.cjs.js"
   },
   "sideEffects": false,
   "files": [
