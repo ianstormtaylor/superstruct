@@ -98,6 +98,8 @@ Superstruct can also handle coercion of your data before validating it, for exam
 ```ts
 import { create, object, number, string, defaulted } from 'superstruct'
 
+let i = 0
+
 const User = object({
   id: defaulted(number(), () => i++),
   name: string(),
@@ -110,7 +112,7 @@ const data = {
 // You can apply the defaults to your data while validating.
 const user = create(data, User)
 // {
-//   id: 1,
+//   id: 0,
 //   name: 'Jane',
 // }
 ```
