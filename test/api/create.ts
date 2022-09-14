@@ -1,5 +1,5 @@
-import { strictEqual } from 'assert'
-import { create, string, defaulted } from '../..'
+import { strictEqual, deepEqual } from 'assert'
+import { type, optional, create, string, defaulted } from '../..'
 
 describe('create', () => {
   it('missing as helper', () => {
@@ -20,5 +20,14 @@ describe('create', () => {
   it('not missing as method', () => {
     const S = defaulted(string(), 'default')
     strictEqual(S.create('string'), 'string')
+  })
+
+  it('optional fields not undefined', () => {
+    const S = type({
+      a: string(),
+      b: optional(string()),
+      c: optional(type({ d: string() })),
+    })
+    deepEqual(S.create({ a: 'a' }), { a: 'a' })
   })
 })
