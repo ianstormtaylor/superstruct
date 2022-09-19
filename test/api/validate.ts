@@ -7,7 +7,7 @@ import {
   refine,
   object,
   any,
-} from '../..'
+} from '../../src'
 
 describe('validate', () => {
   it('valid as helper', () => {

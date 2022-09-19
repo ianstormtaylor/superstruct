@@ -1,4 +1,4 @@
-import { omit, object, string, number } from '../../..'
+import { omit, object, string, number } from '../../../src'
 
 export const Struct = omit(
   object({

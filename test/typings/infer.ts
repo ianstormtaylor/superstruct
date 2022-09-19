@@ -1,4 +1,4 @@
-import { Infer, object, number, string, assert } from '../..'
+import { Infer, object, number, string, assert } from '../../src'
 import { test } from '..'
 
 const Struct = object()

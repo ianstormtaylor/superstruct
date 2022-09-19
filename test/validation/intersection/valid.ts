@@ -1,4 +1,4 @@
-import { type, intersection, string, number } from '../../..'
+import { type, intersection, string, number } from '../../../src'
 
 const A = type({ a: string() })
 const B = type({ b: number() })

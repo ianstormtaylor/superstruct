@@ -1,4 +1,4 @@
-import { object, assign, string, number } from '../../../lib'
+import { object, assign, string, number } from '../../../src'
 
 const A = object({ a: string() })
 const B = object({ a: number(), b: number() })

@@ -1,4 +1,4 @@
-import { string, pattern } from '../../..'
+import { string, pattern } from '../../../src'
 
 export const Struct = pattern(string(), /\d+/)
 

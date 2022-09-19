@@ -1,4 +1,4 @@
-import { literal } from '../../..'
+import { literal } from '../../../src'
 
 export const Struct = literal(42)
 

@@ -1,4 +1,4 @@
-import { assert, boolean } from '../..'
+import { assert, boolean } from '../../src'
 import { test } from '..'
 
 test<boolean>((x) => {

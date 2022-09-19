@@ -1,4 +1,4 @@
-import { assert, type, dynamic, literal, string, number } from '../../..'
+import { assert, type, dynamic, literal, string, number } from '../../../src'
 
 const Entity = type({
   object: string(),

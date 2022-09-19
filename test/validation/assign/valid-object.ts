@@ -1,4 +1,4 @@
-import { type, assign, string, number } from '../../..'
+import { type, assign, string, number } from '../../../src'
 
 const A = type({ a: string() })
 const B = type({ a: number(), b: number() })

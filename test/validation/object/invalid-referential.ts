@@ -1,4 +1,4 @@
-import { object, string, pattern, refine } from '../../..'
+import { object, string, pattern, refine } from '../../../src'
 
 const Section = pattern(string(), /^\d+(\.\d+)*$/)
 

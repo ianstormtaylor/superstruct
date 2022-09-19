@@ -1,4 +1,4 @@
-import { object, string, number } from '../../..'
+import { object, string, number } from '../../../src'
 
 export const Struct = object({
   name: string(),

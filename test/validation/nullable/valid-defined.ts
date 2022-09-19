@@ -1,4 +1,4 @@
-import { number, nullable } from '../../..'
+import { number, nullable } from '../../../src'
 
 export const Struct = nullable(number())
 

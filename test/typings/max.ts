@@ -1,4 +1,4 @@
-import { assert, number, max } from '../..'
+import { assert, number, max } from '../../src'
 import { test } from '..'
 
 test<number>((x) => {

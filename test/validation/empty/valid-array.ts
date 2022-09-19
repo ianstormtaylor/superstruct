@@ -1,4 +1,4 @@
-import { number, array, empty } from '../../..'
+import { number, array, empty } from '../../../src'
 
 export const Struct = empty(array(number()))
 

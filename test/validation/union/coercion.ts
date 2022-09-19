@@ -1,4 +1,4 @@
-import { union, string, number, defaulted } from '../../..'
+import { union, string, number, defaulted } from '../../../src'
 
 const A = defaulted(string(), 'foo')
 const B = number()

@@ -1,4 +1,4 @@
-import { assert, set, string } from '../..'
+import { assert, set, string } from '../../src'
 import { test } from '..'
 
 test<Set<string>>((x) => {

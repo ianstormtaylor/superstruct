@@ -1,4 +1,4 @@
-import { assert, string } from '../..'
+import { assert, string } from '../../src'
 import { test } from '..'
 
 test<string>((x) => {

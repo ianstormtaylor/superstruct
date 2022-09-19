@@ -1,4 +1,4 @@
-import { map, size, number, string } from '../../..'
+import { map, size, number, string } from '../../../src'
 
 export const Struct = size(map(number(), string()), 1, 5)
 

@@ -1,4 +1,4 @@
-import { assert, instance } from '../..'
+import { assert, instance } from '../../src'
 import { test } from '..'
 
 test<Date>((x) => {

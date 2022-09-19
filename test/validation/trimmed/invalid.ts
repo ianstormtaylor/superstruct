@@ -1,4 +1,4 @@
-import { string, trimmed } from '../../..'
+import { string, trimmed } from '../../../src'
 
 export const Struct = trimmed(string())
 

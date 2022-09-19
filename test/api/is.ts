@@ -1,5 +1,5 @@
 import { strictEqual } from 'assert'
-import { is, string } from '../..'
+import { is, string } from '../../src'
 
 describe('is', () => {
   it('valid as helper', () => {

@@ -1,4 +1,4 @@
-import { number, max } from '../../..'
+import { number, max } from '../../../src'
 
 export const Struct = max(number(), 0)
 

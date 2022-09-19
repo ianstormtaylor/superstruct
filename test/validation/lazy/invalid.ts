@@ -1,4 +1,4 @@
-import { lazy, string } from '../../..'
+import { lazy, string } from '../../../src'
 
 export const Struct = lazy(() => string())
 

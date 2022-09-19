@@ -1,4 +1,4 @@
-import { set, empty, number } from '../../..'
+import { set, empty, number } from '../../../src'
 
 export const Struct = empty(set(number()))
 

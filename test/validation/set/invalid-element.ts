@@ -1,4 +1,4 @@
-import { set, number } from '../../..'
+import { set, number } from '../../../src'
 
 export const Struct = set(number())
 

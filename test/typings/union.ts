@@ -1,4 +1,4 @@
-import { assert, union, object, string, literal } from '../..'
+import { assert, union, object, string, literal } from '../../src'
 import { test } from '..'
 
 test<{ a: string } | { b: string }>((x) => {

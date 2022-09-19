@@ -1,4 +1,4 @@
-import { boolean } from '../../..'
+import { boolean } from '../../../src'
 
 export const Struct = boolean()
 

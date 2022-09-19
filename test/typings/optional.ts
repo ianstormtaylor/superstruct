@@ -1,4 +1,4 @@
-import { assert, optional, string, number, object, enums } from '../..'
+import { assert, optional, string, number, object, enums } from '../../src'
 import { test } from '..'
 
 test<string | undefined>((x) => {

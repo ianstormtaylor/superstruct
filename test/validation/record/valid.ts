@@ -1,4 +1,4 @@
-import { record, string, number } from '../../..'
+import { record, string, number } from '../../../src'
 
 export const Struct = record(string(), number())
 

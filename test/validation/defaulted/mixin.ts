@@ -1,4 +1,4 @@
-import { defaulted, string, object, number } from '../../..'
+import { defaulted, string, object, number } from '../../../src'
 
 export const Struct = defaulted(
   object({

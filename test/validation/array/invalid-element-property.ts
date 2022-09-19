@@ -1,4 +1,4 @@
-import { array, object, string } from '../../..'
+import { array, object, string } from '../../../src'
 
 export const Struct = array(object({ id: string() }))
 

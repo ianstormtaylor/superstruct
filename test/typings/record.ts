@@ -1,4 +1,4 @@
-import { assert, record, string, number } from '../..'
+import { assert, record, string, number } from '../../src'
 import { test } from '..'
 
 test<Record<string, number>>((x) => {

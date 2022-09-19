@@ -1,4 +1,4 @@
-import { partial, string, number } from '../../..'
+import { partial, string, number } from '../../../src'
 
 export const Struct = partial({
   name: string(),

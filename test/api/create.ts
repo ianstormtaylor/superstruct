@@ -1,5 +1,5 @@
 import { strictEqual, deepEqual } from 'assert'
-import { type, optional, create, string, defaulted } from '../..'
+import { type, optional, create, string, defaulted } from '../../src'
 
 describe('create', () => {
   it('missing as helper', () => {

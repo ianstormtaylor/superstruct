@@ -7,7 +7,7 @@ import {
   StructError,
   array,
   type,
-} from '../..'
+} from '../../src'
 
 describe('mask', () => {
   it('object as helper', () => {

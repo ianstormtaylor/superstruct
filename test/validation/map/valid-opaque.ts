@@ -1,4 +1,4 @@
-import { map } from '../../..'
+import { map } from '../../../src'
 
 export const Struct = map()
 

@@ -1,4 +1,4 @@
-import { assert, never } from '../..'
+import { assert, never } from '../../src'
 import { test } from '..'
 
 test<never>((x) => {

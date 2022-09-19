@@ -1,4 +1,4 @@
-import { assert, enums } from '../..'
+import { assert, enums } from '../../src'
 import { test } from '..'
 
 test<'a' | 'b' | 'c'>((x) => {

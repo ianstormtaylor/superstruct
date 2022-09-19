@@ -1,4 +1,4 @@
-import { assert, regexp } from '../..'
+import { assert, regexp } from '../../src'
 import { test } from '..'
 
 test<RegExp>((x) => {

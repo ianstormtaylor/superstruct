@@ -1,4 +1,4 @@
-import { number, defaulted } from '../../..'
+import { number, defaulted } from '../../../src'
 
 export const Struct = defaulted(number(), 42)
 
