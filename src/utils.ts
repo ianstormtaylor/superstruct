@@ -175,7 +175,7 @@ export function* run<T, S>(
         } else if (value instanceof Set) {
           value.add(v)
         } else if (isObject(value)) {
-          value[k] = v
+          if (v !== undefined) value[k] = v
         }
       }
     }
