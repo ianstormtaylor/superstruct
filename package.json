@@ -56,7 +56,7 @@
     "typescript": "^4.1.2"
   },
   "scripts": {
-    "build": "rm -r ./lib && yarn build:types && yarn build:mjs && yarn build:cjs && yarn build:umd && yarn build:umd-min",
+    "build": "rm -rf ./{lib,umd} && yarn build:types && yarn build:mjs && yarn build:cjs && yarn build:umd && yarn build:umd-min",
     "build:cjs": "rollup --config ./config/rollup-cjs.js",
     "build:mjs": "rollup --config ./config/rollup.js",
     "build:umd": "rollup --config ./config/rollup-umd.js",
