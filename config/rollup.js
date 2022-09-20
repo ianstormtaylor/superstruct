@@ -6,7 +6,7 @@ import typescript from 'rollup-plugin-ts'
 export default {
   input: './src/index.ts',
   output: {
-    file: './lib/index.es.js',
+    file: './lib/index.mjs',
     format: 'es',
     sourcemap: true,
   },
