@@ -23,7 +23,7 @@ export default {
         [
           '@babel/preset-env',
           {
-            targets: { browsers: 'defaults, not ie 11', node: true },
+            targets: { browsers: 'defaults, not ie 11', node: '14.0' },
             modules: false,
             useBuiltIns: false,
             loose: true,
