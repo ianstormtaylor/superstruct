@@ -11,6 +11,17 @@ test<1 | 2 | 3>((x) => {
   return x
 })
 
+test<1 | 2 | 3>((x) => {
+  assert(x, enums([1, 2, 3] as const))
+  return x
+})
+
+test<number>((x) => {
+  let values = [1, 2, 3]
+  assert(x, enums(values))
+  return x
+})
+
 test<{
   a: 'a'
   b: 'b'

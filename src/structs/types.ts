@@ -95,13 +95,13 @@ export function date(): Struct<Date, null> {
  * potential values as `struct.schema`.
  */
 
-export function enums<U extends number, T extends U[]>(
+export function enums<U extends number, T extends readonly U[]>(
   values: T
 ): Struct<T[number], { [K in T[number]]: K }>
-export function enums<U extends string, T extends U[]>(
+export function enums<U extends string, T extends readonly U[]>(
   values: T
 ): Struct<T[number], { [K in T[number]]: K }>
-export function enums<U extends string | number, T extends U[]>(
+export function enums<U extends string | number, T extends readonly U[]>(
   values: T
 ): any {
   const schema: any = {}
