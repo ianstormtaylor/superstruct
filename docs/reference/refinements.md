@@ -96,3 +96,29 @@ const Positive = refine(number(), 'positive', (value) => value >= 0)
 ```
 
 This allows you to define more fine-grained runtime validation, while still preserving the `number` type at compile time.
+
+> 🤖 The `value` provided to the refiner function is guaranteed to be the provided struct's type. This means you can layer additional validation on top of even complex structs with minimal hassle.
+
+If you'd like to customize the error message that will be returned/thrown by your struct when a value doesn't pass your refinement's validation, you can return a string instead of a boolean inside the refiner.
+
+```ts
+const DateRange = refine(
+  object({
+    startDate: number(),
+    endDate: number(),
+  }),
+  'DateRange',
+  (value) => {
+    if (value.startDate < value.endDate) {
+      return true
+    }
+
+    // Returning a string indicates that validation failed and the provided
+    // string should be used as a custom error message.
+    return (
+      `Expected 'startDate' to be less than 'endDate' on type 'DateRange', ` +
+      `but received ${JSON.stringify(value)}`
+    )
+  }
+)
+```
