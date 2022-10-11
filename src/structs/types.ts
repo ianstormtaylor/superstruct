@@ -522,10 +522,15 @@ export function union<A extends AnyStruct, B extends AnyStruct[]>(
         }
       }
 
+      const hint = failures.find((failure) => failure.path)
+      const hintMessage = hint
+        ? `\n\tAt key \`${hint.path}\` -- ${hint.message}`
+        : ''
+
       return [
         `Expected the value to satisfy a union of \`${description}\`, but received: ${print(
           value
-        )}`,
+        )}${hintMessage}`,
         ...failures,
       ]
     },
