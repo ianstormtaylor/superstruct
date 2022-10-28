@@ -2,7 +2,7 @@
 
 There are some cases where you want to create a validation that is more fine-grained than a "type". For example, you might want not just a `string`, but a specific format of string. Or not just a `User`, but a user that is also an administrator.
 
-For these situations, you can use "refinements". Refinments allow you to create a new struct that is derived from an existing struct with an extra bit of validation layered on top.
+For these situations, you can use "refinements". Refinements allow you to create a new struct that is derived from an existing struct with an extra bit of validation layered on top.
 
 ## Built-in Refinements
 
@@ -44,7 +44,7 @@ assert(-1, Index) // throws!
 
 These refinements don't change the inferred type of the data, but they do ensure that a slightly stricter validation is enforced at runtime.
 
-## Custom Refinments
+## Custom Refinements
 
 You can also write your own custom refinements for more domain-specific use cases. For example, for a specific kind of string:
 
