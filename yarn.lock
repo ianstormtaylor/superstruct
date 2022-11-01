@@ -1234,9 +1234,9 @@
     "@types/node" "*"
 
 "@types/lodash@^4.14.144":
-  version "4.14.185"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.185.tgz#c9843f5a40703a8f5edfd53358a58ae729816908"
-  integrity sha512-evMDG1bC4rgQg4ku9tKpuMh5iBNEwNa3tf9zRHdP1qlv+1WUg44xat4IxCE14gIpZRGUUWAx2VhItCZc25NfMA==
+  version "4.14.187"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.187.tgz#122ff0a7192115b4c1a19444ab4482caa77e2c9d"
+  integrity sha512-MrO/xLXCaUgZy3y96C/iOsaIqZSeupyTImKClHunL5GrmaiII2VwvWmLBu2hwa0Kp0sV19CsyjtrTc/Fx8rg/A==
 
 "@types/minimist@^1.2.0":
   version "1.2.1"
