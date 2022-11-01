@@ -35,6 +35,10 @@ export function isPlainObject(x: unknown): x is { [key: string]: any } {
  */
 
 export function print(value: any): string {
+  if (typeof value === 'symbol') {
+    return value.toString()
+  }
+
   return typeof value === 'string' ? JSON.stringify(value) : `${value}`
 }
 
