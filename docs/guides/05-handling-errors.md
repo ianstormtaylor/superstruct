@@ -25,6 +25,13 @@ assert(data, User)
 // StructError: At path: email -- Expected a string, but received: false
 ```
 
+You can also specify your own message for more clarity. In this case the original message will be preserved in [Error.cause](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause).
+
+```ts
+assert(data, User, "The user is invalid!");
+// StructError: The user is invalid!
+```
+
 In addition to the error message, the `error` object will have a bunch of useful properties on it:
 
 ```ts
