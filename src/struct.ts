@@ -64,16 +64,16 @@ export class Struct<T = unknown, S = unknown> {
    * Assert that a value passes the struct's validation, throwing if it doesn't.
    */
 
-  assert(value: unknown): asserts value is T {
-    return assert(value, this)
+  assert(value: unknown, message?: string): asserts value is T {
+    return assert(value, this, message)
   }
 
   /**
    * Create a value with the struct's coercion logic, then validate it.
    */
 
-  create(value: unknown): T {
-    return create(value, this)
+  create(value: unknown, message?: string): T {
+    return create(value, this, message)
   }
 
   /**
@@ -89,8 +89,8 @@ export class Struct<T = unknown, S = unknown> {
    * properties defined by the struct's schema.
    */
 
-  mask(value: unknown): T {
-    return mask(value, this)
+  mask(value: unknown, message?: string): T {
+    return mask(value, this, message)
   }
 
   /**
@@ -106,6 +106,7 @@ export class Struct<T = unknown, S = unknown> {
     value: unknown,
     options: {
       coerce?: boolean
+      message?: string
     } = {}
   ): [StructError, undefined] | [undefined, T] {
     return validate(value, this, options)
@@ -118,9 +119,10 @@ export class Struct<T = unknown, S = unknown> {
 
 export function assert<T, S>(
   value: unknown,
-  struct: Struct<T, S>
+  struct: Struct<T, S>,
+  message?: string
 ): asserts value is T {
-  const result = validate(value, struct)
+  const result = validate(value, struct, { message })
 
   if (result[0]) {
     throw result[0]
@@ -131,8 +133,12 @@ export function assert<T, S>(
  * Create a value with the coercion logic of struct and validate it.
  */
 
-export function create<T, S>(value: unknown, struct: Struct<T, S>): T {
-  const result = validate(value, struct, { coerce: true })
+export function create<T, S>(
+  value: unknown,
+  struct: Struct<T, S>,
+  message?: string
+): T {
+  const result = validate(value, struct, { coerce: true, message })
 
   if (result[0]) {
     throw result[0]
@@ -145,8 +151,12 @@ export function create<T, S>(value: unknown, struct: Struct<T, S>): T {
  * Mask a value, returning only the subset of properties defined by a struct.
  */
 
-export function mask<T, S>(value: unknown, struct: Struct<T, S>): T {
-  const result = validate(value, struct, { coerce: true, mask: true })
+export function mask<T, S>(
+  value: unknown,
+  struct: Struct<T, S>,
+  message?: string
+): T {
+  const result = validate(value, struct, { coerce: true, mask: true, message })
 
   if (result[0]) {
     throw result[0]
@@ -175,6 +185,7 @@ export function validate<T, S>(
   options: {
     coerce?: boolean
     mask?: boolean
+    message?: string
   } = {}
 ): [StructError, undefined] | [undefined, T] {
   const tuples = run(value, struct, options)

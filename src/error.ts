@@ -8,6 +8,7 @@ export type Failure = {
   type: string
   refinement: string | undefined
   message: string
+  explanation?: string
   branch: Array<any>
   path: Array<any>
 }
@@ -33,11 +34,12 @@ export class StructError extends TypeError {
 
   constructor(failure: Failure, failures: () => Generator<Failure>) {
     let cached: Array<Failure> | undefined
-    const { message, ...rest } = failure
+    const { message, explanation, ...rest } = failure
     const { path } = failure
     const msg =
       path.length === 0 ? message : `At path: ${path.join('.')} -- ${message}`
-    super(msg)
+    super(explanation ?? msg)
+    if (explanation != null) this.cause = msg
     Object.assign(this, rest)
     this.name = this.constructor.name
     this.failures = () => {
