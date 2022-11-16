@@ -82,4 +82,11 @@ describe('mask', () => {
     deepStrictEqual(mask(value, S), { id: '1' })
     deepStrictEqual(value, { id: '1', unknown: true })
   })
+
+  it('custom error message', () => {
+    throws(() => string().mask(42, 'Not a string!'), {
+      cause: 'Expected a string, but received: 42',
+      message: 'Not a string!',
+    })
+  })
 })

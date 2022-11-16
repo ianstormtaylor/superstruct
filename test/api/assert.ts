@@ -27,4 +27,11 @@ describe('assert', () => {
       string().assert(42)
     }, StructError)
   })
+
+  it('custom error message', () => {
+    throws(() => string().assert(42, 'Not a string!'), {
+      cause: 'Expected a string, but received: 42',
+      message: 'Not a string!',
+    })
+  })
 })

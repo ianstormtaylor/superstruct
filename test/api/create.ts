@@ -1,4 +1,4 @@
-import { strictEqual, deepEqual, deepStrictEqual } from 'assert'
+import { strictEqual, deepEqual, deepStrictEqual, throws } from 'assert'
 import {
   type,
   optional,
@@ -49,6 +49,13 @@ describe('create', () => {
       a: 'a',
       b: undefined,
       c: undefined,
+    })
+  })
+
+  it('custom error message', () => {
+    throws(() => string().create(42, 'Not a string!'), {
+      cause: 'Expected a string, but received: 42',
+      message: 'Not a string!',
     })
   })
 })

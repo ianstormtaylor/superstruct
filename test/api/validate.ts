@@ -34,6 +34,7 @@ describe('validate', () => {
         message: 'Expected a string, but received: 42',
         path: [],
         branch: [42],
+        explanation: undefined,
       },
     ])
   })
@@ -52,6 +53,7 @@ describe('validate', () => {
         message: 'Expected a string, but received: 42',
         path: [],
         branch: [42],
+        explanation: undefined,
       },
     ])
   })
@@ -63,6 +65,13 @@ describe('validate', () => {
       (err as StructError).message,
       'At path: author.name -- Expected a string, but received: 42'
     )
+  })
+
+  it('custom error message', () => {
+    const S = string()
+    const [err] = S.validate(42, { message: 'Validation failed!' })
+    strictEqual(err?.message, 'Validation failed!')
+    strictEqual(err?.cause, 'Expected a string, but received: 42')
   })
 
   it('early exit', () => {
