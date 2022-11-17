@@ -30,7 +30,7 @@
     "@babel/register": "^7.6.2",
     "@types/expect": "^24.3.0",
     "@types/lodash": "^4.14.144",
-    "@types/mocha": "^9.1.1",
+    "@types/mocha": "^10.0.0",
     "@types/node": "^18.7.14",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
