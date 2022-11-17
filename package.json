@@ -1,21 +1,17 @@
 {
   "name": "superstruct",
-  "type": "module",
   "description": "A simple and composable way to validate data in JavaScript (and TypeScript).",
   "version": "1.0.0",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
+  "type": "module",
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
   "sideEffects": false,
   "files": [
     "lib"
   ],
-  "exports": {
-    ".": {
-      "import": "./vite/superstruct.js",
-      "require": "./vite/superstruct.cjs",
-      "types": "./lib/index.d.ts"
-    }
-  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
@@ -52,8 +48,8 @@
     "typescript": "^4.8.3"
   },
   "scripts": {
-    "build": "rm -rf ./{lib} && rollup --config ./rollup.config.js",
-    "clean": "rm -rf ./{lib,node_modules}",
+    "build": "rm -rf ./{dist} && rollup --config ./rollup.config.js",
+    "clean": "rm -rf ./{dist,node_modules}",
     "fix": "npm run fix:eslint && npm run fix:prettier",
     "fix:eslint": "npm run lint:eslint --fix",
     "fix:prettier": "npm run lint:prettier --write",

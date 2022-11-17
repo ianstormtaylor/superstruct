@@ -8,7 +8,7 @@
     "lib": ["esnext"],
     "module": "esnext",
     "moduleResolution": "node",
-    "outDir": "./lib",
+    "outDir": "./dist",
     "sourceMap": true,
     "strict": true,
     "suppressImplicitAnyIndexErrors": true,

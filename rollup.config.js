@@ -6,12 +6,12 @@ export default defineConfig({
   plugins: [typescript()],
   output: [
     {
-      file: './lib/index.mjs',
+      file: './dist/index.mjs',
       format: 'esm',
       sourcemap: true,
     },
     {
-      file: './lib/index.cjs',
+      file: './dist/index.cjs',
       format: 'cjs',
       sourcemap: true,
     },
