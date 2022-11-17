@@ -1,5 +1,2 @@
-.vscode/
-lib/
+dist/
 node_modules/
-site/
-umd/
