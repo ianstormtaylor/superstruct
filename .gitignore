@@ -4,7 +4,4 @@ lib/
 node_modules/
 npm-debug.log
 package-lock.json
-site/
 tmp/
-umd/
-yarn-error.log
