@@ -127,6 +127,7 @@ export function* run<T, S>(
     branch?: any[]
     coerce?: boolean
     mask?: boolean
+    message?: string
   } = {}
 ): IterableIterator<[Failure, undefined] | [undefined, T]> {
   const { path = [], branch = [value], coerce = false, mask = false } = options
@@ -153,6 +154,7 @@ export function* run<T, S>(
   let status: 'valid' | 'not_refined' | 'not_valid' = 'valid'
 
   for (const failure of struct.validator(value, ctx)) {
+    failure.explanation = options.message
     status = 'not_valid'
     yield [failure, undefined]
   }
@@ -163,6 +165,7 @@ export function* run<T, S>(
       branch: k === undefined ? branch : [...branch, v],
       coerce,
       mask,
+      message: options.message,
     })
 
     for (const t of ts) {
@@ -187,6 +190,7 @@ export function* run<T, S>(
 
   if (status !== 'not_valid') {
     for (const failure of struct.refiner(value as T, ctx)) {
+      failure.explanation = options.message
       status = 'not_refined'
       yield [failure, undefined]
     }
