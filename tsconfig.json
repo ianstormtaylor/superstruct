@@ -3,12 +3,15 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": true,
+    "declarationMap": true,
     "esModuleInterop": true,
+    "lib": ["esnext"],
     "module": "esnext",
     "moduleResolution": "node",
+    "outDir": "./lib",
     "sourceMap": true,
     "strict": true,
     "suppressImplicitAnyIndexErrors": true,
-    "target": "esnext"
+    "target": "es2020"
   }
 }

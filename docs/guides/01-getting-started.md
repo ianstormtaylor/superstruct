@@ -2,10 +2,9 @@
 
 ## Installing Superstruct
 
-To install Superstruct with Yarn or Npm, either:
+To install Superstruct run:
 
 ```bash
-yarn add superstruct
 npm install --save superstruct
 ```
 
@@ -34,7 +33,7 @@ const User = s.object({
 If you'd rather use a `<script>` tag, you can use the UMD build:
 
 ```html
-<script src="https://unpkg.com/superstruct/umd/superstruct.min.js"></script>
+<script src="https://unpkg.com/superstruct/lib/index.cjs"></script>
 ```
 
 This will expose the `Superstruct` global.
