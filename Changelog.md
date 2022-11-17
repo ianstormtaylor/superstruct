@@ -1,6 +1,21 @@
 # Changelog
 
-This document maintains a list of changes to the `superstruct` package with each new version. Until `1.0.0` is released, breaking changes will be added as minor version bumps, and smaller changes and fixes won't be detailed.
+This document maintains a list of major changes to Superstruct with each new release.
+
+### `1.0.0` — November 17, 2022
+
+###### NEW
+
+**Added an optional `message` argument to override error messages.** You can now pass in a `message` argument to all of the error checking functions which will override any error message with your own message. If you do, Superstruct's original descriptive message will still be accessible via [`error.cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause).
+
+```ts
+assert(data, User, 'The user is invalid!')
+// StructError: The user is invalid!
+```
+
+### BREAKING
+
+**No breaking changes.** This just marks Superstruct being stable for a long time, so better to move to a non `0.*` numbering scheme.
 
 ### `0.16.0` — June 6, 2022
 
