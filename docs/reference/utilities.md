@@ -73,7 +73,7 @@ omit(
 )
 ```
 
-`omit` allows you to create a new struct based on an existing object struct, but excluding specific properties.
+`omit` allows you to create a new struct based on an existing `object` or `type` struct, but excluding specific properties.
 
 ### `partial`
 
