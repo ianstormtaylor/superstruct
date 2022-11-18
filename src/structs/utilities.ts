@@ -199,7 +199,13 @@ export function partial<S extends ObjectSchema>(
     schema[key] = optional(schema[key])
   }
 
-  return object(schema) as any
+  switch (struct.type) {
+    case 'type':
+      return type(schema) as any
+
+    default:
+      return object(schema) as any
+  }
 }
 
 /**
@@ -220,7 +226,13 @@ export function pick<S extends ObjectSchema, K extends keyof S>(
     subschema[key] = schema[key]
   }
 
-  return object(subschema as Pick<S, K>)
+  switch (struct.type) {
+    case 'type':
+      return type(subschema) as any
+
+    default:
+      return object(subschema) as any
+  }
 }
 
 /**
