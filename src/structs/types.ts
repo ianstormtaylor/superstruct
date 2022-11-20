@@ -366,6 +366,9 @@ export function record<K extends string, V>(
         isObject(value) || `Expected an object, but received: ${print(value)}`
       )
     },
+    coercer(value) {
+      return isObject(value) ? { ...value } : value
+    },
   })
 }
 
