@@ -476,6 +476,9 @@ export function tuple<A extends AnyStruct, B extends AnyStruct[]>(
         `Expected an array, but received: ${print(value)}`
       )
     },
+    coercer(value) {
+      return Array.isArray(value) ? value.slice() : value
+    },
   })
 }
 
