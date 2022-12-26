@@ -308,7 +308,7 @@ export type Optionalize<S extends object> = OmitBy<S, undefined> &
   Partial<PickBy<S, undefined>>
 
 /**
- * Transform an object schema type to represent a partial.
+ * Transform an object or type schema type to represent a partial.
  */
 
 export type PartialObjectSchema<S extends ObjectSchema> = {
