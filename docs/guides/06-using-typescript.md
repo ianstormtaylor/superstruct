@@ -9,9 +9,16 @@ Superstruct is built with TypeScript, and is designed to integrate seamlessly wi
 Whenever you use the `is` or `assert` helpers in Superstruct, TypeScript will infer information about your data and give you type safety. For example:
 
 ```ts
+import {
+  is,
+  number,
+  object,
+  string,
+} from 'superstruct'
+
 const User = object({
   id: number(),
-  email: email(),
+  email: string(),
   name: string(),
 })
 
@@ -55,11 +62,16 @@ In this case, the incorrectly defined `id` property will cause TypeScript's comp
 You can also do the reverse and infer a TypeScript type using an existing Superstruct struct with the `Infer` utility. For example:
 
 ```ts
-import { Infer } from 'superstruct'
+import {
+  Infer,
+  number,
+  object,
+  string,
+} from 'superstruct'
 
 const User = object({
   id: number(),
-  email: email(),
+  email: string(),
   name: string(),
 })
 

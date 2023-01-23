@@ -9,7 +9,13 @@ To allow for these use cases, Superstruct has a concept called "coercion", which
 Since defaults are such a common case, Superstruct comes with a `defaulted` helper that makes defining default values easy:
 
 ```ts
-import { defaulted, create } from 'superstruct'
+import {
+  create,
+  defaulted,
+  number,
+  object,
+  string,
+} from 'superstruct'
 
 let i = 0
 

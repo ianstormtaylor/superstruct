@@ -9,7 +9,7 @@ For these situations, you can use "refinements". Refinements allow you to create
 Superstruct has several [built-in refinements](../reference/refinements.md) for common use cases. For example, a common one is ensuring that a string matches a specific regular expression pattern:
 
 ```ts
-import { pattern } from 'superstruct'
+import { assert, pattern, string } from 'superstruct'
 
 const Section = pattern(string(), /\d+(\.\d+/)?/)
 
@@ -21,7 +21,7 @@ assert('string', Section) // throws!
 Or maybe that a string (or array, number, etc.) has a specific size:
 
 ```ts
-import { size } from 'superstruct'
+import { assert, size, string } from 'superstruct'
 
 const Name = size(string(), 1, 100)
 
@@ -32,7 +32,7 @@ assert('', Name) // throws!
 Another common use case is validating nonnegative integers (like indexes in an array) using the built-in `min` helper:
 
 ```ts
-import { min, integer } from 'superstruct'
+import { assert, min, integer } from 'superstruct'
 
 const Index = min(integer(), 0)
 
@@ -49,7 +49,7 @@ These refinements don't change the inferred type of the data, but they do ensure
 You can also write your own custom refinements for more domain-specific use cases. For example, for a specific kind of string:
 
 ```ts
-import { refine } from 'superstruct'
+import { refine, string } from 'superstruct'
 
 const MyString = refine(string(), 'MyString', (value) => {
   return value.startsWith('The') && value.length > 20
