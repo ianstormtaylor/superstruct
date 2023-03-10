@@ -1,6 +1,12 @@
 import { Struct, Context, Validator } from '../struct'
 import { object, optional, type } from './types'
-import { ObjectSchema, Assign, ObjectType, PartialObjectSchema } from '../utils'
+import {
+  ObjectSchema,
+  Assign,
+  ObjectType,
+  PartialObjectSchema,
+  OverrideSourceType,
+} from '../utils'
 
 /**
  * Create a new struct that combines the properties properties from multiple
@@ -57,6 +63,20 @@ export function assign(...Structs: Struct<any>[]): any {
   const schemas = Structs.map((s) => s.schema)
   const schema = Object.assign({}, ...schemas)
   return isType ? type(schema) : object(schema)
+}
+
+/**
+ * Create a new struct based on target struct and overridden by source struct.
+ */
+
+export function override<
+  A extends ObjectSchema,
+  B extends OverrideSourceType<A>
+>(
+  target: Struct<ObjectType<A>, A>,
+  source: B
+): Struct<ObjectType<Assign<A, B>>, Assign<A, B>> {
+  return assign(target, type(source))
 }
 
 /**

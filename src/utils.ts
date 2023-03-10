@@ -292,6 +292,15 @@ export type ObjectType<S extends ObjectSchema> = Simplify<
 >
 
 /**
+ * A schema for source type of override utility.
+ */
+
+export type OverrideSourceType<T extends ObjectSchema> = Partial<
+  Record<keyof T, AnyStruct>
+> &
+  ObjectSchema
+
+/**
  * Omit properties from a type that extend from a specific type.
  */
 
