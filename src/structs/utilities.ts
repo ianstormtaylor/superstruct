@@ -1,6 +1,6 @@
 import { Struct, Context, Validator } from '../struct'
 import { object, optional, type } from './types'
-import { ObjectSchema, Assign, ObjectType, PartialObjectSchema } from '../utils'
+import { ObjectSchema, Assign, ObjectType, PartialObjectSchema, ObjectTypeUncoerced } from '../utils'
 
 /**
  * Create a new struct that combines the properties properties from multiple
@@ -164,9 +164,9 @@ export function lazy<T>(fn: () => Struct<T, any>): Struct<T, null> {
  */
 
 export function omit<S extends ObjectSchema, K extends keyof S>(
-  struct: Struct<ObjectType<S>, S>,
+  struct: Struct<ObjectType<S>, S, ObjectTypeUncoerced<S>>,
   keys: K[]
-): Struct<ObjectType<Omit<S, K>>, Omit<S, K>> {
+): Struct<ObjectType<Omit<S, K>>, Omit<S, K>, ObjectTypeUncoerced<Omit<S, K>>> {
   const { schema } = struct
   const subschema: any = { ...schema }
 
