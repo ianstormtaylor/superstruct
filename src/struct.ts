@@ -232,7 +232,7 @@ export type Infer<T extends Struct<any, any, any>> = T['TYPE']
  */
 
 export type InferUncoerced<T extends Struct<any, any, any>> =
-  T['TYPE'] | T['UNCOERCED_TYPE']
+  T['UNCOERCED_TYPE']
 
 /**
  * A type utility to describe that a struct represents a TypeScript type.

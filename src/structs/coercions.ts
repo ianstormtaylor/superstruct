@@ -13,11 +13,11 @@ import { string, unknown } from './types'
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function coerce<T, S, C>(
-  struct: Struct<T, S>,
-  condition: Struct<C, any>,
+export function coerce<T, S, C, UC>(
+  struct: Struct<T, S, UC>,
+  condition: Struct<C, any, any>,
   coercer: Coercer<C>
-): Struct<T, S, C> {
+): Struct<T, S, UC | C | T> {
   return new Struct({
     ...struct,
     coercer: (value, ctx) => {
@@ -35,14 +35,14 @@ export function coerce<T, S, C>(
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function defaulted<T, S>(
-  struct: Struct<T, S>,
+export function defaulted<T, S, C>(
+  struct: Struct<T, S, C>,
   fallback: any,
   options: {
     strict?: boolean
   } = {}
-): Struct<T, S, unknown> {
-  return coerce(struct, unknown(), (x) => {
+): Struct<T, S, undefined | Partial<T> | C> {
+  return coerce(struct, unknown() as Struct<undefined | Partial<T>>, (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 
     if (x === undefined) {
@@ -76,6 +76,6 @@ export function defaulted<T, S>(
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function trimmed<T, S>(struct: Struct<T, S>): Struct<T, S, string> {
+export function trimmed<T, S>(struct: Struct<T, S>): Struct<T, S, string | T> {
   return coerce(struct, string(), (x) => x.trim())
 }
