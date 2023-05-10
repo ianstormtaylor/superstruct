@@ -1,4 +1,11 @@
-import { Struct, Infer, Result, Context, Describe } from './struct'
+import {
+  Struct,
+  Infer,
+  Result,
+  Context,
+  Describe,
+  InferUncoerced,
+} from './struct'
 import { Failure } from './error'
 
 /**
@@ -56,10 +63,10 @@ export function shiftIterator<T>(input: Iterator<T>): T | undefined {
  * Convert a single validation result to a failure.
  */
 
-export function toFailure<T, S>(
+export function toFailure<T, S, C>(
   result: string | boolean | Partial<Failure>,
   context: Context,
-  struct: Struct<T, S>,
+  struct: Struct<T, S, C>,
   value: any
 ): Failure | undefined {
   if (result === true) {
@@ -95,10 +102,10 @@ export function toFailure<T, S>(
  * Convert a validation result to an iterable of failures.
  */
 
-export function* toFailures<T, S>(
+export function* toFailures<T, S, C>(
   result: Result,
   context: Context,
-  struct: Struct<T, S>,
+  struct: Struct<T, S, C>,
   value: any
 ): IterableIterator<Failure> {
   if (!isIterable(result)) {
@@ -119,9 +126,9 @@ export function* toFailures<T, S>(
  * returning an iterator of failures or success.
  */
 
-export function* run<T, S>(
+export function* run<T, S, C>(
   value: unknown,
-  struct: Struct<T, S>,
+  struct: Struct<T, S, C>,
   options: {
     path?: any[]
     branch?: any[]
@@ -292,6 +299,14 @@ export type ObjectType<S extends ObjectSchema> = Simplify<
 >
 
 /**
+ * Infer a type from an object struct schema.
+ */
+
+export type ObjectTypeUncoerced<S extends ObjectSchema> = Simplify<
+  Optionalize<{ [K in keyof S]: InferUncoerced<S[K]> }>
+>
+
+/**
  * Omit properties from a type that extend from a specific type.
  */
 
@@ -414,3 +429,27 @@ type _InferTuple<
 > = Index extends Length
   ? Accumulated
   : _InferTuple<Tuple, Length, [...Accumulated, Infer<Tuple[Index]>]>
+
+/**
+ * Infer a tuple of types from a tuple of `Struct`s.
+ *
+ * This is used to recursively retrieve the type from `union` `intersection` and
+ * `tuple` structs.
+ */
+
+export type InferStructTupleUncoerced<
+  Tuple extends AnyStruct[],
+  Length extends number = Tuple['length']
+> = Length extends Length
+  ? number extends Length
+    ? Tuple
+    : _InferTupleUncoerced<Tuple, Length, []>
+  : never
+type _InferTupleUncoerced<
+  Tuple extends AnyStruct[],
+  Length extends number,
+  Accumulated extends unknown[],
+  Index extends number = Accumulated['length']
+> = Index extends Length
+  ? Accumulated
+  : _InferTuple<Tuple, Length, [...Accumulated, InferUncoerced<Tuple[Index]>]>

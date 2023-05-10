@@ -1,4 +1,4 @@
-import { Infer, Struct } from '../struct'
+import { Infer, InferUncoerced, Struct } from '../struct'
 import { define } from './utilities'
 import {
   ObjectSchema,
@@ -9,6 +9,8 @@ import {
   AnyStruct,
   InferStructTuple,
   UnionToIntersection,
+  ObjectTypeUncoerced,
+  InferStructTupleUncoerced,
 } from '../utils'
 
 /**
@@ -27,7 +29,9 @@ export function any(): Struct<any, null> {
  * and it is preferred to using `array(any())`.
  */
 
-export function array<T extends Struct<any>>(Element: T): Struct<Infer<T>[], T>
+export function array<T extends Struct<any>>(
+  Element: T
+): Struct<Infer<T>[], T, InferUncoerced<T>[]>
 export function array(): Struct<unknown[], undefined>
 export function array<T extends Struct<any>>(Element?: T): any {
   return new Struct({
@@ -170,7 +174,11 @@ export function integer(): Struct<number, null> {
 
 export function intersection<A extends AnyStruct, B extends AnyStruct[]>(
   Structs: [A, ...B]
-): Struct<Infer<A> & UnionToIntersection<InferStructTuple<B>[number]>, null> {
+): Struct<
+  Infer<A> & UnionToIntersection<InferStructTuple<B>[number]>,
+  null,
+  InferUncoerced<A> & UnionToIntersection<InferStructTupleUncoerced<B>[number]>
+> {
   return new Struct({
     type: 'intersection',
     schema: null,
@@ -262,7 +270,9 @@ export function never(): Struct<never, null> {
  * Augment an existing struct to allow `null` values.
  */
 
-export function nullable<T, S>(struct: Struct<T, S>): Struct<T | null, S> {
+export function nullable<T, S, C>(
+  struct: Struct<T, S, C>
+): Struct<T | null, S> {
   return new Struct({
     ...struct,
     validator: (value, ctx) => value === null || struct.validator(value, ctx),
@@ -293,7 +303,7 @@ export function number(): Struct<number, null> {
 export function object(): Struct<Record<string, unknown>, null>
 export function object<S extends ObjectSchema>(
   schema: S
-): Struct<ObjectType<S>, S>
+): Struct<ObjectType<S>, S, ObjectTypeUncoerced<S>>
 export function object<S extends ObjectSchema>(schema?: S): any {
   const knowns = schema ? Object.keys(schema) : []
   const Never = never()
@@ -432,7 +442,11 @@ export function string(): Struct<string, null> {
 
 export function tuple<A extends AnyStruct, B extends AnyStruct[]>(
   Structs: [A, ...B]
-): Struct<[Infer<A>, ...InferStructTuple<B>], null> {
+): Struct<
+  [Infer<A>, ...InferStructTuple<B>],
+  null,
+  [InferUncoerced<A>, ...InferStructTupleUncoerced<B>]
+> {
   const Never = never()
 
   return new Struct({
@@ -465,7 +479,7 @@ export function tuple<A extends AnyStruct, B extends AnyStruct[]>(
 
 export function type<S extends ObjectSchema>(
   schema: S
-): Struct<ObjectType<S>, S> {
+): Struct<ObjectType<S>, S, ObjectTypeUncoerced<S>> {
   const keys = Object.keys(schema)
   return new Struct({
     type: 'type',
@@ -494,7 +508,11 @@ export function type<S extends ObjectSchema>(
 
 export function union<A extends AnyStruct, B extends AnyStruct[]>(
   Structs: [A, ...B]
-): Struct<Infer<A> | InferStructTuple<B>[number], null> {
+): Struct<
+  Infer<A> | InferStructTuple<B>[number],
+  null,
+  InferUncoerced<A> | InferStructTupleUncoerced<B>[number]
+> {
   const description = Structs.map((s) => s.type).join(' | ')
   return new Struct({
     type: 'union',
