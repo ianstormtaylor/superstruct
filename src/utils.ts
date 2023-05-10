@@ -1,4 +1,11 @@
-import { Struct, Infer, Result, Context, Describe, InferUncoerced } from './struct'
+import {
+  Struct,
+  Infer,
+  Result,
+  Context,
+  Describe,
+  InferUncoerced,
+} from './struct'
 import { Failure } from './error'
 
 /**
@@ -299,7 +306,6 @@ export type ObjectTypeUncoerced<S extends ObjectSchema> = Simplify<
   Optionalize<{ [K in keyof S]: InferUncoerced<S[K]> }>
 >
 
-
 /**
  * Omit properties from a type that extend from a specific type.
  */
@@ -424,7 +430,7 @@ type _InferTuple<
   ? Accumulated
   : _InferTuple<Tuple, Length, [...Accumulated, Infer<Tuple[Index]>]>
 
-  /**
+/**
  * Infer a tuple of types from a tuple of `Struct`s.
  *
  * This is used to recursively retrieve the type from `union` `intersection` and
@@ -432,18 +438,18 @@ type _InferTuple<
  */
 
 export type InferStructTupleUncoerced<
-Tuple extends AnyStruct[],
-Length extends number = Tuple['length']
+  Tuple extends AnyStruct[],
+  Length extends number = Tuple['length']
 > = Length extends Length
-? number extends Length
-  ? Tuple
-  : _InferTupleUncoerced<Tuple, Length, []>
-: never
+  ? number extends Length
+    ? Tuple
+    : _InferTupleUncoerced<Tuple, Length, []>
+  : never
 type _InferTupleUncoerced<
-Tuple extends AnyStruct[],
-Length extends number,
-Accumulated extends unknown[],
-Index extends number = Accumulated['length']
+  Tuple extends AnyStruct[],
+  Length extends number,
+  Accumulated extends unknown[],
+  Index extends number = Accumulated['length']
 > = Index extends Length
-? Accumulated
-: _InferTuple<Tuple, Length, [...Accumulated, InferUncoerced<Tuple[Index]>]>
+  ? Accumulated
+  : _InferTuple<Tuple, Length, [...Accumulated, InferUncoerced<Tuple[Index]>]>

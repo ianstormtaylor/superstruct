@@ -170,7 +170,10 @@ export function mask<T, S, C>(
  * Check if a value passes a struct.
  */
 
-export function is<T, S, C>(value: unknown, struct: Struct<T, S, C>): value is T {
+export function is<T, S, C>(
+  value: unknown,
+  struct: Struct<T, S, C>
+): value is T {
   const result = validate(value, struct)
   return !result[0]
 }
@@ -228,8 +231,8 @@ export type Infer<T extends Struct<any, any, any>> = T['TYPE']
  * A type utility to extract the type from a `Struct` class before coercion
  */
 
-export type InferUncoerced<T extends Struct<any, any, any>> = T['UNCOERCED_TYPE']
-
+export type InferUncoerced<T extends Struct<any, any, any>> =
+  T['TYPE'] | T['UNCOERCED_TYPE']
 
 /**
  * A type utility to describe that a struct represents a TypeScript type.

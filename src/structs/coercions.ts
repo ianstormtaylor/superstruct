@@ -13,11 +13,11 @@ import { string, unknown } from './types'
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function coerce<T, S, C, CT>(
-  struct: Struct<T, S, CT>,
+export function coerce<T, S, C>(
+  struct: Struct<T, S>,
   condition: Struct<C, any>,
   coercer: Coercer<C>
-): Struct<T, S, CT> {
+): Struct<T, S, C> {
   return new Struct({
     ...struct,
     coercer: (value, ctx) => {
@@ -35,8 +35,8 @@ export function coerce<T, S, C, CT>(
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function defaulted<T, S, C>(
-  struct: Struct<T, S, C>,
+export function defaulted<T, S>(
+  struct: Struct<T, S>,
   fallback: any,
   options: {
     strict?: boolean
@@ -76,6 +76,6 @@ export function defaulted<T, S, C>(
  * take effect! Using simply `assert()` or `is()` will not use coercion.
  */
 
-export function trimmed<T, S, C>(struct: Struct<T, S, C>): Struct<T, S, C> {
+export function trimmed<T, S>(struct: Struct<T, S>): Struct<T, S, string> {
   return coerce(struct, string(), (x) => x.trim())
 }

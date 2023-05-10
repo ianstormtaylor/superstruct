@@ -1,6 +1,12 @@
 import { Struct, Context, Validator } from '../struct'
 import { object, optional, type } from './types'
-import { ObjectSchema, Assign, ObjectType, PartialObjectSchema, ObjectTypeUncoerced } from '../utils'
+import {
+  ObjectSchema,
+  Assign,
+  ObjectType,
+  PartialObjectSchema,
+  ObjectTypeUncoerced,
+} from '../utils'
 
 /**
  * Create a new struct that combines the properties properties from multiple
