@@ -140,7 +140,7 @@ export function func(): Struct<Function, null> {
  * Ensure that a value is an instance of a specific class.
  */
 
-export function instance<T extends { new (...args: any): any }>(
+export function instance<T extends abstract new (...args: any) => any>(
   Class: T
 ): Struct<InstanceType<T>, null> {
   return define('instance', (value) => {
