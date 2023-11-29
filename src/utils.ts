@@ -131,24 +131,10 @@ export function* run<T, S>(
   } = {}
 ): IterableIterator<[Failure, undefined] | [undefined, T]> {
   const { path = [], branch = [value], coerce = false, mask = false } = options
-  const ctx: Context = { path, branch }
+  const ctx: Context = { path, branch, mask }
 
   if (coerce) {
     value = struct.coercer(value, ctx)
-
-    if (
-      mask &&
-      struct.type !== 'type' &&
-      isObject(struct.schema) &&
-      isObject(value) &&
-      !Array.isArray(value)
-    ) {
-      for (const key in value) {
-        if (struct.schema[key] === undefined) {
-          delete value[key]
-        }
-      }
-    }
   }
 
   let status: 'valid' | 'not_refined' | 'not_valid' = 'valid'

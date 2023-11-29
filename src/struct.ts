@@ -86,7 +86,8 @@ export class Struct<T = unknown, S = unknown> {
 
   /**
    * Mask a value, coercing and validating it, but returning only the subset of
-   * properties defined by the struct's schema.
+   * properties defined by the struct's schema. Masking applies recursively to
+   * props of `object` structs only.
    */
 
   mask(value: unknown, message?: string): T {
@@ -97,15 +98,17 @@ export class Struct<T = unknown, S = unknown> {
    * Validate a value with the struct's validation logic, returning a tuple
    * representing the result.
    *
-   * You may optionally pass `true` for the `withCoercion` argument to coerce
+   * You may optionally pass `true` for the `coerce` argument to coerce
    * the value before attempting to validate it. If you do, the result will
-   * contain the coerced result when successful.
+   * contain the coerced result when successful. Also, `mask` will turn on
+   * masking of the unknown `object` props recursively if passed.
    */
 
   validate(
     value: unknown,
     options: {
       coerce?: boolean
+      mask?: boolean
       message?: string
     } = {}
   ): [StructError, undefined] | [undefined, T] {
@@ -209,12 +212,16 @@ export function validate<T, S>(
 
 /**
  * A `Context` contains information about the current location of the
- * validation inside the initial input value.
+ * validation inside the initial input value. It also carries `mask`
+ * since it's a run-time flag determining how the validation was invoked
+ * (via `mask()` or via `validate()`), plus it applies recursively
+ * to all of the nested structs.
  */
 
 export type Context = {
   branch: Array<any>
   path: Array<any>
+  mask?: boolean
 }
 
 /**

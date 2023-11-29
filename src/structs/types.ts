@@ -319,8 +319,20 @@ export function object<S extends ObjectSchema>(schema?: S): any {
         isObject(value) || `Expected an object, but received: ${print(value)}`
       )
     },
-    coercer(value) {
-      return isObject(value) ? { ...value } : value
+    coercer(value, ctx) {
+      if (!isObject(value) || Array.isArray(value)) {
+        return value
+      }
+
+      const val = { ...value }
+      if (ctx.mask && schema) {
+        for (const key in val) {
+          if (schema[key] === undefined) {
+            delete val[key]
+          }
+        }
+      }
+      return val
     },
   })
 }
@@ -499,9 +511,12 @@ export function union<A extends AnyStruct, B extends AnyStruct[]>(
   return new Struct({
     type: 'union',
     schema: null,
-    coercer(value) {
+    coercer(value, ctx) {
       for (const S of Structs) {
-        const [error, coerced] = S.validate(value, { coerce: true })
+        const [error, coerced] = S.validate(value, {
+          coerce: true,
+          mask: ctx.mask,
+        })
         if (!error) {
           return coerced
         }
