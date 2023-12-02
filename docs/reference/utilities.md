@@ -42,7 +42,7 @@ const User = object({ ... })
 const Bot = object({ ... })
 
 dynamic((value) => {
-  value.kind === 'user' ? User : Bot
+  return value.kind === 'user' ? User : Bot
 })
 ```
 
