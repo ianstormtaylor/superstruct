@@ -34,7 +34,7 @@
     "@typescript-eslint/parser": "^5.43.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^7.14.0",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^4.0.0",
     "is-email": "^1.0.0",
