@@ -39,12 +39,7 @@ Here we're ensuring that `data` is a valid `Date` object.
 In addition to simple, "flat" values, you can also compose structs into more complex shapes. The most common example of this is `object` structs:
 
 ```ts
-import {
-  assert,
-  number,
-  object,
-  string,
-} from 'superstruct'
+import { assert, number, object, string } from 'superstruct'
 
 const User = object({
   id: number(),
@@ -87,11 +82,7 @@ This `User` struct will ensure that input data is an object with specific shape 
 You could also define a struct which represents a list of values that all match a specific type, using the `array` factory. For example:
 
 ```ts
-import {
-  array,
-  assert,
-  number,
-} from 'superstruct'
+import { array, assert, number } from 'superstruct'
 
 const Struct = array(number())
 
@@ -125,12 +116,7 @@ const Team = object({
 You can also model optional properties. For example, maybe an `email` address isn't strictly required for all your users, you could do:
 
 ```ts
-import {
-  number,
-  object,
-  optional,
-  string,
-} from 'superstruct'
+import { number, object, optional, string } from 'superstruct'
 
 const User = object({
   id: number(),
