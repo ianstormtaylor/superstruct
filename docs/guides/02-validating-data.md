@@ -7,7 +7,7 @@ Superstruct is designed to let you validate any data, ensuring that it matches a
 The simplest structs are ones that validate "primitive" values, like strings, numbers or booleans. For example:
 
 ```ts
-import { string } from 'superstruct'
+import { assert, string } from 'superstruct'
 
 const Struct = string()
 
@@ -22,7 +22,7 @@ In this case, `assert` will throw an error if the input `data` is not a a string
 But Superstruct has simple structs like these for more than the primitive types. It has support out of the box for many of the common types you might need to validate—dates, functions, regexps, etc.
 
 ```ts
-import { date } from 'superstruct'
+import { assert, date } from 'superstruct'
 
 const Struct = date()
 
@@ -39,6 +39,8 @@ Here we're ensuring that `data` is a valid `Date` object.
 In addition to simple, "flat" values, you can also compose structs into more complex shapes. The most common example of this is `object` structs:
 
 ```ts
+import { assert, number, object, string } from 'superstruct'
+
 const User = object({
   id: number(),
   email: string(),
@@ -80,7 +82,7 @@ This `User` struct will ensure that input data is an object with specific shape 
 You could also define a struct which represents a list of values that all match a specific type, using the `array` factory. For example:
 
 ```ts
-import { array } from 'superstruct'
+import { array, assert, number } from 'superstruct'
 
 const Struct = array(number())
 
@@ -114,7 +116,7 @@ const Team = object({
 You can also model optional properties. For example, maybe an `email` address isn't strictly required for all your users, you could do:
 
 ```ts
-import { optional } from 'superstruct'
+import { number, object, optional, string } from 'superstruct'
 
 const User = object({
   id: number(),
