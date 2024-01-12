@@ -339,6 +339,7 @@ export type If<B extends Boolean, Then, Else> = B extends true ? Then : Else
  */
 
 export type StructSchema<T> = [T] extends [string | undefined | null]
+
   ? [T] extends [IsMatch<T, string | undefined | null>]
     ? null
     : [T] extends [IsUnion<T>]
@@ -354,18 +355,21 @@ export type StructSchema<T> = [T] extends [string | undefined | null]
   ? [T] extends [IsExactMatch<T, boolean>]
     ? null
     : T
+  : T extends RegExp | Date | Function
+  ? null
+  : T extends Set<infer A>
+  ? Struct<A>
+  : T extends Record<infer A, infer B>
+  ? [Struct<A>, Struct<B>]
+  : T extends Map<infer A, infer B>
+  ? [A, B]
   : T extends
       | bigint
       | symbol
       | undefined
       | null
-      | Function
-      | Date
       | Error
-      | RegExp
-      | Map<any, any>
       | WeakMap<any, any>
-      | Set<any>
       | WeakSet<any>
       | Promise<any>
   ? null

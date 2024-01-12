@@ -33,13 +33,14 @@ export class Struct<T = unknown, S = unknown> {
       type,
       schema,
       validator,
+      extend,
       refiner,
       coercer = (value: unknown) => value,
       entries = function* () {},
     } = props
 
     this.type = type
-    this.extend = props.extend;
+    this.extend = extend
     this.schema = schema
     this.entries = entries
     this.coercer = coercer
