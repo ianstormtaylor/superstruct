@@ -142,12 +142,16 @@ export function func(): Struct<Function, null> {
 
 export function instance<T extends { new (...args: any): any }>(
   Class: T
-): Struct<InstanceType<T>, null> {
-  return define('instance', (value) => {
-    return (
-      value instanceof Class ||
-      `Expected a \`${Class.name}\` instance, but received: ${print(value)}`
-    )
+): Struct<InstanceType<T>, T> {
+  return new Struct({
+    type: 'instance',
+    schema: Class,
+    validator: (value) => {
+      return (
+        value instanceof Class ||
+        `Expected a \`${Class.name}\` instance, but received: ${print(value)}`
+      )
+    }
   })
 }
 
@@ -170,10 +174,10 @@ export function integer(): Struct<number, null> {
 
 export function intersection<A extends AnyStruct, B extends AnyStruct[]>(
   Structs: [A, ...B]
-): Struct<Infer<A> & UnionToIntersection<InferStructTuple<B>[number]>, null> {
+): Struct<Infer<A> & UnionToIntersection<InferStructTuple<B>[number]>, [A, ...B]> {
   return new Struct({
     type: 'intersection',
-    schema: null,
+    schema: Structs,
     *entries(value, ctx) {
       for (const S of Structs) {
         yield* S.entries(value, ctx)
@@ -225,11 +229,11 @@ export function map(): Struct<Map<unknown, unknown>, null>
 export function map<K, V>(
   Key: Struct<K>,
   Value: Struct<V>
-): Struct<Map<K, V>, null>
+): Struct<Map<K, V>, [Struct<K>, Struct<V>]>
 export function map<K, V>(Key?: Struct<K>, Value?: Struct<V>): any {
   return new Struct({
     type: 'map',
-    schema: null,
+    schema: [Key, Value],
     *entries(value) {
       if (Key && Value && value instanceof Map) {
         for (const [k, v] of value.entries()) {
@@ -265,6 +269,7 @@ export function never(): Struct<never, null> {
 export function nullable<T, S>(struct: Struct<T, S>): Struct<T | null, S> {
   return new Struct({
     ...struct,
+    extend: ["null"],
     validator: (value, ctx) => value === null || struct.validator(value, ctx),
     refiner: (value, ctx) => value === null || struct.refiner(value, ctx),
   })
@@ -332,6 +337,7 @@ export function object<S extends ObjectSchema>(schema?: S): any {
 export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
   return new Struct({
     ...struct,
+    extend: ["?"],
     validator: (value, ctx) =>
       value === undefined || struct.validator(value, ctx),
     refiner: (value, ctx) => value === undefined || struct.refiner(value, ctx),
@@ -348,10 +354,10 @@ export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
 export function record<K extends string, V>(
   Key: Struct<K>,
   Value: Struct<V>
-): Struct<Record<K, V>, null> {
+): Struct<Record<K, V>, [Struct<K>, Struct<V>]> {
   return new Struct({
     type: 'record',
-    schema: null,
+    schema: [Key, Value],
     *entries(value) {
       if (isObject(value)) {
         for (const k in value) {
@@ -388,11 +394,11 @@ export function regexp(): Struct<RegExp, null> {
  */
 
 export function set(): Struct<Set<unknown>, null>
-export function set<T>(Element: Struct<T>): Struct<Set<T>, null>
+export function set<T>(Element: Struct<T>): Struct<Set<T>, Struct<T>>
 export function set<T>(Element?: Struct<T>): any {
   return new Struct({
     type: 'set',
-    schema: null,
+    schema: Element,
     *entries(value) {
       if (Element && value instanceof Set) {
         for (const v of value) {
@@ -432,12 +438,12 @@ export function string(): Struct<string, null> {
 
 export function tuple<A extends AnyStruct, B extends AnyStruct[]>(
   Structs: [A, ...B]
-): Struct<[Infer<A>, ...InferStructTuple<B>], null> {
+): Struct<[Infer<A>, ...InferStructTuple<B>], [A, ...B]> {
   const Never = never()
 
   return new Struct({
     type: 'tuple',
-    schema: null,
+    schema: Structs,
     *entries(value) {
       if (Array.isArray(value)) {
         const length = Math.max(Structs.length, value.length)
@@ -494,11 +500,11 @@ export function type<S extends ObjectSchema>(
 
 export function union<A extends AnyStruct, B extends AnyStruct[]>(
   Structs: [A, ...B]
-): Struct<Infer<A> | InferStructTuple<B>[number], null> {
+): Struct<Infer<A> | InferStructTuple<B>[number], [A, ...B]> {
   const description = Structs.map((s) => s.type).join(' | ')
   return new Struct({
     type: 'union',
-    schema: null,
+    schema: Structs,
     coercer(value) {
       for (const S of Structs) {
         const [error, coerced] = S.validate(value, { coerce: true })

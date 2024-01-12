@@ -42,7 +42,7 @@ export function defaulted<T, S>(
     strict?: boolean
   } = {}
 ): Struct<T, S> {
-  return coerce(struct, unknown(), (x) => {
+  const result = coerce(struct, unknown(), (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 
     if (x === undefined) {
@@ -67,6 +67,10 @@ export function defaulted<T, S>(
 
     return x
   })
+
+  result.extend = ["def", fallback];
+
+  return result;
 }
 
 /**
