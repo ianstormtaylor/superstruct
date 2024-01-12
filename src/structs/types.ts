@@ -143,16 +143,16 @@ export function func(): Struct<Function, null> {
 export function instance<T extends { new (...args: any): any }>(
   Class: T
 ): Struct<InstanceType<T>, T> {
-  return new Struct({ 
-    type: 'instance', 
-    schema: Class, 
+  return new Struct({
+    type: 'instance',
+    schema: Class,
     validator: (value) => {
       return (
         value instanceof Class ||
         `Expected a \`${Class.name}\` instance, but received: ${print(value)}`
       )
     }
-  });
+  })
 }
 
 /**
@@ -229,7 +229,7 @@ export function map(): Struct<Map<unknown, unknown>, null>
 export function map<K, V>(
   Key: Struct<K>,
   Value: Struct<V>
-): Struct<Map<K, V>, [K, V]>
+): Struct<Map<K, V>, [Struct<K>, Struct<V>]>
 export function map<K, V>(Key?: Struct<K>, Value?: Struct<V>): any {
   return new Struct({
     type: 'map',

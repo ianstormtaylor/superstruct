@@ -339,9 +339,8 @@ export type If<B extends Boolean, Then, Else> = B extends true ? Then : Else
  */
 
 export type StructSchema<T> = [T] extends [string | undefined | null]
-
   ? [T] extends [IsMatch<T, string | undefined | null>]
-    ? null
+    ? any
     : [T] extends [IsUnion<T>]
     ? EnumSchema<T>
     : T
@@ -355,33 +354,32 @@ export type StructSchema<T> = [T] extends [string | undefined | null]
   ? [T] extends [IsExactMatch<T, boolean>]
     ? null
     : T
-  : T extends RegExp | Date | Function
-  ? null
-  : T extends Set<infer A>
-  ? Struct<A>
-  : T extends Record<infer A, infer B>
-  ? [Struct<A>, Struct<B>]
-  : T extends Map<infer A, infer B>
-  ? [A, B]
+  : T extends Map<infer K, infer V>
+  ? [Struct<K>, Struct<V>]
+  : T extends Set<infer V>
+  ? Struct<V>
   : T extends
       | bigint
       | symbol
       | undefined
       | null
+      | Function
+      | Date
       | Error
+      | RegExp
       | WeakMap<any, any>
       | WeakSet<any>
       | Promise<any>
   ? null
   : T extends Array<infer E>
   ? T extends IsTuple<T>
-    ? null
+    ? any
     : Struct<E>
   : T extends object
   ? T extends IsRecord<T>
-    ? null
+    ? [any, any]
     : { [K in keyof T]: Describe<T[K]> }
-  : null
+  : any
 
 /**
  * A schema for tuple structs.
