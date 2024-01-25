@@ -251,6 +251,13 @@ export type IsRecord<T> = T extends object
     ? T
     : never
   : never
+
+/**
+ * Check if a type is a class type.
+ */
+
+export type IsClass<T> = T extends { new (...args: any[]): any } ? T : never
+
 /**
  * Check if a type is a tuple.
  */
@@ -374,7 +381,9 @@ export type StructSchema<T> = [T] extends [string | undefined | null]
     ? null
     : Struct<E>
   : T extends object
-  ? T extends IsRecord<T>
+  ? T extends IsClass<T>
+    ? null
+    : T extends IsRecord<T>
     ? null
     : { [K in keyof T]: Describe<T[K]> }
   : null
