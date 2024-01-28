@@ -60,8 +60,8 @@
     "lint:eslint": "eslint '{src,test}/*.{js,ts}'",
     "lint:prettier": "prettier --list-different '**/*.{js,json,ts}'",
     "release": "npm run build && npm run lint && np",
-    "test": "npm run build && npm run test:types && npm run test:mocha",
-    "test:mocha": "mocha --require ./test/register.cjs --require source-map-support/register ./test/index.ts",
+    "test": "npm run build && npm run test:types && npm run test:vitest",
+    "test:vitest": "vitest run",
     "test:types": "tsc --noEmit && tsc --project ./test/tsconfig.json --noEmit",
     "watch": "npm run build -- --watch"
   },
