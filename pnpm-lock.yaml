@@ -14,6 +14,9 @@ devDependencies:
   '@types/lodash':
     specifier: ^4.14.144
     version: 4.14.202
+  '@types/lodash-es':
+    specifier: ^4.17.12
+    version: 4.17.12
   '@types/mocha':
     specifier: ^10.0.0
     version: 10.0.6
@@ -53,8 +56,8 @@ devDependencies:
   jest:
     specifier: ^29.7.0
     version: 29.7.0(@types/node@18.19.10)
-  lodash:
-    specifier: ^4.17.15
+  lodash-es:
+    specifier: ^4.17.21
     version: 4.17.21
   mocha:
     specifier: ^10.0.0
@@ -1248,6 +1251,12 @@ packages:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
       '@types/node': 18.19.10
+    dev: true
+
+  /@types/lodash-es@4.17.12:
+    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
+    dependencies:
+      '@types/lodash': 4.14.202
     dev: true
 
   /@types/lodash@4.14.202:
@@ -4416,6 +4425,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+    dev: true
+
+  /lodash-es@4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: true
 
   /lodash.isequal@4.5.0:

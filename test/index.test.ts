@@ -1,6 +1,6 @@
 import assert, { CallTracker } from 'assert'
 import fs from 'fs'
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 import { basename, extname, resolve } from 'path'
 import {
   any,
