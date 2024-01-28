@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest'
 import { strictEqual } from 'assert'
 import { is, string } from '../../src'
 

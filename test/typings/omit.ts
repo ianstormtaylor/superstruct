@@ -1,5 +1,5 @@
 import { assert, omit, object, number, string, type } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<{
   b: string

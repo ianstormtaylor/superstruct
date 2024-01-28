@@ -1,5 +1,5 @@
 import { assert, intersection, object, string } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<{ a: string; b: string }>((x) => {
   assert(x, intersection([object({ a: string() }), object({ b: string() })]))

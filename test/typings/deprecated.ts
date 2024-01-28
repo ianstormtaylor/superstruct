@@ -1,5 +1,5 @@
 import { assert, object, deprecated, any, Context } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<unknown>((x) => {
   const log = (value: unknown, ctx: Context) => {}

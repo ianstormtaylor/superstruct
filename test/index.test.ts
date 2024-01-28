@@ -12,15 +12,9 @@ import {
   StructError,
 } from '../src'
 
-describe('superstruct', () => {
-  describe('api', () => {
-    require('./api/assert')
-    require('./api/create')
-    require('./api/is')
-    require('./api/mask')
-    require('./api/validate')
-  })
+import { describe, it } from 'vitest'
 
+describe('superstruct', () => {
   describe('validation', () => {
     const kindsDir = resolve(__dirname, 'validation')
     const kinds = fs
@@ -29,7 +23,7 @@ describe('superstruct', () => {
       .map((t) => basename(t, extname(t)))
 
     for (const kind of kinds) {
-      describe(kind, () => {
+      describe(kind, async () => {
         const testsDir = resolve(kindsDir, kind)
         const tests = fs
           .readdirSync(testsDir)
@@ -37,7 +31,7 @@ describe('superstruct', () => {
           .map((t) => basename(t, extname(t)))
 
         for (const name of tests) {
-          const module = require(resolve(testsDir, name))
+          const module = await import(resolve(testsDir, name))
           const { Struct, data, create, only, skip, output, failures } = module
           const run = only ? it.only : skip ? it.skip : it
           run(name, () => {

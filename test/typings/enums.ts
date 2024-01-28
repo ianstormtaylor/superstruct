@@ -1,5 +1,5 @@
 import { assert, enums } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<'a' | 'b' | 'c'>((x) => {
   assert(x, enums(['a', 'b', 'c']))

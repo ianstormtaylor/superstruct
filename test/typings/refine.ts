@@ -1,5 +1,5 @@
 import { assert, refine, string } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<string>((x) => {
   assert(
