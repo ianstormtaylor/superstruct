@@ -22,6 +22,7 @@
   "settings": {
     "import/extensions": [".js", ".ts"]
   },
+  "ignorePatterns": ["/dist/**"],
   "rules": {
     "@typescript-eslint/no-unused-vars": [
       "error",
