@@ -1,3 +1,7 @@
+> [!NOTE]
+> This is a fork created by MetaMask to address ESM and CJS compatibility issues
+> with Superstruct.
+
 <p align="center">
   <a href="#"><img src="./docs/images/banner.png" /></a>
 </p>
