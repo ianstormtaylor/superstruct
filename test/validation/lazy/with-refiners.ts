@@ -1,8 +1,8 @@
-import { lazy, nonempty, string } from '../../../src'
+import { lazy, nonempty, string } from '../../../src';
 
-export const Struct = lazy(() => nonempty(string()))
+export const Struct = lazy(() => nonempty(string()));
 
-export const data = ''
+export const data = '';
 
 export const failures = [
   {
@@ -12,4 +12,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

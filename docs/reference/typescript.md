@@ -10,14 +10,14 @@ The `Describe` utility returns a type representing a struct for a given valid va
 
 ```ts
 type User = {
-  id: number
-  name: string
-}
+  id: number;
+  name: string;
+};
 
 const User: Describe<User> = object({
   id: string(), // This mistake will fail to pass type checking!
   name: string(),
-})
+});
 ```
 
 > 🤖 There are limitations to what `Describe` can do, specifically it will always assume object types are as strict as possible. So describing the `type()` struct is not possible, and simple unions of strings will be required to use `enums()`.
@@ -30,9 +30,9 @@ The `Infer` utility type extracts the type of a valid value from a struct defini
 const User = object({
   id: number(),
   name: string(),
-})
+});
 
-type User = Infer<typeof User>
+type User = Infer<typeof User>;
 // type User = {
 //   id: number
 //   name: string

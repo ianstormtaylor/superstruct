@@ -1,7 +1,7 @@
-import { assert, type, number } from '../../src'
-import { test } from '../index.test'
+import { assert, type, number } from '../../src';
+import { test } from '../index.test';
 
-test<{ a: number }>((x) => {
-  assert(x, type({ a: number() }))
-  return x
-})
+test<{ a: number }>((value) => {
+  assert(value, type({ a: number() }));
+  return value;
+});

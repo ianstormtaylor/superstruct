@@ -45,7 +45,7 @@ But Superstruct is designed for validating data at runtime, so it throws (or ret
 Superstruct allows you to define the shape of data you want to validate:
 
 ```js
-import { assert, object, number, string, array } from 'superstruct'
+import { assert, object, number, string, array } from 'superstruct';
 
 const Article = object({
   id: number(),
@@ -54,7 +54,7 @@ const Article = object({
   author: object({
     id: number(),
   }),
-})
+});
 
 const data = {
   id: 34,
@@ -63,9 +63,9 @@ const data = {
   author: {
     id: 1,
   },
-}
+};
 
-assert(data, Article)
+assert(data, Article);
 // This will throw an error when the data is invalid.
 // If you'd rather not throw, you can use `is()` or `validate()`.
 ```
@@ -73,24 +73,24 @@ assert(data, Article)
 Superstruct ships with validators for all the common JavaScript data types, and you can define custom ones too:
 
 ```js
-import { is, define, object, string } from 'superstruct'
-import isUuid from 'is-uuid'
-import isEmail from 'is-email'
+import { is, define, object, string } from 'superstruct';
+import isUuid from 'is-uuid';
+import isEmail from 'is-email';
 
-const Email = define('Email', isEmail)
-const Uuid = define('Uuid', isUuid.v4)
+const Email = define('Email', isEmail);
+const Uuid = define('Uuid', isUuid.v4);
 
 const User = object({
   id: Uuid,
   email: Email,
   name: string(),
-})
+});
 
 const data = {
   id: 'c8d63140-a1f7-45e0-bfc6-df72973fea86',
   email: 'jane@example.com',
   name: 'Jane',
-}
+};
 
 if (is(data, User)) {
   // Your data is guaranteed to be valid in this block.
@@ -100,21 +100,21 @@ if (is(data, User)) {
 Superstruct can also handle coercion of your data before validating it, for example to mix in default values:
 
 ```ts
-import { create, object, number, string, defaulted } from 'superstruct'
+import { create, object, number, string, defaulted } from 'superstruct';
 
-let i = 0
+let i = 0;
 
 const User = object({
   id: defaulted(number(), () => i++),
   name: string(),
-})
+});
 
 const data = {
   name: 'Jane',
-}
+};
 
 // You can apply the defaults to your data while validating.
-const user = create(data, User)
+const user = create(data, User);
 // {
 //   id: 0,
 //   name: 'Jane',

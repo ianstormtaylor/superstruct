@@ -1,7 +1,7 @@
-import { assert, regexp } from '../../src'
-import { test } from '../index.test'
+import { assert, regexp } from '../../src';
+import { test } from '../index.test';
 
-test<RegExp>((x) => {
-  assert(x, regexp())
-  return x
-})
+test<RegExp>((value) => {
+  assert(value, regexp());
+  return value;
+});

@@ -1,12 +1,12 @@
-import { number, refine } from '../../../src'
+import { number, refine } from '../../../src';
 
 export const Struct = refine(
   number(),
   'positive',
-  (v) => v > 0 || 'Number was not positive!'
-)
+  (value) => value > 0 || 'Number was not positive!',
+);
 
-export const data = -1
+export const data = -1;
 
 export const failures = [
   {
@@ -16,4 +16,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

@@ -1,4 +1,4 @@
-import { omit, object, string } from '../../../src'
+import { omit, object, string } from '../../../src';
 
 export const Struct = omit(
   object({
@@ -8,19 +8,19 @@ export const Struct = omit(
       city: string(),
     }),
   }),
-  ['name']
-)
+  ['name'],
+);
 
 export const data = {
   address: {
     street: '123 Fake St',
     city: 'Springfield',
   },
-}
+};
 
 export const output = {
   address: {
     street: '123 Fake St',
     city: 'Springfield',
   },
-}
+};

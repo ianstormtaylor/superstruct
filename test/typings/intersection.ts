@@ -1,55 +1,58 @@
-import { assert, intersection, object, string } from '../../src'
-import { test } from '../index.test'
+import { assert, intersection, object, string } from '../../src';
+import { test } from '../index.test';
 
-test<{ a: string; b: string }>((x) => {
-  assert(x, intersection([object({ a: string() }), object({ b: string() })]))
-  return x
-})
+test<{ a: string; b: string }>((value) => {
+  assert(
+    value,
+    intersection([object({ a: string() }), object({ b: string() })]),
+  );
+  return value;
+});
 
 // Maximum call stack of 39 items
 test<{
-  a1: string
-  a2: string
-  a3: string
-  a4: string
-  a5: string
-  a6: string
-  a7: string
-  a8: string
-  a9: string
-  a10: string
-  a11: string
-  a12: string
-  a13: string
-  a14: string
-  a15: string
-  a16: string
-  a17: string
-  a18: string
-  a19: string
-  a20: string
-  a21: string
-  a22: string
-  a23: string
-  a24: string
-  a25: string
-  a26: string
-  a27: string
-  a28: string
-  a29: string
-  a30: string
-  a31: string
-  a32: string
-  a33: string
-  a34: string
-  a35: string
-  a36: string
-  a37: string
-  a38: string
-  a39: string
-}>((x) => {
+  a1: string;
+  a2: string;
+  a3: string;
+  a4: string;
+  a5: string;
+  a6: string;
+  a7: string;
+  a8: string;
+  a9: string;
+  a10: string;
+  a11: string;
+  a12: string;
+  a13: string;
+  a14: string;
+  a15: string;
+  a16: string;
+  a17: string;
+  a18: string;
+  a19: string;
+  a20: string;
+  a21: string;
+  a22: string;
+  a23: string;
+  a24: string;
+  a25: string;
+  a26: string;
+  a27: string;
+  a28: string;
+  a29: string;
+  a30: string;
+  a31: string;
+  a32: string;
+  a33: string;
+  a34: string;
+  a35: string;
+  a36: string;
+  a37: string;
+  a38: string;
+  a39: string;
+}>((value) => {
   assert(
-    x,
+    value,
     intersection([
       object({ a1: string() }),
       object({ a2: string() }),
@@ -90,7 +93,7 @@ test<{
       object({ a37: string() }),
       object({ a38: string() }),
       object({ a39: string() }),
-    ])
-  )
-  return x
-})
+    ]),
+  );
+  return value;
+});

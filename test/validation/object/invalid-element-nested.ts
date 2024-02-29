@@ -1,14 +1,14 @@
-import { object, array, string } from '../../../src'
+import { object, array, string } from '../../../src';
 
 export const Struct = object({
   name: string(),
   emails: array(string()),
-})
+});
 
 export const data = {
   name: 'john',
   emails: ['name@example.com', false],
-}
+};
 
 export const failures = [
   {
@@ -18,4 +18,4 @@ export const failures = [
     path: ['emails', 1],
     branch: [data, data.emails, data.emails[1]],
   },
-]
+];

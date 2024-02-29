@@ -1,16 +1,16 @@
-import { object, string, number } from '../../../src'
+import { object, string, number } from '../../../src';
 
 export const Struct = object({
   name: string(),
   age: number(),
   height: string(),
-})
+});
 
 export const data = {
   name: 'john',
   age: 'invalid',
   height: 2,
-}
+};
 
 export const failures = [
   {
@@ -27,4 +27,4 @@ export const failures = [
     path: ['height'],
     branch: [data, data.height],
   },
-]
+];

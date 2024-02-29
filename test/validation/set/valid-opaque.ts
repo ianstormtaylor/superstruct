@@ -1,7 +1,7 @@
-import { set } from '../../../src'
+import { set } from '../../../src';
 
-export const Struct = set()
+export const Struct = set();
 
-export const data = new Set(['a', 2, true])
+export const data = new Set(['a', 2, true]);
 
-export const output = new Set(['a', 2, true])
+export const output = new Set(['a', 2, true]);

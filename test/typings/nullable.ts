@@ -1,19 +1,19 @@
-import { assert, nullable, string, object, enums } from '../../src'
-import { test } from '../index.test'
+import { assert, nullable, string, object, enums } from '../../src';
+import { test } from '../index.test';
 
-test<string | null>((x) => {
-  assert(x, nullable(string()))
-  return x
-})
+test<string | null>((value) => {
+  assert(value, nullable(string()));
+  return value;
+});
 
-test<{ a: string | null }>((x) => {
-  assert(x, object({ a: nullable(string()) }))
-  return x
-})
+test<{ a: string | null }>((value) => {
+  assert(value, object({ a: nullable(string()) }));
+  return value;
+});
 
 test<{
-  a: 'a'
-  b: 'b'
+  a: 'a';
+  b: 'b';
 }>(() => {
-  return nullable(enums(['a', 'b'])).schema
-})
+  return nullable(enums(['a', 'b'])).schema;
+});

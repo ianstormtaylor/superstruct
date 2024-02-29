@@ -1,4 +1,4 @@
-import { defaulted, string, object, number } from '../../../src'
+import { defaulted, string, object, number } from '../../../src';
 
 export const Struct = defaulted(
   object({
@@ -7,16 +7,16 @@ export const Struct = defaulted(
   }),
   {
     title: 'Untitled',
-  }
-)
+  },
+);
 
 export const data = {
   version: 0,
-}
+};
 
 export const output = {
   title: 'Untitled',
   version: 0,
-}
+};
 
-export const create = true
+export const create = true;

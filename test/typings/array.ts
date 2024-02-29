@@ -1,12 +1,12 @@
-import { assert, array, number } from '../../src'
-import { test } from '../index.test'
+import { assert, array, number } from '../../src';
+import { test } from '../index.test';
 
-test<Array<unknown>>((x) => {
-  assert(x, array())
-  return x
-})
+test<unknown[]>((value) => {
+  assert(value, array());
+  return value;
+});
 
-test<Array<number>>((x) => {
-  assert(x, array(number()))
-  return x
-})
+test<number[]>((value) => {
+  assert(value, array(number()));
+  return value;
+});

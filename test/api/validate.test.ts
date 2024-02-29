@@ -1,5 +1,6 @@
-import { describe, it } from 'vitest'
-import { deepStrictEqual, strictEqual } from 'assert'
+import { deepStrictEqual, strictEqual } from 'assert';
+import { describe, it } from 'vitest';
+
 import {
   validate,
   string,
@@ -8,25 +9,25 @@ import {
   refine,
   object,
   any,
-} from '../../src'
+} from '../../src';
 
 describe('validate', () => {
   it('valid as helper', () => {
-    const S = string()
-    deepStrictEqual(validate('valid', S), [undefined, 'valid'])
-  })
+    const struct = string();
+    deepStrictEqual(validate('valid', struct), [undefined, 'valid']);
+  });
 
   it('valid as method', () => {
-    const S = string()
-    deepStrictEqual(S.validate('valid'), [undefined, 'valid'])
-  })
+    const struct = string();
+    deepStrictEqual(struct.validate('valid'), [undefined, 'valid']);
+  });
 
   it('invalid as helper', () => {
-    const S = string()
-    const [err, value] = validate(42, S)
-    strictEqual(value, undefined)
-    strictEqual(err instanceof StructError, true)
-    deepStrictEqual(Array.from((err as StructError).failures()), [
+    const struct = string();
+    const [error, value] = validate(42, struct);
+    strictEqual(value, undefined);
+    strictEqual(error instanceof StructError, true);
+    deepStrictEqual(Array.from(error.failures()), [
       {
         value: 42,
         key: undefined,
@@ -37,15 +38,15 @@ describe('validate', () => {
         branch: [42],
         explanation: undefined,
       },
-    ])
-  })
+    ]);
+  });
 
   it('invalid as method', () => {
-    const S = string()
-    const [err, value] = S.validate(42)
-    strictEqual(value, undefined)
-    strictEqual(err instanceof StructError, true)
-    deepStrictEqual(Array.from((err as StructError).failures()), [
+    const struct = string();
+    const [error, value] = struct.validate(42);
+    strictEqual(value, undefined);
+    strictEqual(error instanceof StructError, true);
+    deepStrictEqual(Array.from(error.failures()), [
       {
         value: 42,
         key: undefined,
@@ -56,95 +57,95 @@ describe('validate', () => {
         branch: [42],
         explanation: undefined,
       },
-    ])
-  })
+    ]);
+  });
 
   it('error message path', () => {
-    const S = object({ author: object({ name: string() }) })
-    const [err] = S.validate({ author: { name: 42 } })
+    const struct = object({ author: object({ name: string() }) });
+    const [error] = struct.validate({ author: { name: 42 } });
     strictEqual(
-      (err as StructError).message,
-      'At path: author.name -- Expected a string, but received: 42'
-    )
-  })
+      (error as StructError).message,
+      'At path: author.name -- Expected a string, but received: 42',
+    );
+  });
 
   it('custom error message', () => {
-    const S = string()
-    const [err] = S.validate(42, { message: 'Validation failed!' })
-    strictEqual(err?.message, 'Validation failed!')
-    strictEqual(err?.cause, 'Expected a string, but received: 42')
-  })
+    const struct = string();
+    const [error] = struct.validate(42, { message: 'Validation failed!' });
+    strictEqual(error?.message, 'Validation failed!');
+    strictEqual(error?.cause, 'Expected a string, but received: 42');
+  });
 
   it('early exit', () => {
-    let ranA = false
-    let ranB = false
+    let ranA = false;
+    const ranB = false;
 
-    const A = define('A', (x) => {
-      ranA = true
-      return typeof x === 'string'
-    })
+    const structA = define('A', (value) => {
+      ranA = true;
+      return typeof value === 'string';
+    });
 
-    const B = define('B', (x) => {
-      ranA = true
-      return typeof x === 'string'
-    })
+    const structB = define('B', (value) => {
+      ranA = true;
+      return typeof value === 'string';
+    });
 
-    const S = object({ a: A, b: B })
-    S.validate({ a: null, b: null })
-    strictEqual(ranA, true)
-    strictEqual(ranB, false)
-  })
+    const struct = object({ a: structA, b: structB });
+    struct.validate({ a: null, b: null });
+    strictEqual(ranA, true);
+    strictEqual(ranB, false);
+  });
 
   it('refiners after children', () => {
-    const order: string[] = []
+    const order: string[] = [];
 
-    const A = define('A', () => {
-      order.push('validator')
-      return true
-    })
+    const structA = define('A', () => {
+      order.push('validator');
+      return true;
+    });
 
-    const B = refine(object({ a: A }), 'B', () => {
-      order.push('refiner')
-      return true
-    })
+    const structB = refine(object({ a: structA }), 'B', () => {
+      order.push('refiner');
+      return true;
+    });
 
-    B.validate({ a: null })
-    deepStrictEqual(order, ['validator', 'refiner'])
-  })
+    structB.validate({ a: null });
+    deepStrictEqual(order, ['validator', 'refiner']);
+  });
 
   it('refiners even if nested refiners fail', () => {
-    let ranOuterRefiner = false
+    let ranOuterRefiner = false;
 
-    const A = refine(any(), 'A', () => {
-      return 'inner refiner failed'
-    })
+    const structA = refine(any(), 'A', () => {
+      return 'inner refiner failed';
+    });
 
-    const B = refine(object({ a: A }), 'B', () => {
-      ranOuterRefiner = true
-      return true
-    })
+    const structB = refine(object({ a: structA }), 'B', () => {
+      ranOuterRefiner = true;
+      return true;
+    });
 
-    const [error] = B.validate({ a: null })
+    const [error] = structB.validate({ a: null });
     // Collect all failures. Ensures all validation runs.
-    error?.failures()
-    strictEqual(ranOuterRefiner, true)
-  })
+    error?.failures();
+    strictEqual(ranOuterRefiner, true);
+  });
 
   it('skips refiners if validators return errors', () => {
-    let ranRefiner = false
+    let ranRefiner = false;
 
-    const A = define('A', () => {
-      return false
-    })
+    const structA = define('A', () => {
+      return false;
+    });
 
-    const B = refine(object({ a: A }), 'B', () => {
-      ranRefiner = true
-      return true
-    })
+    const structB = refine(object({ a: structA }), 'B', () => {
+      ranRefiner = true;
+      return true;
+    });
 
-    const [error] = B.validate({ a: null })
+    const [error] = structB.validate({ a: null });
     // Collect all failures. Ensures all validation runs.
-    error?.failures()
-    strictEqual(ranRefiner, false)
-  })
-})
+    error?.failures();
+    strictEqual(ranRefiner, false);
+  });
+});

@@ -1,10 +1,10 @@
-import { assert, lazy, string } from '../../src'
-import { test } from '../index.test'
+import { assert, lazy, string } from '../../src';
+import { test } from '../index.test';
 
-test<string>((x) => {
+test<string>((value) => {
   assert(
-    x,
-    lazy(() => string())
-  )
-  return x
-})
+    value,
+    lazy(() => string()),
+  );
+  return value;
+});

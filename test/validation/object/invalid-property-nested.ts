@@ -1,4 +1,4 @@
-import { object, string } from '../../../src'
+import { object, string } from '../../../src';
 
 export const Struct = object({
   name: string(),
@@ -6,7 +6,7 @@ export const Struct = object({
     street: string(),
     city: string(),
   }),
-})
+});
 
 export const data = {
   name: 'john',
@@ -14,7 +14,7 @@ export const data = {
     street: 123,
     city: 'Springfield',
   },
-}
+};
 
 export const failures = [
   {
@@ -24,4 +24,4 @@ export const failures = [
     path: ['address', 'street'],
     branch: [data, data.address, data.address.street],
   },
-]
+];

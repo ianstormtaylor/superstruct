@@ -1,7 +1,7 @@
-import { string, empty } from '../../../src'
+import { string, empty } from '../../../src';
 
-export const Struct = empty(string())
+export const Struct = empty(string());
 
-export const data = ''
+export const data = '';
 
-export const output = ''
+export const output = '';

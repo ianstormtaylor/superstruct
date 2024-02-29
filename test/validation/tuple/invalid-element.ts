@@ -1,8 +1,8 @@
-import { tuple, string, number } from '../../../src'
+import { tuple, string, number } from '../../../src';
 
-export const Struct = tuple([string(), number()])
+export const Struct = tuple([string(), number()]);
 
-export const data = [false, 3]
+export const data = [false, 3];
 
 export const failures = [
   {
@@ -12,4 +12,4 @@ export const failures = [
     path: [0],
     branch: [data, data[0]],
   },
-]
+];

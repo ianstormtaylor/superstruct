@@ -1,8 +1,8 @@
-import { dynamic, string, nonempty } from '../../../src'
+import { dynamic, string, nonempty } from '../../../src';
 
-export const Struct = dynamic(() => nonempty(string()))
+export const Struct = dynamic(() => nonempty(string()));
 
-export const data = ''
+export const data = '';
 
 export const failures = [
   {
@@ -12,4 +12,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

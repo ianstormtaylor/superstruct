@@ -1,22 +1,22 @@
-import { assert, literal } from '../../src'
-import { test } from '../index.test'
+import { assert, literal } from '../../src';
+import { test } from '../index.test';
 
-test<true>((x) => {
-  assert(x, literal(true))
-  return x
-})
+test<true>((value) => {
+  assert(value, literal(true));
+  return value;
+});
 
-test<'a'>((x) => {
-  assert(x, literal('a'))
-  return x
-})
+test<'a'>((value) => {
+  assert(value, literal('a'));
+  return value;
+});
 
-test<42>((x) => {
-  assert(x, literal(42))
-  return x
-})
+test<42>((value) => {
+  assert(value, literal(42));
+  return value;
+});
 
-test<Date>((x) => {
-  assert(x, literal(new Date()))
-  return x
-})
+test<Date>((value) => {
+  assert(value, literal(new Date()));
+  return value;
+});

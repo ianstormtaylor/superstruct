@@ -1,9 +1,9 @@
-import { assert, pick, object, number, string } from '../../src'
-import { test } from '../index.test'
+import { assert, pick, object, number, string } from '../../src';
+import { test } from '../index.test';
 
 test<{
-  b: string
-}>((x) => {
-  assert(x, pick(object({ a: number(), b: string() }), ['b']))
-  return x
-})
+  b: string;
+}>((value) => {
+  assert(value, pick(object({ a: number(), b: string() }), ['b']));
+  return value;
+});

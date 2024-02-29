@@ -1,7 +1,7 @@
-import { assert, record, string, number } from '../../src'
-import { test } from '../index.test'
+import { assert, record, string, number } from '../../src';
+import { test } from '../index.test';
 
-test<Record<string, number>>((x) => {
-  assert(x, record(string(), number()))
-  return x
-})
+test<Record<string, number>>((value) => {
+  assert(value, record(string(), number()));
+  return value;
+});

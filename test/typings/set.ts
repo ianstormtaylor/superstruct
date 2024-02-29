@@ -1,7 +1,7 @@
-import { assert, set, string } from '../../src'
-import { test } from '../index.test'
+import { assert, set, string } from '../../src';
+import { test } from '../index.test';
 
-test<Set<string>>((x) => {
-  assert(x, set(string()))
-  return x
-})
+test<Set<string>>((value) => {
+  assert(value, set(string()));
+  return value;
+});

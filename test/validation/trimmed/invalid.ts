@@ -1,8 +1,8 @@
-import { string, trimmed } from '../../../src'
+import { string, trimmed } from '../../../src';
 
-export const Struct = trimmed(string())
+export const Struct = trimmed(string());
 
-export const data = false
+export const data = false;
 
 export const failures = [
   {
@@ -12,6 +12,6 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];
 
-export const create = true
+export const create = true;

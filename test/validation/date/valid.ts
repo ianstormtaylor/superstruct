@@ -1,7 +1,7 @@
-import { date } from '../../../src'
+import { date } from '../../../src';
 
-export const Struct = date()
+export const Struct = date();
 
-export const data = new Date(0)
+export const data = new Date(0);
 
-export const output = new Date(0)
+export const output = new Date(0);

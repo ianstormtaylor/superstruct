@@ -9,13 +9,13 @@ Superstruct is built with TypeScript, and is designed to integrate seamlessly wi
 Whenever you use the `is` or `assert` helpers in Superstruct, TypeScript will infer information about your data and give you type safety. For example:
 
 ```ts
-import { is, number, object, string } from 'superstruct'
+import { is, number, object, string } from 'superstruct';
 
 const User = object({
   id: number(),
   email: string(),
   name: string(),
-})
+});
 
 if (is(data, User)) {
   // In this block TypeScript knows the shape of `data` is guaranteed to match
@@ -28,7 +28,7 @@ Inside that `if` block you can safely access the `User` properties `id`, `name` 
 The same for goes assertions:
 
 ```ts
-assert(data, User)
+assert(data, User);
 // After this point TypeScript knows that data is valid too!
 ```
 
@@ -40,14 +40,14 @@ You can ensure that you're properly describing your existing TypeScript types wi
 
 ```ts
 type User = {
-  id: number
-  name: string
-}
+  id: number;
+  name: string;
+};
 
 const User: Describe<User> = object({
   id: string(), // This mistake will fail to pass type checking!
   name: string(),
-})
+});
 ```
 
 In this case, the incorrectly defined `id` property will cause TypeScript's compilation checks to throw an error. This way your compile-time and run-time validations are never out of sync.
@@ -57,25 +57,25 @@ In this case, the incorrectly defined `id` property will cause TypeScript's comp
 You can also do the reverse and infer a TypeScript type using an existing Superstruct struct with the `Infer` utility. For example:
 
 ```ts
-import { Infer, number, object, string } from 'superstruct'
+import { Infer, number, object, string } from 'superstruct';
 
 const User = object({
   id: number(),
   email: string(),
   name: string(),
-})
+});
 
-type User = Infer<typeof User>
+type User = Infer<typeof User>;
 ```
 
 The `User` type above is the same as if you'd defined it by hand:
 
 ```ts
 type User = {
-  id: number
-  email: string
-  name: string
-}
+  id: number;
+  email: string;
+  name: string;
+};
 ```
 
 This saves you from having to duplicate definitions.

@@ -1,7 +1,7 @@
-import { regexp } from '../../../src'
+import { regexp } from '../../../src';
 
-export const Struct = regexp()
+export const Struct = regexp();
 
-export const data = /./
+export const data = /./u;
 
-export const output = data
+export const output = data;

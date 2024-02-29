@@ -1,22 +1,22 @@
-import { assert, nonempty, string, array, map, set } from '../../src'
-import { test } from '../index.test'
+import { assert, nonempty, string, array, map, set } from '../../src';
+import { test } from '../index.test';
 
-test<string>((x) => {
-  assert(x, nonempty(string()))
-  return x
-})
+test<string>((value) => {
+  assert(value, nonempty(string()));
+  return value;
+});
 
-test<Array<unknown>>((x) => {
-  assert(x, nonempty(array()))
-  return x
-})
+test<unknown[]>((value) => {
+  assert(value, nonempty(array()));
+  return value;
+});
 
-test<Set<unknown>>((x) => {
-  assert(x, nonempty(set()))
-  return x
-})
+test<Set<unknown>>((value) => {
+  assert(value, nonempty(set()));
+  return value;
+});
 
-test<Map<unknown, unknown>>((x) => {
-  assert(x, nonempty(map()))
-  return x
-})
+test<Map<unknown, unknown>>((value) => {
+  assert(value, nonempty(map()));
+  return value;
+});

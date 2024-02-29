@@ -1,7 +1,7 @@
-import { unknown } from '../../../src'
+import { unknown } from '../../../src';
 
-export const Struct = unknown()
+export const Struct = unknown();
 
-export const data = undefined
+export const data = undefined;
 
-export const output = undefined
+export const output = undefined;

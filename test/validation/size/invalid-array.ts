@@ -1,8 +1,8 @@
-import { array, size, number } from '../../../src'
+import { array, size, number } from '../../../src';
 
-export const Struct = size(array(number()), 1, 5)
+export const Struct = size(array(number()), 1, 5);
 
-export const data = []
+export const data = [];
 
 export const failures = [
   {
@@ -12,4 +12,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

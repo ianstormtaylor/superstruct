@@ -1,17 +1,16 @@
 {
-  "include": ["./src/**/*.ts"],
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "declarationMap": true,
     "esModuleInterop": true,
-    "lib": ["esnext"],
-    "module": "esnext",
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2020"],
+    "module": "CommonJS",
     "moduleResolution": "node",
-    "outDir": "./dist",
-    "sourceMap": true,
+    "noEmit": true,
+    "noErrorTruncation": true,
+    "noUncheckedIndexedAccess": true,
     "strict": true,
-    "suppressImplicitAnyIndexErrors": true,
     "target": "es2020"
-  }
+  },
+  "exclude": ["./dist", "**/node_modules"]
 }

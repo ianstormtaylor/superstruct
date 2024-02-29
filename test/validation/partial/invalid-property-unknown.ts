@@ -1,14 +1,14 @@
-import { partial, string, number } from '../../../src'
+import { partial, string, number } from '../../../src';
 
 export const Struct = partial({
   name: string(),
   age: number(),
-})
+});
 
 export const data = {
   name: 'john',
   unknown: true,
-}
+};
 
 export const failures = [
   {
@@ -18,4 +18,4 @@ export const failures = [
     path: ['unknown'],
     branch: [data, data.unknown],
   },
-]
+];

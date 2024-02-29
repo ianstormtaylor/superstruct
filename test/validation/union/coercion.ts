@@ -1,12 +1,12 @@
-import { union, string, number, defaulted } from '../../../src'
+import { union, string, number, defaulted } from '../../../src';
 
-const A = defaulted(string(), 'foo')
-const B = number()
+const First = defaulted(string(), 'foo');
+const Second = number();
 
-export const Struct = union([A, B])
+export const Struct = union([First, Second]);
 
-export const data = undefined
+export const data = undefined;
 
-export const output = 'foo'
+export const output = 'foo';
 
-export const create = true
+export const create = true;

@@ -1,10 +1,10 @@
-import { assert, tuple, string, number, literal } from '../../src'
-import { test } from '../index.test'
+import { assert, tuple, string, number, literal } from '../../src';
+import { test } from '../index.test';
 
-test<[string, number]>((x) => {
-  assert(x, tuple([string(), number()]))
-  return x
-})
+test<[string, number]>((value) => {
+  assert(value, tuple([string(), number()]));
+  return value;
+});
 
 // Maximum call stack of 41 items
 test<
@@ -49,11 +49,11 @@ test<
     '38',
     '39',
     '40',
-    '41'
+    '41',
   ]
->((x) => {
+>((value) => {
   assert(
-    x,
+    value,
     tuple([
       literal('1'),
       literal('2'),
@@ -96,7 +96,7 @@ test<
       literal('39'),
       literal('40'),
       literal('41'),
-    ])
-  )
-  return x
-})
+    ]),
+  );
+  return value;
+});

@@ -1,15 +1,15 @@
-import { object, assign, string, number } from '../../../src'
+import { object, assign, string, number } from '../../../src';
 
-const A = object({ a: string() })
-const B = object({ a: number(), b: number() })
+const First = object({ a: string() });
+const Second = object({ a: number(), b: number() });
 
-export const Struct = assign(A, B)
+export const Struct = assign(First, Second);
 
 export const data = {
   a: 'invalid',
   b: 2,
   c: 5,
-}
+};
 
 export const failures = [
   {
@@ -26,4 +26,4 @@ export const failures = [
     type: 'never',
     value: 5,
   },
-]
+];

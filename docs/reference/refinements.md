@@ -5,8 +5,8 @@ Superstruct allows you to constrain existing structs with further validation. Th
 ### `empty`
 
 ```ts
-empty(string())
-empty(array())
+empty(string());
+empty(array());
 ```
 
 ```ts
@@ -21,7 +21,7 @@ empty(array())
 ### `max`
 
 ```ts
-max(number(), 0)
+max(number(), 0);
 ```
 
 ```txt
@@ -35,11 +35,11 @@ max(number(), 0)
 ### `min`
 
 ```ts
-min(number(), 9000)
+min(number(), 9000);
 ```
 
 ```ts
-9001
+9001;
 ```
 
 `min` enforces that a `number` struct is greater than a threshold.
@@ -49,8 +49,8 @@ min(number(), 9000)
 ### `nonempty`
 
 ```ts
-nonempty(string())
-nonempty(array())
+nonempty(string());
+nonempty(array());
 ```
 
 `nonempty` enforces that a string, array, map, or set is not empty. This does the opposite of `empty`.
@@ -58,11 +58,11 @@ nonempty(array())
 ### `pattern`
 
 ```ts
-pattern(string(), /\d+/)
+pattern(string(), /\d+/);
 ```
 
 ```ts
-'123'
+'123';
 ```
 
 `pattern` enforces that a `string` struct also matches a supplied `RegExp`.
@@ -70,9 +70,9 @@ pattern(string(), /\d+/)
 ### `size`
 
 ```ts
-size(string(), 1, 100)
-size(array(number()), 0)
-size(number(), 93, Infinity)
+size(string(), 1, 100);
+size(array(number()), 0);
+size(number(), 93, Infinity);
 ```
 
 ```txt
@@ -90,9 +90,9 @@ Infinity
 You can also define your own custom refinments that are specific to your application's requirements, like so:
 
 ```ts
-import { number, refine } from 'superstruct'
+import { number, refine } from 'superstruct';
 
-const Positive = refine(number(), 'positive', (value) => value >= 0)
+const Positive = refine(number(), 'positive', (value) => value >= 0);
 ```
 
 This allows you to define more fine-grained runtime validation, while still preserving the `number` type at compile time.
@@ -110,7 +110,7 @@ const DateRange = refine(
   'DateRange',
   (value) => {
     if (value.startDate < value.endDate) {
-      return true
+      return true;
     }
 
     // Returning a string indicates that validation failed and the provided
@@ -118,7 +118,7 @@ const DateRange = refine(
     return (
       `Expected 'startDate' to be less than 'endDate' on type 'DateRange', ` +
       `but received ${JSON.stringify(value)}`
-    )
-  }
-)
+    );
+  },
+);
 ```

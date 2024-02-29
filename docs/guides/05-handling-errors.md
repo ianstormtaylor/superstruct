@@ -9,7 +9,7 @@ const User = object({
   id: number(),
   name: string(),
   email: email(),
-})
+});
 ```
 
 If you pass in an invalid email, an error will be thrown:
@@ -19,16 +19,16 @@ const data = {
   id: 1,
   name: 'Alex',
   email: false,
-}
+};
 
-assert(data, User)
+assert(data, User);
 // StructError: At path: email -- Expected a string, but received: false
 ```
 
 You can also specify your own message for more clarity. In this case the original message will be preserved in [Error.cause](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause).
 
 ```ts
-assert(data, User, "The user is invalid!");
+assert(data, User, 'The user is invalid!');
 // StructError: The user is invalid!
 ```
 
@@ -60,29 +60,29 @@ For example, consider a REST API for creating users:
 
 ```ts
 router.post('/users', ({ request, response }) => {
-  const data = request.body
+  const data = request.body;
 
   try {
-    assert(data, User)
+    assert(data, User);
   } catch (e) {
-    const { key, value, type } = e
+    const { key, value, type } = e;
 
     if (value === undefined) {
-      const error = new Error(`user_${key}_required`)
-      error.attribute = key
-      throw error
+      const error = new Error(`user_${key}_required`);
+      error.attribute = key;
+      throw error;
     } else if (type === 'never') {
-      const error = new Error(`user_attribute_unknown`)
-      error.attribute = key
-      throw error
+      const error = new Error(`user_attribute_unknown`);
+      error.attribute = key;
+      throw error;
     } else {
-      const error = new Error(`user_${key}_invalid`)
-      error.attribute = key
-      error.value = value
-      throw error
+      const error = new Error(`user_${key}_invalid`);
+      error.attribute = key;
+      error.value = value;
+      throw error;
     }
   }
-})
+});
 ```
 
 When a developer tries to create a user with invalid properties, the error responses given by the API are standardized. You end up with errors with codes like:
@@ -107,7 +107,7 @@ However, there are situations where you need to check for all of the potential e
 
 ```ts
 try {
-  assert(data, Struct)
+  assert(data, Struct);
 } catch (error) {
   for (const failure of error.failures()) {
     // ...

@@ -1,8 +1,8 @@
-import { record, string, number } from '../../../src'
+import { record, string, number } from '../../../src';
 
-export const Struct = record(string(), number())
+export const Struct = record(string(), number());
 
-export const data = 'invalid'
+export const data = 'invalid';
 
 export const failures = [
   {
@@ -12,4 +12,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

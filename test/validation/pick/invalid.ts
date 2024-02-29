@@ -1,14 +1,14 @@
-import { pick, object, string, number } from '../../../src'
+import { pick, object, string, number } from '../../../src';
 
 export const Struct = pick(
   object({
     name: string(),
     age: number(),
   }),
-  ['name']
-)
+  ['name'],
+);
 
-export const data = 'invalid'
+export const data = 'invalid';
 
 export const failures = [
   {
@@ -18,4 +18,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

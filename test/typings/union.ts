@@ -1,10 +1,10 @@
-import { assert, union, object, string, literal } from '../../src'
-import { test } from '../index.test'
+import { assert, union, object, string, literal } from '../../src';
+import { test } from '../index.test';
 
-test<{ a: string } | { b: string }>((x) => {
-  assert(x, union([object({ a: string() }), object({ b: string() })]))
-  return x
-})
+test<{ a: string } | { b: string }>((value) => {
+  assert(value, union([object({ a: string() }), object({ b: string() })]));
+  return value;
+});
 
 // Maximum call stack of 40 items
 test<
@@ -48,9 +48,9 @@ test<
   | '38'
   | '39'
   | '40'
->((x) => {
+>((value) => {
   assert(
-    x,
+    value,
     union([
       literal('1'),
       literal('2'),
@@ -92,7 +92,7 @@ test<
       literal('38'),
       literal('39'),
       literal('40'),
-    ])
-  )
-  return x
-})
+    ]),
+  );
+  return value;
+});

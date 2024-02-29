@@ -1,10 +1,10 @@
-import { map } from '../../../src'
+import { map } from '../../../src';
 
-export const Struct = map()
+export const Struct = map();
 
 export const data = new Map([
   ['a', 1],
   [2, true],
-] as any)
+] as any);
 
-export const output = data
+export const output = data;

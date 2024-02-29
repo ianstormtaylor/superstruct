@@ -1,7 +1,7 @@
-import { number, nullable } from '../../../src'
+import { number, nullable } from '../../../src';
 
-export const Struct = nullable(number())
+export const Struct = nullable(number());
 
-export const data = null
+export const data = null;
 
-export const output = null
+export const output = null;

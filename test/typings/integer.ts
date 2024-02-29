@@ -1,7 +1,7 @@
-import { assert, integer } from '../../src'
-import { test } from '../index.test'
+import { assert, integer } from '../../src';
+import { test } from '../index.test';
 
-test<number>((x) => {
-  assert(x, integer())
-  return x
-})
+test<number>((value) => {
+  assert(value, integer());
+  return value;
+});

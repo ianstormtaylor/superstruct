@@ -1,15 +1,15 @@
-import { type, object, assign, string, number } from '../../../src'
+import { type, object, assign, string, number } from '../../../src';
 
-const A = type({ a: string() })
-const B = object({ a: number(), b: number() })
+const First = type({ a: string() });
+const Second = object({ a: number(), b: number() });
 
-export const Struct = assign(A, B)
+export const Struct = assign(First, Second);
 
 export const data = {
   a: 'invalid',
   b: 2,
   c: 5,
-}
+};
 
 export const failures = [
   {
@@ -19,4 +19,4 @@ export const failures = [
     path: ['a'],
     branch: [data, data.a],
   },
-]
+];

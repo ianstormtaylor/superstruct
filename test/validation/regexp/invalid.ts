@@ -1,8 +1,8 @@
-import { regexp } from '../../../src'
+import { regexp } from '../../../src';
 
-export const Struct = regexp()
+export const Struct = regexp();
 
-export const data = 'invalid'
+export const data = 'invalid';
 
 export const failures = [
   {
@@ -12,4 +12,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

@@ -1,7 +1,7 @@
-import { assert, pattern, string } from '../../src'
-import { test } from '../index.test'
+import { assert, pattern, string } from '../../src';
+import { test } from '../index.test';
 
-test<string>((x) => {
-  assert(x, pattern(string(), /.*/))
-  return x
-})
+test<string>((value) => {
+  assert(value, pattern(string(), /.*/u));
+  return value;
+});

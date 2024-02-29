@@ -1,8 +1,8 @@
-import { map, size, number, string } from '../../../src'
+import { map, size, number, string } from '../../../src';
 
-export const Struct = size(map(number(), string()), 1, 5)
+export const Struct = size(map(number(), string()), 1, 5);
 
-export const data = new Map()
+export const data = new Map();
 
 export const failures = [
   {
@@ -12,4 +12,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

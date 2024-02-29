@@ -1,17 +1,17 @@
-import { type, string } from '../../../src'
+import { type, string } from '../../../src';
 
 class Person {
-  name: string
+  name: string;
 
   constructor(name: string) {
-    this.name = name
+    this.name = name;
   }
 }
 
 export const Struct = type({
   name: string(),
-})
+});
 
-export const data = new Person('john')
+export const data = new Person('john');
 
-export const output = data
+export const output = data;

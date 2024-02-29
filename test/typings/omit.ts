@@ -1,16 +1,16 @@
-import { assert, omit, object, number, string, type } from '../../src'
-import { test } from '../index.test'
+import { assert, omit, object, number, string, type } from '../../src';
+import { test } from '../index.test';
 
 test<{
-  b: string
-}>((x) => {
-  assert(x, omit(object({ a: number(), b: string() }), ['a']))
-  return x
-})
+  b: string;
+}>((value) => {
+  assert(value, omit(object({ a: number(), b: string() }), ['a']));
+  return value;
+});
 
 test<{
-  b: string
-}>((x) => {
-  assert(x, omit(type({ a: number(), b: string() }), ['a']))
-  return x
-})
+  b: string;
+}>((value) => {
+  assert(value, omit(type({ a: number(), b: string() }), ['a']));
+  return value;
+});

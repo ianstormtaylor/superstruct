@@ -1,10 +1,10 @@
-import { assert, coerce, string, number } from '../../src'
-import { test } from '../index.test'
+import { assert, coerce, string, number } from '../../src';
+import { test } from '../index.test';
 
-test<number>((x) => {
+test<number>((value) => {
   assert(
-    x,
-    coerce(number(), string(), (x) => parseFloat(x))
-  )
-  return x
-})
+    value,
+    coerce(number(), string(), (coercionValue) => parseFloat(coercionValue)),
+  );
+  return value;
+});

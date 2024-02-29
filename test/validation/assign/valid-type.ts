@@ -1,18 +1,18 @@
-import { type, object, assign, string, number } from '../../../src'
+import { type, object, assign, string, number } from '../../../src';
 
-const A = type({ a: string() })
-const B = object({ b: number() })
+const First = type({ a: string() });
+const Second = object({ b: number() });
 
-export const Struct = assign(A, B)
+export const Struct = assign(First, Second);
 
 export const data = {
   a: '1',
   b: 2,
   c: 3,
-}
+};
 
 export const output = {
   a: '1',
   b: 2,
   c: 3,
-}
+};

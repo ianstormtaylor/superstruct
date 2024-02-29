@@ -1,13 +1,13 @@
-import { type, union, string, number } from '../../../src'
+import { type, union, string, number } from '../../../src';
 
-const A = type({ a: string() })
-const B = type({ b: number() })
+const First = type({ a: string() });
+const Second = type({ b: number() });
 
-export const Struct = union([A, B])
+export const Struct = union([First, Second]);
 
 export const data = {
   b: 'invalid',
-}
+};
 
 export const failures = [
   {
@@ -31,4 +31,4 @@ export const failures = [
     path: ['b'],
     branch: [data, data.b],
   },
-]
+];

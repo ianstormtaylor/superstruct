@@ -1,9 +1,10 @@
-import isEmail from 'is-email'
-import { string, refine } from '../../../src'
+import isEmail from 'is-email';
 
-export const Struct = refine(string(), 'email', isEmail)
+import { string, refine } from '../../../src';
 
-export const data = 'invalid'
+export const Struct = refine(string(), 'email', isEmail);
+
+export const data = 'invalid';
 
 export const failures = [
   {
@@ -13,4 +14,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

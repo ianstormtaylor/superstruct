@@ -5,7 +5,7 @@ Superstruct also ships with a handful of utility type factories, which allow you
 ### `assign`
 
 ```ts
-assign(object({ id: string() }), object({ name: string() }))
+assign(object({ id: string() }), object({ name: string() }));
 ```
 
 ```ts
@@ -24,9 +24,11 @@ object({
   id: number(),
   full_name: string(),
   name: deprecated(string(), (value, ctx) => {
-    console.warn(`${ctx.path} is deprecated, but value was '${value}'. Please use 'full_name' instead.`)
+    console.warn(
+      `${ctx.path} is deprecated, but value was '${value}'. Please use 'full_name' instead.`,
+    );
   }),
-})
+});
 ```
 
 ```ts
@@ -54,7 +56,7 @@ dynamic((value) => {
 const Node = object({
   id: number(),
   children: lazy(() => array(Node)),
-})
+});
 ```
 
 `lazy` allows you to create a self-referential struct, useful for defining recursive data structures.
@@ -69,8 +71,8 @@ omit(
     id: number(),
     name: string(),
   }),
-  ['name']
-)
+  ['name'],
+);
 ```
 
 `omit` allows you to create a new struct based on an existing `object` or `type` struct, but excluding specific properties.
@@ -82,8 +84,8 @@ partial(
   object({
     id: number(),
     name: string(),
-  })
-)
+  }),
+);
 ```
 
 ```ts
@@ -102,8 +104,8 @@ pick(
     id: number(),
     name: string(),
   }),
-  ['id']
-)
+  ['id'],
+);
 ```
 
 `pick` allows you to create a new struct based on an existing `object` or `type` struct, but only including specific properties.

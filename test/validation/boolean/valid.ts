@@ -1,7 +1,7 @@
-import { boolean } from '../../../src'
+import { boolean } from '../../../src';
 
-export const Struct = boolean()
+export const Struct = boolean();
 
-export const data = true
+export const data = true;
 
-export const output = true
+export const output = true;

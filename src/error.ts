@@ -3,15 +3,15 @@
  */
 
 export type Failure = {
-  value: any
-  key: any
-  type: string
-  refinement: string | undefined
-  message: string
-  explanation?: string
-  branch: Array<any>
-  path: Array<any>
-}
+  value: any;
+  key: any;
+  type: string;
+  refinement: string | undefined;
+  message: string;
+  explanation?: string | undefined;
+  branch: any[];
+  path: any[];
+};
 
 /**
  * `StructError` objects are thrown (or returned) when validation fails.
@@ -23,27 +23,38 @@ export type Failure = {
  */
 
 export class StructError extends TypeError {
-  value: any
-  key!: any
-  type!: string
-  refinement!: string | undefined
-  path!: Array<any>
-  branch!: Array<any>
-  failures: () => Array<Failure>;
-  [x: string]: any
+  value: any;
+
+  key!: any;
+
+  type!: string;
+
+  refinement!: string | undefined;
+
+  path!: any[];
+
+  branch!: any[];
+
+  failures: () => Failure[];
+
+  [x: string]: any;
 
   constructor(failure: Failure, failures: () => Generator<Failure>) {
-    let cached: Array<Failure> | undefined
-    const { message, explanation, ...rest } = failure
-    const { path } = failure
-    const msg =
-      path.length === 0 ? message : `At path: ${path.join('.')} -- ${message}`
-    super(explanation ?? msg)
-    if (explanation != null) this.cause = msg
-    Object.assign(this, rest)
-    this.name = this.constructor.name
-    this.failures = () => {
-      return (cached ??= [failure, ...failures()])
+    let cached: Failure[] | undefined;
+    const { message, explanation, ...rest } = failure;
+    const { path } = failure;
+    const cause =
+      path.length === 0 ? message : `At path: ${path.join('.')} -- ${message}`;
+    super(explanation ?? cause);
+
+    if (explanation !== null && explanation !== undefined) {
+      this.cause = cause;
     }
+
+    Object.assign(this, rest);
+    this.name = this.constructor.name;
+    this.failures = () => {
+      return (cached ??= [failure, ...failures()]);
+    };
   }
 }

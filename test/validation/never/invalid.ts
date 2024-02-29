@@ -1,8 +1,8 @@
-import { never } from '../../../src'
+import { never } from '../../../src';
 
-export const Struct = never()
+export const Struct = never();
 
-export const data = true
+export const data = true;
 
 export const failures = [
   {
@@ -12,4 +12,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

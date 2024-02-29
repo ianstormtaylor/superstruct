@@ -9,7 +9,7 @@ This document maintains a list of major changes to Superstruct with each new rel
 **Added an optional `message` argument to override error messages.** You can now pass in a `message` argument to all of the error checking functions which will override any error message with your own message. If you do, Superstruct's original descriptive message will still be accessible via [`error.cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause).
 
 ```ts
-assert(data, User, 'The user is invalid!')
+assert(data, User, 'The user is invalid!');
 // StructError: The user is invalid!
 ```
 
@@ -65,14 +65,14 @@ assert(data, User, 'The user is invalid!')
 
 ```ts
 type User = {
-  id: number
-  name: string
-}
+  id: number;
+  name: string;
+};
 
 const User: Describe<User> = object({
   id: string(), // This mistake will fail to pass type checking!
   name: string(),
-})
+});
 ```
 
 ###### BREAKING
@@ -82,13 +82,13 @@ const User: Describe<User> = object({
 ```ts
 // Previously
 const MyNumber = coerce(number(), (value) => {
-  return typeof value === 'string' ? parseFloat(value) : value
-})
+  return typeof value === 'string' ? parseFloat(value) : value;
+});
 
 // Now
 const MyNumber = coerce(number(), string(), (value) => {
-  return parseFloat(value)
-})
+  return parseFloat(value);
+});
 ```
 
 ### `0.11.0` — November 20, 2020
@@ -99,15 +99,15 @@ const MyNumber = coerce(number(), string(), (value) => {
 
 ```ts
 // Combine two structs with `assign`:
-const a = object({ id: number() })
-const b = object({ name: string() })
-const c = assign([a, b])
+const a = object({ id: number() });
+const b = object({ name: string() });
+const c = assign([a, b]);
 
 // Pick out specific properties with `pick`:
-const a2 = pick(c, ['id'])
+const a2 = pick(c, ['id']);
 
 // Omit specific properties with `omit`:
-const a3 = omit(c, ['name'])
+const a3 = omit(c, ['name']);
 ```
 
 **New `unknown` struct.** This is the same as the existing `any` struct, but it will ensure that in TypeScript the value is of the more restrictive `unknown` type so it encourages better type safety.
@@ -117,7 +117,7 @@ const Shape = type({
   id: number(),
   name: string(),
   other: unknown(),
-})
+});
 ```
 
 **New `integer`, `regexp`, and `func` structs.** These are just simple additions for common use cases of ensuring a value is an integer, a regular expression object (not a string!), or a function.
@@ -127,15 +127,15 @@ const Shape = type({
   id: integer(),
   matches: regexp(),
   send: func(),
-})
+});
 ```
 
 **New `max/min` refinements.** For refining `number` (or `integer`) or `date` structs to ensure they are greater than or less than a specific threshold. The third argument can indicate whether to make the threshold exclusive (instead of the default inclusive).
 
 ```ts
-const Index = min(number(), 0)
-const PastOrPresent = max(date(), new Date())
-const Past = max(date(), new Date(), { exclusive: true })
+const Index = min(number(), 0);
+const PastOrPresent = max(date(), new Date());
+const Past = max(date(), new Date(), { exclusive: true });
 ```
 
 **Even more information on errors.** Errors now expose the `error.refinement` property when the failure originated in a refinement validation. And they also now have an `error.key` property which is the key for the failure in the case of complex values like arrays/objects. (Previously the key was retrievable by checking `error.path`, but this will make the 90% case easier.)
@@ -146,10 +146,10 @@ const Past = max(date(), new Date(), { exclusive: true })
 
 ```ts
 // Previously
-const user = coerce(data, User)
+const user = coerce(data, User);
 
 // Now
-const user = create(data, User)
+const user = create(data, User);
 ```
 
 **The `struct`, `refinement` and `coercion` factories have been renamed.** This renaming is purely for keeping things slightly cleaner and easier to understand. The new names are `define`, `refine`, and `coerce`. Separating them slightly from the noun-based names used for the types themselves.
@@ -172,38 +172,38 @@ _Note that the order of `refine` arguments has changed to be slightly more natur
 
 ```ts
 // Previously
-const Name = length(string(), 1, 100)
-const MyArray = length(array(string()), 3, 3)
+const Name = length(string(), 1, 100);
+const MyArray = length(array(string()), 3, 3);
 
 // Now
-const Name = size(string(), 1, 100)
-const MyArray = size(array(string()), 3)
-const Id = size(integer(), 1, Infinity)
-const MySet = size(set(), 1, 9)
+const Name = size(string(), 1, 100);
+const MyArray = size(array(string()), 3);
+const Id = size(integer(), 1, Infinity);
+const MySet = size(set(), 1, 9);
 ```
 
 **The `StructType` inferring helper has been renamed to `Infer`.** This just makes it slightly easier to read what's going on when you're inferring a type.
 
 ```ts
 // Previously
-type User = StructType<typeof User>
+type User = StructType<typeof User>;
 
 // Now
-type User = Infer<typeof User>
+type User = Infer<typeof User>;
 ```
 
 **The `error.type` property has been standardized.** Previously it was a human-readable description that sort of incorporated the schema. Now it is simple the plain lowercase name of the struct in question, making it something you can use programmatically when formatting errors.
 
 ```ts
 // Previously
-'Array<string>'
-'[string,number]'
-'Map<string,number>'
+'Array<string>';
+'[string,number]';
+'Map<string,number>';
 
 // Now
-'array'
-'tuple'
-'map'
+'array';
+'tuple';
+'map';
 ```
 
 ### `0.10.0` — June 6, 2020
@@ -219,23 +219,23 @@ This makes it much more powerful, however the core architecture has had to chang
 For example, previously:
 
 ```ts
-import { struct } from 'superstruct'
+import { struct } from 'superstruct';
 
 const User = struct.object({
   name: 'string',
   age: 'number',
-})
+});
 ```
 
 Now becomes:
 
 ```ts
-import { object, string, number } from 'superstruct'
+import { object, string, number } from 'superstruct';
 
 const User = object({
   name: string(),
   age: number(),
-})
+});
 ```
 
 **Custom scalars are no longer pre-defined as strings.** Previously, you would define all of your "custom" types in a single place in your codebase and then refer to them in structs later on with a string value. This worked, but added a layer of unnecessary indirection, and made it impossible to accomodate runtime type signatures.
@@ -245,25 +245,25 @@ In the new version, custom types are defined extremely similarly to non-custom t
 Here's how it used to work:
 
 ```ts
-import { superstruct } from 'superstruct'
-import isEmail from 'is-email'
+import { superstruct } from 'superstruct';
+import isEmail from 'is-email';
 
 const struct = superstruct({
   types: {
     email: isEmail,
   },
-})
+});
 
-const Email = struct('email')
+const Email = struct('email');
 ```
 
 And here's what it would look like now:
 
 ```ts
-import { struct } from 'superstruct'
-import isEmail from 'is-email'
+import { struct } from 'superstruct';
+import isEmail from 'is-email';
 
-const Email = struct('email', isEmail)
+const Email = struct('email', isEmail);
 ```
 
 **Validation logic has been moved to helper functions.** Previously the `assert` and `is` helpers lived on the struct objects themselves. Now, these functions have been extracted into separate helpers. This was unfortunately necessary to work around limitations in TypeScript's `asserts` keyword.
@@ -271,15 +271,15 @@ const Email = struct('email', isEmail)
 For example, before:
 
 ```ts
-User.assert(data)
+User.assert(data);
 ```
 
 Now would be:
 
 ```ts
-import { assert } from 'superstruct'
+import { assert } from 'superstruct';
 
-assert(data, User)
+assert(data, User);
 ```
 
 **Coercion is now separate from validation.** Previously there was native logic for handling default values for structs when validating them. This has been abstracted into the ability to define _any_ custom coercion logic for structs, and it has been separate from validation to make it very clear when data can change and when it cannot.
@@ -287,13 +287,13 @@ assert(data, User)
 For example, previously:
 
 ```ts
-const output = User.assert(input)
+const output = User.assert(input);
 ```
 
 Would now be:
 
 ```ts
-const input = coerce(input, User)
+const input = coerce(input, User);
 ```
 
 The `coerce` step is the only time that data will be transformed at all by coercion logic, and the `assert` step no longer needs to return any values. This makes it easy to do things like:
@@ -319,8 +319,8 @@ const Article = struct.object(
   },
   {
     title: 'Untitled',
-  }
-)
+  },
+);
 ```
 
 Whereas now you'd do:
@@ -332,8 +332,8 @@ const Article = defaulted(
   }),
   {
     title: 'Untitled',
-  }
-)
+  },
+);
 ```
 
 **Optional arguments are now defined with a seperate factory.** Similarly to defaults, there is a new `optional` factory for defined values that can also be `undefined`.
@@ -341,13 +341,13 @@ const Article = defaulted(
 Previously you'd do:
 
 ```ts
-const Flag = struct('string?')
+const Flag = struct('string?');
 ```
 
 Now you'd do:
 
 ```ts
-const Flag = optional(string())
+const Flag = optional(string());
 ```
 
 **Several structs have been renamed.** This was necessary because structs are now exposed directly as variables, which runs afoul of reserved words. So the following renames have been applied:
@@ -371,7 +371,7 @@ Hopefully this will make them easier to understand at a glance!
 **The `enums` struct has been removed!** This was special-cased in the API previously, but you can get the exact same behavior by creating an using the `array` and `enum` structs:
 
 ```js
-struct.array(struct.enum(['red', 'blue', 'green']))
+struct.array(struct.enum(['red', 'blue', 'green']));
 ```
 
 **The `any` struct has been removed! (Not the scalar though.)** Previously `struct.any()` was exposed that did the same thing as `struct()`, allowing you to use shorthands for common structs. But this was confusingly named because it has nothing to do with the `'any'` scalar type. And since it was redundant it has been removed.
@@ -382,12 +382,12 @@ struct.array(struct.enum(['red', 'blue', 'green']))
 
 ```js
 struct.dynamic((value, branch, path) => {
-  value === branch[branch.length - 1] // you can get the value...
-  const parent = branch[branch.length - 2] // ...and the parent...
-  const key = path[path.length - 1] // ...and the key...
-  value === parent[key]
-  const root = branch[0] // ...and the root!
-})
+  value === branch[branch.length - 1]; // you can get the value...
+  const parent = branch[branch.length - 2]; // ...and the parent...
+  const key = path[path.length - 1]; // ...and the key...
+  value === parent[key];
+  const root = branch[0]; // ...and the root!
+});
 ```
 
 The `path` is an array of keys representing the nested value's location in the root value. And the `branch` is an array of all of the sub values along the path to get to the current one. This allows you to always be able to receive both the **parent** and the **root** values from any location—as well as any value in between.

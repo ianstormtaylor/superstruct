@@ -1,8 +1,8 @@
-import { bigint } from '../../../src'
+import { bigint } from '../../../src';
 
-export const Struct = bigint()
+export const Struct = bigint();
 
-export const data = 3
+export const data = 3;
 
 export const failures = [
   {
@@ -12,4 +12,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];

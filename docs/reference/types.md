@@ -5,17 +5,17 @@ Superstruct exposes factory functions for a variety of common JavaScript (and Ty
 ### `any`
 
 ```ts
-any()
+any();
 ```
 
 ```ts
-'valid'
-42
-true
-undefined
-null
+'valid';
+42;
+true;
+undefined;
+null;
 {
-  also: 'valid'
+  also: 'valid';
 }
 ```
 
@@ -26,8 +26,8 @@ null
 ### `array`
 
 ```ts
-array(number())
-array(object({ id: number() }))
+array(number());
+array(object({ id: number() }));
 ```
 
 ```txt
@@ -40,14 +40,14 @@ array(object({ id: number() }))
 ### `bigint`
 
 ```ts
-bigint()
+bigint();
 ```
 
 ```ts
-0n
-3n
-4000030n
-BigInt(10n^1000n)
+0n;
+3n;
+4000030n;
+BigInt(10n ^ 1000n);
 ```
 
 `bigint` structs validate that a value is a bigint.
@@ -55,12 +55,12 @@ BigInt(10n^1000n)
 ### `boolean`
 
 ```ts
-boolean()
+boolean();
 ```
 
 ```ts
-true
-false
+true;
+false;
 ```
 
 `boolean` structs accept the boolean values `true` and `false`.
@@ -68,11 +68,11 @@ false
 ### `date`
 
 ```ts
-date()
+date();
 ```
 
 ```ts
-new Date()
+new Date();
 ```
 
 `date` structs accept JavaScript `Date` instances.
@@ -82,12 +82,12 @@ new Date()
 ### `enums`
 
 ```ts
-enums(['Jane', 'John', 'Jack', 'Jill'])
+enums(['Jane', 'John', 'Jack', 'Jill']);
 ```
 
 ```ts
-'Jane'
-'John'
+'Jane';
+'John';
 ```
 
 `enums` structs validate that a value is one of a specific set of literals values.
@@ -95,7 +95,7 @@ enums(['Jane', 'John', 'Jack', 'Jill'])
 ### `func`
 
 ```ts
-func()
+func();
 ```
 
 ```ts
@@ -107,11 +107,11 @@ function () {}
 ### `instance`
 
 ```ts
-instance(MyClass)
+instance(MyClass);
 ```
 
 ```ts
-new MyClass()
+new MyClass();
 ```
 
 `instance` structs validate that a value is an instance of a particular class, using JavaScript's built-in `instanceof` operator.
@@ -119,7 +119,7 @@ new MyClass()
 ### `integer`
 
 ```ts
-integer()
+integer();
 ```
 
 ```txt
@@ -133,11 +133,11 @@ integer()
 ### `intersection`
 
 ```ts
-intersection([string(), Email])
+intersection([string(), Email]);
 ```
 
 ```ts
-'jane@example.com'
+'jane@example.com';
 ```
 
 `intersection` structs validate that a value matches **all** of many structs. It takes existing struct objects as arguments.
@@ -145,11 +145,11 @@ intersection([string(), Email])
 ### `literal`
 
 ```ts
-literal(42)
+literal(42);
 ```
 
 ```ts
-42
+42;
 ```
 
 `literal` structs enforce that a value matches an exact value using the `===` operator.
@@ -157,14 +157,14 @@ literal(42)
 ### `map`
 
 ```ts
-map(string(), number())
+map(string(), number());
 ```
 
 ```ts
 new Map([
   ['a', 1],
   ['b', 2],
-])
+]);
 ```
 
 `map` structs validate that a value is a `Map` object with specific types for its keys and values.
@@ -174,7 +174,7 @@ new Map([
 ### `never`
 
 ```ts
-never()
+never();
 ```
 
 ```ts
@@ -186,14 +186,14 @@ never()
 ### `number`
 
 ```ts
-number()
+number();
 ```
 
 ```ts
-0
-3.14
-42
-Infinity
+0;
+3.14;
+42;
+Infinity;
 ```
 
 `number` structs validate that a value is a number.
@@ -201,12 +201,12 @@ Infinity
 ### `nullable`
 
 ```ts
-nullable(string())
+nullable(string());
 ```
 
 ```ts
-'a string of text'
-null
+'a string of text';
+null;
 ```
 
 `nullable` structs validate that a value matches a specific struct, or that it is `null`.
@@ -217,7 +217,7 @@ null
 object({
   id: number(),
   name: string(),
-})
+});
 ```
 
 ```ts
@@ -234,12 +234,12 @@ object({
 ### `optional`
 
 ```ts
-optional(string())
+optional(string());
 ```
 
 ```ts
-'a string of text'
-undefined
+'a string of text';
+undefined;
 ```
 
 `optional` structs validate that a value matches a specific struct, or that it is `undefined`.
@@ -249,7 +249,7 @@ undefined
 ### `record`
 
 ```ts
-record(string(), number())
+record(string(), number());
 ```
 
 ```ts
@@ -264,12 +264,12 @@ record(string(), number())
 ### `regexp`
 
 ```ts
-regexp()
+regexp();
 ```
 
 ```ts
-;/\d+/
-new RegExp()
+/\d+/;
+new RegExp();
 ```
 
 `regexp` structs validate that a value is a `RegExp` object.
@@ -279,11 +279,11 @@ new RegExp()
 ### `set`
 
 ```ts
-set(string())
+set(string());
 ```
 
 ```ts
-new Set(['a', 'b', 'c'])
+new Set(['a', 'b', 'c']);
 ```
 
 `set` structs validate that a value is a `Set` instance with elements of a specific type.
@@ -293,11 +293,11 @@ new Set(['a', 'b', 'c'])
 ### `string`
 
 ```ts
-string()
+string();
 ```
 
 ```ts
-'a string of text'
+'a string of text';
 ```
 
 `string` structs validate that a value is a string.
@@ -305,7 +305,7 @@ string()
 ### `tuple`
 
 ```ts
-tuple([string(), number(), boolean()])
+tuple([string(), number(), boolean()]);
 ```
 
 ```txt
@@ -320,7 +320,7 @@ tuple([string(), number(), boolean()])
 type({
   name: string(),
   walk: func(),
-})
+});
 ```
 
 ```ts
@@ -341,12 +341,12 @@ When [`mask()`](./core.md#mask) is used with a value of `type`, its unknown prop
 ### `union`
 
 ```ts
-union([string(), number()])
+union([string(), number()]);
 ```
 
 ```ts
-'a string'
-42
+'a string';
+42;
 ```
 
 `union` structs validate that a value matches at least one of many types.
@@ -354,17 +354,17 @@ union([string(), number()])
 ### `unknown`
 
 ```ts
-unknown()
+unknown();
 ```
 
 ```ts
-'valid'
-42
-true
-undefined
-null
+'valid';
+42;
+true;
+undefined;
+null;
 {
-  also: 'valid'
+  also: 'valid';
 }
 ```
 
@@ -375,24 +375,25 @@ null
 You can also define your own custom structs that are specific to your application's requirements, like so:
 
 ```ts
-import { define } from 'superstruct'
-import isEmail from 'is-email'
-import isUuid from 'is-uuid'
+import { define } from 'superstruct';
+import isEmail from 'is-email';
+import isUuid from 'is-uuid';
 
-const Email = define('Email', isEmail)
-const Uuid = define('Uuid', (value) => isUuid.v4(value))
+const Email = define('Email', isEmail);
+const Uuid = define('Uuid', (value) => isUuid.v4(value));
 
 const User = object({
   id: Uuid,
   name: string(),
   email: Email,
   age: number(),
-})
+});
 ```
 
 Custom types take validator functions that return either `true/false` or an array of `StructFailure` objects, in case you want to build more helpful error messages.
 
 > 🤖 If you are using Typescript the value will be of type `unknown` by default. You can pass a more specific type for Typescript:
+>
 > ```ts
-> const Email = define<string>('Email', isEmail)
+> const Email = define<string>('Email', isEmail);
 > ```

@@ -1,7 +1,7 @@
-import { dynamic, string } from '../../../src'
+import { dynamic, string } from '../../../src';
 
-export const Struct = dynamic(() => string())
+export const Struct = dynamic(() => string());
 
-export const data = 'valid'
+export const data = 'valid';
 
-export const output = 'valid'
+export const output = 'valid';

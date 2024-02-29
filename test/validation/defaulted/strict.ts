@@ -1,4 +1,4 @@
-import { defaulted, string, type, number } from '../../../src'
+import { defaulted, string, type, number } from '../../../src';
 
 export const Struct = defaulted(
   type({
@@ -10,12 +10,12 @@ export const Struct = defaulted(
   },
   {
     strict: true,
-  }
-)
+  },
+);
 
 export const data = {
   version: 0,
-}
+};
 
 export const failures = [
   {
@@ -25,6 +25,6 @@ export const failures = [
     path: ['title'],
     branch: [data, undefined],
   },
-]
+];
 
-export const create = true
+export const create = true;

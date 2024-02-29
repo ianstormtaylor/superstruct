@@ -1,11 +1,11 @@
-import { record, string, number } from '../../../src'
+import { record, string, number } from '../../../src';
 
-export const Struct = record(string(), number())
+export const Struct = record(string(), number());
 
 export const data = {
   a: 'a',
   b: 'b',
-}
+};
 
 export const failures = [
   {
@@ -22,4 +22,4 @@ export const failures = [
     path: ['b'],
     branch: [data, data.b],
   },
-]
+];

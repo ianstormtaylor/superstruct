@@ -1,39 +1,39 @@
-import { assert, enums } from '../../src'
-import { test } from '../index.test'
+import { assert, enums } from '../../src';
+import { test } from '../index.test';
 
-test<'a' | 'b' | 'c'>((x) => {
-  assert(x, enums(['a', 'b', 'c']))
-  return x
-})
+test<'a' | 'b' | 'c'>((value) => {
+  assert(value, enums(['a', 'b', 'c']));
+  return value;
+});
 
-test<1 | 2 | 3>((x) => {
-  assert(x, enums([1, 2, 3]))
-  return x
-})
+test<1 | 2 | 3>((value) => {
+  assert(value, enums([1, 2, 3]));
+  return value;
+});
 
-test<1 | 2 | 3>((x) => {
-  assert(x, enums([1, 2, 3] as const))
-  return x
-})
+test<1 | 2 | 3>((value) => {
+  assert(value, enums([1, 2, 3] as const));
+  return value;
+});
 
-test<number>((x) => {
-  let values = [1, 2, 3]
-  assert(x, enums(values))
-  return x
-})
-
-test<{
-  a: 'a'
-  b: 'b'
-  c: 'c'
-}>((x) => {
-  return enums(['a', 'b', 'c']).schema
-})
+test<number>((value) => {
+  const values = [1, 2, 3];
+  assert(value, enums(values));
+  return value;
+});
 
 test<{
-  1: 1
-  2: 2
-  3: 3
-}>((x) => {
-  return enums([1, 2, 3]).schema
-})
+  a: 'a';
+  b: 'b';
+  c: 'c';
+}>(() => {
+  return enums(['a', 'b', 'c']).schema;
+});
+
+test<{
+  1: 1;
+  2: 2;
+  3: 3;
+}>(() => {
+  return enums([1, 2, 3]).schema;
+});

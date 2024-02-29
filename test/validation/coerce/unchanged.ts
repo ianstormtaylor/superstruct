@@ -1,11 +1,11 @@
-import { string, unknown, coerce } from '../../../src'
+import { string, unknown, coerce } from '../../../src';
 
-export const Struct = coerce(string(), unknown(), (x) =>
-  x == null ? 'unknown' : x
-)
+export const Struct = coerce(string(), unknown(), (value) =>
+  value === null || value === undefined ? 'unknown' : value,
+);
 
-export const data = 'known'
+export const data = 'known';
 
-export const output = 'known'
+export const output = 'known';
 
-export const create = true
+export const create = true;

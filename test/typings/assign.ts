@@ -1,10 +1,10 @@
-import { assert, assign, object, number, string } from '../../src'
-import { test } from '../index.test'
+import { assert, assign, object, number, string } from '../../src';
+import { test } from '../index.test';
 
 test<{
-  a: number
-  b: string
-}>((x) => {
-  assert(x, assign(object({ a: number() }), object({ b: string() })))
-  return x
-})
+  a: number;
+  b: string;
+}>((value) => {
+  assert(value, assign(object({ a: number() }), object({ b: string() })));
+  return value;
+});

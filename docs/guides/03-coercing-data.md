@@ -9,22 +9,22 @@ To allow for these use cases, Superstruct has a concept called "coercion", which
 Since defaults are such a common case, Superstruct comes with a `defaulted` helper that makes defining default values easy:
 
 ```ts
-import { create, defaulted, number, object, string } from 'superstruct'
+import { create, defaulted, number, object, string } from 'superstruct';
 
-let i = 0
+let i = 0;
 
 const User = object({
   id: defaulted(number(), () => i++),
   email: string(),
   name: string(),
-})
+});
 
 const data = {
   name: 'Jane',
   email: 'jane@example.com',
-}
+};
 
-const user = create(data, User)
+const user = create(data, User);
 ```
 
 Here the `user` object didn't default an `id` property. That's because any `undefined` values will be replaced with their default values instead.
@@ -42,8 +42,8 @@ const User = defaulted(
   }),
   {
     id: () => i++,
-  }
-)
+  },
+);
 ```
 
 ## Custom Coercions
@@ -53,18 +53,18 @@ We've already covered default values, but sometimes you'll need to create coerci
 For example, maybe you want to ensure that a number is parsed from a string before passing it into the validator. To do that you can define a custom coercion:
 
 ```ts
-import { coerce, number, string, create } from 'superstruct'
+import { coerce, number, string, create } from 'superstruct';
 
-const MyNumber = coerce(number(), string(), (value) => parseFloat(value))
+const MyNumber = coerce(number(), string(), (value) => parseFloat(value));
 ```
 
 Now instead of using `assert()` or `is()` you can use `create()` to apply your custom coercion logic:
 
 ```ts
-import { create } from 'superstruct'
+import { create } from 'superstruct';
 
-const data = '3.14'
-const output = create(data, MyNumber)
+const data = '3.14';
+const output = create(data, MyNumber);
 // 3.14
 ```
 

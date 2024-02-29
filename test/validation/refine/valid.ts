@@ -1,8 +1,9 @@
-import isEmail from 'is-email'
-import { string, refine } from '../../../src'
+import isEmail from 'is-email';
 
-export const Struct = refine(string(), 'email', isEmail)
+import { string, refine } from '../../../src';
 
-export const data = 'name@example.com'
+export const Struct = refine(string(), 'email', isEmail);
 
-export const output = 'name@example.com'
+export const data = 'name@example.com';
+
+export const output = 'name@example.com';

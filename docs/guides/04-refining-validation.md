@@ -21,25 +21,25 @@ assert('string', Section) // throws!
 Or maybe that a string (or array, number, etc.) has a specific size:
 
 ```ts
-import { assert, size, string } from 'superstruct'
+import { assert, size, string } from 'superstruct';
 
-const Name = size(string(), 1, 100)
+const Name = size(string(), 1, 100);
 
-assert('Alex', Name) // passes
-assert('', Name) // throws!
+assert('Alex', Name); // passes
+assert('', Name); // throws!
 ```
 
 Another common use case is validating nonnegative integers (like indexes in an array) using the built-in `min` helper:
 
 ```ts
-import { assert, min, integer } from 'superstruct'
+import { assert, min, integer } from 'superstruct';
 
-const Index = min(integer(), 0)
+const Index = min(integer(), 0);
 
-assert(42, Index) // passes
-assert(0, Index) // passes
-assert(3.14, Index) // throws!
-assert(-1, Index) // throws!
+assert(42, Index); // passes
+assert(0, Index); // passes
+assert(3.14, Index); // throws!
+assert(-1, Index); // throws!
 ```
 
 These refinements don't change the inferred type of the data, but they do ensure that a slightly stricter validation is enforced at runtime.
@@ -49,11 +49,11 @@ These refinements don't change the inferred type of the data, but they do ensure
 You can also write your own custom refinements for more domain-specific use cases. For example, for a specific kind of string:
 
 ```ts
-import { refine, string } from 'superstruct'
+import { refine, string } from 'superstruct';
 
 const MyString = refine(string(), 'MyString', (value) => {
-  return value.startsWith('The') && value.length > 20
-})
+  return value.startsWith('The') && value.length > 20;
+});
 ```
 
 Now the `MyString` will only validate strings that begin with "The" and are longer than 20 characters.

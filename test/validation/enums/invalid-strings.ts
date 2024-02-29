@@ -1,8 +1,8 @@
-import { enums } from '../../../src'
+import { enums } from '../../../src';
 
-export const Struct = enums(['one', 'two'])
+export const Struct = enums(['one', 'two']);
 
-export const data = 'invalid'
+export const data = 'invalid';
 
 export const failures = [
   {
@@ -12,4 +12,4 @@ export const failures = [
     path: [],
     branch: [data],
   },
-]
+];
