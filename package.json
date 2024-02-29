@@ -31,6 +31,7 @@
     "node": ">=16.0.0"
   },
   "devDependencies": {
+    "@lavamoat/allow-scripts": "^3.0.3",
     "@rollup/plugin-typescript": "^9.0.2",
     "@types/expect": "^24.3.0",
     "@types/lodash": "^4.14.144",
@@ -101,5 +102,11 @@
     "validate",
     "validation",
     "validator"
-  ]
+  ],
+  "packageManager": "yarn@4.1.0",
+  "lavamoat": {
+    "allowScripts": {
+      "vitest>vite>esbuild": true
+    }
+  }
 }

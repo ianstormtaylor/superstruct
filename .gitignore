@@ -3,3 +3,13 @@ node_modules/
 npm-debug.log
 package-lock.json
 tmp/
+
+# yarn v3 (w/o zero-install)
+# See: https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
