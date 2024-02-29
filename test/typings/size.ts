@@ -1,5 +1,5 @@
 import { assert, size, string, array, number, map, set } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<number>((x) => {
   assert(x, size(number(), 1, 5))

@@ -1,5 +1,5 @@
 import { assert, literal } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<true>((x) => {
   assert(x, literal(true))

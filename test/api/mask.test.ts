@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest'
 import { deepStrictEqual, throws } from 'assert'
 import {
   mask,

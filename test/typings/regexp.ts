@@ -1,5 +1,5 @@
 import { assert, regexp } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<RegExp>((x) => {
   assert(x, regexp())

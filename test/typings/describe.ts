@@ -28,7 +28,7 @@ import {
   min,
   pattern,
 } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<Describe<any>>((x) => {
   return any()

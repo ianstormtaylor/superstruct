@@ -1,5 +1,5 @@
 import { assert, nonempty, string, array, map, set } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<string>((x) => {
   assert(x, nonempty(string()))
