@@ -199,7 +199,8 @@ export function* run<Type, Schema>(
     yield [failure, undefined];
   }
 
-  for (const [innerKey, innerValue, innerStruct] of struct.entries(
+  // eslint-disable-next-line prefer-const
+  for (let [innerKey, innerValue, innerStruct] of struct.entries(
     value,
     context,
   )) {
@@ -220,8 +221,7 @@ export function* run<Type, Schema>(
 
         yield [result[0], undefined];
       } else if (coerce) {
-        // eslint-disable-next-line no-param-reassign
-        value = result[1];
+        innerValue = result[1];
 
         if (innerKey === undefined) {
           // eslint-disable-next-line no-param-reassign

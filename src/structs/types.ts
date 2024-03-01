@@ -690,8 +690,8 @@ export function union<First extends AnyStruct, Rest extends AnyStruct[]>(
     type: 'union',
     schema: null,
     coercer(value) {
-      for (const { validate } of Structs) {
-        const [error, coerced] = validate(value, { coerce: true });
+      for (const InnerStruct of Structs) {
+        const [error, coerced] = InnerStruct.validate(value, { coerce: true });
         if (!error) {
           return coerced;
         }
