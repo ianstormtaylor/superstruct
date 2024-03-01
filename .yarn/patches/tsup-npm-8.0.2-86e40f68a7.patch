@@ -1,0 +1,13 @@
+diff --git a/dist/index.js b/dist/index.js
+index 4500c4e43c3bbd24aa60b7d4cf95aa3fee8eb185..9c442bc216f99b7cfadb5ac62cb98d3ae9ce2f56 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -1813,6 +1813,8 @@ var cjsSplitting = () => {
+       }
+       const { transform: transform3 } = await Promise.resolve().then(() => require("sucrase"));
+       const result = transform3(code, {
++        // https://github.com/egoist/tsup/issues/1087
++        disableESTransforms: true,
+         filePath: info.path,
+         transforms: ["imports"],
+         sourceMapOptions: this.options.sourcemap ? {
