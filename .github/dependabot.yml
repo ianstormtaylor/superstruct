@@ -1,7 +1,15 @@
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
 version: 2
 updates:
-  - package-ecosystem: npm
+  - package-ecosystem: 'npm'
     directory: '/'
-    open-pull-requests-limit: 20
     schedule:
-      interval: monthly
+      interval: 'daily'
+      time: '06:00'
+    allow:
+      - dependency-name: '@metamask/*'
+    target-branch: 'main'
+    versioning-strategy: 'increase-if-necessary'
+    open-pull-requests-limit: 10

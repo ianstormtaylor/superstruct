@@ -52,6 +52,7 @@
   ],
   "scripts": {
     "build": "tsup --clean && yarn build:types",
+    "build:docs": "typedoc",
     "build:types": "tsc --project tsconfig.build.json",
     "lint": "yarn lint:eslint && yarn lint:misc --check && yarn lint:dependencies --check && yarn lint:changelog",
     "lint:changelog": "auto-changelog validate --prettier",
@@ -92,6 +93,7 @@
     "prettier": "^2.7.1",
     "prettier-plugin-packagejson": "^2.3.0",
     "tsup": "patch:tsup@npm%3A8.0.2#~/.yarn/patches/tsup-npm-8.0.2-86e40f68a7.patch",
+    "typedoc": "^0.25.9",
     "typescript": "~4.8.4",
     "vitest": "^1.2.2"
   },

@@ -3,6 +3,7 @@ node_modules/
 npm-debug.log
 package-lock.json
 tmp/
+docs/
 
 # Optional eslint cache
 .eslintcache

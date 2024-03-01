@@ -1,0 +1,41 @@
+name: Create Release Pull Request
+
+on:
+  workflow_dispatch:
+    inputs:
+      base-branch:
+        description: 'The base branch for git operations and the pull request.'
+        default: 'main'
+        required: true
+      release-type:
+        description: 'A SemVer version diff, i.e. major, minor, or patch. Mutually exclusive with "release-version".'
+        required: false
+      release-version:
+        description: 'A specific version to bump to. Mutually exclusive with "release-type".'
+        required: false
+
+jobs:
+  create-release-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # This is to guarantee that the most recent tag is fetched.
+          # This can be configured to a more reasonable value by consumers.
+          fetch-depth: 0
+          # We check out the specified branch, which will be used as the base
+          # branch for all git operations and the release PR.
+          ref: ${{ github.event.inputs.base-branch }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - uses: MetaMask/action-create-release-pr@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release-type: ${{ github.event.inputs.release-type }}
+          release-version: ${{ github.event.inputs.release-version }}

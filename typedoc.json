@@ -1,0 +1,6 @@
+{
+  "entryPoints": ["./src/index.ts"],
+  "excludePrivate": true,
+  "hideGenerator": true,
+  "out": "docs"
+}

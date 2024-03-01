@@ -1,0 +1,42 @@
+name: Publish docs to GitHub Pages
+
+on:
+  workflow_call:
+    inputs:
+      destination_dir:
+        required: true
+        type: string
+    secrets:
+      PUBLISH_DOCS_TOKEN:
+        required: true
+
+jobs:
+  publish-docs-to-gh-pages:
+    name: Publish docs to GitHub Pages
+    runs-on: ubuntu-latest
+    environment: github-pages
+    permissions:
+      contents: write
+    steps:
+      - name: Ensure `destination_dir` is not empty
+        if: ${{ inputs.destination_dir == '' }}
+        run: exit 1
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+      - name: Install npm dependencies
+        run: yarn --immutable
+      - name: Run build script
+        run: yarn build:docs
+      - name: Deploy to `${{ inputs.destination_dir }}` directory of `gh-pages` branch
+        uses: peaceiris/actions-gh-pages@de7ea6f8efb354206b205ef54722213d99067935
+        with:
+          # This `PUBLISH_DOCS_TOKEN` needs to be manually set per-repository.
+          # Look in the repository settings under "Environments", and set this token in the `github-pages` environment.
+          personal_token: ${{ secrets.PUBLISH_DOCS_TOKEN }}
+          publish_dir: ./docs
+          destination_dir: ${{ inputs.destination_dir }}

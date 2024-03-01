@@ -1,0 +1,77 @@
+name: Main
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check-workflows:
+    name: Check workflows
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download actionlint
+        id: download-actionlint
+        run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/7fdc9630cc360ea1a469eed64ac6d78caeda1234/scripts/download-actionlint.bash) 1.6.23
+        shell: bash
+      - name: Check workflow files
+        run: ${{ steps.download-actionlint.outputs.executable }} -color
+        shell: bash
+
+  build-lint-test:
+    name: Build, lint, and test
+    uses: ./.github/workflows/build-lint-test.yml
+
+  all-jobs-completed:
+    name: All jobs completed
+    runs-on: ubuntu-latest
+    needs:
+      - check-workflows
+      - build-lint-test
+    outputs:
+      PASSED: ${{ steps.set-output.outputs.PASSED }}
+    steps:
+      - name: Set PASSED output
+        id: set-output
+        run: echo "PASSED=true" >> "$GITHUB_OUTPUT"
+
+  all-jobs-pass:
+    name: All jobs pass
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    needs: all-jobs-completed
+    steps:
+      - name: Check that all jobs have passed
+        run: |
+          passed="${{ needs.all-jobs-completed.outputs.PASSED }}"
+          if [[ $passed != "true" ]]; then
+            exit 1
+          fi
+
+  is-release:
+    # Filtering by `push` events ensures that we only release from the `main` branch, which is a
+    # requirement for our npm publishing environment.
+    # The commit author should always be 'github-actions' for releases created by the
+    # 'create-release-pr' workflow, so we filter by that as well to prevent accidentally
+    # triggering a release.
+    if: github.event_name == 'push' && startsWith(github.event.head_commit.author.name, 'github-actions')
+    needs: all-jobs-pass
+    outputs:
+      IS_RELEASE: ${{ steps.is-release.outputs.IS_RELEASE }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: MetaMask/action-is-release@v1
+        id: is-release
+
+  publish-release:
+    needs: is-release
+    if: needs.is-release.outputs.IS_RELEASE == 'true'
+    name: Publish release
+    permissions:
+      contents: write
+    uses: ./.github/workflows/publish-release.yml
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      PUBLISH_DOCS_TOKEN: ${{ secrets.PUBLISH_DOCS_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
