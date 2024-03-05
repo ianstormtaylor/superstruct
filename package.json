@@ -58,14 +58,15 @@
     "lint:changelog": "auto-changelog validate --prettier",
     "lint:dependencies": "depcheck && yarn dedupe",
     "lint:eslint": "eslint . --cache --ext js,ts",
-    "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write && yarn lint:dependencies && yarn lint:changelog",
-    "lint:misc": "prettier '**/*.json' '**/*.md' '**/*.yml' '!.yarnrc.yml' --ignore-path .gitignore --no-error-on-unmatched-pattern",
+    "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write && yarn lint:dependencies && yarn lint:changelog --fix",
+    "lint:misc": "prettier '**/*.json' '**/*.md' '**/*.yml' '!.yarnrc.yml' '!CHANGELOG.md' --ignore-path .gitignore --no-error-on-unmatched-pattern",
     "test": "yarn test:types && yarn test:vitest",
     "test:types": "tsc --noEmit",
     "test:vitest": "vitest run"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^3.0.3",
+    "@metamask/auto-changelog": "^3.4.4",
     "@metamask/eslint-config": "^12.2.0",
     "@metamask/eslint-config-jest": "^12.1.0",
     "@metamask/eslint-config-nodejs": "^12.1.0",
