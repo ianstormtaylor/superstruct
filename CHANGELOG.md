@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0]
+
+### Changed
+
+- Prepare package for releasing under `@metamask` organisation ([#1](https://github.com/MetaMask/superstruct/pull/1), [#3](https://github.com/MetaMask/superstruct/pull/3), [#4](https://github.com/MetaMask/superstruct/pull/4), [#5](https://github.com/MetaMask/superstruct/pull/5), [#6](https://github.com/MetaMask/superstruct/pull/6), [#7](https://github.com/MetaMask/superstruct/pull/7), [#8](https://github.com/MetaMask/superstruct/pull/8))
+  - The package name is now `@metamask/superstruct`.
+  - The changelog file has been renamed to `CHANGELOG.md`, and the format has changed to fit MetaMask's changelog style.
+
+### Fixed
+
+- **BREAKING:** Expose CommonJS and ESM builds via package manifest `exports` ([#5](https://github.com/MetaMask/superstruct/pull/5))
+  - It's no longer possible to import files from the `dist` folder directly.
+
 ## [1.0.0]
 
 ### Added
@@ -600,21 +613,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: git://github.com/MetaMask/superstruct/compare/v1.0.0...HEAD
-[1.0.0]: git://github.com/MetaMask/superstruct/compare/v0.16.0...v1.0.0
-[0.16.0]: git://github.com/MetaMask/superstruct/compare/v0.15.0...v0.16.0
-[0.15.0]: git://github.com/MetaMask/superstruct/compare/v0.14.0...v0.15.0
-[0.14.0]: git://github.com/MetaMask/superstruct/compare/v0.13.0...v0.14.0
-[0.13.0]: git://github.com/MetaMask/superstruct/compare/v0.12.0...v0.13.0
-[0.12.0]: git://github.com/MetaMask/superstruct/compare/v0.11.0...v0.12.0
-[0.11.0]: git://github.com/MetaMask/superstruct/compare/v0.10.0...v0.11.0
-[0.10.0]: git://github.com/MetaMask/superstruct/compare/v0.8.0...v0.10.0
-[0.8.0]: git://github.com/MetaMask/superstruct/compare/v0.7.0...v0.8.0
-[0.7.0]: git://github.com/MetaMask/superstruct/compare/v0.6.0...v0.7.0
-[0.6.0]: git://github.com/MetaMask/superstruct/compare/v0.5.0...v0.6.0
-[0.5.0]: git://github.com/MetaMask/superstruct/compare/v0.4.0...v0.5.0
-[0.4.0]: git://github.com/MetaMask/superstruct/compare/v0.3.0...v0.4.0
-[0.3.0]: git://github.com/MetaMask/superstruct/compare/v0.2.0...v0.3.0
-[0.2.0]: git://github.com/MetaMask/superstruct/compare/v0.1.0...v0.2.0
-[0.1.0]: git://github.com/MetaMask/superstruct/compare/v0.0.1...v0.1.0
-[0.0.1]: git://github.com/MetaMask/superstruct/releases/tag/v0.0.1
+[Unreleased]: https://github.com/MetaMask/superstruct/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/MetaMask/superstruct/compare/v1.0.0...v2.0.0
+[1.0.0]: https://github.com/MetaMask/superstruct/compare/v0.16.0...v1.0.0
+[0.16.0]: https://github.com/MetaMask/superstruct/compare/v0.15.0...v0.16.0
+[0.15.0]: https://github.com/MetaMask/superstruct/compare/v0.14.0...v0.15.0
+[0.14.0]: https://github.com/MetaMask/superstruct/compare/v0.13.0...v0.14.0
+[0.13.0]: https://github.com/MetaMask/superstruct/compare/v0.12.0...v0.13.0
+[0.12.0]: https://github.com/MetaMask/superstruct/compare/v0.11.0...v0.12.0
+[0.11.0]: https://github.com/MetaMask/superstruct/compare/v0.10.0...v0.11.0
+[0.10.0]: https://github.com/MetaMask/superstruct/compare/v0.8.0...v0.10.0
+[0.8.0]: https://github.com/MetaMask/superstruct/compare/v0.7.0...v0.8.0
+[0.7.0]: https://github.com/MetaMask/superstruct/compare/v0.6.0...v0.7.0
+[0.6.0]: https://github.com/MetaMask/superstruct/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/MetaMask/superstruct/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/MetaMask/superstruct/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/MetaMask/superstruct/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/MetaMask/superstruct/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/MetaMask/superstruct/compare/v0.0.1...v0.1.0
+[0.0.1]: https://github.com/MetaMask/superstruct/releases/tag/v0.0.1
