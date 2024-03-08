@@ -33,7 +33,14 @@
     "validation",
     "validator"
   ],
-  "repository": "git://github.com/MetaMask/superstruct.git",
+  "homepage": "https://github.com/MetaMask/superstruct#readme",
+  "bugs": {
+    "url": "https://github.com/MetaMask/superstruct/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MetaMask/superstruct.git"
+  },
   "license": "MIT",
   "sideEffects": false,
   "exports": {
