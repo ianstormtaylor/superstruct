@@ -1,6 +1,6 @@
 {
   "name": "@metamask/superstruct",
-  "version": "2.0.0",
+  "version": "1.0.3",
   "description": "A simple and composable way to validate data in JavaScript (and TypeScript).",
   "keywords": [
     "api",
@@ -33,7 +33,7 @@
     "validation",
     "validator"
   ],
-  "repository": "https://github.com/MetaMask/superstruct.git",
+  "repository": "git://github.com/MetaMask/superstruct.git",
   "license": "MIT",
   "sideEffects": false,
   "exports": {
