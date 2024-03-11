@@ -16,7 +16,7 @@ export function assign<A extends ObjectSchema, B extends ObjectSchema>(
 export function assign<
   A extends ObjectSchema,
   B extends ObjectSchema,
-  C extends ObjectSchema
+  C extends ObjectSchema,
 >(
   A: Struct<ObjectType<A>, A>,
   B: Struct<ObjectType<B>, B>,
@@ -26,7 +26,7 @@ export function assign<
   A extends ObjectSchema,
   B extends ObjectSchema,
   C extends ObjectSchema,
-  D extends ObjectSchema
+  D extends ObjectSchema,
 >(
   A: Struct<ObjectType<A>, A>,
   B: Struct<ObjectType<B>, B>,
@@ -41,7 +41,7 @@ export function assign<
   B extends ObjectSchema,
   C extends ObjectSchema,
   D extends ObjectSchema,
-  E extends ObjectSchema
+  E extends ObjectSchema,
 >(
   A: Struct<ObjectType<A>, A>,
   B: Struct<ObjectType<B>, B>,
