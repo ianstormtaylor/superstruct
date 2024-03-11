@@ -1,10 +1,6 @@
 {
-  "extends": [
-    "plugin:import/typescript",
-    "prettier",
-    "prettier/@typescript-eslint"
-  ],
-  "plugins": ["@typescript-eslint", "import", "prettier"],
+  "extends": ["prettier"],
+  "plugins": ["@typescript-eslint", "prettier/recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",
@@ -19,9 +15,6 @@
     "mocha": true,
     "node": true
   },
-  "settings": {
-    "import/extensions": [".js", ".ts"]
-  },
   "rules": {
     "@typescript-eslint/no-unused-vars": [
       "error",
@@ -30,21 +23,6 @@
     "constructor-super": "error",
     "dot-notation": ["error", { "allowKeywords": true }],
     "eqeqeq": ["error", "smart"],
-    "import/default": "error",
-    "import/export": "error",
-    "import/first": "error",
-    "import/named": "error",
-    "import/namespace": "error",
-    "import/newline-after-import": "error",
-    "import/no-deprecated": "error",
-    "import/no-extraneous-dependencies": [
-      "error",
-      { "peerDependencies": true }
-    ],
-    "import/no-mutable-exports": "error",
-    "import/no-named-as-default": "error",
-    "import/no-named-as-default-member": "error",
-    "import/no-unresolved": "error",
     "linebreak-style": "error",
     "new-parens": "error",
     "no-array-constructor": "error",
@@ -100,7 +78,6 @@
     "prefer-rest-params": "error",
     "prefer-spread": "error",
     "prefer-template": "error",
-    "prettier/prettier": "error",
     "radix": "error",
     "spaced-comment": ["error", "always", { "exceptions": ["-"] }],
     "use-isnan": "error",
