@@ -1,5 +1,5 @@
 import { assert, object, number, string } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<Record<string, unknown>>((x) => {
   assert(x, object())

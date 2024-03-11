@@ -1,5 +1,6 @@
 import { throws, doesNotThrow } from 'assert'
 import { assert, string, StructError } from '../../src'
+import { describe, it } from 'vitest'
 
 describe('assert', () => {
   it('valid as helper', () => {

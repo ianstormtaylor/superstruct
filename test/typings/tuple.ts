@@ -1,5 +1,5 @@
 import { assert, tuple, string, number, literal } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<[string, number]>((x) => {
   assert(x, tuple([string(), number()]))

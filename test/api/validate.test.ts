@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest'
 import { deepStrictEqual, strictEqual } from 'assert'
 import {
   validate,

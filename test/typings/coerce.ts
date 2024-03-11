@@ -1,5 +1,5 @@
 import { assert, coerce, string, number } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<number>((x) => {
   assert(

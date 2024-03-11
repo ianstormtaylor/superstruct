@@ -1,5 +1,5 @@
 import { assert, optional, string, number, object, enums } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<string | undefined>((x) => {
   assert(x, optional(string()))

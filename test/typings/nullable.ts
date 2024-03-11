@@ -1,5 +1,5 @@
 import { assert, nullable, string, object, enums } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<string | null>((x) => {
   assert(x, nullable(string()))

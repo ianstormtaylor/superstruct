@@ -1,5 +1,5 @@
 import { assert, union, object, string, literal } from '../../src'
-import { test } from '..'
+import { test } from '../index.test'
 
 test<{ a: string } | { b: string }>((x) => {
   assert(x, union([object({ a: string() }), object({ b: string() })]))
