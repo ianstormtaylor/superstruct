@@ -1,6 +1,6 @@
-import { Context, Struct, Validator } from '../struct'
-import { Assign, ObjectSchema, ObjectType, PartialObjectSchema } from '../utils'
-import { object, optional, type } from './types'
+import { Context, Struct, Validator } from '../struct.js'
+import { Assign, ObjectSchema, ObjectType, PartialObjectSchema } from '../utils.js'
+import { object, optional, type } from './types.js'
 
 /**
  * Create a new struct that combines the properties properties from multiple

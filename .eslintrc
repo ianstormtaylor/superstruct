@@ -20,7 +20,12 @@
     "node": true
   },
   "settings": {
-    "import/extensions": [".js", ".ts"]
+    "import/extensions": [".js", ".ts"],
+    "import/resolver": {
+      "typescript": {
+        "project": ["./tsconfig.json"]
+      }
+    }
   },
   "rules": {
     "@typescript-eslint/no-unused-vars": [
