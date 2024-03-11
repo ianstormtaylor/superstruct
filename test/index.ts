@@ -5,7 +5,6 @@ import { basename, extname, resolve } from 'path'
 import {
   any,
   assert as assertValue,
-  // eslint-disable-next-line import/named
   Context,
   create as createValue,
   deprecated,

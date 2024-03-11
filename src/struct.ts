@@ -1,5 +1,5 @@
-import { toFailures, shiftIterator, StructSchema, run } from './utils'
-import { StructError, Failure } from './error'
+import { toFailures, shiftIterator, StructSchema, run } from './utils.js'
+import { StructError, Failure } from './error.js'
 
 /**
  * `Struct` objects encapsulate the validation logic for a specific type of

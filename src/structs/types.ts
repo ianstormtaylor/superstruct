@@ -1,5 +1,5 @@
-import { Infer, Struct } from '../struct'
-import { define } from './utilities'
+import { Infer, Struct } from '../struct.js'
+import { define } from './utilities.js'
 import {
   ObjectSchema,
   ObjectType,
@@ -9,7 +9,7 @@ import {
   AnyStruct,
   InferStructTuple,
   UnionToIntersection,
-} from '../utils'
+} from '../utils.js'
 
 /**
  * Ensure that any value passes validation.
