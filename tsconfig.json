@@ -13,5 +13,8 @@
     "strict": true,
     "suppressImplicitAnyIndexErrors": true,
     "target": "es2020"
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true
   }
 }
