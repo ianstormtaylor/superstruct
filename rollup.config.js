@@ -1,9 +1,19 @@
 import { defineConfig } from 'rollup'
 import typescript from '@rollup/plugin-typescript'
+import tscAlias from 'tsc-alias';
+
+const tscAliasPlugin = () =>  {
+    return {
+      name: 'tscAlias',
+      async writeBundle(options) {
+        return tscAlias.replaceTscAliasPaths(options);
+      }
+    }
+  }
 
 export default defineConfig({
   input: './src/index.ts',
-  plugins: [typescript()],
+  plugins: [typescript(), tscAliasPlugin()],
   output: [
     {
       file: './dist/index.mjs',
