@@ -46,6 +46,35 @@ const User = defaulted(
 )
 ```
 
+### Pass-by-reference
+
+While providing a plain value for a `defaulted` property does work, the value will be passed by reference. This means that any modifications to the value will affect other instances that receive the reference.
+
+```ts
+const NamesBuggy = defaulted(array(string()), []);
+// BAD: [] will be passed by reference        ^
+
+const names1 = create(undefined, NamesBuggy);
+names1.push("Jane Doe");
+const names2 = create(undefined, NamesBuggy);
+console.log(names2);
+// [ "Jane Doe" ]
+```
+
+Instead, it is better to provide a function that generates a new value each time:
+
+```ts
+const NamesCorrect = defaulted( array(string()), () => ([]) );
+// Function creates a new array                         ^
+```
+
+A similar change should be made for defaulted objects:
+
+```ts
+const NamesRecord = defaulted( record(string(), number()), () => ({}) );
+// Function creates a new object                                  ^
+```
+
 ## Custom Coercions
 
 We've already covered default values, but sometimes you'll need to create coercions that aren't just defaulted `undefined` values, but instead transforming the input data from one format to another.
