@@ -6,7 +6,7 @@
     "emitDeclarationOnly": true,
     "inlineSources": true,
     "noEmit": false,
-    "outDir": "dist/types",
+    "outDir": "dist",
     "rootDir": "src",
     "sourceMap": true
   },

@@ -1,7 +1,7 @@
 // eslint-disable-next-line n/no-unsupported-features/node-builtins
 import assert, { CallTracker } from 'assert';
 import fs from 'fs';
-import { pick } from 'lodash-es';
+import { pick } from 'lodash';
 import { basename, extname, resolve } from 'path';
 import { describe, it } from 'vitest';
 
