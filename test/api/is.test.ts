@@ -1,4 +1,5 @@
 import { strictEqual } from 'assert'
+import { describe, it } from 'vitest'
 import { is, string } from '../../src'
 
 describe('is', () => {

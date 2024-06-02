@@ -1,4 +1,5 @@
 import { throws, doesNotThrow } from 'assert'
+import { describe, it } from 'vitest'
 import { assert, string, StructError } from '../../src'
 
 describe('assert', () => {
