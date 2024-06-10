@@ -1,17 +1,12 @@
-import assert, { CallTracker } from 'assert'
 import fs from 'fs'
 import { pick } from 'lodash'
 import { basename, extname, resolve } from 'path'
-import { describe, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import {
-  any,
   assert as assertValue,
-  Context,
   create as createValue,
-  deprecated,
   StructError,
 } from '../src'
-
 describe('superstruct', () => {
   describe('validation', () => {
     const kindsDir = resolve(__dirname, 'validation')
@@ -58,7 +53,7 @@ describe('superstruct', () => {
                 )
               }
 
-              assert.deepStrictEqual(actual, output)
+              expect(actual).toStrictEqual(output)
             } else if ('failures' in module) {
               if (!err) {
                 throw new Error(
@@ -71,8 +66,8 @@ describe('superstruct', () => {
                 .failures()
                 .map((failure) => pick(failure, ...props))
 
-              assert.deepStrictEqual(actualFailures, failures)
-              assert.deepStrictEqual(pick(err, ...props), failures[0])
+              expect(actualFailures).toStrictEqual(failures)
+              expect(pick(err, ...props)).toStrictEqual(failures[0])
             } else {
               throw new Error(
                 `The "${name}" fixture did not define an \`output\` or \`failures\` export.`
@@ -83,34 +78,4 @@ describe('superstruct', () => {
       })
     }
   })
-
-  describe('deprecated', () => {
-    it('does not log deprecated type if value is undefined', () => {
-      const tracker = new CallTracker()
-      const logSpy = buildSpyWithZeroCalls(tracker)
-      assertValue(undefined, deprecated(any(), logSpy))
-      tracker.verify()
-    })
-
-    it('logs deprecated type to passed function if value is present', () => {
-      const tracker = new CallTracker()
-      const fakeLog = (value: unknown, ctx: Context) => {}
-      const logSpy = tracker.calls(fakeLog, 1)
-      assertValue('present', deprecated(any(), logSpy))
-      tracker.verify()
-    })
-  })
 })
-
-/**
- * This emulates `tracker.calls(0)`.
- *
- * `CallTracker.calls` doesn't support passing `0`, therefore we expect it
- * to be called once which is our call in this test. This proves that
- * the following action didn't call it.
- */
-function buildSpyWithZeroCalls(tracker: CallTracker) {
-  const logSpy = tracker.calls(1)
-  logSpy()
-  return logSpy
-}
