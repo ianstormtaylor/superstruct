@@ -1,4 +1,5 @@
 import { deepStrictEqual, strictEqual } from 'assert'
+import { describe, it } from 'vitest'
 import {
   validate,
   string,

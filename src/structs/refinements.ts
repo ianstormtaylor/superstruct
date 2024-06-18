@@ -7,7 +7,7 @@ import { toFailures } from '../utils.js'
 
 export function empty<
   T extends string | any[] | Map<any, any> | Set<any>,
-  S extends any
+  S extends any,
 >(struct: Struct<T, S>): Struct<T, S> {
   return refine(struct, 'empty', (value) => {
     const size = getSize(value)
@@ -76,7 +76,7 @@ export function min<T extends number | Date, S extends any>(
 
 export function nonempty<
   T extends string | any[] | Map<any, any> | Set<any>,
-  S extends any
+  S extends any,
 >(struct: Struct<T, S>): Struct<T, S> {
   return refine(struct, 'nonempty', (value) => {
     const size = getSize(value)
@@ -108,7 +108,7 @@ export function pattern<T extends string, S extends any>(
 
 export function size<
   T extends string | number | Date | any[] | Map<any, any> | Set<any>,
-  S extends any
+  S extends any,
 >(struct: Struct<T, S>, min: number, max: number = min): Struct<T, S> {
   const expected = `Expected a ${struct.type}`
   const of = min === max ? `of \`${min}\`` : `between \`${min}\` and \`${max}\``

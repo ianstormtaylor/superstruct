@@ -1,9 +1,6 @@
 {
-  "extends": [
-    "prettier",
-    "prettier/@typescript-eslint"
-  ],
-  "plugins": ["@typescript-eslint", "prettier"],
+  "extends": ["prettier"],
+  "plugins": ["@typescript-eslint", "prettier/recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",
@@ -81,7 +78,6 @@
     "prefer-rest-params": "error",
     "prefer-spread": "error",
     "prefer-template": "error",
-    "prettier/prettier": "error",
     "radix": "error",
     "spaced-comment": ["error", "always", { "exceptions": ["-"] }],
     "use-isnan": "error",
