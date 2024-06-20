@@ -1,5 +1,5 @@
-import { Struct, Refiner } from '../struct'
-import { toFailures } from '../utils'
+import { Struct, Refiner } from '../struct.js'
+import { toFailures } from '../utils.js'
 
 /**
  * Ensure that a string, array, map, or set is empty.

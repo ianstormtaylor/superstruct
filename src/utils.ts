@@ -1,5 +1,5 @@
-import { Struct, Infer, Result, Context, Describe } from './struct'
-import { Failure } from './error'
+import { Struct, Infer, Result, Context, Describe } from './struct.js'
+import { Failure } from './error.js'
 
 /**
  * Check if a value is an iterator.
