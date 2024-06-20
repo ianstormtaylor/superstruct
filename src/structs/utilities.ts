@@ -1,5 +1,10 @@
 import { Context, Struct, Validator } from '../struct.js'
-import { Assign, ObjectSchema, ObjectType, PartialObjectSchema } from '../utils.js'
+import {
+  Assign,
+  ObjectSchema,
+  ObjectType,
+  PartialObjectSchema,
+} from '../utils.js'
 import { object, optional, type } from './types.js'
 
 /**
