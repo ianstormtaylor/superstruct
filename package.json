@@ -34,7 +34,6 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
-    "is-email": "^1.0.0",
     "is-url": "^1.2.4",
     "is-uuid": "^1.0.2",
     "lodash": "^4.17.15",
