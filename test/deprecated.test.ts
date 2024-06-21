@@ -1,33 +1,18 @@
-import { describe, it } from 'vitest'
-import { CallTracker } from 'assert'
-import { any, assert, Context, deprecated } from '../src'
+import { describe, expect, it, vi } from 'vitest'
+import { any, assert, deprecated } from '../src'
 
 describe('deprecated', () => {
   it('does not log deprecated type if value is undefined', () => {
-    const tracker = new CallTracker()
-    const logSpy = buildSpyWithZeroCalls(tracker)
-    assert(undefined, deprecated(any(), logSpy))
-    tracker.verify()
+    const spy = vi.fn()
+    expect(spy).not.toHaveBeenCalled()
+    assert(undefined, deprecated(any(), spy))
+    expect(spy).not.toHaveBeenCalled()
   })
 
   it('logs deprecated type to passed function if value is present', () => {
-    const tracker = new CallTracker()
-    const fakeLog = (value: unknown, ctx: Context) => {}
-    const logSpy = tracker.calls(fakeLog, 1)
-    assert('present', deprecated(any(), logSpy))
-    tracker.verify()
+    const spy = vi.fn()
+    expect(spy).not.toHaveBeenCalled()
+    assert('present', deprecated(any(), spy))
+    expect(spy).toHaveBeenCalledOnce()
   })
 })
-
-/**
- * This emulates `tracker.calls(0)`.
- *
- * `CallTracker.calls` doesn't support passing `0`, therefore we expect it
- * to be called once which is our call in this test. This proves that
- * the following action didn't call it.
- */
-function buildSpyWithZeroCalls(tracker: CallTracker) {
-  const logSpy = tracker.calls(1)
-  logSpy()
-  return logSpy
-}
