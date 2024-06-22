@@ -1,7 +1,6 @@
-import isEmail from 'is-email'
 import { string, refine } from '../../../src'
 
-export const Struct = refine(string(), 'email', isEmail)
+export const Struct = refine(string(), 'email', (value) => value.includes('@'))
 
 export const data = 'name@example.com'
 
