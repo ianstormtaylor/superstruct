@@ -43,7 +43,14 @@ export function defaulted<T, S>(
   } = {}
 ): Struct<T, S> {
   return coerce(struct, unknown(), (x) => {
-    const f = typeof fallback === 'function' ? fallback() : fallback
+    // To avoid a pass-by-reference bug, we'll clone objects when encountered
+    // here, but the for performance avoid cloning primatives and functions
+    const f =
+      typeof fallback === 'function'
+        ? fallback()
+        : typeof fallback === 'object'
+          ? structuredClone(fallback)
+          : fallback
 
     if (x === undefined) {
       return f
