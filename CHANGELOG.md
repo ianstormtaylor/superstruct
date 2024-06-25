@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Newly exports the following types: `Assign`, `If`, `IsUnion`, `ObjectType`, `PartialObjectSchema`, `StructSchema`, `TupleSchema`
+
 ## [3.0.0]
 
 ### Added
