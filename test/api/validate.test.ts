@@ -1,4 +1,4 @@
-import { deepStrictEqual, strictEqual } from 'assert'
+import { describe, expect, it } from 'vitest'
 import {
   validate,
   string,
@@ -12,20 +12,20 @@ import {
 describe('validate', () => {
   it('valid as helper', () => {
     const S = string()
-    deepStrictEqual(validate('valid', S), [undefined, 'valid'])
+    expect(validate('valid', S)).toStrictEqual([undefined, 'valid'])
   })
 
   it('valid as method', () => {
     const S = string()
-    deepStrictEqual(S.validate('valid'), [undefined, 'valid'])
+    expect(S.validate('valid')).toStrictEqual([undefined, 'valid'])
   })
 
   it('invalid as helper', () => {
     const S = string()
     const [err, value] = validate(42, S)
-    strictEqual(value, undefined)
-    strictEqual(err instanceof StructError, true)
-    deepStrictEqual(Array.from((err as StructError).failures()), [
+    expect(value).toStrictEqual(undefined)
+    expect(err).toBeInstanceOf(StructError)
+    expect(Array.from((err as StructError).failures())).toStrictEqual([
       {
         value: 42,
         key: undefined,
@@ -42,9 +42,9 @@ describe('validate', () => {
   it('invalid as method', () => {
     const S = string()
     const [err, value] = S.validate(42)
-    strictEqual(value, undefined)
-    strictEqual(err instanceof StructError, true)
-    deepStrictEqual(Array.from((err as StructError).failures()), [
+    expect(value).toStrictEqual(undefined)
+    expect(err).toBeInstanceOf(StructError)
+    expect(Array.from((err as StructError).failures())).toStrictEqual([
       {
         value: 42,
         key: undefined,
@@ -61,8 +61,7 @@ describe('validate', () => {
   it('error message path', () => {
     const S = object({ author: object({ name: string() }) })
     const [err] = S.validate({ author: { name: 42 } })
-    strictEqual(
-      (err as StructError).message,
+    expect(err?.message).toBe(
       'At path: author.name -- Expected a string, but received: 42'
     )
   })
@@ -70,8 +69,8 @@ describe('validate', () => {
   it('custom error message', () => {
     const S = string()
     const [err] = S.validate(42, { message: 'Validation failed!' })
-    strictEqual(err?.message, 'Validation failed!')
-    strictEqual(err?.cause, 'Expected a string, but received: 42')
+    expect(err?.message).toBe('Validation failed!')
+    expect(err?.cause).toBe('Expected a string, but received: 42')
   })
 
   it('early exit', () => {
@@ -90,8 +89,8 @@ describe('validate', () => {
 
     const S = object({ a: A, b: B })
     S.validate({ a: null, b: null })
-    strictEqual(ranA, true)
-    strictEqual(ranB, false)
+    expect(ranA).toBe(true)
+    expect(ranB).toBe(false)
   })
 
   it('refiners after children', () => {
@@ -108,7 +107,7 @@ describe('validate', () => {
     })
 
     B.validate({ a: null })
-    deepStrictEqual(order, ['validator', 'refiner'])
+    expect(order).toStrictEqual(['validator', 'refiner'])
   })
 
   it('refiners even if nested refiners fail', () => {
@@ -126,7 +125,7 @@ describe('validate', () => {
     const [error] = B.validate({ a: null })
     // Collect all failures. Ensures all validation runs.
     error?.failures()
-    strictEqual(ranOuterRefiner, true)
+    expect(ranOuterRefiner).toBe(true)
   })
 
   it('skips refiners if validators return errors', () => {
@@ -144,6 +143,6 @@ describe('validate', () => {
     const [error] = B.validate({ a: null })
     // Collect all failures. Ensures all validation runs.
     error?.failures()
-    strictEqual(ranRefiner, false)
+    expect(ranRefiner).toBe(false)
   })
 })

@@ -1,20 +1,20 @@
-import { strictEqual } from 'assert'
+import { describe, expect, it } from 'vitest'
 import { is, string } from '../../src'
 
 describe('is', () => {
   it('valid as helper', () => {
-    strictEqual(is('valid', string()), true)
+    expect(is('valid', string())).toBe(true)
   })
 
   it('valid as method', () => {
-    strictEqual(string().is('valid'), true)
+    expect(string().is('valid')).toBe(true)
   })
 
   it('invalid as helper', () => {
-    strictEqual(is(42, string()), false)
+    expect(is(42, string())).toBe(false)
   })
 
   it('invalid as method', () => {
-    strictEqual(string().is(42), false)
+    expect(string().is(42)).toBe(false)
   })
 })

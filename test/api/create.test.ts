@@ -1,4 +1,4 @@
-import { strictEqual, deepEqual, deepStrictEqual, throws } from 'assert'
+import { describe, expect, it } from 'vitest'
 import {
   type,
   optional,
@@ -12,22 +12,22 @@ import {
 describe('create', () => {
   it('missing as helper', () => {
     const S = defaulted(string(), 'default')
-    strictEqual(create(undefined, S), 'default')
+    expect(create(undefined, S)).toBe('default')
   })
 
   it('missing as method', () => {
     const S = defaulted(string(), 'default')
-    strictEqual(S.create(undefined), 'default')
+    expect(S.create(undefined)).toBe('default')
   })
 
   it('not missing as helper', () => {
     const S = defaulted(string(), 'default')
-    strictEqual(create('string', S), 'string')
+    expect(create('string', S)).toBe('string')
   })
 
   it('not missing as method', () => {
     const S = defaulted(string(), 'default')
-    strictEqual(S.create('string'), 'string')
+    expect(S.create('string')).toBe('string')
   })
 
   it('missing optional fields remain missing', () => {
@@ -36,7 +36,7 @@ describe('create', () => {
       b: optional(string()),
       c: optional(type({ d: string() })),
     })
-    deepEqual(S.create({ a: 'a' }), { a: 'a' })
+    expect(S.create({ a: 'a' })).toStrictEqual({ a: 'a' })
   })
 
   it('explicit undefined values are kept', () => {
@@ -45,7 +45,7 @@ describe('create', () => {
       b: coerce(optional(string()), literal(null), () => undefined),
       c: optional(type({ d: string() })),
     })
-    deepStrictEqual(S.create({ a: 'a', b: null, c: undefined }), {
+    expect(S.create({ a: 'a', b: null, c: undefined })).toStrictEqual({
       a: 'a',
       b: undefined,
       c: undefined,
@@ -53,9 +53,11 @@ describe('create', () => {
   })
 
   it('custom error message', () => {
-    throws(() => string().create(42, 'Not a string!'), {
-      cause: 'Expected a string, but received: 42',
-      message: 'Not a string!',
-    })
+    expect(() => string().create(42, 'Not a string!')).toThrow(
+      expect.objectContaining({
+        cause: 'Expected a string, but received: 42',
+        message: 'Not a string!',
+      })
+    )
   })
 })

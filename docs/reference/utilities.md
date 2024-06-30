@@ -42,7 +42,7 @@ const User = object({ ... })
 const Bot = object({ ... })
 
 dynamic((value) => {
-  value.kind === 'user' ? User : Bot
+  return value.kind === 'user' ? User : Bot
 })
 ```
 
@@ -73,7 +73,7 @@ omit(
 )
 ```
 
-`omit` allows you to create a new struct based on an existing object struct, but excluding specific properties.
+`omit` allows you to create a new struct based on an existing `object` or `type` struct, but excluding specific properties.
 
 ### `partial`
 
@@ -92,7 +92,7 @@ partial(
 { name: 'Jane' }
 ```
 
-`partial` allows you to create a new struct based on an existing object struct, but with all of its properties being optional.
+`partial` allows you to create a new struct based on an existing `object` or `type` struct, but with all of its properties being optional.
 
 ### `pick`
 
@@ -106,4 +106,4 @@ pick(
 )
 ```
 
-`pick` allows you to create a new struct based on an existing object struct, but only including specific properties.
+`pick` allows you to create a new struct based on an existing `object` or `type` struct, but only including specific properties.

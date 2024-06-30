@@ -1,6 +1,6 @@
-import { Struct, is, Coercer } from '../struct'
-import { isPlainObject } from '../utils'
-import { string, unknown } from './types'
+import { Struct, is, Coercer } from '../struct.js'
+import { isPlainObject } from '../utils.js'
+import { string, unknown } from './types.js'
 
 /**
  * Augment a `Struct` to add an additional coercion step to its input.

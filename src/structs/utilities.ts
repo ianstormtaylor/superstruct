@@ -1,6 +1,11 @@
-import { Struct, Context, Validator } from '../struct'
-import { object, optional, type } from './types'
-import { ObjectSchema, Assign, ObjectType, PartialObjectSchema } from '../utils'
+import { Context, Struct, Validator } from '../struct.js'
+import {
+  Assign,
+  ObjectSchema,
+  ObjectType,
+  PartialObjectSchema,
+} from '../utils.js'
+import { object, optional, type } from './types.js'
 
 /**
  * Create a new struct that combines the properties properties from multiple
@@ -16,7 +21,7 @@ export function assign<A extends ObjectSchema, B extends ObjectSchema>(
 export function assign<
   A extends ObjectSchema,
   B extends ObjectSchema,
-  C extends ObjectSchema
+  C extends ObjectSchema,
 >(
   A: Struct<ObjectType<A>, A>,
   B: Struct<ObjectType<B>, B>,
@@ -26,7 +31,7 @@ export function assign<
   A extends ObjectSchema,
   B extends ObjectSchema,
   C extends ObjectSchema,
-  D extends ObjectSchema
+  D extends ObjectSchema,
 >(
   A: Struct<ObjectType<A>, A>,
   B: Struct<ObjectType<B>, B>,
@@ -41,7 +46,7 @@ export function assign<
   B extends ObjectSchema,
   C extends ObjectSchema,
   D extends ObjectSchema,
-  E extends ObjectSchema
+  E extends ObjectSchema,
 >(
   A: Struct<ObjectType<A>, A>,
   B: Struct<ObjectType<B>, B>,
@@ -192,11 +197,15 @@ export function omit<S extends ObjectSchema, K extends keyof S>(
 export function partial<S extends ObjectSchema>(
   struct: Struct<ObjectType<S>, S> | S
 ): Struct<ObjectType<PartialObjectSchema<S>>, PartialObjectSchema<S>> {
-  const schema: any =
-    struct instanceof Struct ? { ...struct.schema } : { ...struct }
+  const isStruct = struct instanceof Struct
+  const schema: any = isStruct ? { ...struct.schema } : { ...struct }
 
   for (const key in schema) {
     schema[key] = optional(schema[key])
+  }
+
+  if (isStruct && struct.type === 'type') {
+    return type(schema) as any
   }
 
   return object(schema) as any
@@ -220,7 +229,13 @@ export function pick<S extends ObjectSchema, K extends keyof S>(
     subschema[key] = schema[key]
   }
 
-  return object(subschema as Pick<S, K>)
+  switch (struct.type) {
+    case 'type':
+      return type(subschema) as any
+
+    default:
+      return object(subschema) as any
+  }
 }
 
 /**

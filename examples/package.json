@@ -1,0 +1,10 @@
+{
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "is-email": "^1.0.2",
+    "is-url": "^1.2.4",
+    "is-uuid": "^1.0.2",
+    "superstruct": "latest"
+  }
+}
