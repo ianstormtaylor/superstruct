@@ -324,15 +324,20 @@ export function object<S extends ObjectSchema>(schema?: S): any {
         return value
       }
 
-      const val = { ...value }
+      const coerced = { ...value }
+
+      // The `object` struct has special behaviour enabled by the mask flag.
+      // When masking, properties that are not in the schema are deleted from
+      // the coerced object instead of eventually failing validaiton.
       if (ctx.mask && schema) {
-        for (const key in val) {
+        for (const key in coerced) {
           if (schema[key] === undefined) {
-            delete val[key]
+            delete coerced[key]
           }
         }
       }
-      return val
+
+      return coerced
     },
   })
 }
