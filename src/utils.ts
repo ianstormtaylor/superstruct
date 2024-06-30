@@ -18,6 +18,14 @@ export function isObject(x: unknown): x is object {
 }
 
 /**
+ * Check if a value is a non-array object.
+ */
+
+export function isNonArrayObject(x: unknown): x is object {
+  return isObject(x) && !Array.isArray(x)
+}
+
+/**
  * Check if a value is a plain object.
  */
 

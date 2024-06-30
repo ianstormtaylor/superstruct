@@ -6,6 +6,7 @@ import {
   print,
   run,
   isObject,
+  isNonArrayObject,
   AnyStruct,
   InferStructTuple,
   UnionToIntersection,
@@ -316,11 +317,12 @@ export function object<S extends ObjectSchema>(schema?: S): any {
     },
     validator(value) {
       return (
-        isObject(value) || `Expected an object, but received: ${print(value)}`
+        isNonArrayObject(value) ||
+        `Expected an object, but received: ${print(value)}`
       )
     },
     coercer(value, ctx) {
-      if (!isObject(value) || Array.isArray(value)) {
+      if (!isNonArrayObject(value)) {
         return value
       }
 
@@ -380,7 +382,8 @@ export function record<K extends string, V>(
     },
     validator(value) {
       return (
-        isObject(value) || `Expected an object, but received: ${print(value)}`
+        isNonArrayObject(value) ||
+        `Expected an object, but received: ${print(value)}`
       )
     },
   })
@@ -496,11 +499,12 @@ export function type<S extends ObjectSchema>(
     },
     validator(value) {
       return (
-        isObject(value) || `Expected an object, but received: ${print(value)}`
+        isNonArrayObject(value) ||
+        `Expected an object, but received: ${print(value)}`
       )
     },
     coercer(value) {
-      return isObject(value) ? { ...value } : value
+      return isNonArrayObject(value) ? { ...value } : value
     },
   })
 }
