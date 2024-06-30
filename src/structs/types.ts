@@ -382,7 +382,8 @@ export function record<K extends string, V>(
     },
     validator(value) {
       return (
-        isObject(value) || `Expected an object, but received: ${print(value)}`
+        isNonArrayObject(value) ||
+        `Expected an object, but received: ${print(value)}`
       )
     },
   })
