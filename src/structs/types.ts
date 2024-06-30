@@ -319,8 +319,25 @@ export function object<S extends ObjectSchema>(schema?: S): any {
         isObject(value) || `Expected an object, but received: ${print(value)}`
       )
     },
-    coercer(value) {
-      return isObject(value) ? { ...value } : value
+    coercer(value, ctx) {
+      if (!isObject(value) || Array.isArray(value)) {
+        return value
+      }
+
+      const coerced = { ...value }
+
+      // The `object` struct has special behaviour enabled by the mask flag.
+      // When masking, properties that are not in the schema are deleted from
+      // the coerced object instead of eventually failing validaiton.
+      if (ctx.mask && schema) {
+        for (const key in coerced) {
+          if (schema[key] === undefined) {
+            delete coerced[key]
+          }
+        }
+      }
+
+      return coerced
     },
   })
 }
@@ -499,9 +516,12 @@ export function union<A extends AnyStruct, B extends AnyStruct[]>(
   return new Struct({
     type: 'union',
     schema: null,
-    coercer(value) {
+    coercer(value, ctx) {
       for (const S of Structs) {
-        const [error, coerced] = S.validate(value, { coerce: true })
+        const [error, coerced] = S.validate(value, {
+          coerce: true,
+          mask: ctx.mask,
+        })
         if (!error) {
           return coerced
         }
