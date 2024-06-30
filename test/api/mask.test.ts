@@ -72,7 +72,7 @@ describe('mask', () => {
       object({ b: string() }),
     ])
     const value = { a: '1', extraProp: 42 }
-    deepStrictEqual(mask(value, S), { a: '1', defaultedProp: '42' })
+    expect(mask(value, S)).toStrictEqual({ a: '1', defaultedProp: '42' })
   })
 
   it('masking of a top level type and nested object', () => {
