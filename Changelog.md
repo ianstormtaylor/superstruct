@@ -29,9 +29,9 @@ Some changes in Superstruct 2.0.0 are *potentially* breaking if you were using t
 
 Project maintenance has moved to a new volunteer team: [@arturmuller](https://github.com/arturmuller) and [@yeoffrey](https://github.com/yeoffrey). Hello there! :wave: We are currently going through the existing issues and PRs, trying to resolve or close the backlog. This might take a little while so please bear with us.
 
-If are interested in **contributing** — or helping us process the backlog — we would love your help. Don't hesitate to help us triage, open an issue, or submit a PR. You can also join our Superstruct maintainers Discord: https://discord.gg/pdHrQBjQ96
+If you are interested in **contributing** — or helping us process the backlog — we would love your help. Don't hesitate to help us triage, open an issue, or submit a PR. You can also join our Superstruct maintainers Discord: https://discord.gg/pdHrQBjQ96
 
-If you have **questions, suggestions, or are just not sure about something** related to Superstruct, head over to GitHub Discussions! We have recently enabled this feature so help us differentiate between actual issues/bugs and everything else. We hope this will be a great new place where Superstruct users can get quick help from us — the maintainers — but also from the community as a whole.
+If you have **questions, suggestions, or are just not sure about something** related to Superstruct, head over to GitHub Discussions! We have recently enabled this feature to help us differentiate between actual issues/bugs and everything else. We hope this will be a great new place where Superstruct users can get quick help from us — the maintainers — but also from the community as a whole.
 
 See you at the next release! :v:
 
