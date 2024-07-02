@@ -16,7 +16,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=14.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.3",
