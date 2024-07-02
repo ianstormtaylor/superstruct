@@ -54,6 +54,7 @@
     "test": "npm run build && npm run test:types && npm run test:vitest",
     "test:types": "tsc --noEmit && tsc --project ./test/tsconfig.json --noEmit",
     "test:vitest": "vitest run",
+    "test:watch": "vitest",
     "watch": "npm run build -- --watch"
   },
   "keywords": [
