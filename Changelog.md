@@ -17,7 +17,7 @@ Some changes in Superstruct 2.0.0 are *potentially* breaking if you were using t
 
 - The library and its TypeScript typings are now compatible with NodeNext/Node16 module resolution. This means that if you are using the library with TypeScript and ECMAScript modules at the same time, you should no longer run into issues!
 
-### Fixed
+#### Fixed
 
 - Using `mask()` with `union()` now correctly masks union members instead of incorrectly failing validation.
 
