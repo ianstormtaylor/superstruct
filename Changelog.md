@@ -2,6 +2,29 @@
 
 This document maintains a list of major changes to Superstruct with each new release.
 
+### `2.0.0` - July 2, 2024
+
+Some changes in Superstruct 2.0.0 are *potentially* breaking if you were using the library in unusual and/or undocumented ways. Since it has been almost 2 years since the last release, we want to make sure that we don't ruin someone's day by surprising them with a fix that changes [buggy behaviour they were relying on](https://xkcd.com/1172/). For this reason, some changes that would ordinarily be consider a fix are marked as breaking.
+
+**For the absolute majority of users, this should be a smooth upgrade that will not require any changes.**
+
+#### Breaking
+
+- Validation now correctly fails when arrays are passed to `object()`, `type()`, and `record()` structs.
+- When coercing an `object()` (via `mask()`, `create()` or `validate()` with the `coerce: true` option), arrays will no longer be automatically converted to objects with indexes as keys. [See this PR comment](https://github.com/ianstormtaylor/superstruct/pull/1196#issuecomment-1858924264).
+
+#### New
+
+- The library and its TypeScript typings are now compatible with NodeNext/Node16 module resolution. This means that if you are using the library with TypeScript and ECMAScript modules at the same time, you should no longer run into issues!
+
+### Fixed
+
+- Using `mask()` with `union()` now correctly masks union members instead of incorrectly failing validation.
+
+#### Deprecations
+
+- Use with Node.js v14 is now deprecated. Due to incompatible tooling, we are no longer able to test Superstruct on this version of Node.js. Use at your own risk.
+
 ### `1.0.0` — November 17, 2022
 
 ###### NEW
