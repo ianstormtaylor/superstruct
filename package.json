@@ -19,12 +19,6 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.3",
-    "@babel/core": "^7.6.3",
-    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
-    "@babel/preset-env": "^7.20.2",
-    "@babel/preset-typescript": "^7.6.0",
-    "@babel/register": "^7.6.2",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/expect": "^24.3.0",
     "@types/lodash": "^4.14.144",
