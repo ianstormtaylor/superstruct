@@ -6,7 +6,7 @@ This document maintains a list of major changes to Superstruct with each new rel
 
 Some changes in Superstruct 2.0.0 are *potentially* breaking if you were using the library in unusual and/or undocumented ways. Since it has been almost 2 years since the last release, we want to make sure that we don't ruin someone's day by surprising them with a fix that changes [buggy behaviour they were relying on](https://xkcd.com/1172/). For this reason, some changes that would ordinarily be consider a fix are marked as breaking.
 
-**For the absolute majority of users, this should be a smooth upgrade that will not require any changes.**
+**:rocket: For the absolute majority of users, this should be a smooth upgrade that will not require any changes.**
 
 #### Breaking
 
@@ -24,6 +24,17 @@ Some changes in Superstruct 2.0.0 are *potentially* breaking if you were using t
 #### Deprecations
 
 - Use with Node.js v14 is now deprecated. Due to incompatible tooling, we are no longer able to test Superstruct on this version of Node.js. Use at your own risk.
+
+#### New Maintainers & Next Steps
+
+Project maintenance has moved to a new volunteer team: @arturmuller and @yeoffrey. Hello there! :wave: We are currently going through the existing issues and PRs, trying to resolve or close the backlog. This might take a little while so please bear with us.
+
+If are interested in **contributing** — or helping us process the backlog — we would love your help. Don't hesitate to help us triage, open an issue, or submit a PR. You can also join our Superstruct maintainers Discord: https://discord.gg/pdHrQBjQ96
+
+If you have **questions, suggestions, or are just not sure about something** related to Superstruct, head over to GitHub Discussions! We have recently enabled this feature so help us differentiate between actual issues/bugs and everything else. We hope this will be a great new place where SUperstruct users can get quick help from us — the maintainers — but also from the community as a whole.
+
+See you at the next release! :v:
+
 
 ### `1.0.0` — November 17, 2022
 
