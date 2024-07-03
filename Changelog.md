@@ -2,6 +2,39 @@
 
 This document maintains a list of major changes to Superstruct with each new release.
 
+### `2.0.0` - July 3, 2024
+
+Some changes in Superstruct v2.0 are _potentially_ breaking if you were using the library in unusual and/or undocumented ways. Since it has been almost 2 years since the last significant release, we want to make sure that we don't ruin someone's day by surprising them with a fix that changes [buggy behavior they were relying on](https://xkcd.com/1172/). For this reason, some changes that would ordinarily be considered a fix are marked as breaking.
+
+**:rocket: For the absolute majority of users, this should be a smooth upgrade that will not require any changes.**
+
+#### Breaking
+
+- Validation now correctly fails when arrays are passed to `object()`, `type()`, and `record()` structs.
+- When coercing an `object()` (via `mask()`, `create()` or `validate()` with the `coerce: true` option), arrays will no longer be automatically converted to objects with indexes as keys. [See this PR comment](https://github.com/ianstormtaylor/superstruct/pull/1196#issuecomment-1858924264).
+
+#### New
+
+- The library and its TypeScript typings are now compatible with NodeNext/Node16 module resolution. This means that if you are using the library with TypeScript and ECMAScript modules at the same time, you should no longer run into issues!
+
+#### Fixed
+
+- Using `mask()` with `union()` now correctly masks union members instead of incorrectly failing validation.
+
+#### Deprecations
+
+- Use with Node.js v14 is now deprecated. Due to incompatible tooling, we are no longer able to test Superstruct on this version of Node.js. Use at your own risk.
+
+#### New Maintainers & Next Steps
+
+Project maintenance has moved to a new volunteer team: [@arturmuller](https://github.com/arturmuller) and [@yeoffrey](https://github.com/yeoffrey). Hello there! :wave: We are currently going through the existing issues and PRs, trying to resolve or close the backlog. This might take a little while so please bear with us.
+
+If you are interested in **contributing** — or helping us process the backlog — we would love your help. Don't hesitate to help us triage, open an issue, or submit a PR. You can also join our Superstruct maintainers Discord: https://discord.gg/pdHrQBjQ96.
+
+If you have **questions, suggestions, or are just not sure about something** related to Superstruct, head over to GitHub Discussions! We have recently enabled this feature to help us differentiate between actual issues/bugs and everything else. We hope this will be a great new place where Superstruct users can get quick help from us — the maintainers — but also from the community as a whole.
+
+See you at the next release! :v:
+
 ### `1.0.0` — November 17, 2022
 
 ###### NEW
