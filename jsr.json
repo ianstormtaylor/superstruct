@@ -1,0 +1,9 @@
+{
+  "$schema": "https://jsr.io/schema/config-file.v1.json",
+  "name": "@superstruct/core",
+  "version": "2.0.2",
+  "exports": "./src/index.ts",
+  "publish": {
+    "include": ["Readme.md", "License.md", "src", "docs"]
+  }
+}
