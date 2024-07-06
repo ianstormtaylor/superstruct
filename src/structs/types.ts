@@ -387,7 +387,7 @@ export function record<K extends string, V>(
       )
     },
     coercer(value) {
-      return isObject(value) ? { ...value } : value
+      return isNonArrayObject(value) ? { ...value } : value
     },
   })
 }
