@@ -386,6 +386,9 @@ export function record<K extends string, V>(
         `Expected an object, but received: ${print(value)}`
       )
     },
+    coercer(value) {
+      return isNonArrayObject(value) ? { ...value } : value
+    },
   })
 }
 
@@ -472,6 +475,9 @@ export function tuple<A extends AnyStruct, B extends AnyStruct[]>(
         Array.isArray(value) ||
         `Expected an array, but received: ${print(value)}`
       )
+    },
+    coercer(value) {
+      return Array.isArray(value) ? value.slice() : value
     },
   })
 }
