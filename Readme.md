@@ -20,10 +20,13 @@
 
 <p align="center">
   <a href="https://unpkg.com/superstruct/umd/superstruct.min.js">
-    <img src="https://badgen.net/bundlephobia/minzip/superstruct?color=green&label=size">
+    <img src="https://badgen.net/bundlephobia/minzip/superstruct?color=green&label=size" alt="">
   </a>
   <a href="./package.json">
-    <img src="https://badgen.net/npm/v/superstruct?color=blue&label=version">
+    <img src="https://badgen.net/npm/v/superstruct?color=blue&label=version" alt="">
+  </a>
+  <a href="https://jsr.io/@superstruct/core">
+    <img src="https://jsr.io/badges/@superstruct/core" alt="">
   </a>
 </p>
 
