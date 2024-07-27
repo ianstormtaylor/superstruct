@@ -200,7 +200,9 @@ export function* run<T, S>(
  */
 
 export type UnionToIntersection<U> = (
-  U extends any ? (arg: U) => any : never
+  U extends any
+    ? (arg: U) => any
+    : never
 ) extends (arg: infer I) => void
   ? I
   : never
@@ -230,10 +232,11 @@ export type IsMatch<T, G> = T extends G ? (G extends T ? T : never) : never
  * Check if a type is an exact match.
  */
 
-export type IsExactMatch<T, U> =
-  (<G>() => G extends T ? 1 : 2) extends <G>() => G extends U ? 1 : 2
-    ? T
-    : never
+export type IsExactMatch<T, U> = (<G>() => G extends T ? 1 : 2) extends <
+  G,
+>() => G extends U ? 1 : 2
+  ? T
+  : never
 
 /**
  * Check if a type is a record type.
@@ -265,7 +268,11 @@ export type IsTuple<T> = T extends [any]
  */
 
 export type IsUnion<T, U extends T = T> = (
-  T extends any ? (U extends T ? false : true) : false
+  T extends any
+    ? U extends T
+      ? false
+      : true
+    : false
 ) extends false
   ? never
   : T
