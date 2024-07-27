@@ -43,7 +43,7 @@
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "lint:eslint": "eslint '{src,test}/*.{js,ts}'",
     "lint:prettier": "prettier '**/*.{js,json,ts}' --check",
-    "release": "npm run build && npm run lint && np",
+    "release": "npm run build && npm run lint && np --any-branch",
     "test": "npm run build && npm run test:types && npm run test:vitest",
     "test:types": "tsc --noEmit && tsc --project ./test/tsconfig.json --noEmit",
     "test:vitest": "vitest run",
