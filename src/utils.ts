@@ -47,7 +47,11 @@ export function print(value: any): string {
     return value.toString()
   }
 
-  return typeof value === 'string' ? JSON.stringify(value) : `${value}`
+  if (value instanceof Object) {
+    return JSON.stringify(value)
+  }
+
+  return `${value}`
 }
 
 /**
