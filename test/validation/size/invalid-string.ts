@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { string, size } from '../../../src'
 
-export const Struct = size(string(), 1, 5)
+test("Invalid size string", () => {
+  const data = '';
+  const [err, res] = validate(data, size(string(), 1, 5));
+  expect(res).toBeUndefined();
 
-export const data = ''
-
-export const failures = [
-  {
-    value: '',
-    type: 'string',
-    refinement: 'size',
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: '',
+      type: 'string',
+      refinement: 'size',
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

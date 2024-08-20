@@ -1,15 +1,17 @@
+import { create } from "../../../src";
+import { expect, test } from "vitest";
 import { record, string, number } from '../../../src'
 
-export const Struct = record(string(), number())
+test("Valid record frozen", () => {
+  const data = Object.freeze({
+    a: 1,
+    b: 2,
+  });
 
-export const data = Object.freeze({
-  a: 1,
-  b: 2,
-})
+  const res = create(data, record(string(), number()));
 
-export const output = {
-  a: 1,
-  b: 2,
-}
-
-export const create = true
+  expect(res).toStrictEqual({
+    a: 1,
+    b: 2,
+  });
+});

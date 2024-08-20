@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { string, refine } from '../../../src'
 
-export const Struct = refine(string(), 'email', (value) => value.includes('@'))
-
-export const data = 'name@example.com'
-
-export const output = 'name@example.com'
+test("Valid refine", () => {
+  const data = 'name@example.com';
+  assert(data, refine(string(), 'email', (value) => value.includes('@')));
+  expect(data).toStrictEqual('name@example.com');
+});

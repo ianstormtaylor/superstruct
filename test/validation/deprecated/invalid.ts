@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { deprecated, number } from '../../../src'
 
-export const Struct = deprecated(number(), () => {})
+test("Invalid deprecated", () => {
+  const data = '42';
+  const [err, res] = validate(data, deprecated(number(), () => {}));
+  expect(res).toBeUndefined();
 
-export const data = '42'
-
-export const failures = [
-  {
-    value: '42',
-    type: 'number',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: '42',
+      type: 'number',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

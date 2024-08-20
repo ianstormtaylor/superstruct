@@ -1,21 +1,27 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { omit, object, string, number } from '../../../src'
 
-export const Struct = omit(
-  object({
-    name: string(),
-    age: number(),
-  }),
-  ['age']
-)
+test("Invalid omit", () => {
+  const data = 'invalid';
 
-export const data = 'invalid'
+  const [err, res] = validate(data, omit(
+    object({
+      name: string(),
+      age: number(),
+    }),
+    ['age']
+  ));
 
-export const failures = [
-  {
-    value: 'invalid',
-    type: 'object',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(res).toBeUndefined();
+
+  expect(err).toMatchStructError([
+    {
+      value: 'invalid',
+      type: 'object',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

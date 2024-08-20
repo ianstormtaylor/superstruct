@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { string, pattern } from '../../../src'
 
-export const Struct = pattern(string(), /\d+/)
-
-export const data = '123'
-
-export const output = '123'
+test("Valid pattern", () => {
+  const data = '123';
+  assert(data, pattern(string(), /\d+/));
+  expect(data).toStrictEqual('123');
+});

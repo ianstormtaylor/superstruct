@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { lazy, nonempty, string } from '../../../src'
 
-export const Struct = lazy(() => nonempty(string()))
+test("With lazy refiners", () => {
+  const data = '';
+  const [err, res] = validate(data, lazy(() => nonempty(string())));
+  expect(res).toBeUndefined();
 
-export const data = ''
-
-export const failures = [
-  {
-    value: data,
-    type: 'string',
-    refinement: 'nonempty',
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: data,
+      type: 'string',
+      refinement: 'nonempty',
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

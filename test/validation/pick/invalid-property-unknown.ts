@@ -1,24 +1,30 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { pick, object, string, number } from '../../../src'
 
-export const Struct = pick(
-  object({
-    name: string(),
-    age: number(),
-  }),
-  ['name']
-)
+test("Invalid pick property unknown", () => {
+  const data = {
+    name: 'john',
+    age: 42,
+  };
 
-export const data = {
-  name: 'john',
-  age: 42,
-}
+  const [err, res] = validate(data, pick(
+    object({
+      name: string(),
+      age: number(),
+    }),
+    ['name']
+  ));
 
-export const failures = [
-  {
-    value: 42,
-    type: 'never',
-    refinement: undefined,
-    path: ['age'],
-    branch: [data, data.age],
-  },
-]
+  expect(res).toBeUndefined();
+
+  expect(err).toMatchStructError([
+    {
+      value: 42,
+      type: 'never',
+      refinement: undefined,
+      path: ['age'],
+      branch: [data, data.age],
+    },
+  ]);
+});

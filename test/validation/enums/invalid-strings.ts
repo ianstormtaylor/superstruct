@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { enums } from '../../../src'
 
-export const Struct = enums(['one', 'two'])
+test("Invalid enums strings", () => {
+  const data = 'invalid';
+  const [err, res] = validate(data, enums(['one', 'two']));
+  expect(res).toBeUndefined();
 
-export const data = 'invalid'
-
-export const failures = [
-  {
-    value: 'invalid',
-    type: 'enums',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: 'invalid',
+      type: 'enums',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

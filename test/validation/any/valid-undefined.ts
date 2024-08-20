@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { any } from '../../../src'
 
-export const Struct = any()
-
-export const data = undefined
-
-export const output = undefined
+test("Valid any undefined", () => {
+  const data = undefined;
+  assert(data, any());
+  expect(data).toStrictEqual(undefined);
+});

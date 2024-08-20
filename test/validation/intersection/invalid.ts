@@ -1,21 +1,26 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { type, intersection, string, number } from '../../../src'
 
 const A = type({ a: string() })
 const B = type({ b: number() })
 
-export const Struct = intersection([A, B])
+test("Invalid intersection", () => {
+  const data = {
+    a: 'a',
+    b: 'invalid',
+  };
 
-export const data = {
-  a: 'a',
-  b: 'invalid',
-}
+  const [err, res] = validate(data, intersection([A, B]));
+  expect(res).toBeUndefined();
 
-export const failures = [
-  {
-    type: 'number',
-    value: 'invalid',
-    refinement: undefined,
-    path: ['b'],
-    branch: [data, data.b],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      type: 'number',
+      value: 'invalid',
+      refinement: undefined,
+      path: ['b'],
+      branch: [data, data.b],
+    },
+  ]);
+});

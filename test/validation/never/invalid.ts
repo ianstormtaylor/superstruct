@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { never } from '../../../src'
 
-export const Struct = never()
+test("Invalid never", () => {
+  const data = true;
+  const [err, res] = validate(data, never());
+  expect(res).toBeUndefined();
 
-export const data = true
-
-export const failures = [
-  {
-    value: true,
-    type: 'never',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: true,
+      type: 'never',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

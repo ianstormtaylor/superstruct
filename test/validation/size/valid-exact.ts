@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { string, size } from '../../../src'
 
-export const Struct = size(string(), 4)
-
-export const data = 'abcd'
-
-export const output = 'abcd'
+test("Valid size exact", () => {
+  const data = 'abcd';
+  assert(data, size(string(), 4));
+  expect(data).toStrictEqual('abcd');
+});

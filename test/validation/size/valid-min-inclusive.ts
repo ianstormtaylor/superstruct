@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { string, size } from '../../../src'
 
-export const Struct = size(string(), 1, 5)
-
-export const data = 'a'
-
-export const output = 'a'
+test("Valid size min inclusive", () => {
+  const data = 'a';
+  assert(data, size(string(), 1, 5));
+  expect(data).toStrictEqual('a');
+});

@@ -1,13 +1,17 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { object } from '../../../src'
 
-export const Struct = object()
+test("Valid object opaque", () => {
+  const data = {
+    a: 'string',
+    b: 42,
+  };
 
-export const data = {
-  a: 'string',
-  b: 42,
-}
+  assert(data, object());
 
-export const output = {
-  a: 'string',
-  b: 42,
-}
+  expect(data).toStrictEqual({
+    a: 'string',
+    b: 42,
+  });
+});

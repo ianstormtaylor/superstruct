@@ -1,25 +1,29 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { object, string } from '../../../src'
 
-export const Struct = object({
-  name: string(),
-  address: object({
-    street: string(),
-    city: string(),
-  }),
-})
+test("Valid object nested", () => {
+  const data = {
+    name: 'john',
+    address: {
+      street: '123 Fake St',
+      city: 'Springfield',
+    },
+  };
 
-export const data = {
-  name: 'john',
-  address: {
-    street: '123 Fake St',
-    city: 'Springfield',
-  },
-}
+  assert(data, object({
+    name: string(),
+    address: object({
+      street: string(),
+      city: string(),
+    }),
+  }));
 
-export const output = {
-  name: 'john',
-  address: {
-    street: '123 Fake St',
-    city: 'Springfield',
-  },
-}
+  expect(data).toStrictEqual({
+    name: 'john',
+    address: {
+      street: '123 Fake St',
+      city: 'Springfield',
+    },
+  });
+});

@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { number, array, empty } from '../../../src'
 
-export const Struct = empty(array(number()))
-
-export const data = []
-
-export const output = []
+test("Valid empty array", () => {
+  const data = [];
+  assert(data, empty(array(number())));
+  expect(data).toStrictEqual([]);
+});

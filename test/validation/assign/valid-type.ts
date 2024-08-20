@@ -1,18 +1,22 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { type, object, assign, string, number } from '../../../src'
 
 const A = type({ a: string() })
 const B = object({ b: number() })
 
-export const Struct = assign(A, B)
+test("Valid assign type", () => {
+  const data = {
+    a: '1',
+    b: 2,
+    c: 3,
+  };
 
-export const data = {
-  a: '1',
-  b: 2,
-  c: 3,
-}
+  assert(data, assign(A, B));
 
-export const output = {
-  a: '1',
-  b: 2,
-  c: 3,
-}
+  expect(data).toStrictEqual({
+    a: '1',
+    b: 2,
+    c: 3,
+  });
+});

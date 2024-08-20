@@ -1,13 +1,17 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { record, string, number } from '../../../src'
 
-export const Struct = record(string(), number())
+test("Valid record", () => {
+  const data = {
+    a: 1,
+    b: 2,
+  };
 
-export const data = {
-  a: 1,
-  b: 2,
-}
+  assert(data, record(string(), number()));
 
-export const output = {
-  a: 1,
-  b: 2,
-}
+  expect(data).toStrictEqual({
+    a: 1,
+    b: 2,
+  });
+});

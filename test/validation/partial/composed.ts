@@ -1,16 +1,20 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { partial, object, string, number } from '../../../src'
 
-export const Struct = partial(
-  object({
-    name: string(),
-    age: number(),
-  })
-)
+test("Composed partial", () => {
+  const data = {
+    name: 'john',
+  };
 
-export const data = {
-  name: 'john',
-}
+  assert(data, partial(
+    object({
+      name: string(),
+      age: number(),
+    })
+  ));
 
-export const output = {
-  name: 'john',
-}
+  expect(data).toStrictEqual({
+    name: 'john',
+  });
+});

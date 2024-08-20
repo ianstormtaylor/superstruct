@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { dynamic, string } from '../../../src'
 
-export const Struct = dynamic(() => string())
+test("Invalid dynamic", () => {
+  const data = 3;
+  const [err, res] = validate(data, dynamic(() => string()));
+  expect(res).toBeUndefined();
 
-export const data = 3
-
-export const failures = [
-  {
-    value: 3,
-    type: 'string',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: 3,
+      type: 'string',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

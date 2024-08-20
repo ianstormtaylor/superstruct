@@ -1,3 +1,5 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { string, refine, object } from '../../../src'
 
 const PasswordValidator = refine(string(), 'MinimumLength', (pw) =>
@@ -8,34 +10,38 @@ const changePasswordStruct = object({
   confirmPassword: string(),
 })
 
-export const Struct = refine(
-  changePasswordStruct,
-  'PasswordsDoNotMatch',
-  (values) => {
-    return values.newPassword === values.confirmPassword
-      ? true
-      : 'Passwords do not match'
-  }
-)
+test("Invalid refine multiple refinements", () => {
+  const data = {
+    newPassword: '1234567',
+    confirmPassword: '123456789',
+  };
 
-export const data = {
-  newPassword: '1234567',
-  confirmPassword: '123456789',
-}
+  const [err, res] = validate(data, refine(
+    changePasswordStruct,
+    'PasswordsDoNotMatch',
+    (values) => {
+      return values.newPassword === values.confirmPassword
+        ? true
+        : 'Passwords do not match'
+    }
+  ));
 
-export const failures = [
-  {
-    value: data.newPassword,
-    type: 'string',
-    refinement: 'MinimumLength',
-    path: ['newPassword'],
-    branch: [data, data.newPassword],
-  },
-  {
-    value: data,
-    type: 'object',
-    refinement: 'PasswordsDoNotMatch',
-    path: [],
-    branch: [data],
-  },
-]
+  expect(res).toBeUndefined();
+
+  expect(err).toMatchStructError([
+    {
+      value: data.newPassword,
+      type: 'string',
+      refinement: 'MinimumLength',
+      path: ['newPassword'],
+      branch: [data, data.newPassword],
+    },
+    {
+      value: data,
+      type: 'object',
+      refinement: 'PasswordsDoNotMatch',
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

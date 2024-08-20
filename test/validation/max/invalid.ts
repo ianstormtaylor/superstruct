@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { number, max } from '../../../src'
 
-export const Struct = max(number(), 0)
+test("Invalid max", () => {
+  const data = 1;
+  const [err, res] = validate(data, max(number(), 0));
+  expect(res).toBeUndefined();
 
-export const data = 1
-
-export const failures = [
-  {
-    value: 1,
-    type: 'number',
-    refinement: 'max',
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: 1,
+      type: 'number',
+      refinement: 'max',
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

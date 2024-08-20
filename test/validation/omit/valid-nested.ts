@@ -1,26 +1,30 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { omit, object, string } from '../../../src'
 
-export const Struct = omit(
-  object({
-    name: string(),
-    address: object({
-      street: string(),
-      city: string(),
+test("Valid omit nested", () => {
+  const data = {
+    address: {
+      street: '123 Fake St',
+      city: 'Springfield',
+    },
+  };
+
+  assert(data, omit(
+    object({
+      name: string(),
+      address: object({
+        street: string(),
+        city: string(),
+      }),
     }),
-  }),
-  ['name']
-)
+    ['name']
+  ));
 
-export const data = {
-  address: {
-    street: '123 Fake St',
-    city: 'Springfield',
-  },
-}
-
-export const output = {
-  address: {
-    street: '123 Fake St',
-    city: 'Springfield',
-  },
-}
+  expect(data).toStrictEqual({
+    address: {
+      street: '123 Fake St',
+      city: 'Springfield',
+    },
+  });
+});

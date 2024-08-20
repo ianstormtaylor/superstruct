@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { string, empty } from '../../../src'
 
-export const Struct = empty(string())
-
-export const data = ''
-
-export const output = ''
+test("Valid empty string", () => {
+  const data = '';
+  assert(data, empty(string()));
+  expect(data).toStrictEqual('');
+});

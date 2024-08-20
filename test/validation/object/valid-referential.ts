@@ -1,22 +1,26 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { object, string, pattern, refine } from '../../../src'
 
 const Section = pattern(string(), /^\d+(\.\d+)*$/)
 
-export const Struct = object({
-  section: Section,
-  subsection: refine(Section, 'Subsection', (value, ctx) => {
-    const { branch } = ctx
-    const parent = branch[0]
-    return value.startsWith(`${parent.section}.`)
-  }),
-})
+test("Valid object referential", () => {
+  const data = {
+    section: '1',
+    subsection: '1.1',
+  };
 
-export const data = {
-  section: '1',
-  subsection: '1.1',
-}
+  assert(data, object({
+    section: Section,
+    subsection: refine(Section, 'Subsection', (value, ctx) => {
+      const { branch } = ctx
+      const parent = branch[0]
+      return value.startsWith(`${parent.section}.`)
+    }),
+  }));
 
-export const output = {
-  section: '1',
-  subsection: '1.1',
-}
+  expect(data).toStrictEqual({
+    section: '1',
+    subsection: '1.1',
+  });
+});

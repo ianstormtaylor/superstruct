@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { number, min } from '../../../src'
 
-export const Struct = min(number(), 0, { exclusive: true })
+test("Invalid min exclusive", () => {
+  const data = 0;
+  const [err, res] = validate(data, min(number(), 0, { exclusive: true }));
+  expect(res).toBeUndefined();
 
-export const data = 0
-
-export const failures = [
-  {
-    value: 0,
-    type: 'number',
-    refinement: 'min',
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: 0,
+      type: 'number',
+      refinement: 'min',
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

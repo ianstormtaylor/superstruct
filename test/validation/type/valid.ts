@@ -1,13 +1,17 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { type, string, number } from '../../../src'
 
-export const Struct = type({
-  name: string(),
-  age: number(),
-})
+test("Valid type", () => {
+  const data = {
+    name: 'john',
+    age: 42,
+  };
 
-export const data = {
-  name: 'john',
-  age: 42,
-}
+  assert(data, type({
+    name: string(),
+    age: number(),
+  }));
 
-export const output = data
+  expect(data).toStrictEqual(data);
+});

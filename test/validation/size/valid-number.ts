@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { number, size } from '../../../src'
 
-export const Struct = size(number(), 1, 5)
-
-export const data = 3
-
-export const output = 3
+test("Valid size number", () => {
+  const data = 3;
+  assert(data, size(number(), 1, 5));
+  expect(data).toStrictEqual(3);
+});

@@ -1,13 +1,15 @@
+import { create } from "../../../src";
+import { expect, test } from "vitest";
 import { defaulted, string, object } from '../../../src'
 
-export const Struct = object({
-  title: defaulted(string(), 'Untitled'),
-})
+test("Nested defaulted", () => {
+  const data = {};
 
-export const data = {}
+  const res = create(data, object({
+    title: defaulted(string(), 'Untitled'),
+  }));
 
-export const output = {
-  title: 'Untitled',
-}
-
-export const create = true
+  expect(res).toStrictEqual({
+    title: 'Untitled',
+  });
+});

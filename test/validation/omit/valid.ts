@@ -1,17 +1,21 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { omit, object, string, number } from '../../../src'
 
-export const Struct = omit(
-  object({
-    name: string(),
-    age: number(),
-  }),
-  ['age']
-)
+test("Valid omit", () => {
+  const data = {
+    name: 'john',
+  };
 
-export const data = {
-  name: 'john',
-}
+  assert(data, omit(
+    object({
+      name: string(),
+      age: number(),
+    }),
+    ['age']
+  ));
 
-export const output = {
-  name: 'john',
-}
+  expect(data).toStrictEqual({
+    name: 'john',
+  });
+});

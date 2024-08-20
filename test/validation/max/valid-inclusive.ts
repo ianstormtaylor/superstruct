@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { number, max } from '../../../src'
 
-export const Struct = max(number(), 0)
-
-export const data = 0
-
-export const output = 0
+test("Valid max inclusive", () => {
+  const data = 0;
+  assert(data, max(number(), 0));
+  expect(data).toStrictEqual(0);
+});

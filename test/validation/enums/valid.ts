@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { enums } from '../../../src'
 
-export const Struct = enums(['one', 'two'])
-
-export const data = 'two'
-
-export const output = 'two'
+test("Valid enums", () => {
+  const data = 'two';
+  assert(data, enums(['one', 'two']));
+  expect(data).toStrictEqual('two');
+});

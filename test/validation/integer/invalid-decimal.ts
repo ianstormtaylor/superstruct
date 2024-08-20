@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { integer } from '../../../src'
 
-export const Struct = integer()
+test("Invalid integer decimal", () => {
+  const data = 3.14;
+  const [err, res] = validate(data, integer());
+  expect(res).toBeUndefined();
 
-export const data = 3.14
-
-export const failures = [
-  {
-    value: 3.14,
-    type: 'integer',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: 3.14,
+      type: 'integer',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

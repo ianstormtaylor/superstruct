@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { array, number } from '../../../src'
 
-export const Struct = array(number())
+test("Invalid array", () => {
+  const data = 'invalid';
+  const [err, res] = validate(data, array(number()));
+  expect(res).toBeUndefined();
 
-export const data = 'invalid'
-
-export const failures = [
-  {
-    value: 'invalid',
-    type: 'array',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: 'invalid',
+      type: 'array',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

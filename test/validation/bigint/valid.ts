@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { bigint } from '../../../src'
 
-export const Struct = bigint()
-
-export const data = 542n
-
-export const output = 542n
+test("Valid bigint", () => {
+  const data = 542n;
+  assert(data, bigint());
+  expect(data).toStrictEqual(542n);
+});

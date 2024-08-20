@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { map, size, number, string } from '../../../src'
 
-export const Struct = size(map(number(), string()), 1, 5)
+test("Invalid size map", () => {
+  const data = new Map();
+  const [err, res] = validate(data, size(map(number(), string()), 1, 5));
+  expect(res).toBeUndefined();
 
-export const data = new Map()
-
-export const failures = [
-  {
-    value: data,
-    type: 'map',
-    refinement: 'size',
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: data,
+      type: 'map',
+      refinement: 'size',
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

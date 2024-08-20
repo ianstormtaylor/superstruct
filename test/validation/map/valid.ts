@@ -1,13 +1,17 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { map, string, number } from '../../../src'
 
-export const Struct = map(string(), number())
+test("Valid map", () => {
+  const data = new Map([
+    ['a', 1],
+    ['b', 2],
+  ]);
 
-export const data = new Map([
-  ['a', 1],
-  ['b', 2],
-])
+  assert(data, map(string(), number()));
 
-export const output = new Map([
-  ['a', 1],
-  ['b', 2],
-])
+  expect(data).toStrictEqual(new Map([
+    ['a', 1],
+    ['b', 2],
+  ]));
+});

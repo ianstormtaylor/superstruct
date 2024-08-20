@@ -1,19 +1,25 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { number, refine } from '../../../src'
 
-export const Struct = refine(
-  number(),
-  'positive',
-  (v) => v > 0 || 'Number was not positive!'
-)
+test("Invalid refine shorthand", () => {
+  const data = -1;
 
-export const data = -1
+  const [err, res] = validate(data, refine(
+    number(),
+    'positive',
+    (v) => v > 0 || 'Number was not positive!'
+  ));
 
-export const failures = [
-  {
-    value: -1,
-    type: 'number',
-    refinement: 'positive',
-    path: [],
-    branch: [data],
-  },
-]
+  expect(res).toBeUndefined();
+
+  expect(err).toMatchStructError([
+    {
+      value: -1,
+      type: 'number',
+      refinement: 'positive',
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

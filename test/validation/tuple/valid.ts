@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { tuple, string, number } from '../../../src'
 
-export const Struct = tuple([string(), number()])
-
-export const data = ['A', 1]
-
-export const output = ['A', 1]
+test("Valid tuple", () => {
+  const data = ['A', 1];
+  assert(data, tuple([string(), number()]));
+  expect(data).toStrictEqual(['A', 1]);
+});

@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { number, array, size } from '../../../src'
 
-export const Struct = size(array(number()), 1, 5)
-
-export const data = [1, 2, 3]
-
-export const output = [1, 2, 3]
+test("Valid size array", () => {
+  const data = [1, 2, 3];
+  assert(data, size(array(number()), 1, 5));
+  expect(data).toStrictEqual([1, 2, 3]);
+});

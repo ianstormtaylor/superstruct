@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { number, nullable } from '../../../src'
 
-export const Struct = nullable(number())
-
-export const data = null
-
-export const output = null
+test("Valid nullable null", () => {
+  const data = null;
+  assert(data, nullable(number()));
+  expect(data).toStrictEqual(null);
+});

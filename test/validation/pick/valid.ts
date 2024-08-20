@@ -1,17 +1,21 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { pick, object, string, number } from '../../../src'
 
-export const Struct = pick(
-  object({
-    name: string(),
-    age: number(),
-  }),
-  ['name']
-)
+test("Valid pick", () => {
+  const data = {
+    name: 'john',
+  };
 
-export const data = {
-  name: 'john',
-}
+  assert(data, pick(
+    object({
+      name: string(),
+      age: number(),
+    }),
+    ['name']
+  ));
 
-export const output = {
-  name: 'john',
-}
+  expect(data).toStrictEqual({
+    name: 'john',
+  });
+});

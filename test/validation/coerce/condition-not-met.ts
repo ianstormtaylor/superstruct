@@ -1,17 +1,23 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { string, number, coerce } from '../../../src'
 
-export const Struct = coerce(string(), number(), (x) => 'known')
+test("Condition coerce not met", () => {
+  const data = false;
 
-export const data = false
+  const [err, res] = validate(data, coerce(string(), number(), (x) => 'known'), {
+    coerce: true
+  });
 
-export const failures = [
-  {
-    value: false,
-    type: 'string',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(res).toBeUndefined();
 
-export const create = true
+  expect(err).toMatchStructError([
+    {
+      value: false,
+      type: 'string',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

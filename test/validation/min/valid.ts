@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { number, min } from '../../../src'
 
-export const Struct = min(number(), 0)
-
-export const data = 3
-
-export const output = 3
+test("Valid min", () => {
+  const data = 3;
+  assert(data, min(number(), 0));
+  expect(data).toStrictEqual(3);
+});

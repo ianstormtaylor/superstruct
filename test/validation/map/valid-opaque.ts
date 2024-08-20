@@ -1,10 +1,19 @@
+import { assert } from '../../../src'
+import { expect, test } from 'vitest'
 import { map } from '../../../src'
 
-export const Struct = map()
+test('Valid map opaque', () => {
+  const data = new Map([
+    ['a', 1],
+    [2, true],
+  ] as any)
 
-export const data = new Map([
-  ['a', 1],
-  [2, true],
-] as any)
+  assert(data, map())
 
-export const output = data
+  expect(data).toStrictEqual(
+    new Map([
+      ['a', 1],
+      [2, true],
+    ] as any)
+  )
+})

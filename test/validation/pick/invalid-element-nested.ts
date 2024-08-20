@@ -1,23 +1,29 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { pick, object, array, string } from '../../../src'
 
-export const Struct = pick(
-  object({
-    name: string(),
-    emails: array(string()),
-  }),
-  ['emails']
-)
+test("Invalid pick element nested", () => {
+  const data = {
+    emails: ['name@example.com', false],
+  };
 
-export const data = {
-  emails: ['name@example.com', false],
-}
+  const [err, res] = validate(data, pick(
+    object({
+      name: string(),
+      emails: array(string()),
+    }),
+    ['emails']
+  ));
 
-export const failures = [
-  {
-    value: false,
-    type: 'string',
-    refinement: undefined,
-    path: ['emails', 1],
-    branch: [data, data.emails, data.emails[1]],
-  },
-]
+  expect(res).toBeUndefined();
+
+  expect(err).toMatchStructError([
+    {
+      value: false,
+      type: 'string',
+      refinement: undefined,
+      path: ['emails', 1],
+      branch: [data, data.emails, data.emails[1]],
+    },
+  ]);
+});

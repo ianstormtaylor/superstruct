@@ -1,16 +1,20 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { type, string, number, optional } from '../../../src'
 
-export const Struct = type({
-  name: optional(string()),
-  age: number(),
-})
+test("Valid optional defined nested", () => {
+  const data = {
+    name: 'Jill',
+    age: 42,
+  };
 
-export const data = {
-  name: 'Jill',
-  age: 42,
-}
+  assert(data, type({
+    name: optional(string()),
+    age: number(),
+  }));
 
-export const output = {
-  name: 'Jill',
-  age: 42,
-}
+  expect(data).toStrictEqual({
+    name: 'Jill',
+    age: 42,
+  });
+});

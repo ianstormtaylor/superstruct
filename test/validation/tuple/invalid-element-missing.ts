@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { tuple, string, number } from '../../../src'
 
-export const Struct = tuple([string(), number()])
+test("Invalid tuple element missing", () => {
+  const data = ['A'];
+  const [err, res] = validate(data, tuple([string(), number()]));
+  expect(res).toBeUndefined();
 
-export const data = ['A']
-
-export const failures = [
-  {
-    value: undefined,
-    type: 'number',
-    refinement: undefined,
-    path: [1],
-    branch: [data, data[1]],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: undefined,
+      type: 'number',
+      refinement: undefined,
+      path: [1],
+      branch: [data, data[1]],
+    },
+  ]);
+});

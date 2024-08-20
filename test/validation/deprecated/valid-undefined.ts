@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { deprecated, number } from '../../../src'
 
-export const Struct = deprecated(number(), () => {})
-
-export const data = undefined
-
-export const output = undefined
+test("Valid deprecated undefined", () => {
+  const data = undefined;
+  assert(data, deprecated(number(), () => {}));
+  expect(data).toStrictEqual(undefined);
+});

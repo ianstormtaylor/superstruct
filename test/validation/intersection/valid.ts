@@ -1,16 +1,20 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { type, intersection, string, number } from '../../../src'
 
 const A = type({ a: string() })
 const B = type({ b: number() })
 
-export const Struct = intersection([A, B])
+test("Valid intersection", () => {
+  const data = {
+    a: 'a',
+    b: 42,
+  };
 
-export const data = {
-  a: 'a',
-  b: 42,
-}
+  assert(data, intersection([A, B]));
 
-export const output = {
-  a: 'a',
-  b: 42,
-}
+  expect(data).toStrictEqual({
+    a: 'a',
+    b: 42,
+  });
+});

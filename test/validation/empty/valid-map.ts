@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { string, number, map, empty } from '../../../src'
 
-export const Struct = empty(map(number(), string()))
-
-export const data = new Map()
-
-export const output = data
+test("Valid empty map", () => {
+  const data = new Map();
+  assert(data, empty(map(number(), string())));
+  expect(data).toStrictEqual(data);
+});

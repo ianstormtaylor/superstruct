@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { string } from '../../../src'
 
-export const Struct = string()
-
-export const data = 'valid'
-
-export const output = 'valid'
+test("Valid string", () => {
+  const data = 'valid';
+  assert(data, string());
+  expect(data).toStrictEqual('valid');
+});

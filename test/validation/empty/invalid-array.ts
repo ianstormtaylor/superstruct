@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { array, empty, number } from '../../../src'
 
-export const Struct = empty(array(number()))
+test("Invalid empty array", () => {
+  const data = [1, 2, 3];
+  const [err, res] = validate(data, empty(array(number())));
+  expect(res).toBeUndefined();
 
-export const data = [1, 2, 3]
-
-export const failures = [
-  {
-    value: data,
-    type: 'array',
-    refinement: 'empty',
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: data,
+      type: 'array',
+      refinement: 'empty',
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

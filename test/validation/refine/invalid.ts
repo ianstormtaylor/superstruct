@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { string, refine } from '../../../src'
 
-export const Struct = refine(string(), 'email', (value) => value.includes('@'))
+test("Invalid refine", () => {
+  const data = 'invalid';
+  const [err, res] = validate(data, refine(string(), 'email', (value) => value.includes('@')));
+  expect(res).toBeUndefined();
 
-export const data = 'invalid'
-
-export const failures = [
-  {
-    value: 'invalid',
-    type: 'string',
-    refinement: 'email',
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: 'invalid',
+      type: 'string',
+      refinement: 'email',
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

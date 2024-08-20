@@ -1,14 +1,18 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { type, number, deprecated, any } from '../../../src'
 
-export const Struct = type({
-  name: deprecated(any(), () => {}),
-  age: number(),
-})
+test("Valid deprecated property", () => {
+  const data = {
+    age: 42,
+  };
 
-export const data = {
-  age: 42,
-}
+  assert(data, type({
+    name: deprecated(any(), () => {}),
+    age: number(),
+  }));
 
-export const output = {
-  age: 42,
-}
+  expect(data).toStrictEqual({
+    age: 42,
+  });
+});

@@ -1,20 +1,22 @@
+import { create } from "../../../src";
+import { expect, test } from "vitest";
 import { defaulted, string, object } from '../../../src'
 
-export const Struct = object({
-  book: defaulted(
-    object({
-      title: defaulted(string(), 'Untitled'),
-    }),
-    {}
-  ),
-})
+test("Nested defaulted double", () => {
+  const data = {};
 
-export const data = {}
+  const res = create(data, object({
+    book: defaulted(
+      object({
+        title: defaulted(string(), 'Untitled'),
+      }),
+      {}
+    ),
+  }));
 
-export const output = {
-  book: {
-    title: 'Untitled',
-  },
-}
-
-export const create = true
+  expect(res).toStrictEqual({
+    book: {
+      title: 'Untitled',
+    },
+  });
+});

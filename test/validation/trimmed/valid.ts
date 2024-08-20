@@ -1,9 +1,9 @@
+import { create } from "../../../src";
+import { expect, test } from "vitest";
 import { string, trimmed } from '../../../src'
 
-export const Struct = trimmed(string())
-
-export const data = '  valid  '
-
-export const output = 'valid'
-
-export const create = true
+test("Valid trimmed", () => {
+  const data = '  valid  ';
+  const res = create(data, trimmed(string()));
+  expect(res).toStrictEqual('valid');
+});

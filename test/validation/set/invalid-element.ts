@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { set, number } from '../../../src'
 
-export const Struct = set(number())
+test("Invalid set element", () => {
+  const data = new Set([1, 'b', 3]);
+  const [err, res] = validate(data, set(number()));
+  expect(res).toBeUndefined();
 
-export const data = new Set([1, 'b', 3])
-
-export const failures = [
-  {
-    value: 'b',
-    type: 'number',
-    refinement: undefined,
-    path: ['b'],
-    branch: [data, 'b'],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: 'b',
+      type: 'number',
+      refinement: undefined,
+      path: ['b'],
+      branch: [data, 'b'],
+    },
+  ]);
+});

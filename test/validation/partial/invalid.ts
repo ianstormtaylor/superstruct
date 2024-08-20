@@ -1,18 +1,24 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { partial, string, number } from '../../../src'
 
-export const Struct = partial({
-  name: string(),
-  age: number(),
-})
+test("Invalid partial", () => {
+  const data = 'invalid';
 
-export const data = 'invalid'
+  const [err, res] = validate(data, partial({
+    name: string(),
+    age: number(),
+  }));
 
-export const failures = [
-  {
-    value: 'invalid',
-    type: 'object',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(res).toBeUndefined();
+
+  expect(err).toMatchStructError([
+    {
+      value: 'invalid',
+      type: 'object',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { dynamic, string } from '../../../src'
 
-export const Struct = dynamic(() => string())
-
-export const data = 'valid'
-
-export const output = 'valid'
+test("Valid dynamic", () => {
+  const data = 'valid';
+  assert(data, dynamic(() => string()));
+  expect(data).toStrictEqual('valid');
+});

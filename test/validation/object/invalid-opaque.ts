@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { object } from '../../../src'
 
-export const Struct = object()
+test("Invalid object opaque", () => {
+  const data = 'invalid';
+  const [err, res] = validate(data, object());
+  expect(res).toBeUndefined();
 
-export const data = 'invalid'
-
-export const failures = [
-  {
-    value: 'invalid',
-    type: 'object',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: 'invalid',
+      type: 'object',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

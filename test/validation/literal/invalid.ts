@@ -1,15 +1,19 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { literal } from '../../../src'
 
-export const Struct = literal(42)
+test("Invalid literal", () => {
+  const data = false;
+  const [err, res] = validate(data, literal(42));
+  expect(res).toBeUndefined();
 
-export const data = false
-
-export const failures = [
-  {
-    value: false,
-    type: 'literal',
-    refinement: undefined,
-    path: [],
-    branch: [data],
-  },
-]
+  expect(err).toMatchStructError([
+    {
+      value: false,
+      type: 'literal',
+      refinement: undefined,
+      path: [],
+      branch: [data],
+    },
+  ]);
+});

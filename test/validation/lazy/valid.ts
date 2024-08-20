@@ -1,7 +1,9 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { lazy, string } from '../../../src'
 
-export const Struct = lazy(() => string())
-
-export const data = 'two'
-
-export const output = 'two'
+test("Valid lazy", () => {
+  const data = 'two';
+  assert(data, lazy(() => string()));
+  expect(data).toStrictEqual('two');
+});

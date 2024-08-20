@@ -1,18 +1,20 @@
+import { create } from "../../../src";
+import { expect, test } from "vitest";
 import { object, string, number } from '../../../src'
 
-export const Struct = object({
-  name: string(),
-  age: number(),
-})
+test("Valid object frozen", () => {
+  const data = Object.freeze({
+    name: 'john',
+    age: 42,
+  });
 
-export const data = Object.freeze({
-  name: 'john',
-  age: 42,
-})
+  const res = create(data, object({
+    name: string(),
+    age: number(),
+  }));
 
-export const output = {
-  name: 'john',
-  age: 42,
-}
-
-export const create = true
+  expect(res).toStrictEqual({
+    name: 'john',
+    age: 42,
+  });
+});

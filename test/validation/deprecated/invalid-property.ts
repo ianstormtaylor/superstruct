@@ -1,19 +1,25 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { deprecated, number, object } from '../../../src'
 
-export const Struct = object({
-  deprecatedKey: deprecated(number(), () => {}),
-})
+test("Invalid deprecated property", () => {
+  const data = {
+    deprecatedKey: '42',
+  };
 
-export const data = {
-  deprecatedKey: '42',
-}
+  const [err, res] = validate(data, object({
+    deprecatedKey: deprecated(number(), () => {}),
+  }));
 
-export const failures = [
-  {
-    value: '42',
-    type: 'number',
-    refinement: undefined,
-    path: ['deprecatedKey'],
-    branch: [data, data.deprecatedKey],
-  },
-]
+  expect(res).toBeUndefined();
+
+  expect(err).toMatchStructError([
+    {
+      value: '42',
+      type: 'number',
+      refinement: undefined,
+      path: ['deprecatedKey'],
+      branch: [data, data.deprecatedKey],
+    },
+  ]);
+});

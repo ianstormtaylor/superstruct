@@ -1,14 +1,18 @@
+import { assert } from "../../../src";
+import { expect, test } from "vitest";
 import { type, union, string, number } from '../../../src'
 
 const A = type({ a: string() })
 const B = type({ b: number() })
 
-export const Struct = union([A, B])
+test("Valid union", () => {
+  const data = {
+    a: 'a',
+  };
 
-export const data = {
-  a: 'a',
-}
+  assert(data, union([A, B]));
 
-export const output = {
-  a: 'a',
-}
+  expect(data).toStrictEqual({
+    a: 'a',
+  });
+});

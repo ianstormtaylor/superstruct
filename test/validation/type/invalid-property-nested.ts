@@ -1,23 +1,29 @@
+import { validate } from "../../../src";
+import { expect, test } from "vitest";
 import { type, string, number } from '../../../src'
 
-export const Struct = type({
-  id: number(),
-  person: type({
-    name: string(),
-    age: number(),
-  }),
-})
+test("Invalid type property nested", () => {
+  const data = {
+    id: 1,
+  };
 
-export const data = {
-  id: 1,
-}
+  const [err, res] = validate(data, type({
+    id: number(),
+    person: type({
+      name: string(),
+      age: number(),
+    }),
+  }));
 
-export const failures = [
-  {
-    value: undefined,
-    type: 'type',
-    refinement: undefined,
-    path: ['person'],
-    branch: [data, undefined],
-  },
-]
+  expect(res).toBeUndefined();
+
+  expect(err).toMatchStructError([
+    {
+      value: undefined,
+      type: 'type',
+      refinement: undefined,
+      path: ['person'],
+      branch: [data, undefined],
+    },
+  ]);
+});
