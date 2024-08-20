@@ -1,11 +1,14 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { deprecated, string } from '../../../src'
 
-test("Invalid deprecated null", () => {
-  const data = null;
-  const [err, res] = validate(data, deprecated(string(), () => {}));
-  expect(res).toBeUndefined();
+test('Invalid deprecated null', () => {
+  const data = null
+  const [err, res] = validate(
+    data,
+    deprecated(string(), () => {})
+  )
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +18,5 @@ test("Invalid deprecated null", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

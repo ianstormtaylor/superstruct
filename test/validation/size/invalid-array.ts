@@ -1,11 +1,11 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { array, size, number } from '../../../src'
 
-test("Invalid size array", () => {
-  const data = [];
-  const [err, res] = validate(data, size(array(number()), 1, 5));
-  expect(res).toBeUndefined();
+test('Invalid size array', () => {
+  const data = []
+  const [err, res] = validate(data, size(array(number()), 1, 5))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +15,5 @@ test("Invalid size array", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

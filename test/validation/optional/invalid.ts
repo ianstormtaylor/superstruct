@@ -1,11 +1,11 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { number, optional } from '../../../src'
 
-test("Invalid optional", () => {
-  const data = 'invalid';
-  const [err, res] = validate(data, optional(number()));
-  expect(res).toBeUndefined();
+test('Invalid optional', () => {
+  const data = 'invalid'
+  const [err, res] = validate(data, optional(number()))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +15,5 @@ test("Invalid optional", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

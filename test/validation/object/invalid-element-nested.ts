@@ -1,19 +1,22 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { object, array, string } from '../../../src'
 
-test("Invalid object element nested", () => {
+test('Invalid object element nested', () => {
   const data = {
     name: 'john',
     emails: ['name@example.com', false],
-  };
+  }
 
-  const [err, res] = validate(data, object({
-    name: string(),
-    emails: array(string()),
-  }));
+  const [err, res] = validate(
+    data,
+    object({
+      name: string(),
+      emails: array(string()),
+    })
+  )
 
-  expect(res).toBeUndefined();
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -23,5 +26,5 @@ test("Invalid object element nested", () => {
       path: ['emails', 1],
       branch: [data, data.emails, data.emails[1]],
     },
-  ]);
-});
+  ])
+})

@@ -1,13 +1,14 @@
-import { create } from "../../../src";
-import { expect, test } from "vitest";
+import { create } from '../../../src'
+import { expect, test } from 'vitest'
 import { string, unknown, coerce } from '../../../src'
 
-test("Unchanged coerce", () => {
-  const data = 'known';
+test('Unchanged coerce', () => {
+  const data = 'known'
 
-  const res = create(data, coerce(string(), unknown(), (x) =>
-    x == null ? 'unknown' : x
-  ));
+  const res = create(
+    data,
+    coerce(string(), unknown(), (x) => (x == null ? 'unknown' : x))
+  )
 
-  expect(res).toStrictEqual('known');
-});
+  expect(res).toStrictEqual('known')
+})

@@ -1,11 +1,14 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { dynamic, string, nonempty } from '../../../src'
 
-test("With dynamic refiners", () => {
-  const data = '';
-  const [err, res] = validate(data, dynamic(() => nonempty(string())));
-  expect(res).toBeUndefined();
+test('With dynamic refiners', () => {
+  const data = ''
+  const [err, res] = validate(
+    data,
+    dynamic(() => nonempty(string()))
+  )
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +18,5 @@ test("With dynamic refiners", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

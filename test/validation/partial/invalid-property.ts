@@ -1,18 +1,21 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { partial, string, number } from '../../../src'
 
-test("Invalid partial property", () => {
+test('Invalid partial property', () => {
   const data = {
     age: 'invalid',
-  };
+  }
 
-  const [err, res] = validate(data, partial({
-    name: string(),
-    age: number(),
-  }));
+  const [err, res] = validate(
+    data,
+    partial({
+      name: string(),
+      age: number(),
+    })
+  )
 
-  expect(res).toBeUndefined();
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -22,5 +25,5 @@ test("Invalid partial property", () => {
       path: ['age'],
       branch: [data, data.age],
     },
-  ]);
-});
+  ])
+})

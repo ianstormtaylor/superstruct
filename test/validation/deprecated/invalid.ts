@@ -1,11 +1,14 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { deprecated, number } from '../../../src'
 
-test("Invalid deprecated", () => {
-  const data = '42';
-  const [err, res] = validate(data, deprecated(number(), () => {}));
-  expect(res).toBeUndefined();
+test('Invalid deprecated', () => {
+  const data = '42'
+  const [err, res] = validate(
+    data,
+    deprecated(number(), () => {})
+  )
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +18,5 @@ test("Invalid deprecated", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

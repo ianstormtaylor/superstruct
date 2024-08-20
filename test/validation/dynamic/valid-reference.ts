@@ -1,5 +1,5 @@
-import { assert } from "../../../src";
-import { expect, test } from "vitest";
+import { assert } from '../../../src'
+import { expect, test } from 'vitest'
 import { assert, type, dynamic, literal, string, number } from '../../../src'
 
 const Entity = type({
@@ -21,19 +21,22 @@ const map = {
   PRODUCT: Product,
 }
 
-test("Valid dynamic reference", () => {
+test('Valid dynamic reference', () => {
   const data = {
     object: 'PRODUCT',
     price: 1999,
-  };
+  }
 
-  assert(data, dynamic((entity) => {
-    assert(entity, Entity)
-    return map[entity.object]
-  }));
+  assert(
+    data,
+    dynamic((entity) => {
+      assert(entity, Entity)
+      return map[entity.object]
+    })
+  )
 
   expect(data).toStrictEqual({
     object: 'PRODUCT',
     price: 1999,
-  });
-});
+  })
+})

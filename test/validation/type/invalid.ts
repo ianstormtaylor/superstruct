@@ -1,16 +1,19 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { type, string, number } from '../../../src'
 
-test("Invalid type", () => {
-  const data = 'invalid';
+test('Invalid type', () => {
+  const data = 'invalid'
 
-  const [err, res] = validate(data, type({
-    name: string(),
-    age: number(),
-  }));
+  const [err, res] = validate(
+    data,
+    type({
+      name: string(),
+      age: number(),
+    })
+  )
 
-  expect(res).toBeUndefined();
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -20,5 +23,5 @@ test("Invalid type", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

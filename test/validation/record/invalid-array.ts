@@ -1,11 +1,11 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { record, string, number } from '../../../src'
 
-test("Invalid record array", () => {
-  const data = [];
-  const [err, res] = validate(data, record(string(), number()));
-  expect(res).toBeUndefined();
+test('Invalid record array', () => {
+  const data = []
+  const [err, res] = validate(data, record(string(), number()))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +15,5 @@ test("Invalid record array", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

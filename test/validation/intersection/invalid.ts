@@ -1,18 +1,18 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { type, intersection, string, number } from '../../../src'
 
 const A = type({ a: string() })
 const B = type({ b: number() })
 
-test("Invalid intersection", () => {
+test('Invalid intersection', () => {
   const data = {
     a: 'a',
     b: 'invalid',
-  };
+  }
 
-  const [err, res] = validate(data, intersection([A, B]));
-  expect(res).toBeUndefined();
+  const [err, res] = validate(data, intersection([A, B]))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -22,5 +22,5 @@ test("Invalid intersection", () => {
       path: ['b'],
       branch: [data, data.b],
     },
-  ]);
-});
+  ])
+})

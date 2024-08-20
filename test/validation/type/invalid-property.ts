@@ -1,19 +1,22 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { type, string, number } from '../../../src'
 
-test("Invalid type property", () => {
+test('Invalid type property', () => {
   const data = {
     name: 'john',
     age: 'invalid',
-  };
+  }
 
-  const [err, res] = validate(data, type({
-    name: string(),
-    age: number(),
-  }));
+  const [err, res] = validate(
+    data,
+    type({
+      name: string(),
+      age: number(),
+    })
+  )
 
-  expect(res).toBeUndefined();
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -23,5 +26,5 @@ test("Invalid type property", () => {
       path: ['age'],
       branch: [data, data.age],
     },
-  ]);
-});
+  ])
+})

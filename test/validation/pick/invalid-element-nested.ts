@@ -1,21 +1,24 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { pick, object, array, string } from '../../../src'
 
-test("Invalid pick element nested", () => {
+test('Invalid pick element nested', () => {
   const data = {
     emails: ['name@example.com', false],
-  };
+  }
 
-  const [err, res] = validate(data, pick(
-    object({
-      name: string(),
-      emails: array(string()),
-    }),
-    ['emails']
-  ));
+  const [err, res] = validate(
+    data,
+    pick(
+      object({
+        name: string(),
+        emails: array(string()),
+      }),
+      ['emails']
+    )
+  )
 
-  expect(res).toBeUndefined();
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -25,5 +28,5 @@ test("Invalid pick element nested", () => {
       path: ['emails', 1],
       branch: [data, data.emails, data.emails[1]],
     },
-  ]);
-});
+  ])
+})

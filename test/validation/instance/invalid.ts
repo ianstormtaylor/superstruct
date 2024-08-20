@@ -1,11 +1,11 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { instance } from '../../../src'
 
-test("Invalid instance", () => {
-  const data = false;
-  const [err, res] = validate(data, instance(Array));
-  expect(res).toBeUndefined();
+test('Invalid instance', () => {
+  const data = false
+  const [err, res] = validate(data, instance(Array))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +15,5 @@ test("Invalid instance", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

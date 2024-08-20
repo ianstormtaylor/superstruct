@@ -1,11 +1,14 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { lazy, string } from '../../../src'
 
-test("Invalid lazy", () => {
-  const data = 3;
-  const [err, res] = validate(data, lazy(() => string()));
-  expect(res).toBeUndefined();
+test('Invalid lazy', () => {
+  const data = 3
+  const [err, res] = validate(
+    data,
+    lazy(() => string())
+  )
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +18,5 @@ test("Invalid lazy", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

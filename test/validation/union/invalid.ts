@@ -1,17 +1,17 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { type, union, string, number } from '../../../src'
 
 const A = type({ a: string() })
 const B = type({ b: number() })
 
-test("Invalid union", () => {
+test('Invalid union', () => {
   const data = {
     b: 'invalid',
-  };
+  }
 
-  const [err, res] = validate(data, union([A, B]));
-  expect(res).toBeUndefined();
+  const [err, res] = validate(data, union([A, B]))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -35,5 +35,5 @@ test("Invalid union", () => {
       path: ['b'],
       branch: [data, data.b],
     },
-  ]);
-});
+  ])
+})

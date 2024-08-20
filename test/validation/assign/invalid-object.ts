@@ -1,19 +1,19 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { object, assign, string, number } from '../../../src'
 
 const A = object({ a: string() })
 const B = object({ a: number(), b: number() })
 
-test("Invalid assign object", () => {
+test('Invalid assign object', () => {
   const data = {
     a: 'invalid',
     b: 2,
     c: 5,
-  };
+  }
 
-  const [err, res] = validate(data, assign(A, B));
-  expect(res).toBeUndefined();
+  const [err, res] = validate(data, assign(A, B))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -30,5 +30,5 @@ test("Invalid assign object", () => {
       type: 'never',
       value: 5,
     },
-  ]);
-});
+  ])
+})

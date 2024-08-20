@@ -1,27 +1,30 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { pick, object, string } from '../../../src'
 
-test("Invalid pick property nested", () => {
+test('Invalid pick property nested', () => {
   const data = {
     address: {
       street: 123,
       city: 'Springfield',
     },
-  };
+  }
 
-  const [err, res] = validate(data, pick(
-    object({
-      name: string(),
-      address: object({
-        street: string(),
-        city: string(),
+  const [err, res] = validate(
+    data,
+    pick(
+      object({
+        name: string(),
+        address: object({
+          street: string(),
+          city: string(),
+        }),
       }),
-    }),
-    ['address']
-  ));
+      ['address']
+    )
+  )
 
-  expect(res).toBeUndefined();
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -31,5 +34,5 @@ test("Invalid pick property nested", () => {
       path: ['address', 'street'],
       branch: [data, data.address, data.address.street],
     },
-  ]);
-});
+  ])
+})

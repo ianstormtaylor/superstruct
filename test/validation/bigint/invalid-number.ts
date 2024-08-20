@@ -1,11 +1,11 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { bigint } from '../../../src'
 
-test("Invalid bigint number", () => {
-  const data = 3;
-  const [err, res] = validate(data, bigint());
-  expect(res).toBeUndefined();
+test('Invalid bigint number', () => {
+  const data = 3
+  const [err, res] = validate(data, bigint())
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +15,5 @@ test("Invalid bigint number", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

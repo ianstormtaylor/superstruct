@@ -1,15 +1,15 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { map, string, number } from '../../../src'
 
-test("Invalid map property", () => {
+test('Invalid map property', () => {
   const data = new Map([
     ['a', 'a'],
     ['b', 'b'],
-  ]);
+  ])
 
-  const [err, res] = validate(data, map(string(), number()));
-  expect(res).toBeUndefined();
+  const [err, res] = validate(data, map(string(), number()))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -26,5 +26,5 @@ test("Invalid map property", () => {
       path: ['b'],
       branch: [data, 'b'],
     },
-  ]);
-});
+  ])
+})

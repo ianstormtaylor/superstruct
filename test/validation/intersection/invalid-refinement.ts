@@ -1,14 +1,14 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { intersection, refine, number } from '../../../src'
 
 const A = number()
 const B = refine(number(), 'positive', (value) => value > 0)
 
-test("Invalid intersection refinement", () => {
-  const data = -1;
-  const [err, res] = validate(data, intersection([A, B]));
-  expect(res).toBeUndefined();
+test('Invalid intersection refinement', () => {
+  const data = -1
+  const [err, res] = validate(data, intersection([A, B]))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -18,5 +18,5 @@ test("Invalid intersection refinement", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

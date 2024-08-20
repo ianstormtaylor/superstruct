@@ -1,11 +1,11 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { map, empty, number, string } from '../../../src'
 
-test("Invalid empty map", () => {
-  const data = new Map([[1, 'a']]);
-  const [err, res] = validate(data, empty(map(number(), string())));
-  expect(res).toBeUndefined();
+test('Invalid empty map', () => {
+  const data = new Map([[1, 'a']])
+  const [err, res] = validate(data, empty(map(number(), string())))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +15,5 @@ test("Invalid empty map", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

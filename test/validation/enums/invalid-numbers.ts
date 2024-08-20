@@ -1,11 +1,11 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { enums } from '../../../src'
 
-test("Invalid enums numbers", () => {
-  const data = 'invalid';
-  const [err, res] = validate(data, enums([1, 2]));
-  expect(res).toBeUndefined();
+test('Invalid enums numbers', () => {
+  const data = 'invalid'
+  const [err, res] = validate(data, enums([1, 2]))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +15,5 @@ test("Invalid enums numbers", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

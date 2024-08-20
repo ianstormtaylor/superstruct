@@ -1,22 +1,25 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { pick, object, string, number } from '../../../src'
 
-test("Invalid pick property unknown", () => {
+test('Invalid pick property unknown', () => {
   const data = {
     name: 'john',
     age: 42,
-  };
+  }
 
-  const [err, res] = validate(data, pick(
-    object({
-      name: string(),
-      age: number(),
-    }),
-    ['name']
-  ));
+  const [err, res] = validate(
+    data,
+    pick(
+      object({
+        name: string(),
+        age: number(),
+      }),
+      ['name']
+    )
+  )
 
-  expect(res).toBeUndefined();
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -26,5 +29,5 @@ test("Invalid pick property unknown", () => {
       path: ['age'],
       branch: [data, data.age],
     },
-  ]);
-});
+  ])
+})

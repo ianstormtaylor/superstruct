@@ -1,11 +1,11 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { tuple, string, number } from '../../../src'
 
-test("Invalid tuple", () => {
-  const data = 'invalid';
-  const [err, res] = validate(data, tuple([string(), number()]));
-  expect(res).toBeUndefined();
+test('Invalid tuple', () => {
+  const data = 'invalid'
+  const [err, res] = validate(data, tuple([string(), number()]))
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +15,5 @@ test("Invalid tuple", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

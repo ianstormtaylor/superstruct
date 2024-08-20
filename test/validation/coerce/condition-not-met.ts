@@ -1,15 +1,19 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { string, number, coerce } from '../../../src'
 
-test("Condition coerce not met", () => {
-  const data = false;
+test('Condition coerce not met', () => {
+  const data = false
 
-  const [err, res] = validate(data, coerce(string(), number(), (x) => 'known'), {
-    coerce: true
-  });
+  const [err, res] = validate(
+    data,
+    coerce(string(), number(), (x) => 'known'),
+    {
+      coerce: true,
+    }
+  )
 
-  expect(res).toBeUndefined();
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -19,5 +23,5 @@ test("Condition coerce not met", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

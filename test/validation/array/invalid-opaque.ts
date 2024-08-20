@@ -1,11 +1,11 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { array } from '../../../src'
 
-test("Invalid array opaque", () => {
-  const data = 'invalid';
-  const [err, res] = validate(data, array());
-  expect(res).toBeUndefined();
+test('Invalid array opaque', () => {
+  const data = 'invalid'
+  const [err, res] = validate(data, array())
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +15,5 @@ test("Invalid array opaque", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})

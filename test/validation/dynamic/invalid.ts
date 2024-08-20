@@ -1,11 +1,14 @@
-import { validate } from "../../../src";
-import { expect, test } from "vitest";
+import { validate } from '../../../src'
+import { expect, test } from 'vitest'
 import { dynamic, string } from '../../../src'
 
-test("Invalid dynamic", () => {
-  const data = 3;
-  const [err, res] = validate(data, dynamic(() => string()));
-  expect(res).toBeUndefined();
+test('Invalid dynamic', () => {
+  const data = 3
+  const [err, res] = validate(
+    data,
+    dynamic(() => string())
+  )
+  expect(res).toBeUndefined()
 
   expect(err).toMatchStructError([
     {
@@ -15,5 +18,5 @@ test("Invalid dynamic", () => {
       path: [],
       branch: [data],
     },
-  ]);
-});
+  ])
+})
