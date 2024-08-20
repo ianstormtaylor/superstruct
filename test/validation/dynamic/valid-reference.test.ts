@@ -1,4 +1,3 @@
-import { assert } from '../../../src'
 import { expect, test } from 'vitest'
 import { assert, type, dynamic, literal, string, number } from '../../../src'
 

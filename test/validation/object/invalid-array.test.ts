@@ -3,7 +3,7 @@ import { expect, test } from 'vitest'
 import { object } from '../../../src'
 
 test('Invalid object array', () => {
-  const data = []
+  const data: any[] = []
   const [err, res] = validate(data, object())
   expect(res).toBeUndefined()
 

@@ -3,7 +3,7 @@ import { expect, test } from 'vitest'
 import { record, string, number } from '../../../src'
 
 test('Invalid record array', () => {
-  const data = []
+  const data: any[] = []
   const [err, res] = validate(data, record(string(), number()))
   expect(res).toBeUndefined()
 
