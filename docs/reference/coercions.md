@@ -40,6 +40,6 @@ const b = create('42', MyNumber) // 42
 const c = create(false, MyNumber) // error thrown!
 ```
 
-The second argument to `coerce` is a struct narrowing the types of input values you want to try coercion. In the example above, the coercion functionn will only ever be called when the input is a string—booleans would ignore coercion and fail normally.
+The second argument to `coerce` is a struct narrowing the types of input values you want to try coercion. In the example above, the coercion function will only ever be called when the input is a string—booleans would ignore coercion and fail normally.
 
 > 🤖 If you want to run coercion for any type of input, use the `unknown()` struct to run it in all cases.
