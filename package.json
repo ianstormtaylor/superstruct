@@ -1,13 +1,25 @@
 {
   "name": "superstruct",
   "description": "A simple and composable way to validate data in JavaScript (and TypeScript).",
-  "version": "2.0.2",
+  "version": "2.0.3-1",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
   "type": "module",
   "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
   "sideEffects": false,
   "files": [
     "dist"
@@ -19,7 +31,6 @@
     "node": ">=14.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^11.1.6",
     "@types/expect": "^24.3.0",
     "@types/lodash": "^4.14.144",
     "@types/node": "^18.7.14",
@@ -31,12 +42,12 @@
     "lodash": "^4.17.15",
     "np": "^10.0.0",
     "prettier": "^3.2.5",
-    "rollup": "^4.12.1",
+    "tsup": "^8.2.3",
     "typescript": "^4.8.3",
     "vitest": "^1.6.0"
   },
   "scripts": {
-    "build": "rm -rf ./{dist} && rollup --config ./rollup.config.js",
+    "build": "rm -rf ./{dist} && tsup",
     "clean": "rm -rf ./{dist,node_modules}",
     "fix": "npm run fix:eslint && npm run fix:prettier",
     "fix:eslint": "npm run lint:eslint --fix",
@@ -44,7 +55,7 @@
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "lint:eslint": "eslint '{src,test}/*.{js,ts}'",
     "lint:prettier": "prettier '**/*.{js,json,ts}' --check",
-    "release": "npm run build && npm run lint && np",
+    "release": "npm run build && npm run lint && np --any-branch",
     "test": "npm run build && npm run test:types && npm run test:vitest",
     "test:types": "tsc --noEmit && tsc --project ./test/tsconfig.json --noEmit",
     "test:vitest": "vitest run",
