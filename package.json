@@ -22,7 +22,7 @@
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/expect": "^24.3.0",
     "@types/lodash": "^4.14.144",
-    "@types/node": "^18.7.14",
+    "@types/node": "^22.7.4",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "eslint": "^8.57.0",
