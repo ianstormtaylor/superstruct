@@ -80,11 +80,12 @@ export function toFailure<T, S>(
 
   const { path, branch } = context
   const { type } = struct
+  const finalValue = typeof value === 'object' ? JSON.stringify(value) : value
   const {
     refinement,
     message = `Expected a value of type \`${type}\`${
       refinement ? ` with refinement \`${refinement}\`` : ''
-    }, but received: \`${print(value)}\``,
+    }, but received: \`${print(finalValue)}\``,
   } = result
 
   return {
