@@ -3,6 +3,7 @@
   "name": "@yeoffrey/megastruct",
   "version": "0.1.0",
   "exports": "./src/index.ts",
+  "license": "MIT",
   "publish": {
     "include": ["README.md", "LICENSE.md", "src", "docs"]
   }
