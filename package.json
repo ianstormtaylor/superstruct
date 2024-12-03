@@ -1,9 +1,9 @@
 {
-  "name": "superstruct",
-  "description": "A simple and composable way to validate data in JavaScript (and TypeScript).",
-  "version": "2.0.2",
+  "name": "megastruct",
+  "description": "An all-in-one data solution for TypeScript projects",
+  "version": "0.1.0",
   "license": "MIT",
-  "repository": "git://github.com/ianstormtaylor/superstruct.git",
+  "repository": "git://github.com/yeoffrey/megastruct.git",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
