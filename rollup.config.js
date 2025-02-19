@@ -11,7 +11,7 @@ export default defineConfig({
       sourcemap: true,
     },
     {
-      file: './dist/index.cjs',
+      file: './dist/index.js',
       format: 'umd',
       name: 'Superstruct',
       sourcemap: true,

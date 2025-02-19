@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/superstruct.git",
   "type": "module",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "sideEffects": false,
