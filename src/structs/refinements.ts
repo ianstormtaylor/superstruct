@@ -95,8 +95,9 @@ export function pattern<T extends string, S extends any>(
   regexp: RegExp
 ): Struct<T, S> {
   return refine(struct, 'pattern', (value) => {
+    const regexpCopy = new RegExp(regexp) // necessary because of https://stackoverflow.com/questions/3891641/regex-test-only-works-every-other-time
     return (
-      regexp.test(value) ||
+      regexpCopy.test(value) ||
       `Expected a ${struct.type} matching \`/${regexp.source}/\` but received "${value}"`
     )
   })
