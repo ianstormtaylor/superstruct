@@ -95,6 +95,9 @@ export function pattern<T extends string, S extends any>(
   regexp: RegExp
 ): Struct<T, S> {
   return refine(struct, 'pattern', (value) => {
+    if (regexp.lastIndex) {
+      regexp.lastIndex = 0
+    }
     return (
       regexp.test(value) ||
       `Expected a ${struct.type} matching \`/${regexp.source}/\` but received "${value}"`
