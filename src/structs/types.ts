@@ -364,7 +364,7 @@ export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
  * Like TypeScript's `Record` utility.
  */
 
-export function record<K extends string, V>(
+export function record<K extends string | number, V>(
   Key: Struct<K>,
   Value: Struct<V>
 ): Struct<Record<K, V>, null> {
