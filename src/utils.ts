@@ -242,7 +242,9 @@ export type IsExactMatch<T, U> =
 export type IsRecord<T> = T extends object
   ? string extends keyof T
     ? T
-    : never
+    : number extends keyof T
+      ? T
+      : never
   : never
 /**
  * Check if a type is a tuple.

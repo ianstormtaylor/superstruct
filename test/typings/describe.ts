@@ -126,6 +126,10 @@ test<Describe<Record<string, number>>>((x) => {
   return record(string(), number())
 })
 
+test<Describe<Record<number, number>>>((x) => {
+  return record(number(), number())
+})
+
 test<Describe<RegExp>>((x) => {
   return regexp()
 })

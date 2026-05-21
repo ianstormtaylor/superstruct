@@ -5,3 +5,8 @@ test<Record<string, number>>((x) => {
   assert(x, record(string(), number()))
   return x
 })
+
+test<Record<number, number>>((x) => {
+  assert(x, record(number(), number()))
+  return x
+})
