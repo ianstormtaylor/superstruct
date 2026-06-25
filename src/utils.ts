@@ -153,6 +153,11 @@ export function* run<T, S>(
     yield [failure, undefined]
   }
 
+  // `Set.add()` can only insert members, never replace one positionally, so a
+  // coerced element would accumulate alongside its original. Clear the set once
+  // on the first coerced write-back so only coerced members remain.
+  let clearedSet = false
+
   for (let [k, v, s] of struct.entries(value, ctx)) {
     const ts = run(v, s as Struct, {
       path: k === undefined ? path : [...path, k],
@@ -174,6 +179,10 @@ export function* run<T, S>(
         } else if (value instanceof Map) {
           value.set(k, v)
         } else if (value instanceof Set) {
+          if (!clearedSet) {
+            value.clear()
+            clearedSet = true
+          }
           value.add(v)
         } else if (isObject(value)) {
           if (v !== undefined || k in value) value[k] = v

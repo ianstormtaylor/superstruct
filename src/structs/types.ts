@@ -418,7 +418,7 @@ export function set<T>(Element?: Struct<T>): any {
     schema: null,
     *entries(value) {
       if (Element && value instanceof Set) {
-        for (const v of value) {
+        for (const v of [...value]) {
           yield [v as string, v, Element]
         }
       }
