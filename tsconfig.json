@@ -9,6 +9,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "outDir": "./dist",
+    "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "suppressImplicitAnyIndexErrors": true,
