@@ -61,7 +61,23 @@ export function assign(...Structs: Struct<any>[]): any {
   const isType = Structs[0].type === 'type'
   const schemas = Structs.map((s) => s.schema)
   const schema = Object.assign({}, ...schemas)
-  return isType ? type(schema) : object(schema)
+  const struct = isType ? type(schema) : object(schema)
+
+  // Preserve any top-level coercion (e.g. `defaulted`, `trimmed`) that the
+  // merged structs carried, instead of silently dropping it. The merged
+  // struct's own coercer still runs last so that masking is applied once
+  // against the combined schema; the inputs run with masking disabled so they
+  // don't strip out keys owned by the other structs being assigned.
+  const coercer = struct.coercer
+  struct.coercer = (value, ctx) => {
+    let coerced = value
+    for (const s of Structs) {
+      coerced = s.coercer(coerced, { ...ctx, mask: false })
+    }
+    return coercer(coerced, ctx)
+  }
+
+  return struct
 }
 
 /**
