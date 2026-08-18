@@ -268,6 +268,13 @@ export function nullable<T, S>(struct: Struct<T, S>): Struct<T | null, S> {
     ...struct,
     validator: (value, ctx) => value === null || struct.validator(value, ctx),
     refiner: (value, ctx) => value === null || struct.refiner(value, ctx),
+    *entries(value, ctx) {
+      if (value !== null) {
+        yield* struct.entries(value, ctx)
+      }
+    },
+    coercer: (value, ctx) =>
+      value === null ? value : struct.coercer(value, ctx),
   })
 }
 
@@ -354,6 +361,13 @@ export function optional<T, S>(struct: Struct<T, S>): Struct<T | undefined, S> {
     validator: (value, ctx) =>
       value === undefined || struct.validator(value, ctx),
     refiner: (value, ctx) => value === undefined || struct.refiner(value, ctx),
+    *entries(value, ctx) {
+      if (value !== undefined) {
+        yield* struct.entries(value, ctx)
+      }
+    },
+    coercer: (value, ctx) =>
+      value === undefined ? value : struct.coercer(value, ctx),
   })
 }
 
