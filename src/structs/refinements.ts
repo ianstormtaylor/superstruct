@@ -39,12 +39,12 @@ export function max<T extends number | Date, S extends any>(
 ): Struct<T, S> {
   const { exclusive } = options
   return refine(struct, 'max', (value) => {
-    return exclusive
-      ? value < threshold
-      : value <= threshold ||
-          `Expected a ${struct.type} less than ${
-            exclusive ? '' : 'or equal to '
-          }${threshold} but received \`${value}\``
+    return (
+      (exclusive ? value < threshold : value <= threshold) ||
+      `Expected a ${struct.type} less than ${
+        exclusive ? '' : 'or equal to '
+      }${threshold} but received \`${value}\``
+    )
   })
 }
 
@@ -61,12 +61,12 @@ export function min<T extends number | Date, S extends any>(
 ): Struct<T, S> {
   const { exclusive } = options
   return refine(struct, 'min', (value) => {
-    return exclusive
-      ? value > threshold
-      : value >= threshold ||
-          `Expected a ${struct.type} greater than ${
-            exclusive ? '' : 'or equal to '
-          }${threshold} but received \`${value}\``
+    return (
+      (exclusive ? value > threshold : value >= threshold) ||
+      `Expected a ${struct.type} greater than ${
+        exclusive ? '' : 'or equal to '
+      }${threshold} but received \`${value}\``
+    )
   })
 }
 
