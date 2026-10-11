@@ -3,6 +3,7 @@ import {
   validate,
   string,
   StructError,
+  Struct,
   define,
   refine,
   object,
@@ -144,5 +145,98 @@ describe('validate', () => {
     // Collect all failures. Ensures all validation runs.
     error?.failures()
     expect(ranRefiner).toBe(false)
+  })
+
+  for (const reverse of [false, true]) {
+    for (const coerce of [false, true]) {
+      it(`skips refiners after mixed child failures (reverse=${reverse}, coerce=${coerce})`, () => {
+        let ranRefiner = false
+        const name = string()
+        const password = refine(
+          string(),
+          'length',
+          (value) => value.length >= 8
+        )
+        const schema = reverse ? { password, name } : { name, password }
+        const S = refine(object(schema), 'outer', (value) => {
+          ranRefiner = true
+          return value.name.toUpperCase() !== value.password.toUpperCase()
+        })
+        const [error] = S.validate(
+          { name: null, password: 'short' },
+          { coerce }
+        )
+
+        expect(error).toBeInstanceOf(StructError)
+        expect(() => error?.failures()).not.toThrow()
+        const failures = error?.failures()
+        expect(failures?.map((failure) => failure.path)).toStrictEqual(
+          reverse ? [['password'], ['name']] : [['name'], ['password']]
+        )
+        expect(error?.failures()).toBe(failures)
+        expect(ranRefiner).toBe(false)
+      })
+    }
+  }
+
+  it('keeps an own validator failure after a nested refinement failure', () => {
+    let ranRefiner = false
+    const shape = object({ value: refine(string(), 'child', () => false) })
+    const S = refine(
+      new Struct({ ...shape, validator: () => false }),
+      'outer',
+      () => {
+        ranRefiner = true
+        return true
+      }
+    )
+    const [error] = S.validate({ value: 'valid type' })
+
+    expect(error?.failures().map((failure) => failure.path)).toStrictEqual([
+      [],
+      ['value'],
+    ])
+    expect(ranRefiner).toBe(false)
+  })
+
+  it('skips ancestor refiners after mixed descendant failures', () => {
+    const refiners: string[] = []
+    const Child = refine(
+      object({
+        name: string(),
+        password: refine(string(), 'length', () => false),
+      }),
+      'child',
+      () => {
+        refiners.push('child')
+        return true
+      }
+    )
+    const Parent = refine(object({ child: Child }), 'parent', () => {
+      refiners.push('parent')
+      return true
+    })
+    const [error] = Parent.validate({
+      child: { name: null, password: 'short' },
+    })
+
+    expect(error?.failures()).toHaveLength(2)
+    expect(refiners).toStrictEqual([])
+  })
+
+  it('still collects parent refinements when every child type is valid', () => {
+    const S = refine(
+      object({
+        first: refine(string(), 'first', () => false),
+        second: refine(string(), 'second', () => false),
+      }),
+      'parent',
+      () => false
+    )
+    const [error] = S.validate({ first: 'one', second: 'two' })
+
+    expect(
+      error?.failures().map((failure) => failure.refinement)
+    ).toStrictEqual(['first', 'second', 'parent'])
   })
 })

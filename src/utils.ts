@@ -164,7 +164,9 @@ export function* run<T, S>(
 
     for (const t of ts) {
       if (t[0]) {
-        status = t[0].refinement != null ? 'not_refined' : 'not_valid'
+        if (status !== 'not_valid') {
+          status = t[0].refinement != null ? 'not_refined' : 'not_valid'
+        }
         yield [t[0], undefined]
       } else if (coerce) {
         v = t[1]
