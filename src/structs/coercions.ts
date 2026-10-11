@@ -43,6 +43,10 @@ export function defaulted<T, S>(
   } = {}
 ): Struct<T, S> {
   return coerce(struct, unknown(), (x) => {
+    if (x !== undefined && (options.strict || !isPlainObject(x))) {
+      return x
+    }
+
     const f = typeof fallback === 'function' ? fallback() : fallback
 
     if (x === undefined) {
