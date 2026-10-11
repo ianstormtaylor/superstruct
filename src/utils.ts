@@ -336,13 +336,13 @@ export type StructSchema<T> = [T] extends [string | undefined | null]
     ? null
     : [T] extends [IsUnion<T>]
       ? EnumSchema<T>
-      : T
+      : T | EnumSchema<T>
   : [T] extends [number | undefined | null]
     ? [T] extends [IsMatch<T, number | undefined | null>]
       ? null
       : [T] extends [IsUnion<T>]
         ? EnumSchema<T>
-        : T
+        : T | EnumSchema<T>
     : [T] extends [boolean]
       ? [T] extends [IsExactMatch<T, boolean>]
         ? null
