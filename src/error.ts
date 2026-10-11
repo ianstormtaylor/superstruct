@@ -37,7 +37,9 @@ export class StructError extends TypeError {
     const { message, explanation, ...rest } = failure
     const { path } = failure
     const msg =
-      path.length === 0 ? message : `At path: ${path.join('.')} -- ${message}`
+      path.length === 0
+        ? message
+        : `At path: ${path.map((key) => (typeof key === 'symbol' ? key.toString() : key)).join('.')} -- ${message}`
     super(explanation ?? msg)
     if (explanation != null) this.cause = msg
     Object.assign(this, rest)
