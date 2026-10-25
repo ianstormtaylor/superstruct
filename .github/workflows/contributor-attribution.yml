@@ -1,0 +1,105 @@
+name: Contributor attribution
+
+on:
+  pull_request_target:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  attribution:
+    name: Human attribution
+    if: github.event.deleted != true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check author identities and contributor credits
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ATTRIBUTION_BASELINE: "cd6f229ed84b8fdb26ca80553dbed05d33a3949f"
+        run: |
+          node --input-type=module <<'ATTRIBUTION_CHECK'
+          const aiNames = /^(?:Claude(?: (?:Code|Opus|Sonnet|Haiku)(?: [0-9.]+)?)?|ChatGPT|OpenAI Codex|Codex|GitHub Copilot|Copilot|Gemini|Cursor(?: Agent)?|Aider|AI Assistant)$/i;
+          const aiAccounts = /^(?:claude(?:\[bot\])?|chatgpt|codex|chatgpt-codex-connector\[bot\]|copilot(?:-swe-agent)?(?:\[bot\])?|gemini(?:-code-assist)?(?:\[bot\])?|cursor(?:-agent)?(?:\[bot\])?|aider(?:\[bot\])?)$/i;
+          const generatedCredit = /^(?:Claude-Session:|[ \t]*(?:🤖[ \t]*)?Generated (?:with|by)[^\r\n]*(?:Claude|ChatGPT|Codex|Copilot|Gemini|Cursor|Aider))/im;
+          function isAI(identity) {
+            const email = (identity?.email ?? '').trim();
+            const account = /^(?:\d+\+)?([^@]+)@users\.noreply\.github\.com$/i.exec(email)?.[1];
+            return aiNames.test((identity?.name ?? '').trim().replace(/[ \t]+/g, ' ').replace(/ \([^()\r\n]*\)$/, '')) || /\(aider\b[^)]*\)[ \t]*$/i.test(identity?.name ?? '') ||
+              /^(?:noreply@(?:anthropic|openai)\.com|cursoragent@cursor\.com|aider@localhost)$/i.test(email) ||
+              aiAccounts.test(identity?.login ?? '') || (account !== undefined && aiAccounts.test(account));
+          }
+          export function attributionViolations(commits) {
+            return commits.filter((entry) => {
+              const { author, committer, message } = entry.commit;
+              const credits = [...message.matchAll(/^(?:co-authored-by|signed-off-by):[ \t]*(.*?)[ \t]*<([^>\r\n]+)>[ \t]*$/gim)]
+                .map((match) => ({ name: match[1], email: match[2] }));
+              return [author, committer, entry.author, entry.committer, ...credits].some(isAI) || generatedCredit.test(message);
+            }).map((entry) => entry.sha);
+          }
+          
+          export async function verify({ repository, baseline, head, token, request = fetch }) {
+            if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository) ||
+                !/^[a-f0-9]{40}$/i.test(baseline) || !/^[a-f0-9]{40}$/i.test(head)) {
+              throw new Error('Invalid repository or commit identifier.');
+            }
+            const seen = new Set();
+            const violations = new Set();
+            let expected;
+            for (let page = 1; ; page += 1) {
+              const response = await request(
+                `https://api.github.com/repos/${repository}/compare/${baseline}...${head}?per_page=100&page=${page}`,
+                { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } },
+              );
+              if (!response.ok) throw new Error(`GitHub commit metadata is unavailable (HTTP ${response.status}).`);
+              const data = await response.json();
+              if (!Array.isArray(data.commits) || !Number.isInteger(data.total_commits) || data.total_commits < 0) {
+                throw new Error('GitHub returned incomplete commit metadata.');
+              }
+              expected ??= data.total_commits;
+              if (expected !== data.total_commits) throw new Error('Commit comparison changed during verification.');
+              const previous = seen.size;
+              for (const entry of data.commits) seen.add(entry.sha);
+              for (const sha of attributionViolations(data.commits)) violations.add(sha);
+              if (seen.size >= expected) break;
+              if (seen.size === previous) throw new Error('GitHub did not return every commit in the comparison.');
+            }
+            if (violations.size) throw new Error(`AI contributor attribution found in ${[...violations].map((sha) => sha.slice(0, 12)).join(', ')}. Preserve human authorship and remove AI credits.`);
+            return { checked: seen.size };
+          }
+          
+          export async function selfTest() {
+            const { strict: assert } = await import('node:assert');
+            const human = { name: 'Matthew Dean', email: 'matthew@example.com' };
+            const commit = (message = 'Fix a bug', author = human) => ({ sha: 'a'.repeat(40), commit: { author, committer: human, message }, author: null, committer: null });
+            for (const entry of [commit(), commit('Document Claude and ChatGPT'), commit('Fix art', { name: 'Claude Monet', email: 'artist@example.com' }), commit('Update dependencies', { name: 'dependabot[bot]', email: '49699333+dependabot[bot]@users.noreply.github.com' })]) {
+              assert.deepEqual(attributionViolations([entry]), []);
+            }
+            for (const name of ['Claude', 'Claude  Code', 'Claude\tSonnet 4.5', 'ChatGPT', 'OpenAI Codex', 'Cursor', 'Cursor Agent', 'Aider', 'Matthew Dean (aider)', 'GitHub Copilot (GPT-5)', 'Claude Opus 4.1 (1M context)']) {
+              assert.equal(attributionViolations([commit('Fix', { name, email: 'agent@example.com' })]).length, 1);
+              assert.equal(attributionViolations([commit(`Fix\n\nCo-authored-by: ${name} <agent@example.com>`)]).length, 1);
+            }
+            assert.equal(attributionViolations([commit('Co-authored-by: chatgpt-codex-connector[bot] <199175422+chatgpt-codex-connector[bot]@users.noreply.github.com>')]).length, 1);
+            assert.equal(attributionViolations([commit('Fix\n\nCo-authored-by: Assistant <123+copilot-swe-agent[bot]@users.noreply.github.com>')]).length, 1);
+            assert.equal(attributionViolations([commit('Fix', { name: 'Build Bot', email: 'cursoragent@cursor.com' })]).length, 1);
+            const records = Array.from({ length: 101 }, (_, i) => ({ ...commit(), sha: i.toString(16).padStart(40, '0') }));
+            const args = { repository: 'owner/repo', baseline: 'b'.repeat(40), head: 'c'.repeat(40), token: 'test' };
+            let calls = 0;
+            assert.equal((await verify({ ...args, request: async () => ({ ok: true, json: async () => ({ total_commits: 101, commits: records.slice(calls++ * 100, calls * 100) }) }) })).checked, 101);
+            assert.equal(calls, 2);
+            await assert.rejects(verify({ ...args, request: async () => ({ ok: false, status: 403 }) }), /unavailable/);
+            await assert.rejects(verify({ ...args, request: async () => ({ ok: true, json: async () => ({ total_commits: 1, commits: [] }) }) }), /every commit/);
+            await assert.rejects(verify({ ...args, request: async () => ({ ok: true, json: async () => ({ total_commits: 1, commits: [commit('Co-authored-by: Claude <agent@example.com>')] }) }) }), /AI contributor/);
+          }
+          await selfTest();
+          const { readFileSync } = await import('node:fs');
+          const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+          const result = await verify({ repository: process.env.GITHUB_REPOSITORY, baseline: process.env.ATTRIBUTION_BASELINE, head: event.pull_request?.head.sha ?? process.env.GITHUB_SHA, token: process.env.GITHUB_TOKEN });
+          console.log(`Verified human attribution in ${result.checked} commits.`);
+          ATTRIBUTION_CHECK
