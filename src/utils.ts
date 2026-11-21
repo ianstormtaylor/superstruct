@@ -290,7 +290,7 @@ export type ObjectType<S extends ObjectSchema> = Simplify<
 
 export type OmitBy<T, V> = Omit<
   T,
-  { [K in keyof T]: V extends Extract<T[K], V> ? K : never }[keyof T]
+  { [K in keyof T]: V extends T[K] ? K : never }[keyof T]
 >
 
 /**
@@ -314,7 +314,7 @@ export type PartialObjectSchema<S extends ObjectSchema> = {
 
 export type PickBy<T, V> = Pick<
   T,
-  { [K in keyof T]: V extends Extract<T[K], V> ? K : never }[keyof T]
+  { [K in keyof T]: V extends T[K] ? K : never }[keyof T]
 >
 
 /**
