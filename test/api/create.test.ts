@@ -4,6 +4,7 @@ import {
   optional,
   create,
   string,
+  number,
   defaulted,
   literal,
   coerce,
@@ -50,6 +51,14 @@ describe('create', () => {
       b: undefined,
       c: undefined,
     })
+  })
+
+  it('defaulted undefined fills absent fields', () => {
+    const S = type({
+      a: string(),
+      b: defaulted(optional(number()), undefined),
+    })
+    expect(S.create({ a: 'a' })).toStrictEqual({ a: 'a', b: undefined })
   })
 
   it('custom error message', () => {
