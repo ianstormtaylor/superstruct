@@ -1,5 +1,5 @@
 import { Struct, is, Coercer } from '../struct.js'
-import { isPlainObject } from '../utils.js'
+import { defaultedCoercers, isPlainObject } from '../utils.js'
 import { string, unknown } from './types.js'
 
 /**
@@ -42,7 +42,7 @@ export function defaulted<T, S>(
     strict?: boolean
   } = {}
 ): Struct<T, S> {
-  return coerce(struct, unknown(), (x) => {
+  const coerced = coerce(struct, unknown(), (x) => {
     const f = typeof fallback === 'function' ? fallback() : fallback
 
     if (x === undefined) {
@@ -67,6 +67,10 @@ export function defaulted<T, S>(
 
     return x
   })
+
+  defaultedCoercers.add(coerced.coercer)
+
+  return coerced
 }
 
 /**

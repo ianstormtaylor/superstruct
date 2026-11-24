@@ -1,4 +1,4 @@
-import { Struct, Infer, Result, Context, Describe } from './struct.js'
+import { Struct, Infer, Result, Context, Describe, Coercer } from './struct.js'
 import { Failure } from './error.js'
 
 /**
@@ -123,6 +123,15 @@ export function* toFailures<T, S>(
 }
 
 /**
+ * Coercers that substitute a fallback when a value is `undefined`, created by
+ * `defaulted`. Parent object structs write the coerced value back even when
+ * the fallback itself is `undefined`, so the property is present in the
+ * result instead of being skipped like an absent `optional` field.
+ */
+
+export const defaultedCoercers = new WeakSet<Coercer>()
+
+/**
  * Check a value against a struct, traversing deeply into nested values, and
  * returning an iterator of failures or success.
  */
@@ -176,7 +185,12 @@ export function* run<T, S>(
         } else if (value instanceof Set) {
           value.add(v)
         } else if (isObject(value)) {
-          if (v !== undefined || k in value) value[k] = v
+          if (
+            v !== undefined ||
+            k in value ||
+            (!Array.isArray(value) && defaultedCoercers.has(s.coercer))
+          )
+            value[k] = v
         }
       }
     }
